@@ -1,0 +1,32 @@
+{
+    "id": "",
+    "sex": {
+        "id": "",
+        "label": ""
+    },
+    "ethnicity": {
+        "id": "",
+        "label": ""
+    },
+    "info": {},
+    "interventionsOrProcedures": {
+        "procedureCode": {
+            "id": "",
+            "label": ""
+        }
+    },
+    "measures": {
+        "assayCode": {
+            "id": "",
+            "label": ""
+        },
+        "measurementValue": {
+            "unit": {
+                "id": "",
+                "label": ""
+            },
+            "value": ""
+        },
+        "date": ""
+    }
+}
