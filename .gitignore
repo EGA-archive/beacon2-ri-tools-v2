@@ -1,0 +1,4 @@
+.DS_Store
+__pycache__/*
+individuals/__pycache__/*
+schemas/__pycache__/*
