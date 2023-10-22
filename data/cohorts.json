@@ -3,8 +3,8 @@
         "collectionEvents": [
             {
                 "eventDiseases": {
-                    "availability": "true",
-                    "availabilityCount": "1705",
+                    "availability": true,
+                    "availabilityCount": 1705,
                     "distribution": {
                         "diseases": {
                             "iron deficiency anaemia": 142,
@@ -30,8 +30,8 @@
                     }
                 },
                 "eventLocations": {
-                    "availability": "true",
-                    "availabilityCount": "1597",
+                    "availability": true,
+                    "availabilityCount": 1597,
                     "distribution": {
                         "locations": {
                             "Northern Ireland": 317,
@@ -43,7 +43,7 @@
                     }
                 },
                 "eventGenders": {
-                    "availability": "true",
+                    "availability": true,
                     "availabilityCount": 2504,
                     "distribution": {
                         "genders": {
@@ -53,7 +53,7 @@
                     }
                 },
                 "eventEthnicities": {
-                    "availability": "true",
+                    "availability": true,
                     "availabilityCount": 2287,
                     "distribution": {
                         "ethnicities": {
@@ -86,7 +86,7 @@
             "id": "OMIABIS:000101",
             "label": "longitudinal study design"
         },
-        "inclustionCriteria": {
+        "inclusionCriteria": {
             "ageRange": {
                 "end": {
                     "iso8601duration": "P65Y"
@@ -5110,7 +5110,6 @@
                 "NA21144"
             ]
         },
-        "cohortDataTypes": [],
         "genders": [
             {
                 "id": "NCIT:C16576",

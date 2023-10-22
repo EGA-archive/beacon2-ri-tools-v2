@@ -8,10 +8,10 @@ ws = xw.Book("Beacon-v2-Models_CINECA_UK1.xlsx").sheets['cohorts']
 cohorts = {}
 cohorts['collectionEvents'] = []
 cohorts['cohortDesign'] = {}
-cohorts['inclustionCriteria'] = {}
-cohorts['inclustionCriteria']['ageRange'] = {}
-cohorts['inclustionCriteria']['ageRange']['end'] = {}
-cohorts['inclustionCriteria']['ageRange']['start'] = {}
+cohorts['inclusionCriteria'] = {}
+cohorts['inclusionCriteria']['ageRange'] = {}
+cohorts['inclusionCriteria']['ageRange']['end'] = {}
+cohorts['inclusionCriteria']['ageRange']['start'] = {}
 cohorts['ids']={}
 data={}
 data1={}
@@ -23,7 +23,6 @@ while n < 3:
     range = str(n)
     first_column = 'A'
     last_column = 'BA'
-    cohorts['cohortDataTypes'] = []
     cohorts['collectionEvents'] = []
     data['eventDiseases']={}
     data['eventLocations']={}
@@ -56,10 +55,10 @@ while n < 3:
                 cohorts['cohortType']=v1
         elif i == 16:
             if v1 is not None:
-                data['eventDiseases']['availability']=v1
+                data['eventDiseases']['availability']=bool(v1)
         elif i == 17:
             if v1 is not None:
-                data['eventDiseases']['availabilityCount']=v1
+                data['eventDiseases']['availabilityCount']=int(str(v1))
         elif i == 18:
             if v1 is not None:
                 print(type(v1))
@@ -69,10 +68,12 @@ while n < 3:
                     data['eventDiseases']['distribution']=value
         elif i == 19:
             if v1 is not None:
-                data['eventEthnicities']['availability']=v1
+                if str(v1) == 'true':
+                    v1 == True
+                data['eventEthnicities']['availability']=bool(v1)
         elif i == 20:
             if v1 is not None:
-                data['eventEthnicities']['availabilityCount']=v1
+                data['eventEthnicities']['availabilityCount']=int(v1)
         elif i == 21:
             if v1 is not None:
                 v1 = ast.literal_eval(v1)
@@ -80,10 +81,12 @@ while n < 3:
                     data['eventEthnicities']['distribution']=value
         elif i == 22:
             if v1 is not None:
-                data['eventGenders']['availability']=v1
+                if str(v1) == 'true':
+                    v1 == True
+                data['eventGenders']['availability']=bool(v1)
         elif i == 23:
             if v1 is not None:
-                data['eventGenders']['availabilityCount']=v1
+                data['eventGenders']['availabilityCount']=int(v1)
         elif i == 24:
             if v1 is not None:
                 v1 = ast.literal_eval(v1)
@@ -91,10 +94,12 @@ while n < 3:
                     data['eventGenders']['distribution']=value
         elif i == 25:
             if v1 is not None:
-                data['eventLocations']['availability']=v1
+                if str(v1) == 'true':
+                    v1 == True
+                data['eventLocations']['availability']=bool(v1)
         elif i == 26:
             if v1 is not None:
-                data['eventLocations']['availabilityCount']=v1
+                data['eventLocations']['availabilityCount']=int(str(v1))
         elif i == 27:
             if v1 is not None:
                 v1 = ast.literal_eval(v1)
@@ -106,10 +111,10 @@ while n < 3:
                 cohorts['id']=v1
         elif i == 43:
             if v1 is not None:
-                cohorts['inclustionCriteria']['ageRange']['end']['iso8601duration']=v1
+                cohorts['inclusionCriteria']['ageRange']['end']['iso8601duration']=v1
         elif i == 44:
             if v1 is not None:
-                cohorts['inclustionCriteria']['ageRange']['start']['iso8601duration']=v1
+                cohorts['inclusionCriteria']['ageRange']['start']['iso8601duration']=v1
         elif i == 47:
             if v1 is not None:
                 v1 = ast.literal_eval(v1)
