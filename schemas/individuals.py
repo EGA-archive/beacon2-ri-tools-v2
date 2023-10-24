@@ -139,25 +139,32 @@ def subtypes(file):
                         elif k1 == 'items':
                             for k2, v2 in v1.items():
                                 if k2 == '$ref':
-                                    print(v2)
-                                    v2_splitted = v2.split('/')
-                                    subdict[clau][k]={}
-                                    for keyx, valuex in data.items():
-                                        if keyx == 'definitions':
-                                            for kx, vx in valuex.items():
-                                                if kx == v2_splitted[-1]:
-                                                    for k1x, v1x in vx.items():
-                                                        if k1x == 'properties':
-                                                            for k2x, v2x in v1x.items():
-                                                                for k3x, v3x in v2x.items():
-                                                                    if k3x == '$ref':
-                                                                        if 'ontologyTerm' in v3x:
-                                                                            subdict[clau][k][k2x]='ontologyTerm.json'
-                                                                        else:
-                                                                            splitted_v = v3x.split('/')
-                                                                            double_split = splitted_v[-1].split('/')
-                                                                            subdict[clau][k][k2x]=double_split[-1]
-                                                                            
+                                    if '.json' in v2:
+                                        v2_splitted = v2.split('/')
+                                        subdict[clau][k]={}
+                                        subdict[clau][k]['items']=v2_splitted[-1]
+                                    else:
+                                        v2_splitted = v2.split('/')
+                                        subdict[clau][k]={}
+                                        for keyx, valuex in data.items():
+                                            if keyx == 'definitions':
+                                                for kx, vx in valuex.items():
+                                                    if kx == v2_splitted[-1]:
+                                                        for k1x, v1x in vx.items():
+                                                            if k1x == 'properties':
+                                                                for k2x, v2x in v1x.items():
+                                                                    for k3x, v3x in v2x.items():
+                                                                        if k3x == '$ref':
+                                                                            if 'ontologyTerm' in v3x:
+                                                                                subdict[clau][k][k2x]='ontologyTerm.json'
+                                                                            else:
+                                                                                splitted_v = v3x.split('/')
+                                                                                double_split = splitted_v[-1].split('/')
+                                                                                subdict[clau][k][k2x]=double_split[-1]
+                                                                        elif k3x == 'type':
+                                                                            subdict[clau][k][k2x]=v3x
+                                                            elif k1x == 'required':
+                                                                subdict[clau][k][k1x]=v1x
         elif key == 'type':
             subdict[clau]['type']=value
         elif key == 'oneOf':
@@ -174,7 +181,7 @@ def subtypes(file):
 
     return subdict
 
-subdict = subtypes('pedigree.json')
+subdict = subtypes('treatment.json')
 
 print(subdict)
 
