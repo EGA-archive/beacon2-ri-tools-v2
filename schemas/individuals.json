@@ -1,4 +1,9 @@
- {
+{
+    "$comment": "version: ga4gh-beacon-individual-v2.0.0",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": true,
+    "description": "Schema for an individual entry.",
+    "properties": {
         "diseases": {
             "description": "List of disease(s) been diagnosed to the individual, defined by disease ontology ID(s), age of onset, stage and the presence of family history.",
             "items": {
@@ -66,4 +71,11 @@
             },
             "type": "array"
         }
-    }
+    },
+    "required": [
+        "id",
+        "sex"
+    ],
+    "title": "Individual",
+    "type": "object"
+}
