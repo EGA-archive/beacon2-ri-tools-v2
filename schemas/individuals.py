@@ -128,6 +128,14 @@ def subtypes(file):
                             else:
                                 v1_splitted = v1.split('/')
                                 subdict[clau][k]=v1_splitted[-1]
+                        elif k1 == 'oneOf':
+                            subdict[clau][k]={}
+                            subdict[clau][k]['oneOf']=[]
+                            for valor in v1:
+                                for kval, vval in valor.items():
+                                    if kval == '$ref':
+                                        vval_splitted = vval.split('/')
+                                        subdict[clau][k]['oneOf'].append(vval_splitted[-1])
                         elif k1 == 'items':
                             for k2, v2 in v1.items():
                                 if k2 == '$ref':
@@ -152,13 +160,21 @@ def subtypes(file):
                                                                             
         elif key == 'type':
             subdict[clau]['type']=value
+        elif key == 'oneOf':
+            subdict[clau]['oneOf']=[]
+            for valor in value:
+                for kval, vval in valor.items():
+                    if kval == '$ref':
+                        vval_splitted = vval.split('/')
+                        subdict[clau]['oneOf'].append(vval_splitted[-1])
+
     
 
 
 
     return subdict
 
-subdict = subtypes('timeElement.json')
+subdict = subtypes('pedigree.json')
 
 print(subdict)
 
