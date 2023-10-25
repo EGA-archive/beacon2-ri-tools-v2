@@ -90,7 +90,6 @@ for kprinc, vprinc in data.items():
 
         
 
-#print(dict_types)
 
 
 
@@ -524,41 +523,47 @@ for key, value in dict_final.items():
 age = subtypes('age.json')
 agerange = subtypes('ageRange.json')
 
-element=subtypes('measurement.json')
+
 
 
 
 def overtypes(element):
     overtypes={}
-    for key, value in element.items():
-        if '.json' in value:
-            new_value=subtypes(value)
-            overtypes[key]=new_value
-        elif 'string' in value:
-            new_value=""
-            overtypes[key]=new_value
-        elif isinstance(value, dict):
-            new_value=""
-            for k, v in value.items():
-                if k == 'oneOf':
-                    if 'complexValue.json' in v:
-                        new_value=oneof_function(v)
-                    else:
-                        new_value=oneofunc(v)
-            if new_value != "":
-                overtypes[key]=new_value
-            else:
+    if isinstance(element, dict):
+        for key, value in element.items():
+            if isinstance(value, bool):
                 overtypes[key]=value
-        elif isinstance(value, list):
-            overtypes[key]=value                  
+            elif '.json' in value:
+                new_value=subtypes(value)
+                overtypes[key]=new_value
+            elif 'string' in value:
+                new_value=""
+                overtypes[key]=new_value
+            elif 'CURIE' in value:
+                new_value=""
+                overtypes[key]=new_value
+            elif 'boolean' in value:
+                new_value=True
+                overtypes[key]=new_value
+            elif isinstance(value, dict):
+                new_value=""
+                for k, v in value.items():
+                    if k == 'oneOf':
+                        if 'complexValue.json' in v:
+                            new_value=oneof_function(v)
+                        else:
+                            new_value=oneofunc(v)
+                if new_value != "":
+                    overtypes[key]=new_value
+                else:
+                    overtypes[key]=value
+            elif isinstance(value, list):
+                overtypes[key]=value   
+            elif value=='':
+                overtypes[key]=value                
     return overtypes
 
-element = overtypes(element)
 
-
-age = overtypes(age)
-
-element = overtypes(element)
 
 
 
@@ -574,13 +579,19 @@ def dict_overtypes(element):
                     superovertypes[key][k]=''
                 elif '.json' in v:
                     superovertypes[key][k]=subtypes(v)
+                elif 'boolean' in v:
+                    superovertypes[key][k]=True
                 elif 'oneOf' in k:
                     superovertypes[key][k]=overtypes(v)
+                elif k == 'items':
+                    list_items=[]
+                    list_items.append(v)
+                    superovertypes[key]=list_items
         else:
             superovertypes[key]=value
     return superovertypes
 
-element = dict_overtypes(element)
+
 
 
 def super_overtypes(element):
@@ -597,21 +608,42 @@ def super_overtypes(element):
                         elif 'string' in v1:
                             superovertypes[key][k][k1]=""
                         elif '.json' in v1:
-                            superovertypes[key][k][k1]=subtypes(v1)
+                            superovertypes[key][k]=subtypes(v1)
                         elif 'oneOf' in k1:
-                            superovertypes[key][k][k1]=oneofunc(v1)
+                            superovertypes[key][k]=oneofunc(v1)
+                        elif 'number' in v1:
+                            superovertypes[key][k][k1]=0
+                else:
+                    superovertypes[key][k]=v
         else:
             superovertypes[key]=value
     return superovertypes
 
-element = super_overtypes(element)
+
+
+
+def megaovertypes(element):
+    superovertypes={}
+    for key, value in element.items():
+        if isinstance(value, dict):
+            superovertypes[key]={}
+            for k, v in value.items():
+                if k == 'items':
+                    list_items=[]
+                    list_items.append(v)
+                    superovertypes[key]=list_items
+                else:
+                    superovertypes[key][k]=v
+        else:
+            superovertypes[key]=value
+    return superovertypes
 
 
 
 
 
 
-print(oneofunc(['age.json', 'ageRange.json', 'gestationalAge.json', 'Timestamp', 'timeInterval.json', 'ontologyTerm.json']))
+#print(oneofunc(['age.json', 'ageRange.json', 'gestationalAge.json', 'Timestamp', 'timeInterval.json', 'ontologyTerm.json']))
 
 
 
@@ -645,25 +677,81 @@ print(oneofunc(['age.json', 'ageRange.json', 'gestationalAge.json', 'Timestamp',
 
 
             
-
-    
-
-
-                
-
-
-
-
-                
-
-
-
-
-
-
-
-            
 #print(dict_types)
+
+
+
+                
+
+
+
+def disease():          
+    element=subtypes('disease.json')
+    element=overtypes(element)
+    element=overtypes(element)
+    element=dict_overtypes(element)
+    return element
+
+def measure():          
+    element=subtypes('measurement.json')
+    element=overtypes(element)
+    element=overtypes(element)
+    element=dict_overtypes(element)
+    element=super_overtypes(element)
+    return element
+
+def ontologyTerm():
+    element=subtypes('ontologyTerm.json')
+    element=overtypes(element)
+    return element
+
+def exposure():
+    element=subtypes('exposure.json')
+    element=overtypes(element)
+    element=dict_overtypes(element)
+    return element
+
+def procedure():
+    element=subtypes('procedure.json')
+    element=overtypes(element)
+    element=overtypes(element)
+    element=dict_overtypes(element)
+    return element
+
+def pedigree():
+    element=subtypes('pedigree.json')
+    element=overtypes(element)
+    element=dict_overtypes(element)
+    element=super_overtypes(element)
+    return element 
+
+def phenotypicFeature():
+    element=subtypes('phenotypicFeature.json')
+    element=overtypes(element)
+    element=overtypes(element)
+    element=dict_overtypes(element)
+    element=super_overtypes(element)
+    element=megaovertypes(element)
+    return element    
+
+def evidence():
+    element=subtypes('evidence.json')
+    element=overtypes(element)
+    element=dict_overtypes(element)
+    return element
+
+def treatment():
+    element=subtypes('treatment.json')
+    element=overtypes(element)
+    element=dict_overtypes(element)
+    element=super_overtypes(element)
+    element=super_overtypes(element)
+    element=megaovertypes(element)
+    return element
+    
+#print(treatment())
+            
+print(dict_types)
 
 
 
