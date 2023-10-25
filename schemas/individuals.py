@@ -90,7 +90,6 @@ for kprinc, vprinc in data.items():
 
         
 
-
 #print(dict_types)
 
 
@@ -119,13 +118,14 @@ def subtypes(file):
                             elif 'commonDefinitions' in v1:
                                 v1_splitted = v1.split('/')
                                 for kcd, vcd in commonDefinitions.items():
-                                    if kcd == v_splitted[-1]:
+                                    if kcd == v1_splitted[-1]:
                                         for kcd1, vcd1 in vcd.items():
                                             if 'ontologyTerm' in vcd1:
                                                 subdict[k]='ontologyTerm.json'
                                             elif kcd1 == 'type':
                                                 subdict[k]={}
-                                                subdict[k]['type']=vcd1
+                                                subdict[k]=vcd1
+
                             else:
                                 v1_splitted = v1.split('/')
                                 subdict[k]=v1_splitted[-1]
@@ -205,6 +205,8 @@ for key, value in dict_types.items():
                 elif v == 'ontologyTerm.json':
                     response[key]={}
 
+
+
 for key, value in dict_types.items():
     if key != 'required':
         for k, v in value.items():
@@ -221,55 +223,6 @@ for key, value in dict_types.items():
                         response[key]['id']=""
                         response[key]['label']=""
 
-for key, value in response.items():
-    if isinstance(value, dict):
-        for k, v in value.items():
-            if isinstance(v, dict):
-                for k1, v1 in v.items():
-                    if '.json' in v1:
-                        element = subtypes(v1)
-                        response[key][k][k1]={}
-    elif isinstance(value, list):
-        for item in value:
-            for k, v in item.items():
-                if isinstance(v, dict):
-                    for k1, v1 in v.items():
-                        if 'ontologyTerm' in v1:
-                            element = {}
-                            element['id']=""
-                            element['label']=""
-                            response[key]=[]
-                            subresponse = {}
-                            subresponse[k]={}
-                            subresponse[k][k1]=element
-                            response[key].append(subresponse)
-                        elif '.json' in v1:
-                            element = subtypes(v1)
-                            response[key]=[]
-                            subresponse = {}
-                            subresponse[k]={}
-                            subresponse[k][k1]=element
-                            response[key].append(subresponse)
-    elif isinstance(value, dict):
-        for k, v in item.items():
-            if isinstance(v, dict):
-                for k1, v1 in v.items():
-                    if 'ontologyTerm' in v1:
-                        element = {}
-                        element['id']=""
-                        element['label']=""
-                        response[key]=[]
-                        subresponse = {}
-                        subresponse[k]={}
-                        subresponse[k][k1]=element
-                        response[key].append(subresponse)
-                    elif '.json' in v1:
-                        element = subtypes(v1)
-                        response[key]=[]
-                        subresponse = {}
-                        subresponse[k]={}
-                        subresponse[k][k1]=element
-                        response[key].append(subresponse)
 
 
 def oneof_function(oneof_array):
@@ -304,6 +257,10 @@ def oneof_function(oneof_array):
                             nou_dict[clau]=0
                             if nou_dict not in nova_llista:
                                 nova_llista.append(nou_dict)
+                        elif 'string' in valor:
+                            nou_dict[clau]=""
+                            if nou_dict not in nova_llista:
+                                nova_llista.append(nou_dict)
             else:
                 if isinstance(v, dict):
                     new_dict={}
@@ -336,6 +293,8 @@ def oneof_function(oneof_array):
                         new_dict[k][key]=valornou
                     elif 'number' in value:
                         new_dict[k][key]=0
+                    elif 'string' in value:
+                        new_dict[k][key]=""
                     elif key == 'type':
                         pass
                     else:
@@ -363,6 +322,8 @@ def oneof_function(oneof_array):
                                 typed_dict[k][key][clau]=valor_nou
                             elif 'number' in valor:
                                 typed_dict[k][key][clau]=0
+                            elif 'string' in valor:
+                                typed_dict[k][key][clau]=""
                             elif clau == 'type':
                                 pass
                             else:
@@ -398,6 +359,8 @@ def oneof_function(oneof_array):
                                             typed_dict2[k][key][clau][ki]=valor_nou
                                         elif 'number' in vi:
                                             typed_dict2[k][key][clau][ki]=0
+                                        elif 'string' in vi:
+                                            typed_dict2[k][key][clau][ki]=""
                                         elif ki == 'type':
                                             pass
                                         else:
@@ -418,6 +381,252 @@ def oneof_function(oneof_array):
         
 
 
+new_response={}
+
+for key, value in response.items():
+    if isinstance(value, list):
+        new_list=[]
+        new_response[key]=[]
+        for item in value:
+            dicty={}
+            for k, v in item.items():
+                dicty[k]={}
+                if isinstance(v, dict):
+                    for k1, v1 in v.items():
+                        if k1 == 'oneOf':
+                            resposta = oneof_function(v1)
+                            dicty[k]=resposta
+                        else:
+                            dicty[k]=v
+                else:
+                    dicty[k]=v
+            if dicty not in new_list:
+                new_list.append(dicty)
+        for element in new_list:
+            new_response[key].append(element)
+    else:
+        new_response[key]=value
+
+
+def oneofunc(array):
+    new_array=[]
+    for item in array:
+        if 'ontologyTerm' in item:
+            new_item={}
+            new_item['id']=""
+            new_item['label']=""
+        elif 'Timestamp' in item:
+            new_item=""
+        else:
+            new_item = subtypes(item)
+        new_array.append(new_item)
+    new_array2=[]
+    for item in new_array:
+        dict_2={}
+        if isinstance(item, dict):
+            for k,v in item.items():
+                if 'string' in v:
+                    dict_2[k]=""
+                elif 'ontologyTerm' in v:
+                    dict_2[k]={}
+                    dict_2[k]["id"]=""
+                    dict_2[k]["label"]=""
+                elif '.json' in v:
+                    element=subtypes(v)
+                    dict_2[k]=element
+                elif 'integer' in v:
+                    dict_2[k]=0
+                elif 'type' in k:
+                    pass
+                else:
+                    dict_2[k]=v
+        new_array2.append(dict_2)
+    new_array3=[]
+    for item in new_array2:
+        dict_3={}
+        if isinstance(item, dict):
+            for k,v in item.items():
+                dict_3[k]={}
+                if isinstance(v, dict):
+                    for key, value in v.items():
+                        if 'string' in value:
+                            dict_3[k][key]=""
+                else:
+                    dict_3[k]=v
+        new_array3.append(dict_3)
+    new_array4=[]
+    for item in new_array3:
+        if item == {}:
+            new_array4.append("")
+        else:
+            new_array4.append(item)   
+
+    return new_array4    
+
+dict_final={}
+for key, value in new_response.items():
+    if isinstance(value, list):
+        dict_final[key]=value[0]
+    else:
+        dict_final[key]= value
+
+
+dict_defi={}
+
+for key, value in dict_final.items():
+    dict_defi[key]={}
+    if isinstance(value, dict):
+        for k, v in value.items():
+            if 'ontologyTerm' in v:
+                dict_defi[key][k]={}
+                dict_defi[key][k]["id"]=""
+                dict_defi[key][k]["label"]=""
+            elif '.json' in v:
+                element= subtypes(v)
+                dict_defi[key][k]=element
+            elif 'string' in v:
+                dict_defi[key][k]=""
+            elif 'boolean' in v:
+                dict_defi[key][k]=True
+            elif 'integer' in v:
+                dict_defi[key][k]=0
+            elif 'number' in v:
+                dict_defi[key][k]=0
+            elif isinstance(v, list):
+                dict_defi[key][k]=v
+            elif isinstance(v, dict):
+                dict_defi[key][k]={}
+                for k1, v1 in v.items():
+                    if k1 == 'oneOf':
+                        vnew=oneofunc(v1)
+                        dict_defi[key][k]=vnew
+                    elif 'ontologyTerm' in v1:
+                        dict_defi[key][k][k1]={}
+                        dict_defi[key][k][k1]["id"]=""
+                        dict_defi[key][k][k1]["label"]=""
+                    elif '.json' in v1:
+                        element= subtypes(v1)
+                        dict_defi[key][k][k1]=element
+                    elif 'string' in v1:
+                        dict_defi[key][k][k1]=""
+                    elif 'boolean' in v1:
+                        dict_defi[key][k][k1]=True
+                    elif 'integer' in v1:
+                        dict_defi[key][k][k1]=0
+                    elif 'number' in v1:
+                        dict_defi[key][k][k1]=0
+                    elif isinstance(v1, list):
+                        dict_defi[key][k][k1]=v1
+                    elif isinstance(v1, dict):
+                        dict_defi[key][k][k1]=v1
+
+
+age = subtypes('age.json')
+agerange = subtypes('ageRange.json')
+
+element=subtypes('measurement.json')
+
+
+
+def overtypes(element):
+    overtypes={}
+    for key, value in element.items():
+        if '.json' in value:
+            new_value=subtypes(value)
+            overtypes[key]=new_value
+        elif 'string' in value:
+            new_value=""
+            overtypes[key]=new_value
+        elif isinstance(value, dict):
+            new_value=""
+            for k, v in value.items():
+                if k == 'oneOf':
+                    if 'complexValue.json' in v:
+                        new_value=oneof_function(v)
+                    else:
+                        new_value=oneofunc(v)
+            if new_value != "":
+                overtypes[key]=new_value
+            else:
+                overtypes[key]=value
+        elif isinstance(value, list):
+            overtypes[key]=value                  
+    return overtypes
+
+element = overtypes(element)
+
+
+age = overtypes(age)
+
+element = overtypes(element)
+
+
+
+def dict_overtypes(element):
+    superovertypes={}
+    for key, value in element.items():
+        if isinstance(value, dict):
+            superovertypes[key]={}
+            for k, v in value.items():
+                if 'CURIE' in v:
+                    superovertypes[key][k]=''
+                elif 'string' in v:
+                    superovertypes[key][k]=''
+                elif '.json' in v:
+                    superovertypes[key][k]=subtypes(v)
+                elif 'oneOf' in k:
+                    superovertypes[key][k]=overtypes(v)
+        else:
+            superovertypes[key]=value
+    return superovertypes
+
+element = dict_overtypes(element)
+
+
+def super_overtypes(element):
+    superovertypes={}
+    for key, value in element.items():
+        if isinstance(value, dict):
+            superovertypes[key]={}
+            for k, v in value.items():
+                if isinstance(v, dict):
+                    superovertypes[key][k]={}
+                    for k1, v1 in v.items():
+                        if 'CURIE' in v1:
+                            superovertypes[key][k][k1]=""
+                        elif 'string' in v1:
+                            superovertypes[key][k][k1]=""
+                        elif '.json' in v1:
+                            superovertypes[key][k][k1]=subtypes(v1)
+                        elif 'oneOf' in k1:
+                            superovertypes[key][k][k1]=oneofunc(v1)
+        else:
+            superovertypes[key]=value
+    return superovertypes
+
+element = super_overtypes(element)
+
+
+
+
+
+
+print(oneofunc(['age.json', 'ageRange.json', 'gestationalAge.json', 'Timestamp', 'timeInterval.json', 'ontologyTerm.json']))
+
+
+
+
+
+
+#print(subtypes('timeInterval.json'))
+
+                            
+
+                        
+
+    
+                
+                        
 
 
 
@@ -455,7 +664,7 @@ def oneof_function(oneof_array):
 
             
 #print(dict_types)
-print(response)
+
 
 
 
