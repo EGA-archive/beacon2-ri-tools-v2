@@ -2,7 +2,7 @@ import json
 import xlwings as xw
    
 # Opening JSON file 
-f = open('runs.json',) 
+f = open('genomicVariations.json',) 
    
 # returns JSON object as  
 # a dictionary 
@@ -31,7 +31,25 @@ def data_types(data):
                         dict_types[key]['type']=v
                     elif k == '$ref':
                         dict_types[key]['type']={}
-                        if '.json' in v:
+                        if 'commonDefinitions' in v:
+                            v_splitted = v.split('/')
+                            for kcd, vcd in commonDefinitions.items():
+                                if kcd == v_splitted[-1]:
+                                    for kcd1, vcd1 in vcd.items():
+                                        if 'ontologyTerm' in vcd1:
+                                            dict_types[key]['type']='ontologyTerm.json'
+                                        elif kcd1 == 'type':
+                                            dict_types[key]['type']=vcd1
+                        elif 'beaconCommonComponents' in v:
+                            v_splitted = v.split('/')
+                            for kcd, vcd in commonComponents.items():
+                                if kcd == v_splitted[-1]:
+                                    for kcd1, vcd1 in vcd.items():
+                                        if 'ontologyTerm' in vcd1:
+                                            dict_types[key]['type']='ontologyTerm.json'
+                                        elif kcd1 == 'type':
+                                            dict_types[key]['type']=vcd1
+                        elif '.json' in v:
                             splitted_v=v.split('/')
                             dict_types[key]['type']=splitted_v[-1]
                         elif 'definitions' in v:
@@ -67,31 +85,13 @@ def data_types(data):
                                                             elif kx3 == 'type':
                                                                 dict_items['type']=vx3
                                                                 dict_types[key][kx2]=dict_items
-                        elif 'commonDefinitions' in v:  
-                            v_splitted = v.split('/')
-                            for kcd, vcd in commonDefinitions.items():
-                                if kcd == v_splitted[-1]:
-                                    for kcd1, vcd1 in vcd.items():
-                                        if 'ontologyTerm' in vcd1:
-                                            dict_types[key]['type']='ontologyTerm.json'
-                                        elif kcd1 == 'type':
-                                            dict_types[key]['type']=vcd1
-                        elif 'beaconCommonComponents' in v:
-                            v_splitted = v.split('/')
-                            for kcd, vcd in commonComponents.items():
-                                if kcd == v_splitted[-1]:
-                                    for kcd1, vcd1 in vcd.items():
-                                        if 'ontologyTerm' in vcd1:
-                                            dict_types[key]['type']='ontologyTerm.json'
-                                        elif kcd1 == 'type':
-                                            dict_types[key]['type']=vcd1
                     elif k == 'items':
                         for kcd, vcd in v.items():
                             if kcd == '$ref':
                                 if 'definitions' in vcd:
                                     list_of_definition_keys.append(key)
                                     vcd_splitted = vcd.split('/')
-                                    a = open('cohorts.json')
+                                    a = open('genomicVariations.json')
                                     data_a=json.load(a)
                                     for keyx, valuex in data_a.items():
                                         if keyx == 'definitions':
