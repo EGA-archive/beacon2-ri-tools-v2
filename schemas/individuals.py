@@ -2,7 +2,7 @@ import json
 import xlwings as xw
    
 # Opening JSON file 
-f = open('individuals.json',) 
+f = open('runs.json',) 
    
 # returns JSON object as  
 # a dictionary 
@@ -10,86 +10,145 @@ data = json.load(f)
    
 commonDefinitions = open('commondefinitions.json')
 commonDefinitions = json.load(commonDefinitions)
-
 commonComponents = open('beaconcommoncomponents.json')
 commonComponents = json.load(commonComponents)
 
-dict_types={}
 
 
-for kprinc, vprinc in data.items():
-    if kprinc == 'properties':
-        for key, value in vprinc.items():
-            dict_types[key]={}
-            for k, v in value.items():
-                if k == "type":
-                    dict_types[key]['type']=v
-                elif k == '$ref':
-                    dict_types[key]['type']={}
-                    if 'commonDefinitions' in v:
-                        v_splitted = v.split('/')
-                        for kcd, vcd in commonDefinitions.items():
-                            if kcd == v_splitted[-1]:
-                                for kcd1, vcd1 in vcd.items():
-                                    if 'ontologyTerm' in vcd1:
-                                        dict_types[key]['type']='ontologyTerm.json'
-                                    elif kcd1 == 'type':
-                                        dict_types[key]['type']=vcd1
-                    elif 'beaconCommonComponents' in v:
-                        v_splitted = v.split('/')
-                        for kcd, vcd in commonComponents.items():
-                            if kcd == v_splitted[-1]:
-                                for kcd1, vcd1 in vcd.items():
-                                    if 'ontologyTerm' in vcd1:
-                                        dict_types[key]['type']='ontologyTerm.json'
-                                    elif kcd1 == 'type':
-                                        dict_types[key]['type']=vcd1
-                elif k == 'items':
-                    for kcd, vcd in v.items():
-                        if kcd == '$ref':
-                            vcd_splitted = vcd.split('/')
-                            dict_types[key]['items']=vcd_splitted[-1]
-                            vcd_file = open(vcd_splitted[-1])
-                            data_vcd = json.load(vcd_file) 
-                            for keyv, itemv in data_vcd.items():
-                                if keyv == 'properties':
-                                    vcd_dict = itemv
-                                elif keyv == 'required':
-                                    dict_types[key]['required']=itemv
-                                    #print(vcd_dict)
-                            for key2, item2 in vcd_dict.items():
-                                for keyd, itemd in item2.items():
-                                    if keyd == "type":
-                                        if itemd=='array':
-                                            pass
-                                        else:
+def data_types(data):
+    commonDefinitions = open('commondefinitions.json')
+    commonDefinitions = json.load(commonDefinitions)
+    commonComponents = open('beaconcommoncomponents.json')
+    commonComponents = json.load(commonComponents)
+    dict_types={}
+    list_of_definition_keys=[]
+    for kprinc, vprinc in data.items():
+        if kprinc == 'properties':
+            for key, value in vprinc.items():
+                dict_types[key]={}
+                for k, v in value.items():
+                    if k == "type":
+                        dict_types[key]['type']=v
+                    elif k == '$ref':
+                        dict_types[key]['type']={}
+                        if '.json' in v:
+                            splitted_v=v.split('/')
+                            dict_types[key]['type']=splitted_v[-1]
+                        elif 'definitions' in v:
+                            list_of_definition_keys.append(key)
+                            splitted_v=v.split('/')
+                            a = open('cohorts.json')
+                            data_a=json.load(a)
+                            for keyx, valuex in data_a.items():
+                                if keyx == 'definitions':
+                                    for kx,vx in valuex.items():
+                                        if kx == splitted_v[-1]:
+                                            for kx1, vx1 in vx.items():
+                                                if kx1 == 'items':
+                                                    for kx2, vx2 in vx1.items():
+                                                        if '.json' in vx2:
+                                                            vx2_splitted = vx2.split('/')
+                                                            dict_types[key]['items']=vx2_splitted[-1]
+                                                elif kx1 == 'type':
+                                                    dict_types[key]['type']=vx1
+                                                elif kx1 == 'properties':
+                                                    for kx2, vx2 in vx1.items():
+                                                        for kx3, vx3 in vx2.items():
+                                                            if kx3 == '$ref':
+                                                                vx3_splitted = vx3.split('/')
+                                                                dict_types[key][kx2]=vx3_splitted[-1]
+                                                            elif kx3 == 'items':
+                                                                for kx4, vx4 in vx3.items():
+                                                                    if '.json' in vx4:
+                                                                        vx4_splitted = vx4.split('/')
+                                                                        dict_items={}
+                                                                        dict_items['items']=vx4_splitted[-1]
+                                                                        dict_types[key][kx2]=dict_items
+                                                            elif kx3 == 'type':
+                                                                dict_items['type']=vx3
+                                                                dict_types[key][kx2]=dict_items
+                        elif 'commonDefinitions' in v:  
+                            v_splitted = v.split('/')
+                            for kcd, vcd in commonDefinitions.items():
+                                if kcd == v_splitted[-1]:
+                                    for kcd1, vcd1 in vcd.items():
+                                        if 'ontologyTerm' in vcd1:
+                                            dict_types[key]['type']='ontologyTerm.json'
+                                        elif kcd1 == 'type':
+                                            dict_types[key]['type']=vcd1
+                        elif 'beaconCommonComponents' in v:
+                            v_splitted = v.split('/')
+                            for kcd, vcd in commonComponents.items():
+                                if kcd == v_splitted[-1]:
+                                    for kcd1, vcd1 in vcd.items():
+                                        if 'ontologyTerm' in vcd1:
+                                            dict_types[key]['type']='ontologyTerm.json'
+                                        elif kcd1 == 'type':
+                                            dict_types[key]['type']=vcd1
+                    elif k == 'items':
+                        for kcd, vcd in v.items():
+                            if kcd == '$ref':
+                                if 'definitions' in vcd:
+                                    list_of_definition_keys.append(key)
+                                    vcd_splitted = vcd.split('/')
+                                    a = open('cohorts.json')
+                                    data_a=json.load(a)
+                                    for keyx, valuex in data_a.items():
+                                        if keyx == 'definitions':
+                                            for kx,vx in valuex.items():
+                                                if kx == vcd_splitted[-1]:
+                                                    data_vcd = vx
+                                else:
+                                    vcd_splitted = vcd.split('/')
+                                    dict_types[key]['items']=vcd_splitted[-1]
+                                    vcd_file = open(vcd_splitted[-1])
+                                    data_vcd = json.load(vcd_file) 
+                                for keyv, itemv in data_vcd.items():
+                                    if keyv == 'properties':
+                                        vcd_dict = itemv
+                                    elif keyv == 'required':
+                                        dict_types[key]['required']=itemv
+                                for key2, item2 in vcd_dict.items():
+                                    for keyd, itemd in item2.items():
+                                        if keyd == "type":
+                                            if itemd=='array':
+                                                pass
+                                            else:
+                                                dict_types[key][key2]=itemd
+                                        elif keyd == "items":
+                                            if isinstance(itemd, dict):
+                                                for ki, vi in itemd.items():
+                                                    if ki =='$ref':
+                                                        dict_types[key][key2]={}
+                                                        vi_splitted = vi.split('/')
+                                                        dict_types[key][key2]['arraytype']=vi_splitted[-1]
+                                        elif keyd == '$ref':
+                                            if '.json' in itemd:
+                                                item_splitted = itemd.split('/')
+                                                dict_types[key][key2]=item_splitted[-1]
+                                            elif 'commonDefinitions' in itemd:
+                                                v_splitted = itemd.split('/')
+                                                for kcd, vcd in commonDefinitions.items():
+                                                    if kcd == v_splitted[-1]:
+                                                        for kcd1, vcd1 in vcd.items():
+                                                            if 'ontologyTerm' in vcd1:
+                                                                dict_types[key][key2]='ontologyTerm.json'
+                                                            elif kcd1 == 'type':
+                                                                dict_types[key][key2]=vcd1
+                                        elif 'oneOf' in keyd:
                                             dict_types[key][key2]=itemd
-                                    elif keyd == "items":
-                                        if isinstance(itemd, dict):
-                                            for ki, vi in itemd.items():
-                                                if ki =='$ref':
-                                                    dict_types[key][key2]={}
-                                                    vi_splitted = vi.split('/')
-                                                    dict_types[key][key2]['arraytype']=vi_splitted[-1]
-                                    elif keyd == '$ref':
-                                        if '.json' in itemd:
-                                            item_splitted = itemd.split('/')
-                                            dict_types[key][key2]=item_splitted[-1]
-                                        elif 'commonDefinitions' in itemd:
-                                            v_splitted = itemd.split('/')
-                                            for kcd, vcd in commonDefinitions.items():
-                                                if kcd == v_splitted[-1]:
-                                                    for kcd1, vcd1 in vcd.items():
-                                                        if 'ontologyTerm' in vcd1:
-                                                            dict_types[key][key2]='ontologyTerm.json'
-                                                        elif kcd1 == 'type':
-                                                            dict_types[key][key2]=vcd1
-                                    elif 'oneOf' in keyd:
-                                        dict_types[key][key2]=itemd
-    elif kprinc == 'required':
-        dict_types[kprinc]=vprinc
+        elif kprinc == 'required':
+            dict_types[kprinc]=vprinc
+        dictio_return={}
+        dictio_return['dict_types']=dict_types
+        dictio_return['list']=list_of_definition_keys
+    return dictio_return
 
-        
+returned = data_types(data)
+dict_types=returned['dict_types']
+list_of_definition_keys=returned['list']
+
+
 
 
 
@@ -175,55 +234,7 @@ def subtypes(file):
                     if kval == '$ref':
                         vval_splitted = vval.split('/')
                         subdict['oneOf'].append(vval_splitted[-1])
-
-        
-
-
-
-    
-
-
-
     return subdict
-
-subdict = subtypes('pedigree.json')
-
-#print(subdict)
-
-response = {}
-
-for key, value in dict_types.items():
-    if key != 'required':
-        for k, v in value.items():
-            if k == 'type':
-                if v == 'string':
-                    response[key]=""
-                elif v == 'array':
-                    response[key]=[]
-                elif v == 'object':
-                    response[key]={}
-                elif v == 'ontologyTerm.json':
-                    response[key]={}
-
-
-
-for key, value in dict_types.items():
-    if key != 'required':
-        for k, v in value.items():
-            if k != 'required':
-                if k == 'items':
-                    element = subtypes(v)
-                    if isinstance(response[key], list):
-                        response[key].append(element)
-                    elif isinstance(response[key], dict):
-                        response[key][k]={}
-                elif k == 'type':
-                    if 'ontologyTerm' in v:
-                        response[key]={}
-                        response[key]['id']=""
-                        response[key]['label']=""
-
-
 
 def oneof_function(oneof_array):
     list_oneof=[]
@@ -378,36 +389,6 @@ def oneof_function(oneof_array):
     return llista_final
 
 
-        
-
-
-new_response={}
-
-for key, value in response.items():
-    if isinstance(value, list):
-        new_list=[]
-        new_response[key]=[]
-        for item in value:
-            dicty={}
-            for k, v in item.items():
-                dicty[k]={}
-                if isinstance(v, dict):
-                    for k1, v1 in v.items():
-                        if k1 == 'oneOf':
-                            resposta = oneof_function(v1)
-                            dicty[k]=resposta
-                        else:
-                            dicty[k]=v
-                else:
-                    dicty[k]=v
-            if dicty not in new_list:
-                new_list.append(dicty)
-        for element in new_list:
-            new_response[key].append(element)
-    else:
-        new_response[key]=value
-
-
 def oneofunc(array):
     new_array=[]
     for item in array:
@@ -462,68 +443,6 @@ def oneofunc(array):
             new_array4.append(item)   
 
     return new_array4    
-
-dict_final={}
-for key, value in new_response.items():
-    if isinstance(value, list):
-        dict_final[key]=value[0]
-    else:
-        dict_final[key]= value
-
-
-dict_defi={}
-
-for key, value in dict_final.items():
-    dict_defi[key]={}
-    if isinstance(value, dict):
-        for k, v in value.items():
-            if 'ontologyTerm' in v:
-                dict_defi[key][k]={}
-                dict_defi[key][k]["id"]=""
-                dict_defi[key][k]["label"]=""
-            elif '.json' in v:
-                element= subtypes(v)
-                dict_defi[key][k]=element
-            elif 'string' in v:
-                dict_defi[key][k]=""
-            elif 'boolean' in v:
-                dict_defi[key][k]=True
-            elif 'integer' in v:
-                dict_defi[key][k]=0
-            elif 'number' in v:
-                dict_defi[key][k]=0
-            elif isinstance(v, list):
-                dict_defi[key][k]=v
-            elif isinstance(v, dict):
-                dict_defi[key][k]={}
-                for k1, v1 in v.items():
-                    if k1 == 'oneOf':
-                        vnew=oneofunc(v1)
-                        dict_defi[key][k]=vnew
-                    elif 'ontologyTerm' in v1:
-                        dict_defi[key][k][k1]={}
-                        dict_defi[key][k][k1]["id"]=""
-                        dict_defi[key][k][k1]["label"]=""
-                    elif '.json' in v1:
-                        element= subtypes(v1)
-                        dict_defi[key][k][k1]=element
-                    elif 'string' in v1:
-                        dict_defi[key][k][k1]=""
-                    elif 'boolean' in v1:
-                        dict_defi[key][k][k1]=True
-                    elif 'integer' in v1:
-                        dict_defi[key][k][k1]=0
-                    elif 'number' in v1:
-                        dict_defi[key][k][k1]=0
-                    elif isinstance(v1, list):
-                        dict_defi[key][k][k1]=v1
-                    elif isinstance(v1, dict):
-                        dict_defi[key][k][k1]=v1
-
-
-age = subtypes('age.json')
-agerange = subtypes('ageRange.json')
-
 
 
 
@@ -640,49 +559,7 @@ def megaovertypes(element):
     return superovertypes
 
 
-
-
-
-
-#print(oneofunc(['age.json', 'ageRange.json', 'gestationalAge.json', 'Timestamp', 'timeInterval.json', 'ontologyTerm.json']))
-
-
-
-
-
-
-#print(subtypes('timeInterval.json'))
-
-                            
-
-                        
-
-    
-                
-                        
-
-
-
-
-                            
-
-
-
-
-
-        
-
-
-
-
-
-
-            
-#print(dict_types)
-
-
-
-                
+          
 
 
 
@@ -750,51 +627,126 @@ def treatment():
     element=megaovertypes(element)
     return element
     
-#print(treatment())
-            
-#print(dict_types)
 
 finaldict={}
 
+#print(dict_types)
+
 for key, value in dict_types.items():
-    items_dict={}
-    if isinstance(value, dict):
-        for k, v in value.items():
-            if k == 'items':
-                if 'disease' in v:
-                    items_dict = disease()
-                elif 'measure' in v:
-                    items_dict = measure()
-                elif 'ontologyTerm' in v:
-                    items_dict = ontologyTerm()
-                elif 'exposure' in v:
-                    items_dict = exposure()
-                elif 'procedure' in v:
-                    items_dict = procedure()
-                elif 'pedigree' in v:
-                    items_dict = pedigree()
-                elif 'phenotypicFeature' in v:
-                    items_dict = phenotypicFeature()
-                elif 'evidence' in v:
-                    items_dict = evidence()
-                elif 'treatment' in v:
-                    items_dict = treatment()
-            elif k == 'type':
-                if v == 'array':
-                    list_of_items=[]
-                    list_of_items.append(items_dict)
-                    finaldict[key]=list_of_items
-                elif 'ontologyTerm' in v:
-                    items_dict=ontologyTerm()
-                    finaldict[key]=items_dict
+    if key not in list_of_definition_keys:
+        items_dict={}
+        if isinstance(value, dict):
+            for k,v in sorted(value.items()):
+                if k == 'items':
+                    if 'disease' in v:
+                        items_dict = disease()
+                    elif 'measure' in v:
+                        items_dict = measure()
+                    elif 'ontologyTerm' in v:
+                        items_dict = ontologyTerm()
+                    elif 'exposure' in v:
+                        items_dict = exposure()
+                    elif 'procedure' in v:
+                        items_dict = procedure()
+                    elif 'pedigree' in v:
+                        items_dict = pedigree()
+                    elif 'phenotypicFeature' in v:
+                        items_dict = phenotypicFeature()
+                    elif 'evidence' in v:
+                        items_dict = evidence()
+                    elif 'treatment' in v:
+                        items_dict = treatment()
+                elif k == 'type':
+                    if v == 'array':
+                        list_of_items=[]
+                        list_of_items.append(items_dict)
+                        finaldict[key]=list_of_items
+                    elif 'ontologyTerm' in v:
+                        items_dict=ontologyTerm()
+                        finaldict[key]=items_dict
+                    elif 'object' in v:
+                        items_dict={}
+                        finaldict[key]=items_dict
+                    elif 'string' in v:
+                        finaldict[key]=''
+    elif key in list_of_definition_keys:
+        finaldict[key]={}
+        items_dict={}
+        if isinstance(value, dict):
+            for k,v in sorted(value.items()):
+                if k == 'items':
+                    if 'ontologyTerm' in v:
+                        finaldict[key]=ontologyTerm()
+                elif 'integer' in v:
+                        finaldict[key][k]=0
                 elif 'object' in v:
-                    items_dict={}
-                    finaldict[key]=items_dict
-                elif 'string' in v:
-                    finaldict[key]=''
+                        finaldict[key][k]={}
+                        finaldict[key][k]['availability']=True
+                        finaldict[key][k]['availabilityCount']=0
+                        finaldict[key][k]['distribution']={}
+                elif isinstance(v, dict):
+                    for k1, v1 in v.items():
+                        if k1 == 'items':
+                            if 'ontologyTerm' in v1:
+                                items_dict = ontologyTerm()
+                            elif '.json' in v1:
+                                if 'disease' in v1:
+                                    items_dict = disease()
+                                elif 'measure' in v1:
+                                    items_dict = measure()
+                                elif 'ontologyTerm' in v1:
+                                    items_dict = ontologyTerm()
+                                elif 'exposure' in v1:
+                                    items_dict = exposure()
+                                elif 'procedure' in v1:
+                                    items_dict = procedure()
+                                elif 'pedigree' in v1:
+                                    items_dict = pedigree()
+                                elif 'phenotypicFeature' in v1:
+                                    items_dict = phenotypicFeature()
+                                elif 'evidence' in v1:
+                                    items_dict = evidence()
+                                elif 'treatment' in v1:
+                                    items_dict = treatment()
+                            elif 'integer' in v1:
+                                items_dict = 0
+                            elif 'string' in v1:
+                                items_dict = ""
+                            elif 'Ethnicity' in v1:
+                                items_dict = {}
+                                items_dict['id']=""
+                                items_dict['label']=""
+                            elif 'Sex' in v1:
+                                items_dict = {}
+                                items_dict['id']=""
+                                items_dict['label']=""
+                            elif 'GeographicLocation' in v1:
+                                items_dict = {}
+                                items_dict['id']=""
+                                items_dict['label']=""
+                        elif k1 == 'type':
+                            if v1 == 'array':
+                                list_of_items=[]
+                                list_of_items.append(items_dict)
+                                finaldict[key][k]=list_of_items
+                            elif 'ontologyTerm' in v:
+                                items_dict=ontologyTerm()
+                                finaldict[key][k]=items_dict
+                            elif 'object' in v:
+                                items_dict={}
+                                finaldict[key][k]=items_dict
+                            elif 'string' in v:
+                                finaldict[key][k]=''
+
+
+print(finaldict)
+                    
+
+
+
+
             
 
-#print(finaldict)
 
 list_of_excel_items=[]
 for key, value in finaldict.items():
@@ -852,8 +804,10 @@ for key, value in finaldict.items():
         new_item = key
         list_of_excel_items.append(new_item)
 
-print(list_of_excel_items) 
 
+
+#print(list_of_excel_items) 
+'''
 wb = xw.Book('individuals.xlsx')
 
 sheet = wb.sheets['Sheet1']
@@ -869,7 +823,7 @@ list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 print(len(list_of_excel_items))
 print(len(list_columns))
 
-'''
+
 
 i=0
 for element in list_of_excel_items:
