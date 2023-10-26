@@ -852,7 +852,7 @@ for key, value in finaldict.items():
         new_item = key
         list_of_excel_items.append(new_item)
 
-print(list_of_excel_items) 
+#print(list_of_excel_items) 
 
 wb = xw.Book('individuals.xlsx')
 
@@ -866,18 +866,120 @@ list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
                 'EA', 'EE', 'EE', 'EE', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
 ]
 
-print(len(list_of_excel_items))
-print(len(list_columns))
-
-'''
 
 i=0
+dict_of_properties={}
 for element in list_of_excel_items:
-    number_sheet = list_columns[i]+str(1)
-    sheet[number_sheet].value = element
+    property = list_columns[i]+str(1)
+    property_value = sheet[property].value
+    number_sheet = list_columns[i]+str(2)
+    valor = sheet[number_sheet].value
+    if valor:
+        dict_of_properties[property_value]=valor
     i+=1
-'''
 
+
+definitivedict={}
+for key, value in finaldict.items():
+    if isinstance(value, list):
+        value_list=[]
+        for item in value:
+            if isinstance(item, dict):
+                item_dict={}
+                for ki, vi in item.items():
+                    if isinstance(vi, list):
+                        vi_list=[]
+                        for subitem in vi:
+                            if isinstance(subitem, dict):
+                                for k, v in subitem.items():
+                                    if isinstance(v, dict):
+                                        for k1, v1 in v.items():
+                                            if isinstance(v1, dict):
+                                                for k2, v2 in v1.items():
+                                                    if isinstance(v2, dict): 
+                                                        for k3, v3 in v2.items():
+                                                            new_item = ""
+                                                            new_item = key + "_" + ki + "_" + k + "_" + k1 + "_" + k2 + "_" + k3
+                                                            for propk, propv in dict_of_properties.items():
+                                                                if propk == new_item:
+                                                                    subitem_dict={}
+                                                                    subitem_dict[k]={}
+                                                                    subitem_dict[k][k1]={}
+                                                                    subitem_dict[k][k1][k2]={}
+                                                                    subitem_dict[k][k1][k2][k3]=propv
+                                                    else:
+                                                        new_item = ""
+                                                        new_item = key + "_" + ki + "_" + k + "_" + k1 + "_" + k2
+                                                        for propk, propv in dict_of_properties.items():
+                                                            if propk == new_item:
+                                                                subitem_dict={}
+                                                                subitem_dict[k]={}
+                                                                subitem_dict[k][k1]={}
+                                                                subitem_dict[k][k1][k2]=propv                                      
+                                            else:
+                                                new_item = ""
+                                                new_item = key + "_" + ki + "_" + k + "_" + k1
+                                                for propk, propv in dict_of_properties.items():
+                                                    if propk == new_item:
+                                                        subitem_dict={}
+                                                        subitem_dict[k]={}
+                                                        subitem_dict[k][k1]=propv    
+                                    else:
+                                        new_item = ""
+                                        new_item = key + "_" + ki + "_" + k
+                                        for propk, propv in dict_of_properties.items():
+                                            if propk == new_item:
+                                                subitem_dict={}
+                                                subitem_dict[k]=propv
+                                if subitem_dict not in vi_list:
+                                    vi_list.append(subitem_dict)
+                        item_dict[ki]=vi_list
+                    elif isinstance(vi, dict):
+                        for ki1, vi1 in vi.items():
+                            if isinstance(vi1, dict):
+                                for ki2, vi2 in vi1.items():
+                                    new_item = ""
+                                    new_item = key + "_" + ki + "_" + ki1 + "_" + ki2
+                                    for propk, propv in dict_of_properties.items():
+                                        if propk == new_item:
+                                            vi_dict={}
+                                            vi_dict[ki1]={}
+                                            vi_dict[ki1][ki2]=propv
+                                    item_dict[ki]=vi_dict    
+                            else:
+                                new_item = ""
+                                new_item = key + "_" + ki + "_" + ki1
+                                for propk, propv in dict_of_properties.items():
+                                    if propk == new_item:
+                                        vi_dict={}
+                                        vi_dict[ki1]=propv 
+                                item_dict[ki]=vi_dict      
+                    else:
+                        new_item = ""
+                        new_item = key + "_" + ki
+                        for propk, propv in dict_of_properties.items():
+                            if propk == new_item:
+                                item_dict[ki]=propv
+                    if item_dict not in value_list:
+                        value_list.append(item_dict)
+                definitivedict[key]=value_list       
+    elif isinstance(value, dict):
+        value_dict={}
+        for kd, vd in value.items():
+            new_item = ""
+            new_item = key + "_" + kd
+            for propk, propv in dict_of_properties.items():
+                if propk == new_item:
+                    value_dict[kd]=propv
+                    definitivedict[key]=value_dict
+    else:
+        new_item = ""
+        new_item = key
+        for propk, propv in dict_of_properties.items():
+            if propk == new_item:
+                definitivedict[key]=propv
+
+print(definitivedict)
    
 # Closing file 
 f.close() 
