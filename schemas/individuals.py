@@ -1,8 +1,9 @@
 import json
 import xlwings as xw
-   
+
+file_to_open='genomicVariations.json'
 # Opening JSON file 
-f = open('genomicVariations.json',) 
+f = open(file_to_open,) 
    
 # returns JSON object as  
 # a dictionary 
@@ -55,7 +56,7 @@ def data_types(data):
                         elif 'definitions' in v:
                             list_of_definition_keys.append(key)
                             splitted_v=v.split('/')
-                            a = open('cohorts.json')
+                            a = open(file_to_open)
                             data_a=json.load(a)
                             for keyx, valuex in data_a.items():
                                 if keyx == 'definitions':
@@ -83,15 +84,34 @@ def data_types(data):
                                                                         dict_items['items']=vx4_splitted[-1]
                                                                         dict_types[key][kx2]=dict_items
                                                             elif kx3 == 'type':
-                                                                dict_items['type']=vx3
-                                                                dict_types[key][kx2]=dict_items
+                                                                try:
+                                                                    dict_items['type']=vx3
+                                                                    dict_types[key][kx2]=dict_items
+                                                                except UnboundLocalError:
+                                                                    dict_types[key][kx2]=vx3
+                                                if isinstance(vx1, dict):
+                                                    for kx2, vx2 in vx1.items():
+                                                        if isinstance(vx2,dict):
+                                                            
+                                                            for kx3, vx3 in vx2.items():
+                                                                if 'items' in kx3:
+                                                                    v_to_split = vx2['items']
+                                                                    for kts, vts in v_to_split.items():
+                                                                        if kts == '$ref':
+                                                                            if isinstance(vts, str):
+                                                                                vts_splitted = vts.split('/')
+                                                                                if '.json' in vts_splitted[-1]:
+                                                                                    dict_types[key]['items']=vts_splitted[-1]
+                                                                                else:
+                                                                                    dict_types[key]['arraytype']=vts_splitted[-1]
+                                                                        else:
+                                                                            dict_types[key]['items']=v_to_split
                     elif k == 'items':
                         for kcd, vcd in v.items():
                             if kcd == '$ref':
                                 if 'definitions' in vcd:
-                                    list_of_definition_keys.append(key)
                                     vcd_splitted = vcd.split('/')
-                                    a = open('genomicVariations.json')
+                                    a = open(file_to_open)
                                     data_a=json.load(a)
                                     for keyx, valuex in data_a.items():
                                         if keyx == 'definitions':
@@ -146,6 +166,7 @@ def data_types(data):
 
 returned = data_types(data)
 dict_types=returned['dict_types']
+
 list_of_definition_keys=returned['list']
 
 
@@ -629,14 +650,15 @@ def treatment():
     
 
 finaldict={}
-
+#print('-------------')
 #print(dict_types)
 
 for key, value in dict_types.items():
     if key not in list_of_definition_keys:
         items_dict={}
+        list_of_items=[]
         if isinstance(value, dict):
-            for k,v in sorted(value.items()):
+            for k,v in sorted(value.items()):              
                 if k == 'items':
                     if 'disease' in v:
                         items_dict = disease()
@@ -658,7 +680,6 @@ for key, value in dict_types.items():
                         items_dict = treatment()
                 elif k == 'type':
                     if v == 'array':
-                        list_of_items=[]
                         list_of_items.append(items_dict)
                         finaldict[key]=list_of_items
                     elif 'ontologyTerm' in v:
@@ -679,12 +700,15 @@ for key, value in dict_types.items():
                         finaldict[key]=ontologyTerm()
                 elif 'integer' in v:
                         finaldict[key][k]=0
+                elif 'string' in v:
+                        finaldict[key][k]=''
                 elif 'object' in v:
                         finaldict[key][k]={}
                         finaldict[key][k]['availability']=True
                         finaldict[key][k]['availabilityCount']=0
                         finaldict[key][k]['distribution']={}
                 elif isinstance(v, dict):
+                    finaldict[key][k]={}
                     for k1, v1 in v.items():
                         if k1 == 'items':
                             if 'ontologyTerm' in v1:
@@ -737,10 +761,53 @@ for key, value in dict_types.items():
                                 finaldict[key][k]=items_dict
                             elif 'string' in v:
                                 finaldict[key][k]=''
+                        elif k1 == 'arraytype':
+                            b = open(file_to_open)
+                            data_b=json.load(b)
+                            for kb, vb in data_b.items():
+                                if kb == 'definitions':
+                                    definitions_dict=vb   
+                            for kd, vd in definitions_dict.items():
+                                if kd == v1:
+                                    arraydict = vd
+                            for ka, va in arraydict.items():
+                                if ka == 'properties':
+                                    propertiesdict=va
+                            for kp, vp in propertiesdict.items():
+                                finaldict[key][k][kp]={}
+                                for kp1, vp1 in vp.items():
+                                    if kp1 == 'type':
+                                        if vp1 == 'string':
+                                            finaldict[key][k][kp]=''
+                                        elif vp1 == 'number':
+                                            finaldict[key][k][kp]=0
+                                    elif kp1 == '$ref':
+                                        if 'ontologyTerm' in vp1:
+                                            finaldict[key][k][kp]=ontologyTerm()
+                                        elif 'definitions' in vp1:
+                                            vp1_splitted = vp1.split('/')
+                                            c = open(file_to_open)
+                                            data_c=json.load(c)
+                                            for kbc, vbc in data_c.items():
+                                                if kbc == 'definitions':
+                                                    definitions_dictc=vbc   
+                                            for kdc, vdc in definitions_dictc.items():
+                                                if kdc == vp1_splitted[-1]:
+                                                    arraydictc = vdc
+                                            for kac, vac in arraydictc.items():
+                                                if kac == 'properties':
+                                                    propertiesdictc=vac
+                                            for kpc, vpc in propertiesdictc.items():
+                                                for kpc1, vpc1 in vpc.items():
+                                                    if kpc1 == 'type':
+                                                        if vpc1 == 'string':
+                                                            finaldict[key][k][kp][kpc]=''
+                                                        elif vpc1 == 'object':
+                                                            finaldict[key][k][kp][kpc]={}
 
 
-print(finaldict)
-                    
+
+print(finaldict)   
 
 
 
