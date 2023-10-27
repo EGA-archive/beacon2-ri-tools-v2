@@ -3,6 +3,7 @@ import xlwings as xw
 
 collection = 'genomicVariations'
 file_to_open= collection + '.json'
+num_registries = 4
 # Opening JSON file 
 new_file = open(file_to_open,) 
    
@@ -476,6 +477,9 @@ for k, v in dict_properties.items():
                         new_list.append(vl)
             dict_properties[k]=new_list[0]
 
+#print(dict_properties)
+
+
 for key, value in dict_properties.items():
     if isinstance(value, dict):
         for k, v in value.items():
@@ -500,8 +504,6 @@ for key, value in dict_properties.items():
                                 new_list.append(vl)
                                 dict_properties[key][k]=new_list
 
-
-#print(dict_definitions)
 
 list_of_definitions_required=[]
 list_of_properties_required=[]
@@ -581,15 +583,22 @@ for key, value in dict_properties.items():
                         else:
                             new_item = ""
                             new_item = key + "_" + kd + "_" + kd1
-                            list_of_excel_items.append(new_item)  
+                            list_of_excel_items.append(new_item)
                 else:
                     new_item = ""
                     new_item = key + "_" + kd
-                    list_of_excel_items.append(new_item)
+                    list_of_excel_items.append(new_item)  
+            else:
+                new_item = ""
+                new_item = key + "_" + kd
+                list_of_excel_items.append(new_item)
+
     else:
         new_item = ""
         new_item = key
         list_of_excel_items.append(new_item)
+
+
 
 
 
@@ -609,12 +618,16 @@ list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 
 
 '''
+print(list_of_excel_items)
+
 i=0
 for element in list_of_excel_items:
     number_sheet = list_columns[i]+str(1)
     sheet[number_sheet].value = element
     i+=1
 '''
+
+
 
 dict_of_properties={}
 list_of_filled_items=[]
@@ -623,9 +636,9 @@ total_dict =[]
 k=0
 j=2
 print(len(list_of_excel_items))
-while j < 4:
+while j < num_registries:
     i=1
-    while i <72:
+    while i <(len(list_of_excel_items)+2):
         
         property = list_columns[i]+str(1)
         property_value = sheet[property].value
@@ -650,6 +663,13 @@ while j < 4:
                                 h2 = h2[0].lower() + h2[1:]
                                 if h2 not in list_of_properties_required:
                                     list_of_properties_required.append(h2)
+        for filled_item in list_of_filled_items:
+            if isinstance(filled_item, str): 
+                if 'variation' in filled_item:
+                    try:
+                        list_of_properties_required.remove('variation')
+                    except Exception:
+                        pass
         if valor:
             dict_of_properties[property_value]=valor
         i +=1
@@ -658,10 +678,9 @@ while j < 4:
 
     for lispro in list_of_properties_required:
         if lispro not in list_of_filled_items:
-            print('error: you are not filling all the required fields. missing field is: {}'.format(lispro))
-            break
+            raise Exception(('error: you are not filling all the required fields. missing field is: {}').format(lispro))
+            
 
-    
     
 
 
@@ -718,9 +737,11 @@ while j < 4:
                                                     subitem_dict={}
                                                     subitem_dict[k]=propv
                                                     if subitem_dict != {}:
-                                                        vi_list.append(subitem_dict)
+                                                        if subitem_dict not in vi_list:
+                                                            vi_list.append(subitem_dict)
                                                         item_dict[ki]=vi_list[0]
                         elif isinstance(vi, dict):
+                            vi_dict={}
                             for ki1, vi1 in vi.items():
                                 if isinstance(vi1, dict):
                                     for ki2, vi2 in vi1.items():
@@ -738,9 +759,10 @@ while j < 4:
                                     new_item = key + "_" + ki + "_" + ki1
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
-                                            vi_dict={}
+                                            print(propv)
                                             vi_dict[ki1]=propv 
-                                            item_dict[ki]=vi_dict      
+                                            print(vi_dict)
+                                            item_dict[ki]=vi_dict
                         else:
                             new_item = ""
                             new_item = key + "_" + ki
@@ -773,21 +795,36 @@ while j < 4:
                                 new_item = key + "_" + kd + "_" + kd1
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
-                                        value_dict[kd]={}
-                                        value_dict[kd][kd1]=propv
+                                        if ',' in propv:
+                                            propv_splitted = propv.split(',')
+                                            for itemsplitted in propv:
+                                                value_dict[kd]={}
+                                                value_dict[kd][kd1]=propv_splitted
+                                                if value_dict not in vd_list:
+                                                    vd_list.append(value_dict)
+                                        else:
+                                            value_dict[kd]={}
+                                            value_dict[kd][kd1]=propv
                             
                             if value_dict != {}:
-                                vd_list.append(value_dict)
+                                if value_dict not in vd_list:
+                                    vd_list.append(value_dict)
                         if vd_list != []:
-                            print(vd_list)
                             definitivedict[key]=vd_list
-                    else:
-                        new_item = ""
-                        new_item = key + "_" + kd
-                        for propk, propv in dict_of_properties.items():
-                            if propk == new_item:
-                                value_dict[kd]=propv
-                                definitivedict[key]=value_dict
+                else:
+                    new_item = ""
+                    new_item = key + "_" + kd
+                    for propk, propv in dict_of_properties.items():
+                        if propk == new_item:
+                            value_dict[kd]=propv
+                            definitivedict[key]=value_dict
+            else:
+                new_item = ""
+                new_item = key + "_" + kd
+                for propk, propv in dict_of_properties.items():
+                    if propk == new_item:
+                        value_dict[kd]=propv
+                        definitivedict[key]=value_dict
         else:
             new_item = ""
             new_item = key
