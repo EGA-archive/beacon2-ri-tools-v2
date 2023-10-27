@@ -759,9 +759,7 @@ while j < num_registries:
                                     new_item = key + "_" + ki + "_" + ki1
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
-                                            print(propv)
                                             vi_dict[ki1]=propv 
-                                            print(vi_dict)
                                             item_dict[ki]=vi_dict
                         else:
                             new_item = ""
@@ -773,7 +771,56 @@ while j < num_registries:
                             if item_dict not in value_list:
                                 value_list.append(item_dict)
                     if value_list != []:
-                        definitivedict[key]=value_list       
+                        itemdict={}
+                        definitivedict[key]=[]
+                        for itemvl in value_list:
+                            
+                            for kvl, vvl in itemvl.items():
+                                if isinstance(vvl, str):
+                                    if ',' in vvl:
+                                        itemv={}
+                                        v_array = vvl.split(',')
+                                        itemv[kvl]=v_array
+                                        v_key = kvl
+                                elif isinstance(vvl, dict):
+                                    v1_array=[]
+                                    itemdict[kvl]={}
+                                    v1_keys = []
+                                    for kvl1, vvl1 in vvl.items():
+                                        itemdict[kvl][kvl1]={}
+                                        if ',' in vvl1:
+                                            vvl1_array = vvl1.split(',')
+                                            for vvlitem in vvl1_array:
+                                                if vvlitem not in v1_array:
+                                                    v1_array.append(vvlitem)
+                                            v1_bigkeys = kvl
+                                            if kvl1 not in v1_keys:
+                                                v1_keys.append(kvl1)
+                                    
+                                    half_array_number = len(v_array)/2
+                                    itemdict[v1_bigkeys]={}
+                        if v1_keys != []:
+                            n=0
+                            list_to_def=[]
+
+                            while n < len(v_array):
+                                newdict={}
+                                newdict[v1_bigkeys]={}
+                                print(v_array[n])
+                                num=int(half_array_number+n+1)
+                                newdict[v_key]=v_array[n]
+                                newdict[v1_bigkeys][v1_keys[0]]=v1_array[n]
+                                newdict[v1_bigkeys][v1_keys[1]]=v1_array[num]
+                                print(newdict)
+                                list_to_def.append(newdict)
+                                
+                                n +=1
+                            print(list_to_def)
+                            for itemldf in list_to_def:
+                                definitivedict[key].append(itemldf)
+                        else:
+                            for itemvl in value_list:
+                                definitivedict[key].append(itemvl)       
         elif isinstance(value, dict):
             value_dict={}
             for kd, vd in value.items():
