@@ -1,7 +1,7 @@
 import json
 import xlwings as xw
 
-file_to_open='genomicVariations.json'
+file_to_open='individuals.json'
 # Opening JSON file 
 f = open(file_to_open,) 
    
