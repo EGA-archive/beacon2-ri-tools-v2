@@ -671,8 +671,7 @@ for key, value in dict_types.items():
         for item in value:
             list_of_properties_required.append(item)
 
-print(list_of_definitions_required)
-print(list_of_properties_required)
+
 
 
 
@@ -947,7 +946,6 @@ def generate(dict_properties):
     num_registries = 4
     k=0
     j=2
-    print(len(list_of_excel_items))
     while j < num_registries:
         i=1
         while i <(len(list_of_excel_items)+2):
@@ -1071,49 +1069,92 @@ def generate(dict_properties):
                             itemdict={}
                             definitivedict[key]=[]
                             v_array=[]
+                            v1_array=[]
+                            v2_array=[]
+                            v1_keys = []
+                            v2_keys=[]
+                            kv2dict={}
+                            kvl2dict={}
+                            v1_bigkeys=[]
+                            v2_bigkeys=[]
+                            v3_bigkeys=[]
                             for itemvl in value_list:
-                                
                                 for kvl, vvl in itemvl.items():
                                     if isinstance(vvl, str):
                                         if ',' in vvl:
-                                            itemv={}
                                             v_array = vvl.split(',')
-                                            itemv[kvl]=v_array
-                                            v_key = kvl
+                                            for vitem in v_array:
+                                                v1_array.append(vitem)
+                                            if kvl not in v1_bigkeys:
+                                                v1_bigkeys.append(kvl)
                                     elif isinstance(vvl, dict):
-                                        
-                                        v1_array=[]
                                         itemdict[kvl]={}
-                                        v1_keys = []
                                         for kvl1, vvl1 in vvl.items():
                                             itemdict[kvl][kvl1]={}
                                             if isinstance(vvl1, str) and ',' in vvl1:
                                                 vvl1_array = vvl1.split(',')
                                                 for vvlitem in vvl1_array:
-                                                    if vvlitem not in v1_array:
-                                                        v1_array.append(vvlitem)
-                                                v1_bigkeys = kvl
+                                                    v1_array.append(vvlitem)
+                                                if kvl not in v1_bigkeys:
+                                                    v1_bigkeys.append(kvl)
                                                 if kvl1 not in v1_keys:
                                                     v1_keys.append(kvl1)
-                                        if v_array != []:
-                                            half_array_number = len(v_array)/2
-                                            itemdict[v1_bigkeys]={}
-                            if v1_keys != []:
-                                n=0
-                                list_to_def=[]
-
-                                while n < len(v_array):
+                                            elif isinstance(vvl1, dict):
+                                                if kvl1 not in v2_bigkeys:
+                                                    v2_bigkeys.append(kvl1)
+                                                for kvl2, vvl2 in vvl1.items():
+                                                    if kvl2 not in v3_bigkeys:
+                                                        v3_bigkeys.append(kvl2)
+                                                    vvl2_array = vvl2.split(',')
+                                                    for vvl2item in vvl2_array:
+                                                        v2_array.append(vvl2item)
+                                                    
+                                                    kvl2dict[kvl2]=vvl2
+                                                    kv2dict[kvl1]=kvl2dict
+                                                    if kvl2 not in v2_keys:
+                                                        v2_keys.append(kvl2)
+                                                    if kvl1 not in v1_keys:
+                                                        v1_keys.append(kvl1)
+                                if v1_keys != []:
+                                    n=0
+                                    list_to_def=[]
+                                    print(v2_bigkeys)
+                                    print(v1_array)
+                                    print(v2_array)
                                     newdict={}
-                                    newdict[v1_bigkeys]={}
-                                    num=int(half_array_number+n+1)
-                                    newdict[v_key]=v_array[n]
-                                    newdict[v1_bigkeys][v1_keys[0]]=v1_array[n]
-                                    newdict[v1_bigkeys][v1_keys[1]]=v1_array[num]
-                                    list_to_def.append(newdict)
-                                    
-                                    n +=1
-                                for itemldf in list_to_def:
-                                    definitivedict[key].append(itemldf)
+                                    for v1bigkey in v1_bigkeys:
+                                        newdict[v1bigkey]={}
+                                        if v1bigkey == 'measurementValue':
+                                            newdict[v1bigkey][v2_bigkeys[0]]={}
+                                            newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[0]]=''
+                                            newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[1]]=''
+                                        elif v1bigkey == 'assayCode':
+                                            newdict[v1bigkey][v1_keys[0]]=""
+
+
+
+
+                                    while n < len(v_array):
+                                        num=int(n+len(v_array)-1)
+                                        num2=int(n+len(v_array))
+                                        num4=int(n+(len(v_array)*2))
+                                        num6=int(n+(len(v_array)*3))
+                                        print(v2_bigkeys)
+                                        for v1bigkey in v1_bigkeys:                                            
+                                            if v1bigkey == 'measurementValue':
+                                                newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[0]]=v2_array[n]
+                                                newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[1]]=v2_array[num2]
+                                                newdict[v1bigkey][v1_keys[3]]=v1_array[num6]
+                                            elif v1bigkey == 'assayCode':
+                                                newdict[v1bigkey][v1_keys[0]]=v1_array[n]
+                                                newdict[v1bigkey][v1_keys[1]]=v1_array[num2]
+                                            elif v1bigkey == 'date':
+                                                newdict[v1bigkey]=v1_array[num4]
+                                        list_to_def.append(newdict)
+                                        
+                                        n +=1
+                                    for itemldf in list_to_def:
+                                        definitivedict[key].append(itemldf)
                             else:
                                 for itemvl in value_list:
                                     definitivedict[key].append(itemvl)       
