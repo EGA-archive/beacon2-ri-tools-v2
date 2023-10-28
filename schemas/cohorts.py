@@ -1,5 +1,6 @@
 import json
 import xlwings as xw
+import re
 
 file_to_open='cohorts.json'
 # Opening JSON file 
@@ -728,7 +729,6 @@ for key, value in dict_types.items():
                         finaldict[key]=''
 
     elif key in list_of_definition_keys:
-        print(key)
         finaldict[key]={}
         items_dict={}
         if isinstance(value, dict):
@@ -975,7 +975,7 @@ def generate(dict_properties):
     dict_of_properties={}
     list_of_filled_items=[]
     total_dict =[]
-    num_registries = 4
+    num_registries = 3
     k=0
     j=2
     while j < num_registries:
@@ -1071,16 +1071,25 @@ def generate(dict_properties):
                                 vi_dict={}
                                 for ki1, vi1 in vi.items():
                                     if isinstance(vi1, dict):
-                                        for ki2, vi2 in vi1.items():
+                                        vi_dict={}
+                                        vi_dict[ki1]={}
+                                        if vi1 == {}:
                                             new_item = ""
-                                            new_item = key + "_" + ki + "_" + ki1 + "_" + ki2
+                                            new_item = key + "_" + ki + "_" + ki1
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
-                                                    vi_dict={}
-                                                    vi_dict[ki1]={}
-                                                    vi_dict[ki1][ki2]=propv
-                                            if vi_dict != {}:
-                                                item_dict[ki]=vi_dict    
+                                                    propv = re.sub(r'\s', '', propv)
+                                                    respropv = json.loads(propv)                                                    
+                                                    item_dict[ki][ki1]=respropv 
+                                        else:  
+                                            for ki2, vi2 in vi1.items():
+                                                new_item = ""
+                                                new_item = key + "_" + ki + "_" + ki1 + "_" + ki2
+                                                for propk, propv in dict_of_properties.items():
+                                                    if propk == new_item:
+                                                        vi_dict[ki1][ki2]=propv
+                                                if vi_dict != {}:
+                                                    item_dict[ki]=vi_dict    
                                     else:
                                         new_item = ""
                                         new_item = key + "_" + ki + "_" + ki1
@@ -1134,19 +1143,7 @@ def generate(dict_properties):
                                             elif isinstance(vvl1, dict):
                                                 if kvl1 not in v2_bigkeys:
                                                     v2_bigkeys.append(kvl1)
-                                                for kvl2, vvl2 in vvl1.items():
-                                                    if kvl2 not in v3_bigkeys:
-                                                        v3_bigkeys.append(kvl2)
-                                                    vvl2_array = vvl2.split(',')
-                                                    for vvl2item in vvl2_array:
-                                                        v2_array.append(vvl2item)
                                                     
-                                                    kvl2dict[kvl2]=vvl2
-                                                    kv2dict[kvl1]=kvl2dict
-                                                    if kvl2 not in v2_keys:
-                                                        v2_keys.append(kvl2)
-                                                    if kvl1 not in v1_keys:
-                                                        v1_keys.append(kvl1)
                                 if v1_keys != []:
                                     n=0
                                     list_to_def=[]
@@ -1192,6 +1189,7 @@ def generate(dict_properties):
                     if isinstance(vd, list):
                         vd_list=[]
                         if isinstance(vd[0], dict):
+                            dicty={}
                             for kd1, vd1 in vd[0].items():
                                 if isinstance(vd1, dict):
                                     for kd2, vd2 in vd1.items():
@@ -1215,14 +1213,43 @@ def generate(dict_properties):
                                                     if value_dict not in vd_list:
                                                         vd_list.append(value_dict)
                                             else:
-                                                value_dict[kd]={}
-                                                value_dict[kd][kd1]=propv
+                                                arrayofkdvs=[]
+                                                for kdv, vdv in value_dict.items():
+                                                    arrayofkdvs.append(kdv)
+                                                if kd not in arrayofkdvs:
+                                                    value_dict[kd]=[]
+                                                print(kd1)
+                                                dicty[kd1]=propv
+                                                if dicty not in value_dict[kd]:
+                                                    value_dict[kd].append(dicty)
                                 
                                 if value_dict != {}:
                                     if value_dict not in vd_list:
                                         vd_list.append(value_dict)
                             if vd_list != []:
                                 definitivedict[key]=vd_list
+
+
+                    elif isinstance(vd, dict):
+                        for kd1, vd1 in vd.items():
+                            if isinstance(vd1, dict):
+                                for kd2, vd2 in vd1.items():
+                                    new_item = ""
+                                    new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                    for propk, propv in dict_of_properties.items():
+                                        if propk == new_item:
+                                            if value_dict == {}:
+                                                value_dict[kd]={}
+                                            value_dict[kd][kd1]={}
+                                            value_dict[kd][kd1][kd2]=propv
+                                            definitivedict[key]=value_dict
+                            else:
+                                new_item = ""
+                                new_item = key + "_" + kd + "_" + kd1
+                                for propk, propv in dict_of_properties.items():
+                                    if propk == new_item:
+                                        value_dict[kd][kd1]=propv
+                                        definitivedict[key]=value_dict
                         else:
                             new_item = ""
                             new_item = key + "_" + kd
