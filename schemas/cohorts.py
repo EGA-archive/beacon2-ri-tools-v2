@@ -1188,8 +1188,14 @@ def generate(dict_properties):
                 for kd, vd in value.items():
                     if isinstance(vd, list):
                         vd_list=[]
+                        
+                        
                         if isinstance(vd[0], dict):
                             dicty={}
+                            propv_splitted_id=[]
+                            propv_splitted_label=[]
+                            arrayofkdvs=[]
+                            
                             for kd1, vd1 in vd[0].items():
                                 if isinstance(vd1, dict):
                                     for kd2, vd2 in vd1.items():
@@ -1206,22 +1212,35 @@ def generate(dict_properties):
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
                                             if ',' in propv:
-                                                propv_splitted = propv.split(',')
-                                                for itemsplitted in propv:
-                                                    value_dict[kd]={}
-                                                    value_dict[kd][kd1]=propv_splitted
-                                                    if value_dict not in vd_list:
-                                                        vd_list.append(value_dict)
+                                                if propv_splitted_id != []:
+                                                    propv_splitted_label = propv.split(',')
+                                                else:
+                                                    
+                                                    propv_splitted_id = propv.split(',')
+                                                if propv_splitted_label != []:
+                                                    n=0
+                                                    while n < len(propv_splitted_id):
+                                                        dicty={}
+                                                        dicty['id']=propv_splitted_id[n]
+                                                        dicty['label']=propv_splitted_label[n]
+                                                        for kdv, vdv in value_dict.items():
+                                                            arrayofkdvs.append(kdv)
+                                                        if kd not in arrayofkdvs:
+                                                            value_dict[kd]=[]
+                                                        value_dict[kd].append(dicty)
+                                                        n+=1
+
+
                                             else:
+                                                dicty[kd1]=propv
                                                 arrayofkdvs=[]
                                                 for kdv, vdv in value_dict.items():
                                                     arrayofkdvs.append(kdv)
                                                 if kd not in arrayofkdvs:
                                                     value_dict[kd]=[]
-                                                print(kd1)
-                                                dicty[kd1]=propv
                                                 if dicty not in value_dict[kd]:
                                                     value_dict[kd].append(dicty)
+
                                 
                                 if value_dict != {}:
                                     if value_dict not in vd_list:
