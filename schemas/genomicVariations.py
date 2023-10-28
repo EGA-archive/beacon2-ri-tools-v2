@@ -652,7 +652,7 @@ while j < num_registries:
             if valor != '':
                 list_of_filled_items.append(property_value)
 
-
+                
                 for header in list_of_headers_definitions_required:
                     header2 = header[0].lower() + header[1:]
                     if header2 in element:
@@ -773,6 +773,7 @@ while j < num_registries:
                     if value_list != []:
                         itemdict={}
                         definitivedict[key]=[]
+                        v_array=[]
                         for itemvl in value_list:
                             
                             for kvl, vvl in itemvl.items():
@@ -788,7 +789,7 @@ while j < num_registries:
                                     v1_keys = []
                                     for kvl1, vvl1 in vvl.items():
                                         itemdict[kvl][kvl1]={}
-                                        if ',' in vvl1:
+                                        if isinstance(vvl1, str) and ',' in vvl1:
                                             vvl1_array = vvl1.split(',')
                                             for vvlitem in vvl1_array:
                                                 if vvlitem not in v1_array:
@@ -796,9 +797,9 @@ while j < num_registries:
                                             v1_bigkeys = kvl
                                             if kvl1 not in v1_keys:
                                                 v1_keys.append(kvl1)
-                                    
-                                    half_array_number = len(v_array)/2
-                                    itemdict[v1_bigkeys]={}
+                                    if v_array != []:
+                                        half_array_number = len(v_array)/2
+                                        itemdict[v1_bigkeys]={}
                         if v1_keys != []:
                             n=0
                             list_to_def=[]
