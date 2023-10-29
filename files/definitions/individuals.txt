@@ -1,0 +1,13 @@
+diseases_diseaseCode
+exposures_exposureCode
+exposures_ageAtExposure
+exposures_unit
+exposures_duration
+interventionsOrProcedures_procedureCode
+measures_assayCode
+measures_measurementValue
+pedigrees_id
+pedigrees_disease
+pedigrees_members
+phenotypicFeatures_featureType
+treatments_treatmentCode
