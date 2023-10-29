@@ -979,7 +979,7 @@ def generate(dict_properties):
     k=0
     j=2
     while j < num_registries:
-        i=1
+        i=0
         while i <(len(list_of_excel_items)+2):
             
             property = list_columns[i]+str(1)
