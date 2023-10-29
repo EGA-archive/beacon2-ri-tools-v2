@@ -2,7 +2,7 @@ import json
 import xlwings as xw
 import re
 
-file_to_open='runs.json'
+file_to_open='datasets.json'
 # Opening JSON file 
 f = open(file_to_open,) 
    
@@ -156,6 +156,8 @@ def data_types(data):
                                                                 dict_types[key][key2]='ontologyTerm.json'
                                                             elif kcd1 == 'type':
                                                                 dict_types[key][key2]=vcd1
+                                            elif 'DataAvailabilityAndDistribution' in itemd:
+                                                dict_types[key][key2]='object'
                                         elif 'oneOf' in keyd:
                                             dict_types[key][key2]=itemd
         elif kprinc == 'required':
@@ -649,6 +651,8 @@ def treatment():
     element=megaovertypes(element)
     return element
 
+#print(dict_types)
+
 list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
@@ -675,7 +679,9 @@ for key, value in dict_types.items():
     if key not in list_of_definition_keys:
         items_dict={}
         list_of_items=[]
-        if isinstance(value, dict):
+        if key == 'info':
+            finaldict[key]={}
+        elif isinstance(value, dict):
             for k,v in sorted(value.items()):              
                 if k == 'items':
                     if 'disease' in v:
@@ -696,6 +702,21 @@ for key, value in dict_types.items():
                         items_dict = evidence()
                     elif 'treatment' in v:
                         items_dict = treatment()
+                elif v == 'integer':
+                    if k != 'collectionEvents':
+                        finaldict[key]=0
+                    else:
+                        items_dict[k]=0
+                elif v == 'object':
+                    items_dict[k]={}
+                    items_dict[k]['availability']=True
+                    items_dict[k]['availabilityCount']=0
+                    items_dict[k]['distribution']={}
+                elif v == 'string':
+                    if k != 'collectionEvents':
+                        finaldict[key]=''
+                    else:
+                        items_dict[k]=''
                 elif k == 'type':
                     if v == 'array':
                         list_of_items.append(items_dict)
@@ -708,6 +729,19 @@ for key, value in dict_types.items():
                         finaldict[key]=items_dict
                     elif 'string' in v:
                         finaldict[key]=''
+                    elif 'dataUseConditions' in v:
+                        dict_conditions={}
+                        dict_conditions['description']=''
+                        dict_conditions['id']=''
+                        dict_conditions['label']=''
+                        dict_conditions['modifiers']=[{'id':'','label': ''}]
+                        dict_conditions['version']=''
+                        dict_use={}
+                        dict_use['duoDataUse']=dict_conditions
+                        finaldict[key]=dict_use
+
+
+
     elif key in list_of_definition_keys:
         finaldict[key]={}
         items_dict={}
@@ -720,6 +754,11 @@ for key, value in dict_types.items():
                         finaldict[key][k]=0
                 elif 'string' in v:
                         finaldict[key][k]=''
+                elif '.json' in v:
+                        subtyped=subtypes(v)
+                        overtyped=overtypes(subtyped)
+                        dictovertyped=dict_overtypes(overtyped)
+                        finaldict[key][k]=dictovertyped
                 elif 'object' in v:
                         finaldict[key][k]={}
                         finaldict[key][k]['availability']=True
@@ -824,10 +863,7 @@ for key, value in dict_types.items():
                                                             finaldict[key][k][kp][kpc]={}
 
 
-
- 
-
-
+#print(finaldict)
 
 
 
@@ -927,7 +963,7 @@ def generate(dict_properties):
             new_item = key
             list_of_excel_items.append(new_item)
 
-    wb = xw.Book('runs.xlsx')
+    wb = xw.Book('datasets.xlsx')
 
     sheet = wb.sheets['Sheet1']
 
@@ -939,6 +975,8 @@ def generate(dict_properties):
                     'EA', 'EE', 'EE', 'EE', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
     ]
 
+
+
     '''
     i=0
     for element in list_of_excel_items:
@@ -946,7 +984,8 @@ def generate(dict_properties):
         sheet[number_sheet].value = element
         i+=1
         '''
-    print(list_of_properties_required)
+
+
 
     dict_of_properties={}
     list_of_filled_items=[]
@@ -966,24 +1005,17 @@ def generate(dict_properties):
 
             
             valor = sheet[number_sheet].value
-
             if i > 1:
-                if valor is not None and valor != '':
+                if valor != '':
                     list_of_filled_items.append(property_value)
+
 
 
             for filled_item in list_of_filled_items:
                 if isinstance(filled_item, str): 
-                    if 'biosampleStatus' in filled_item:
+                    if 'sex' in filled_item:
                         try:
-                            
-                            list_of_properties_required.remove('biosampleStatus')
-                        except Exception:
-                            pass
-                    elif 'sampleOriginType' in filled_item:
-                        try:
-                            
-                            list_of_properties_required.remove('sampleOriginType')
+                            list_of_properties_required.remove('sex')
                         except Exception:
                             pass
             if valor:
@@ -991,7 +1023,6 @@ def generate(dict_properties):
             i +=1
 
         
-        print(list_of_filled_items)
 
         for lispro in list_of_properties_required:
             if lispro not in list_of_filled_items:
@@ -1073,14 +1104,7 @@ def generate(dict_properties):
                                                     if propk == new_item:
                                                         vi_dict[ki1][ki2]=propv
                                                 if vi_dict != {}:
-                                                    vivilist=[]
-                                                    print(vi_dict)
-                                                    for kivi, vivi in vi_dict.items():
-                                                        if vivi != {}:
-                                                            vivilist.append(vivi)
-                                                    for vivitem in vivilist:
-                                                        if vivitem != {}:
-                                                            item_dict[ki]=vi_dict    
+                                                    item_dict[ki]=vi_dict    
                                     else:
                                         new_item = ""
                                         new_item = key + "_" + ki + "_" + ki1
@@ -1098,7 +1122,6 @@ def generate(dict_properties):
                                 if item_dict not in value_list:
                                     value_list.append(item_dict)
                         if value_list != []:
-                            print(value_list)
                             itemdict={}
                             definitivedict[key]=[]
                             v_array=[]
@@ -1242,6 +1265,15 @@ def generate(dict_properties):
 
 
                     elif isinstance(vd, dict):
+                        lofv={}
+                        list_of_values=[]
+                        propv_splitted_id=[]
+                        propv_splitted_label=[]
+                        propv_splitted_version=[]
+                        vd_list=[]
+
+
+                        
                         for kd1, vd1 in vd.items():
                             if isinstance(vd1, dict):
                                 for kd2, vd2 in vd1.items():
@@ -1255,12 +1287,43 @@ def generate(dict_properties):
                                             value_dict[kd][kd1][kd2]=propv
                                             definitivedict[key]=value_dict
                             else:
+                                arrayofkdvs=[]
                                 new_item = ""
                                 new_item = key + "_" + kd + "_" + kd1
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
-                                        value_dict[kd][kd1]=propv
-                                        definitivedict[key]=value_dict
+                                        if ',' in propv:
+                                            print(propv)
+                                            if propv_splitted_id != [] and propv_splitted_label != []:
+                                                propv_splitted_version = propv.split(',')
+                                            elif propv_splitted_id != []:
+                                                propv_splitted_label = propv.split(',')
+                                            else:
+                                                propv_splitted_id = propv.split(',')
+                                            if propv_splitted_version != []:
+                                                n=0
+                                                while n < len(propv_splitted_id):
+                                                    dicty={}
+                                                    dicty['id']=propv_splitted_id[n]
+                                                    dicty['label']=propv_splitted_label[n]
+                                                    dicty['version']=propv_splitted_version[n]
+                                                    for kdv, vdv in value_dict.items():
+                                                        arrayofkdvs.append(kdv)
+                                                    if kd not in arrayofkdvs:
+                                                        value_dict[kd]=[]
+                                                    value_dict[kd].append(dicty)
+                                                    n+=1
+                                        else:
+                                            lofv[kd1]=propv
+                                            if lofv not in list_of_values:
+                                                list_of_values.append(lofv)
+                                                print(list_of_values)
+                                            value_dict[kd]=list_of_values
+                                if value_dict != {}:
+                                    if value_dict not in vd_list:
+                                        vd_list.append(value_dict)
+                            if vd_list != []:
+                                definitivedict[key]=vd_list
                         else:
                             new_item = ""
                             new_item = key + "_" + kd
@@ -1281,7 +1344,7 @@ def generate(dict_properties):
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             propv = re.sub(r'\s', '', propv)
-                            respropv = json.loads(propv)  
+                            respropv = json.loads(propv)                                                    
                             definitivedict[key]=respropv
             else:
                 new_item = ""
@@ -1297,13 +1360,11 @@ def generate(dict_properties):
 
 
 
+
 dict_generado=generate(finaldict)
 
 
-
-with open('definitive_bio.json', 'w') as f:
+with open('definitive_coh.json', 'w') as f:
     json.dump(dict_generado, f)
-
-
 
 
