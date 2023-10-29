@@ -1,0 +1,5 @@
+diagnosticMarkers_id
+measurements_assayCode
+measurements_measurementValue
+pathologicalTnmFinding_id
+phenotypicFeatures_featureType

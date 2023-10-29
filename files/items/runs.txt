@@ -1,0 +1,13 @@
+biosampleId
+id
+individualId
+info
+libraryLayout
+librarySelection
+librarySource_id
+librarySource_label
+libraryStrategy
+platform
+platformModel_id
+platformModel_label
+runDate

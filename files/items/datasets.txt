@@ -1,0 +1,13 @@
+createDateTime
+dataUseConditions_duoDataUse_description
+dataUseConditions_duoDataUse_id
+dataUseConditions_duoDataUse_label
+dataUseConditions_duoDataUse_modifiers
+dataUseConditions_duoDataUse_version
+description
+externalUrl
+id
+info
+name
+updateDateTime
+version

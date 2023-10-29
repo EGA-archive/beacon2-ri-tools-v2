@@ -1,0 +1,67 @@
+[
+    {
+        "caseLevelData": [
+            {
+                "zygosity": {
+                    "id": "0/1",
+                    "label": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03770"
+            },
+            {
+                "zygosity": {
+                    "id": "1/2",
+                    "label": "GENO:GENO_0000457"
+                },
+                "biosampleId": "HG03771"
+            }
+        ],
+        "identifiers": [
+            {
+                "genomicHGVSId": "22:g.16050075A>G"
+            }
+        ],
+        "molecularAttributes": [
+            {
+                "molecularEffects": {
+                    "label": "intergenic_region"
+                }
+            }
+        ],
+        "variantInternalId": "chr22_16050075_A_G",
+        "variation": {
+            "alternateBases": "G",
+            "referenceBases": "A",
+            "variantType": "SNP"
+        }
+    },
+    {
+        "caseLevelData": [
+            {
+                "biosampleId": "HG03770",
+                "zygosity": {
+                    "id": "0/1",
+                    "label": "GENO:GENO_0000458"
+                }
+            }
+        ],
+        "identifiers": [
+            {
+                "genomicHGVSId": "22:g.16050075A>G"
+            }
+        ],
+        "molecularAttributes": [
+            {
+                "molecularEffects": {
+                    "label": "intergenic_region"
+                }
+            }
+        ],
+        "variantInternalId": "chr22_16050075_A_G",
+        "variation": {
+            "alternateBases": "G",
+            "referenceBases": "A",
+            "variantType": "SNP"
+        }
+    }
+]

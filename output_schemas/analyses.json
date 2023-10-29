@@ -1,0 +1,13 @@
+[
+    {
+        "aligner": "bwa-0.5.9",
+        "analysisDate": "30-9-2015",
+        "biosampleId": "HG00096",
+        "id": "UK1_analysisId_1",
+        "individualId": "HG00096",
+        "pipelineName": "1000G-low-coverage-WGS",
+        "pipelineRef": "https://www.nature.com/articles/nature15393",
+        "runId": "SRR00000001",
+        "variantCaller": "GATK4.0"
+    }
+]
