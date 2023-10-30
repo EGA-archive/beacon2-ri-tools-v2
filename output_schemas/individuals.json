@@ -1,1 +1,512 @@
-[{"caseLevelData": [], "frequencyInPopulations": [], "molecularAttributes": [{"genomicFeatures": {"featureClass": {"id": "CHR_START-DUXAP8"}}, "molecularEffects": {"label": "ENSGLOSSARY:0000174"}}], "variantInternalId": "intergenic_region", "variantLevelData": [{"clinicalInterpretations": {"annotatedWith": {"toolName": "chr22_16050075_A_G"}}}], "variation": {"location": "G", "variantType": "SNP"}}, {"caseLevelData": [{"zygosity": {"label": "0/1"}}], "frequencyInPopulations": [{"frequencies": {"alleleFrequency": "GENO:GENO_0000458"}}], "molecularAttributes": [{"genomicFeatures": {"featureClass": {"id": "CHR_START-DUXAP8"}}, "molecularEffects": {"label": "ENSGLOSSARY:0000174"}}], "variantInternalId": "intergenic_region", "variantLevelData": [{"clinicalInterpretations": {"annotatedWith": {"toolName": "chr22_16050075_A_G"}}}], "variation": {"location": "G", "variantType": "SNP"}}]
+[
+    {
+        "ethnicity": {
+            "id": "NCIT:C42331",
+            "label": "African"
+        },
+        "id": "HG00096",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C20197",
+            "label": "male"
+        }
+    },
+    {
+        "ethnicity": {
+            "id": "NCIT:C41261",
+            "label": "British"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00002641",
+            "label": "England"
+        },
+        "id": "HG00097",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        }
+    },
+    {
+        "ethnicity": {
+            "id": "NCIT:C41260",
+            "label": "Asian or Asian British"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00002640",
+            "label": "Wales"
+        },
+        "id": "HG00099",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        }
+    },
+    {
+        "ethnicity": {
+            "id": "NCIT:C67109",
+            "label": "White and Asian"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00002640",
+            "label": "Wales"
+        },
+        "id": "HG00100",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        }
+    },
+    {
+        "ethnicity": {
+            "id": "NCIT:C67109",
+            "label": "White and Black African"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00002640",
+            "label": "Wales"
+        },
+        "id": "HG00101",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C20197",
+            "label": "male"
+        }
+    },
+    {
+        "ethnicity": {
+            "id": "NCIT:C67109",
+            "label": "White and Black African"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00002638",
+            "label": "Northern Ireland"
+        },
+        "id": "HG00102",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        }
+    },
+    {
+        "diseases": [],
+        "ethnicity": {
+            "id": "NCIT:C67109",
+            "label": "Any other Asian background"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00002638",
+            "label": "Northern Ireland"
+        },
+        "id": "HG00103",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C20197",
+            "label": "male"
+        }
+    },
+    {
+        "diseases": [],
+        "ethnicity": {
+            "id": "NCIT:C67109",
+            "label": "White and Black Caribbean"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00002640",
+            "label": "Wales"
+        },
+        "id": "HG00105",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C20197",
+            "label": "male"
+        }
+    },
+    {
+        "diseases": [],
+        "ethnicity": {
+            "id": "NCIT:C16352",
+            "label": "Black or Black British"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00002641",
+            "label": "England"
+        },
+        "id": "HG00106",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        }
+    },
+    {
+        "diseases": [],
+        "ethnicity": {
+            "id": "NCIT:C67109",
+            "label": "Any other mixed background"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00004018",
+            "label": "Republic of Ireland"
+        },
+        "id": "HG00107",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C20197",
+            "label": "male"
+        }
+    },
+    {
+        "diseases": [],
+        "ethnicity": {
+            "id": "NCIT:C67109",
+            "label": "White and Black African"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00002639",
+            "label": "Scotland"
+        },
+        "id": "HG00108",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C20197",
+            "label": "male"
+        }
+    },
+    {
+        "diseases": [],
+        "ethnicity": {
+            "id": "NCIT:C42331",
+            "label": "African"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00002640",
+            "label": "Wales"
+        },
+        "id": "HG00109",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C20197",
+            "label": "male"
+        }
+    },
+    {
+        "diseases": [],
+        "ethnicity": {
+            "id": "NCIT:C42331",
+            "label": "African"
+        },
+        "geographicOrigin": {
+            "id": "GAZ:00002641",
+            "label": "England"
+        },
+        "id": "HG00110",
+        "interventionsOrProcedures": [],
+        "measures": [
+            {
+                "assayCode": {
+                    "id": "LOINC:35925-4",
+                    "label": "BMI"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:3141-9",
+                    "label": "Weight"
+                },
+                "date": "2021-09-24"
+            },
+            {
+                "assayCode": {
+                    "id": "LOINC:8308-9",
+                    "label": "Height-standing"
+                },
+                "date": "2021-09-24"
+            }
+        ],
+        "sex": {
+            "id": "NCIT:C16576",
+            "label": "female"
+        }
+    }
+]

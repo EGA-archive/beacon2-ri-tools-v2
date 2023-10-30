@@ -1,6 +1,6 @@
 import json
 import xlwings as xw
-import re
+from tqdm import tqdm
 
 list_of_excel_items=[]
 list_of_definitions_required=[]
@@ -18,7 +18,7 @@ with open('files/dictionaries/individuals.json') as json_file:
 def generate(list_of_excel_items, list_of_properties_required, dict_properties):
 
 
-    wb = xw.Book('individuals.xlsx')
+    wb = xw.Book('datasheets/individuals.xlsx')
 
     sheet = wb.sheets['Sheet1']
 
@@ -34,9 +34,10 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
     dict_of_properties={}
     list_of_filled_items=[]
     total_dict =[]
-    num_registries = 4
+    num_registries = 15
     k=0
     j=2
+    pbar = tqdm(total = num_registries)
     while j < num_registries:
         i=0
         while i <(len(list_of_excel_items)+2):
@@ -79,6 +80,7 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                 for item in value:
                     if isinstance(item, dict):
                         item_dict={}
+
                         for ki, vi in item.items():
                             if isinstance(vi, list):
                                 vi_list=[]
@@ -206,31 +208,24 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                                                         v2_keys.append(kvl2)
                                                     if kvl1 not in v1_keys:
                                                         v1_keys.append(kvl1)
+                                list_to_def=[]
                                 if v1_keys != []:
                                     n=0
                                     list_to_def=[]
-                                    print(v2_bigkeys)
-                                    print(v1_array)
-                                    print(v2_array)
-                                    newdict={}
-                                    for v1bigkey in v1_bigkeys:
-                                        newdict[v1bigkey]={}
-                                        if v1bigkey == 'measurementValue':
-                                            newdict[v1bigkey][v2_bigkeys[0]]={}
-                                            newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[0]]=''
-                                            newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[1]]=''
-                                        elif v1bigkey == 'assayCode':
-                                            newdict[v1bigkey][v1_keys[0]]=""
-
-
-
-
                                     while n < len(v_array):
+                                        newdict={}
+                                        for v1bigkey in v1_bigkeys:
+                                            newdict[v1bigkey]={}
+                                            if v1bigkey == 'measurementValue':
+                                                newdict[v1bigkey][v2_bigkeys[0]]={}
+                                                newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[0]]=''
+                                                newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[1]]=''
+                                            elif v1bigkey == 'assayCode':
+                                                newdict[v1bigkey][v1_keys[0]]=""
                                         num=int(n+len(v_array)-1)
                                         num2=int(n+len(v_array))
                                         num4=int(n+(len(v_array)*2))
                                         num6=int(n+(len(v_array)*3))
-                                        print(v2_bigkeys)
                                         for v1bigkey in v1_bigkeys:                                            
                                             if v1bigkey == 'measurementValue':
                                                 newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[0]]=v2_array[n]
@@ -242,13 +237,17 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                                             elif v1bigkey == 'date':
                                                 newdict[v1bigkey]=v1_array[num4]
                                         list_to_def.append(newdict)
+
+
+
                                         
                                         n +=1
                                     for itemldf in list_to_def:
-                                        definitivedict[key].append(itemldf)
-                            else:
-                                for itemvl in value_list:
-                                    definitivedict[key].append(itemvl)       
+                                        if itemldf not in definitivedict[key]:
+                                            definitivedict[key].append(itemldf)
+                        else:
+                            for itemvl in value_list:
+                                definitivedict[key].append(itemvl)       
             elif isinstance(value, dict):
                 value_dict={}
                 for kd, vd in value.items():
@@ -305,10 +304,13 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                     new_item = key
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
-                            propvalue={}
-                            propvalue_splitted = propv.split(':')
-                            propvalue[propvalue_splitted[0]]=propvalue_splitted[1]
-                            definitivedict[key]=propvalue
+                            try:
+                                propvalue={}
+                                propvalue_splitted = propv.split(':')
+                                propvalue[propvalue_splitted[0]]=propvalue_splitted[1]
+                                definitivedict[key]=propvalue
+                            except Exception:
+                                pass
             else:
                 new_item = ""
                 new_item = key
@@ -317,6 +319,8 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                         definitivedict[key]=propv
         total_dict.append(definitivedict)
         j+=1
+        pbar.update(1)
+    pbar.close()
     return total_dict
 
 
