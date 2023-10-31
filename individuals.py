@@ -34,7 +34,7 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
     dict_of_properties={}
     list_of_filled_items=[]
     total_dict =[]
-    num_registries = 5
+    num_registries = 2506
     k=0
     j=2
     pbar = tqdm(total = num_registries-2)
@@ -152,7 +152,6 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                                 if item_dict != {} and item_dict != [{}]:
                                     if item_dict not in value_list:
                                         value_list.append(item_dict)
-                                        print(value_list)
                             else:
                                 new_item = ""
                                 new_item = key + "_" + ki
