@@ -34,10 +34,10 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
     dict_of_properties={}
     list_of_filled_items=[]
     total_dict =[]
-    num_registries = 15
+    num_registries = 5
     k=0
     j=2
-    pbar = tqdm(total = num_registries)
+    pbar = tqdm(total = num_registries-2)
     while j < num_registries:
         i=0
         while i <(len(list_of_excel_items)+2):
@@ -149,6 +149,10 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                                             if propk == new_item:
                                                 vi_dict[ki1]=propv 
                                                 item_dict[ki]=vi_dict
+                                if item_dict != {} and item_dict != [{}]:
+                                    if item_dict not in value_list:
+                                        value_list.append(item_dict)
+                                        print(value_list)
                             else:
                                 new_item = ""
                                 new_item = key + "_" + ki
@@ -158,9 +162,14 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                             if item_dict != {} and item_dict != [{}]:
                                 if item_dict not in value_list:
                                     value_list.append(item_dict)
+                            if value_list != []:
+                                definitivedict[key]=[]
+                                for itemdc in value_list:
+                                    if itemdc not in definitivedict[key]:
+                                        definitivedict[key].append(itemdc)
+
                         if value_list != []:
                             itemdict={}
-                            definitivedict[key]=[]
                             v_array=[]
                             v1_array=[]
                             v2_array=[]
@@ -236,17 +245,20 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                                                 newdict[v1bigkey][v1_keys[1]]=v1_array[num2]
                                             elif v1bigkey == 'date':
                                                 newdict[v1bigkey]=v1_array[num4]
+                                        
                                         list_to_def.append(newdict)
 
 
 
                                         
                                         n +=1
+                                    definitivedict[key]=[]
                                     for itemldf in list_to_def:
                                         if itemldf not in definitivedict[key]:
                                             definitivedict[key].append(itemldf)
                         else:
                             for itemvl in value_list:
+                                definitivedict[key]=[]
                                 definitivedict[key].append(itemvl)       
             elif isinstance(value, dict):
                 value_dict={}

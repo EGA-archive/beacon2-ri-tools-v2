@@ -1,24 +1,29 @@
 import json
 import xlwings as xw
 import re
+from tqdm import tqdm
 
 list_of_excel_items=[]
 list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
-with open("files/items/analyses.txt", "r") as txt_file:
+with open("files/items/cohorts.txt", "r") as txt_file:
     list_of_excel_items=txt_file.read().splitlines() 
-with open("files/properties/analyses.txt", "r") as txt_file:
+with open("files/properties/cohorts.txt", "r") as txt_file:
     list_of_properties_required=txt_file.read().splitlines() 
-with open("files/headers/analyses.txt", "r") as txt_file:
+with open("files/headers/cohorts.txt", "r") as txt_file:
     list_of_headers_definitions_required=txt_file.read().splitlines()
-with open('files/dictionaries/analyses.json') as json_file:
+with open('files/dictionaries/cohorts.json') as json_file:
     dict_properties = json.load(json_file)
 
-def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
 
-    wb = xw.Book('datasheets/analyses.xlsx')
+
+
+def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
+    
+
+    wb = xw.Book('datasheets/cohorts.xlsx')
 
     sheet = wb.sheets['Sheet1']
 
@@ -30,32 +35,38 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                     'EA', 'EE', 'EE', 'EE', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
     ]
 
+
     dict_of_properties={}
     list_of_filled_items=[]
     total_dict =[]
     num_registries = 3
     k=0
     j=2
+    pbar = tqdm(total = num_registries-2)
     while j < num_registries:
         i=0
         while i <(len(list_of_excel_items)+2):
-            
             property = list_columns[i]+str(1)
             property_value = sheet[property].value
 
             number_sheet = list_columns[i]+str(j)
-            print(number_sheet)
             
 
             
             valor = sheet[number_sheet].value
-
             if i > 1:
-                if valor is not None and valor != '':
+                if valor != '':
                     list_of_filled_items.append(property_value)
 
-            print(list_of_filled_items)
 
+
+            for filled_item in list_of_filled_items:
+                if isinstance(filled_item, str): 
+                    if 'sex' in filled_item:
+                        try:
+                            list_of_properties_required.remove('sex')
+                        except Exception:
+                            pass
             if valor:
                 dict_of_properties[property_value]=valor
             i +=1
@@ -142,14 +153,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                     if propk == new_item:
                                                         vi_dict[ki1][ki2]=propv
                                                 if vi_dict != {}:
-                                                    vivilist=[]
-                                                    print(vi_dict)
-                                                    for kivi, vivi in vi_dict.items():
-                                                        if vivi != {}:
-                                                            vivilist.append(vivi)
-                                                    for vivitem in vivilist:
-                                                        if vivitem != {}:
-                                                            item_dict[ki]=vi_dict    
+                                                    item_dict[ki]=vi_dict    
                                     else:
                                         new_item = ""
                                         new_item = key + "_" + ki + "_" + ki1
@@ -167,7 +171,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 if item_dict not in value_list:
                                     value_list.append(item_dict)
                         if value_list != []:
-                            print(value_list)
                             itemdict={}
                             definitivedict[key]=[]
                             v_array=[]
@@ -349,9 +352,10 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                     new_item = key
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
-                            propv = re.sub(r'\s', '', propv)
-                            respropv = json.loads(propv)  
-                            definitivedict[key]=respropv
+                            propvalue={}
+                            propvalue_splitted = propv.split(':')
+                            propvalue[propvalue_splitted[0]]=propvalue_splitted[1]
+                            definitivedict[key]=propvalue
             else:
                 new_item = ""
                 new_item = key
@@ -360,8 +364,9 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                         definitivedict[key]=propv
         total_dict.append(definitivedict)
         j+=1
+        pbar.update(1)
+    pbar.close()
     return total_dict
-
 
 
 
@@ -369,9 +374,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 dict_generado=generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties)
 
 
-with open('output_schemas/analyses.json', 'w') as f:
+with open('output_schemas/cohorts.json', 'w') as f:
     json.dump(dict_generado, f)
-
-        
-
 

@@ -1,27 +1,26 @@
 import json
 import xlwings as xw
 import re
+from tqdm import tqdm
 
 list_of_excel_items=[]
 list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
-with open("files/items/datasets.txt", "r") as txt_file:
+with open("files/items/biosamples.txt", "r") as txt_file:
     list_of_excel_items=txt_file.read().splitlines() 
-with open("files/properties/datasets.txt", "r") as txt_file:
+with open("files/properties/biosamples.txt", "r") as txt_file:
     list_of_properties_required=txt_file.read().splitlines() 
-with open("files/headers/datasets.txt", "r") as txt_file:
+with open("files/headers/biosamples.txt", "r") as txt_file:
     list_of_headers_definitions_required=txt_file.read().splitlines()
-with open('files/dictionaries/datasets.json') as json_file:
+with open('files/dictionaries/biosamples.json') as json_file:
     dict_properties = json.load(json_file)
-
-
-
 
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
 
-    wb = xw.Book('datasheets/datasets.xlsx')
+
+    wb = xw.Book('datasheets/biosamples.xlsx')
 
     sheet = wb.sheets['Sheet1']
 
@@ -33,13 +32,13 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                     'EA', 'EE', 'EE', 'EE', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
     ]
 
-
     dict_of_properties={}
     list_of_filled_items=[]
     total_dict =[]
     num_registries = 3
     k=0
     j=2
+    pbar = tqdm(total = num_registries-2)
     while j < num_registries:
         i=0
         while i <(len(list_of_excel_items)+2):
@@ -52,17 +51,24 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 
             
             valor = sheet[number_sheet].value
+            
             if i > 1:
-                if valor != '':
+                if valor is not None and valor != '':
                     list_of_filled_items.append(property_value)
-
 
 
             for filled_item in list_of_filled_items:
                 if isinstance(filled_item, str): 
-                    if 'sex' in filled_item:
+                    if 'biosampleStatus' in filled_item:
                         try:
-                            list_of_properties_required.remove('sex')
+                            
+                            list_of_properties_required.remove('biosampleStatus')
+                        except Exception:
+                            pass
+                    elif 'sampleOriginType' in filled_item:
+                        try:
+                            
+                            list_of_properties_required.remove('sampleOriginType')
                         except Exception:
                             pass
             if valor:
@@ -151,7 +157,13 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                     if propk == new_item:
                                                         vi_dict[ki1][ki2]=propv
                                                 if vi_dict != {}:
-                                                    item_dict[ki]=vi_dict    
+                                                    vivilist=[]
+                                                    for kivi, vivi in vi_dict.items():
+                                                        if vivi != {}:
+                                                            vivilist.append(vivi)
+                                                    for vivitem in vivilist:
+                                                        if vivitem != {}:
+                                                            item_dict[ki]=vi_dict    
                                     else:
                                         new_item = ""
                                         new_item = key + "_" + ki + "_" + ki1
@@ -312,15 +324,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 
 
                     elif isinstance(vd, dict):
-                        lofv={}
-                        list_of_values=[]
-                        propv_splitted_id=[]
-                        propv_splitted_label=[]
-                        propv_splitted_version=[]
-                        vd_list=[]
-
-
-                        
                         for kd1, vd1 in vd.items():
                             if isinstance(vd1, dict):
                                 for kd2, vd2 in vd1.items():
@@ -334,43 +337,12 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                             value_dict[kd][kd1][kd2]=propv
                                             definitivedict[key]=value_dict
                             else:
-                                arrayofkdvs=[]
                                 new_item = ""
                                 new_item = key + "_" + kd + "_" + kd1
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
-                                        if ',' in propv:
-                                            print(propv)
-                                            if propv_splitted_id != [] and propv_splitted_label != []:
-                                                propv_splitted_version = propv.split(',')
-                                            elif propv_splitted_id != []:
-                                                propv_splitted_label = propv.split(',')
-                                            else:
-                                                propv_splitted_id = propv.split(',')
-                                            if propv_splitted_version != []:
-                                                n=0
-                                                while n < len(propv_splitted_id):
-                                                    dicty={}
-                                                    dicty['id']=propv_splitted_id[n]
-                                                    dicty['label']=propv_splitted_label[n]
-                                                    dicty['version']=propv_splitted_version[n]
-                                                    for kdv, vdv in value_dict.items():
-                                                        arrayofkdvs.append(kdv)
-                                                    if kd not in arrayofkdvs:
-                                                        value_dict[kd]=[]
-                                                    value_dict[kd].append(dicty)
-                                                    n+=1
-                                        else:
-                                            lofv[kd1]=propv
-                                            if lofv not in list_of_values:
-                                                list_of_values.append(lofv)
-                                                print(list_of_values)
-                                            value_dict[kd]=list_of_values
-                                if value_dict != {}:
-                                    if value_dict not in vd_list:
-                                        vd_list.append(value_dict)
-                            if vd_list != []:
-                                definitivedict[key]=vd_list
+                                        value_dict[kd][kd1]=propv
+                                        definitivedict[key]=value_dict
                         else:
                             new_item = ""
                             new_item = key + "_" + kd
@@ -391,7 +363,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             propv = re.sub(r'\s', '', propv)
-                            respropv = json.loads(propv)                                                    
+                            respropv = json.loads(propv)  
                             definitivedict[key]=respropv
             else:
                 new_item = ""
@@ -401,9 +373,9 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                         definitivedict[key]=propv
         total_dict.append(definitivedict)
         j+=1
+        pbar.update(1)
+    pbar.close()
     return total_dict
-
-
 
 
 
@@ -411,7 +383,5 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 dict_generado=generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties)
 
 
-with open('output_schemas/datasets.json', 'w') as f:
+with open('output_schemas/biosamples.json', 'w') as f:
     json.dump(dict_generado, f)
-
-

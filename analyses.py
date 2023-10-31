@@ -1,25 +1,25 @@
 import json
 import xlwings as xw
 import re
+from tqdm import tqdm
 
 list_of_excel_items=[]
 list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
-with open("files/items/biosamples.txt", "r") as txt_file:
+with open("files/items/analyses.txt", "r") as txt_file:
     list_of_excel_items=txt_file.read().splitlines() 
-with open("files/properties/biosamples.txt", "r") as txt_file:
+with open("files/properties/analyses.txt", "r") as txt_file:
     list_of_properties_required=txt_file.read().splitlines() 
-with open("files/headers/biosamples.txt", "r") as txt_file:
+with open("files/headers/analyses.txt", "r") as txt_file:
     list_of_headers_definitions_required=txt_file.read().splitlines()
-with open('files/dictionaries/biosamples.json') as json_file:
+with open('files/dictionaries/analyses.json') as json_file:
     dict_properties = json.load(json_file)
 
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
 
-
-    wb = xw.Book('datasheets/biosamples.xlsx')
+    wb = xw.Book('datasheets/analyses.xlsx')
 
     sheet = wb.sheets['Sheet1']
 
@@ -37,6 +37,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
     num_registries = 3
     k=0
     j=2
+    pbar = tqdm(total = num_registries-2)
     while j < num_registries:
         i=0
         while i <(len(list_of_excel_items)+2):
@@ -45,30 +46,18 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
             property_value = sheet[property].value
 
             number_sheet = list_columns[i]+str(j)
+            print(number_sheet)
             
 
             
             valor = sheet[number_sheet].value
-            
+
             if i > 1:
                 if valor is not None and valor != '':
                     list_of_filled_items.append(property_value)
 
+            print(list_of_filled_items)
 
-            for filled_item in list_of_filled_items:
-                if isinstance(filled_item, str): 
-                    if 'biosampleStatus' in filled_item:
-                        try:
-                            
-                            list_of_properties_required.remove('biosampleStatus')
-                        except Exception:
-                            pass
-                    elif 'sampleOriginType' in filled_item:
-                        try:
-                            
-                            list_of_properties_required.remove('sampleOriginType')
-                        except Exception:
-                            pass
             if valor:
                 dict_of_properties[property_value]=valor
             i +=1
@@ -156,6 +145,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                         vi_dict[ki1][ki2]=propv
                                                 if vi_dict != {}:
                                                     vivilist=[]
+                                                    print(vi_dict)
                                                     for kivi, vivi in vi_dict.items():
                                                         if vivi != {}:
                                                             vivilist.append(vivi)
@@ -179,6 +169,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 if item_dict not in value_list:
                                     value_list.append(item_dict)
                         if value_list != []:
+                            print(value_list)
                             itemdict={}
                             definitivedict[key]=[]
                             v_array=[]
@@ -371,7 +362,10 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                         definitivedict[key]=propv
         total_dict.append(definitivedict)
         j+=1
+        pbar.update(1)
+    pbar.close()
     return total_dict
+
 
 
 
@@ -379,5 +373,9 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 dict_generado=generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties)
 
 
-with open('output_schemas/biosamples.json', 'w') as f:
+with open('output_schemas/analyses.json', 'w') as f:
     json.dump(dict_generado, f)
+
+        
+
+
