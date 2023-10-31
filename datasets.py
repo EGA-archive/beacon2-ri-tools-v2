@@ -342,7 +342,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
                                         if ',' in propv:
-                                            print(propv)
                                             if propv_splitted_id != [] and propv_splitted_label != []:
                                                 propv_splitted_version = propv.split(',')
                                             elif propv_splitted_id != []:
@@ -366,7 +365,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                             lofv[kd1]=propv
                                             if lofv not in list_of_values:
                                                 list_of_values.append(lofv)
-                                                print(list_of_values)
                                             value_dict[kd]=list_of_values
                                 if value_dict != {}:
                                     if value_dict not in vd_list:

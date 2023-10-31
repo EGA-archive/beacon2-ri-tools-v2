@@ -1,6 +1,6 @@
 # Beacon ri tools v2.0
 
-This repository contains the new Beacon ri tools v2.0, a software for generating BFF data from .xlsx or .vcf (and probably more types of datafiles in the future). This is based on the first beacon ri tools, a previous and different version [Beacon ri tools v1](https://github.com/EGA-archive/beacon2-ri-tools), but the new features for beacon v2.0 are:
+This repository contains the new Beacon ri tools v2.0, a software for generating BFF data from .xlsx or .vcf (and probably more types of datafiles in the future). This is based on the first beacon ri tools, a previous and different version that you can find here: [Beacon ri tools v1](https://github.com/EGA-archive/beacon2-ri-tools). The new features for beacon v2.0 are:
 
 * Code Language is written in [Python 3.11](https://www.python.org/downloads/release/python-3110/)
 * The output gain are schemas that suit the very last version of [Beacon v2](https://github.com/ga4gh-beacon/beacon-v2) specifications, and ready to be deployed in a beacon v2 API compliant.
@@ -36,7 +36,7 @@ Next step is to fill the .xlsx file writing the records according to the header 
 Once you have finished filling all data and saved the .xlsx file with the collection name, e.g. genomicVariations.xlsx inside datasheets folder, please execute the next bash script from the root folder in your terminal:
 
 ```bash
-python beacon.py -output genomicVariations
+python genomicVariations.py
 ```
 
 This will generate the final .json file that is Beacon Friendly Format in the output_schemas folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. This file will be able to be directly imported into a mongoDB for beacon usage, for example for the [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).

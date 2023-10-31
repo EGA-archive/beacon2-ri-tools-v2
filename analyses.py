@@ -34,7 +34,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
     dict_of_properties={}
     list_of_filled_items=[]
     total_dict =[]
-    num_registries = 3
+    num_registries = 2506
     k=0
     j=2
     pbar = tqdm(total = num_registries-2)
@@ -46,7 +46,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
             property_value = sheet[property].value
 
             number_sheet = list_columns[i]+str(j)
-            print(number_sheet)
             
 
             
@@ -56,7 +55,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                 if valor is not None and valor != '':
                     list_of_filled_items.append(property_value)
 
-            print(list_of_filled_items)
 
             if valor:
                 dict_of_properties[property_value]=valor
@@ -145,7 +143,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                         vi_dict[ki1][ki2]=propv
                                                 if vi_dict != {}:
                                                     vivilist=[]
-                                                    print(vi_dict)
                                                     for kivi, vivi in vi_dict.items():
                                                         if vivi != {}:
                                                             vivilist.append(vivi)
@@ -169,7 +166,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 if item_dict not in value_list:
                                     value_list.append(item_dict)
                         if value_list != []:
-                            print(value_list)
                             itemdict={}
                             definitivedict[key]=[]
                             v_array=[]
