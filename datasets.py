@@ -21,7 +21,6 @@ with open('files/dictionaries/datasets.json') as json_file:
 
 
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
-
     wb = xw.Book('datasheets/datasets.xlsx')
 
     sheet = wb.sheets['Sheet1']
@@ -279,7 +278,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                 if propv_splitted_id != []:
                                                     propv_splitted_label = propv.split(',')
                                                 else:
-                                                    
                                                     propv_splitted_id = propv.split(',')
                                                 if propv_splitted_label != []:
                                                     n=0
@@ -368,7 +366,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                             value_dict[kd]=list_of_values
                                 if value_dict != {}:
                                     if value_dict not in vd_list:
-                                        vd_list.append(value_dict)
+                                        definitivedict[key]=value_dict
                             if vd_list != []:
                                 definitivedict[key]=vd_list
                         else:
