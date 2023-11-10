@@ -21,7 +21,7 @@ with open('files/dictionaries/genomicVariations.json') as json_file:
 
 
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
-    num_registries=4
+    num_registries=1006
     xls_Book = 'datasheets/genomicVariations.xlsx'
 
     wb = xw.Book(xls_Book)
@@ -199,22 +199,20 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                             if isinstance(vvl1, str) and ',' in vvl1:
                                                 vvl1_array = vvl1.split(',')
                                                 for vvlitem in vvl1_array:
-                                                    if vvlitem not in v1_array:
-                                                        v1_array.append(vvlitem)
+                                                    v1_array.append(vvlitem)
                                                 v1_bigkeys = kvl
                                                 if kvl1 not in v1_keys:
                                                     v1_keys.append(kvl1)
-                                        if v_array != []:
-                                            half_array_number = len(v_array)/2
-                                            itemdict[v1_bigkeys]={}
+
                             if v1_keys != []:
                                 n=0
                                 list_to_def=[]
-
-                                while n < len(v_array):
+                                half_array_number = len(v1_array)/2
+                                itemdict[v1_bigkeys]={}
+                                while n < int(half_array_number):
                                     newdict={}
                                     newdict[v1_bigkeys]={}
-                                    num=int(half_array_number+n+1)
+                                    num=int(half_array_number+n)
                                     newdict[v_key]=v_array[n]
                                     newdict[v1_bigkeys][v1_keys[0]]=v1_array[n]
                                     newdict[v1_bigkeys][v1_keys[1]]=v1_array[num]
@@ -231,15 +229,20 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                 for kd, vd in value.items():
                     if isinstance(vd, list):
                         vd_list=[]
+                        value_dict[kd]={}
+                        
+
                         if isinstance(vd[0], dict):
                             for kd1, vd1 in vd[0].items():
+                                
                                 if isinstance(vd1, dict):
+                                    
                                     for kd2, vd2 in vd1.items():
                                         new_item = ""
                                         new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
                                         for propk, propv in dict_of_properties.items():
                                             if propk == new_item:
-                                                value_dict[kd]={}
+                                                
                                                 value_dict[kd][kd1]={}
                                                 value_dict[kd][kd1][kd2]=propv
                                 else:
@@ -250,26 +253,65 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                             if ',' in propv:
                                                 propv_splitted = propv.split(',')
                                                 for itemsplitted in propv:
-                                                    value_dict[kd]={}
                                                     value_dict[kd][kd1]=propv_splitted
                                                     if value_dict not in vd_list:
                                                         vd_list.append(value_dict)
                                             else:
-                                                value_dict[kd]={}
                                                 value_dict[kd][kd1]=propv
-                                
+
+
+                                value_dict = {ka:va for ka,va in value_dict.items() if va != {}}
                                 if value_dict != {}:
                                     if value_dict not in vd_list:
                                         vd_list.append(value_dict)
                             if vd_list != []:
                                 definitivedict[key]=vd_list
-                    else:
-                        new_item = ""
-                        new_item = key + "_" + kd
-                        for propk, propv in dict_of_properties.items():
-                            if propk == new_item:
-                                value_dict[kd]=propv
-                                definitivedict[key]=value_dict
+                        else:
+                            new_item = ""
+                            new_item = key + "_" + kd
+                            for propk, propv in dict_of_properties.items():
+                                if propk == new_item:
+                                    value_dict[kd]=[]
+                                    value_dict[kd].append(propv)
+                    elif isinstance(vd, dict):
+                        value_dict[kd]={}
+                        for kd1, vd1 in vd.items():
+                            if isinstance(vd1, dict):
+                                value_dict[kd][kd1]={}
+                                for kd2, vd2 in vd1.items():
+                                    if isinstance(vd2, dict):
+                                        value_dict[kd][kd1][kd2]={}
+                                        for kd3, vd3 in vd2.items():
+                                            new_item = ""
+                                            new_item = key + "_" + kd + "_" + kd1 + "_" + kd2 + "_" + kd3
+                                            for propk, propv in dict_of_properties.items():
+                                                if propk == new_item:
+                                                    
+                                                    
+                                                    
+                                                    value_dict[kd][kd1][kd2][kd3]=propv
+                                                    definitivedict[key]=value_dict
+                                    else:
+                                        new_item = ""
+                                        new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                        for propk, propv in dict_of_properties.items():
+                                            if propk == new_item:
+                                                value_dict[kd][kd1][kd2]=propv
+                                                definitivedict[key]=value_dict
+                            else:
+                                new_item = ""
+                                new_item = key + "_" + kd + "_" + kd1
+                                for propk, propv in dict_of_properties.items():
+                                    if propk == new_item:
+                                        value_dict[kd][kd1]=propv
+                                        definitivedict[key]=value_dict
+                        else:
+                            new_item = ""
+                            new_item = key + "_" + kd
+                            for propk, propv in dict_of_properties.items():
+                                if propk == new_item:
+                                    value_dict[kd]=propv
+                                    definitivedict[key]=value_dict
                 else:
                     new_item = ""
                     new_item = key + "_" + kd

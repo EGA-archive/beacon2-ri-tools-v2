@@ -1,0 +1,8 @@
+version: "3.8"
+
+services:
+
+  beacon-ri-tools-v2:
+    build:
+      context: ./
+    container_name: ri-tools

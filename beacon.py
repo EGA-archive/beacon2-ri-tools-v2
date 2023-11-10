@@ -22,8 +22,8 @@ args = parser.parse_args()
 if args.datasheet:
     bash_string = ('python3 scripts/datasheet/{}.py').format(args.datasheet)
     try:
-        bash = subprocess.Popen([bash_string], shell=True, stdout=subprocess.PIPE)
-        #bash = subprocess.check_output([bash_string], shell=True)
+        #bash = subprocess.Popen([bash_string], shell=True, stdout=subprocess.PIPE)
+        bash = subprocess.check_output([bash_string], shell=True)
         print(bash)
     except subprocess.CalledProcessError as e:
         output = e.output

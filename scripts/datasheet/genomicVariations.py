@@ -459,7 +459,6 @@ for k, v in dict_properties.items():
                 new_list.append(ontologyTerm())
                 dict_properties[k]=new_list
             elif '.json' in v[0]:
-                print(v)
                 new_list=[]
                 new_list.append(subtypes(v[0]))
                 dict_properties[k]=new_list
@@ -478,8 +477,6 @@ for k, v in dict_properties.items():
                         new_list.append(vl)
             dict_properties[k]=new_list[0]
 
-#print(dict_properties)
-
 
 for key, value in dict_properties.items():
     if isinstance(value, dict):
@@ -487,7 +484,22 @@ for key, value in dict_properties.items():
             if isinstance(v, str):
                 if v != '':
                     if v == 'Location':
-                        dict_properties[key][k]=''
+                        dict_properties[key][k]={
+"interval": {
+"start": {
+"value": 0,
+"type": ""
+},
+"end": {
+"value": 0,
+"type": ""
+},
+"type": ""
+},
+"type": "",
+"sequence_id": ""
+}
+
                     else:
                         for kd, vd in dict_definitions.items():
                             if kd == v:
@@ -504,6 +516,36 @@ for key, value in dict_properties.items():
                                 new_list=[]
                                 new_list.append(vl)
                                 dict_properties[key][k]=new_list
+
+def location():
+    initial_dict={}
+    second_dict={}
+    item_dict={}
+    initial_list=[]
+    second_list=[]
+    vrs = 'ref_schemas/vrs'
+    file_vrs= vrs + '.json'
+    new_vrs = open(file_vrs,) 
+    datavrs = json.load(new_vrs)
+    for key, value in datavrs.items():
+        if key == 'definitions':
+            initial_dict=value
+    for key, value in initial_dict.items():
+        if key == 'Location':
+            second_dict=value
+    for key, value in second_dict.items():
+        if key == 'oneOf':
+            initial_list=value
+    for item in initial_list:
+        for k,v in item.items():
+            v_splitted = v.split('/')
+            second_list.append(v_splitted[-1])
+    for item in second_dict:
+        for key, value in initial_dict.items():
+            if key == item:
+                item_dict=value
+    print(second_list)
+
 
 
 list_of_definitions_required=[]
@@ -589,6 +631,24 @@ def generate(dict_properties):
                         new_item = ""
                         new_item = key + "_" + kd
                         list_of_excel_items.append(new_item)  
+                elif isinstance(vd, dict):
+                    for kd1, vd1 in vd.items():
+                        if isinstance(vd1, dict):
+                            for kd2, vd2 in vd1.items():
+                                if isinstance(vd2, dict):
+                                    for kd3, vd3 in vd2.items():
+                                        new_item = ""
+                                        new_item = key + "_" + kd + "_" + kd1 + "_" + kd2 + "_" + kd3
+                                        list_of_excel_items.append(new_item)
+                                else:
+                                    new_item = ""
+                                    new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                    list_of_excel_items.append(new_item)
+                        else:
+                            new_item = ""
+                            new_item = key + "_" + kd + "_" + kd1
+                            list_of_excel_items.append(new_item)
+                
                 else:
                     new_item = ""
                     new_item = key + "_" + kd
