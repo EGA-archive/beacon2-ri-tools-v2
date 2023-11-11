@@ -1,37 +1,33 @@
-from cyvcf2 import VCF
+import vcfpy
 import re
 import openpyxl
 
 dict_to_xls={}
 new_dict_to_xls={}
-vcf = VCF('/Users/oriol/Desktop/beacon-ri-tools-v2/files/vcf/chr22.Test.1000G.phase3.joint.norm.ann.dbnsfp.clinvar.cosmic.vcf.gz')
+vcf = vcfpy.Reader.from_path('files/vcf/chr22.Test.1000G.phase3.joint.norm.ann.dbnsfp.clinvar.cosmic.vcf.gz')
 i=0
-header=vcf.raw_header
-header_splitted=header.split("#")
-headerify = header_splitted[-1].replace('\n', '')
-header_list = re.split(r'\t+', headerify.rstrip('\t'))
+header_list = ['#CHROM', 'POS','ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT'] + vcf.header.samples.names
+
 
 for v in vcf:
     i+=1
-    example=str(v)
-    example = example.replace('\n', '')
-    line = re.split(r'\t+', example.rstrip('\t'))
-    #line=list(dict.fromkeys(line))
-    #print(line)
+    for value in v.ALT:
+        ALT = str(value.value)
+    line = [v.CHROM, v.POS, v.ID, v.REF, ALT, v.QUAL, v.FILTER, v.INFO, v.FORMAT]
+    line += [alt.value for alt in v.ALT]
+    line += [call.data.get('GT') or './.' for call in v.calls]
     dict_to_xls['variation_alternateBases'] = line[3]
     dict_to_xls['variation_referenceBases'] = line[4]
-    line7_splitted = line[7].split(';')
-    for line7 in line7_splitted:
-        if 'VT=' in line7:
-            line7splitted = line7.split("=")
-            dict_to_xls['variation_variantType'] = line7splitted[-1]
-        elif 'ANN=' in line7:
-            line7splitted = line7.split("|")
+    for k,v in line[7].items():
+        if k == 'VT':
+            dict_to_xls['variation_variantType'] = v[0]
+        elif k == 'ANN':
+            line7splitted = v[0].split("|")
             dict_to_xls['molecularAttributes_molecularEffects_label'] = line7splitted[1]
             dict_to_xls['molecularAttributes_molecularEffects_id'] = "ENSGLOSSARY:0000174"
             dict_to_xls['molecularAttributes_aminoacidChanges'] = "."
             dict_to_xls['molecularAttributes_geneIds'] = line7splitted[3]
-    dict_to_xls['variantInternalId'] = 'chr' + line[0] + '_' + line[1] + '_' + line[3] + '_' + line[4]
+    dict_to_xls['variantInternalId'] = 'chr' + str(line[0]) + '_' + str(line[1]) + '_' + str(line[3]) + '_' + str(line[4])
     zigosity={}
     zigosity['0/1']='GENO_0000458'
     zigosity['1/0']='GENO_0000458'
@@ -52,15 +48,14 @@ for v in vcf:
                 dict_to_xls['caseLevelData_zygosity_label'] = dict_to_xls['caseLevelData_zygosity_label'] + ',' + zigosity[zygo]
                 dict_to_xls['caseLevelData_biosampleId'] = dict_to_xls['caseLevelData_biosampleId'] + ',' + header_list[num]
         j+=1
-
-    dict_to_xls['identifiers_genomicHGVSId'] = line[0] + ':' + 'g.' + line[1] + line[4] + '>' + line[3]
+    dict_to_xls['identifiers_genomicHGVSId'] = str(line[0]) + ':' + 'g.' + str(line[1]) + line[4] + '>' + line[3]
     dict_to_xls['variation_location_interval_start_value'] = int(line[1]) -1
     dict_to_xls['variation_location_interval_start_type']="Number"
     dict_to_xls['variation_location_interval_end_value'] = int(line[1])
     dict_to_xls['variation_location_interval_end_type']="Number"
     dict_to_xls['variation_location_interval_type']="SequenceInterval"
     dict_to_xls['variation_location_type']="SequenceLocation"
-    dict_to_xls['variation_location_sequence_id']="HGVSid:" + line[0] + ":g." + line[1] + line[4] + ">" + line[3]
+    dict_to_xls['variation_location_sequence_id']="HGVSid:" + str(line[0]) + ":g." + str(line[1]) + line[4] + ">" + line[3]
 
 
 
