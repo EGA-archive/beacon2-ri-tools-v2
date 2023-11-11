@@ -1,6 +1,6 @@
 from cyvcf2 import VCF
 import re
-import xlwings as xw
+import openpyxl
 
 dict_to_xls={}
 new_dict_to_xls={}
@@ -69,9 +69,9 @@ for v in vcf:
 
     xls_Book = 'datasheets/genomicVariations.xlsx'
 
-    wb = xw.Book(xls_Book)
+    wb = openpyxl.load_workbook(xls_Book)
 
-    sheet = wb.sheets['Sheet1']
+    sheet = wb['Sheet1']
 
     list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
@@ -101,7 +101,11 @@ for v in vcf:
     if i == 1005:
         break
 
+
+
 for key, value in new_dict_to_xls.items():
     sheet[key].value = value
+
+wb.save(xls_Book)
 
 

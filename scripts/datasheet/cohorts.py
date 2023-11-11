@@ -1,5 +1,5 @@
 import json
-import xlwings as xw
+import openpyxl
 import re
 
 file_to_open='ref_schemas/cohorts.json'
@@ -945,9 +945,11 @@ def generate(dict_properties):
             new_item = key
             list_of_excel_items.append(new_item)
 
-    wb = xw.Book('datasheets/cohorts.xlsx')
+    xls_Book = 'datasheets/cohorts.xlsx'
 
-    sheet = wb.sheets['Sheet1']
+    wb = openpyxl.load_workbook(xls_Book)
+
+    sheet = wb['Sheet1']
 
     list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
@@ -964,6 +966,8 @@ def generate(dict_properties):
         number_sheet = list_columns[i]+str(1)
         sheet[number_sheet].value = element
         i+=1
+
+    wb.save(xls_Book)
 
     with open("files/items/cohorts.txt", "w") as txt_file:
         for line in list_of_excel_items:

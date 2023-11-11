@@ -1,5 +1,5 @@
 import json
-import xlwings as xw
+import openpyxl
 
 file_to_open='ref_schemas/individuals.json'
 # Opening JSON file 
@@ -919,10 +919,11 @@ def generate(dict_properties):
             new_item = key
             list_of_excel_items.append(new_item)
 
+    xls_Book = 'datasheets/individuals.xlsx'
 
-    wb = xw.Book('datasheets/individuals.xlsx')
+    wb = openpyxl.load_workbook(xls_Book)
 
-    sheet = wb.sheets['Sheet1']
+    sheet = wb['Sheet1']
 
     list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
@@ -932,7 +933,7 @@ def generate(dict_properties):
                     'EA', 'EE', 'EE', 'EE', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
     ]
 
-
+    wb.save(xls_Book)
 
     i=0
     for element in list_of_excel_items:

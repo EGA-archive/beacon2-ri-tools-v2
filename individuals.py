@@ -1,5 +1,5 @@
 import json
-import xlwings as xw
+import openpyxl
 from tqdm import tqdm
 
 list_of_excel_items=[]
@@ -18,9 +18,9 @@ with open('files/dictionaries/individuals.json') as json_file:
 def generate(list_of_excel_items, list_of_properties_required, dict_properties):
 
 
-    wb = xw.Book('datasheets/individuals.xlsx')
+    wb = openpyxl.load_workbook('datasheets/individuals.xlsx')
 
-    sheet = wb.sheets['Sheet1']
+    sheet = wb['Sheet1']
 
     list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
