@@ -31,9 +31,9 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
     list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
                     'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW', 'BX', 'BY', 'BZ',
-                    'CA', 'CC', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ', 'CR', 'CS', 'CT', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ',
-                    'DA', 'DD', 'DD', 'DD', 'DE', 'DF', 'DG', 'DH', 'DI', 'DJ', 'DK', 'DL', 'DM', 'DN', 'DO', 'DP', 'DQ', 'DR', 'DS', 'DT', 'DU', 'DV', 'DW', 'DX', 'DY', 'DZ',
-                    'EA', 'EE', 'EE', 'EE', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
+                    'CA', 'CB', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ', 'CR', 'CS', 'CT', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ',
+                    'DA', 'DB', 'DC', 'DD', 'DE', 'DF', 'DG', 'DH', 'DI', 'DJ', 'DK', 'DL', 'DM', 'DN', 'DO', 'DP', 'DQ', 'DR', 'DS', 'DT', 'DU', 'DV', 'DW', 'DX', 'DY', 'DZ',
+                    'EA', 'EB', 'EC', 'ED', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
     ]
 
     dict_of_properties={}
@@ -230,7 +230,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                     if isinstance(vd, list):
                         vd_list=[]
                         value_dict[kd]={}
-                        for itemvd in vd.items():
+                        for itemvd in vd:
                             if isinstance(itemvd, dict):
                                 for kd1, vd1 in itemvd.items():
                                     if isinstance(vd1, dict):
@@ -242,23 +242,23 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                     value_dict[kd][kd1]={}
                                                     value_dict[kd][kd1][kd2]=propv
                                     elif isinstance(vd1, list):
+                                        value_dict[kd][kd1]={}
                                         for item in vd1:
                                             for kd2, vd2 in item.items():
-                                                if isinstance(vd2, dict):
-                                                    for kd3, vd3 in vd2.items():
-                                                        new_item = ""
-                                                        new_item = key + "_" + kd + "_" + kd1 + "_" + kd2 + "_" + kd3 
-                                                        for propk, propv in dict_of_properties.items():
-                                                            if propk == new_item:
-                                                                value_dict[kd][kd1]={}
-                                                                value_dict[kd][kd1][kd3]={}
-                                                                value_dict[kd][kd1][kd2][kd3]=propv
+                                                if isinstance(vd2, list):
+                                                    value_dict[kd][kd1][kd2]={}
+                                                    for itemvd2 in vd2:
+                                                        for kd3, vd3 in itemvd2.items():
+                                                            new_item = ""
+                                                            new_item = key + "_" + kd + "_" + kd1 + "_" + kd2 + "_" + kd3
+                                                            for propk, propv in dict_of_properties.items():
+                                                                if propk == new_item:
+                                                                    value_dict[kd][kd1][kd2][kd3]=propv
                                                 else:
                                                     new_item = ""
                                                     new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
                                                     for propk, propv in dict_of_properties.items():
                                                         if propk == new_item:
-                                                            value_dict[kd][kd1]={}
                                                             value_dict[kd][kd1][kd2]=propv
                                     else:
                                         new_item = ""
@@ -272,15 +272,12 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                         if value_dict not in vd_list:
                                                             vd_list.append(value_dict)
                                                 else:
+                                                    if value_dict == {}:
+                                                        value_dict[kd]={}
                                                     value_dict[kd][kd1]=propv
 
 
-                                    value_dict = {ka:va for ka,va in value_dict.items() if va != {}}
-                                    if value_dict != {}:
-                                        if value_dict not in vd_list:
-                                            vd_list.append(value_dict)
-                                if vd_list != []:
-                                    definitivedict[key]=vd_list
+
                             else:
                                 new_item = ""
                                 new_item = key + "_" + kd
@@ -288,6 +285,11 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                     if propk == new_item:
                                         value_dict[kd]=[]
                                         value_dict[kd].append(propv)
+
+
+                            value_dict = {ka:va for ka,va in value_dict.items() if va != {}}
+                            if value_dict != {}:
+                                definitivedict[key]=value_dict
                     elif isinstance(vd, dict):
                         value_dict[kd]={}
                         for kd1, vd1 in vd.items():
@@ -317,13 +319,13 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                     if propk == new_item:
                                         value_dict[kd][kd1]=propv
                                         definitivedict[key]=value_dict
-                        else:
-                            new_item = ""
-                            new_item = key + "_" + kd
-                            for propk, propv in dict_of_properties.items():
-                                if propk == new_item:
-                                    value_dict[kd]=propv
-                                    definitivedict[key]=value_dict
+                    else:
+                        new_item = ""
+                        new_item = key + "_" + kd
+                        for propk, propv in dict_of_properties.items():
+                            if propk == new_item:
+                                value_dict[kd]=propv
+                                definitivedict[key]=value_dict
                 else:
                     new_item = ""
                     new_item = key + "_" + kd
