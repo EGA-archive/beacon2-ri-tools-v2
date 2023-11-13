@@ -154,15 +154,17 @@ def location():
                                     elif v1 == 'integer':
                                         itemdict[k2]=0
                                 elif k1 == 'oneOf':
+                                    itemdict[k2]=[]
                                     for item in v1:
                                         for kr, vr in item.items():
                                             vr_splitted = vr.split('/')
                                             for krd, vrd in initial_dict.items():
                                                 if krd == vr_splitted[-1]:
-                                                    itemdict[k2]=vrd
+                                                    itemdict[k2].append(vrd)
                         new_dict7[key][k].append(itemdict)
             else:
                 new_dict7[key][k]=v
+
     new_dict8={}
     for key, value in new_dict7.items():
         new_dict8[key]={}
@@ -173,10 +175,12 @@ def location():
                     if isinstance(item, dict):
                         itemdict={}
                         for k2, v2 in item.items():
-                            if isinstance(v2, dict):
-                                for k1, v1 in v2.items():
-                                    if k1 == 'properties':
-                                        itemdict[k2]=v1
+                            if isinstance(v2, list):
+                                itemdict[k2]=[]
+                                for itemv2 in v2:
+                                    for k1, v1 in itemv2.items():
+                                        if k1 == 'properties':
+                                            itemdict[k2].append(v1)
 
                             else:
                                 itemdict[k2]=v2
@@ -194,18 +198,54 @@ def location():
                     if isinstance(item, dict):
                         itemdict={}
                         for k2, v2 in item.items():
-                            if isinstance(v2, dict):
-                                itemdict[k2]={}
-                                for k1, v1 in v2.items():
-                                    if isinstance(v1, dict):
-                                        if k1 == 'type':
-                                            for k3, v3 in v1.items():
-                                                if v3 == 'string':
-                                                    itemdict[k2][k1]=''
-                                        elif k1 == 'value':
-                                            for k3, v3 in v1.items():
-                                                if v3 == 'integer':
-                                                    itemdict[k2][k1]=0
+                            if isinstance(v2, list):
+                                itemdict[k2]=[]
+                                
+                                for itemv2 in v2:
+                                    v1dict={}
+                                    for k1, v1 in itemv2.items():
+
+                                        if isinstance(v1, dict):
+                                            
+                                            if k1 == 'type':
+                                                for k3, v3 in v1.items():
+                                                    if v3 == 'string':
+                                                        v1dict[k1]=''
+                                                        if v1dict not in itemdict[k2]:
+                                                            itemdict[k2].append(v1dict)
+                                                    elif v3 == 'integer':
+                                                        v1dict[k1]=0
+                                                        if v1dict not in itemdict[k2]:
+                                                            itemdict[k2].append(v1dict)
+                                                    elif v3 == 'number':
+                                                        v1dict[k1]=0
+                                                        if v1dict not in itemdict[k2]:
+                                                            itemdict[k2].append(v1dict)
+                                            elif k1 == 'value':
+                                                for k3, v3 in v1.items():
+                                                    if v3 == 'integer':
+                                                        v1dict[k1]=0
+                                                        if v1dict not in itemdict[k2]:
+                                                            itemdict[k2].append(v1dict)
+                                                    elif v3 == 'number':
+                                                        v1dict[k1]=0
+                                                        if v1dict not in itemdict[k2]:
+                                                            itemdict[k2].append(v1dict)
+                                            else:
+                                                for k3, v3 in v1.items():
+                                                    if v3 == 'number':
+                                                        v1dict[k1]=0
+                                                        if v1dict not in itemdict[k2]:
+                                                            itemdict[k2].append(v1dict)
+                                                    elif v3 == 'string':
+                                                        v1dict[k1]=''
+                                                        if v1dict not in itemdict[k2]:
+                                                            itemdict[k2].append(v1dict)
+                                                    elif v3 == 'integer':
+                                                        v1dict[k1]=0
+                                                        if v1dict not in itemdict[k2]:
+                                                            itemdict[k2].append(v1dict)
+
                             else:
                                 itemdict[k2]=v2
                     
@@ -700,7 +740,7 @@ for key, value in dict_properties.items():
                                 dict_properties[key][k]=new_list
 
 
-print(dict_properties)
+#print(dict_properties)
 
 
 list_of_definitions_required=[]
@@ -727,7 +767,6 @@ def generate(dict_properties):
         if isinstance(value, list):
             for item in value:
                 if isinstance(item, dict):
-                    #print(item)
                     for ki, vi in item.items():
                         if isinstance(vi, list):
                             for subitem in vi:
@@ -783,12 +822,13 @@ def generate(dict_properties):
                                 elif isinstance(vd1, list):
                                     for item in vd1:
                                         for kd2, vd2 in item.items():
-                                            if isinstance(vd2, dict):
-                                                for kd3, vd3 in vd2.items():
-                                                    new_item = ""
-                                                    new_item = key + "_" + kd + "_" + kd1 + "_" + kd2 + "_" + kd3 
-                                                    if new_item not in list_of_excel_items:
-                                                        list_of_excel_items.append(new_item)
+                                            if isinstance(vd2, list):
+                                                for itemvd2 in vd2:
+                                                    for kd3, vd3 in itemvd2.items():
+                                                        new_item = ""
+                                                        new_item = key + "_" + kd + "_" + kd1 + "_" + kd2 + "_" + kd3
+                                                        if new_item not in list_of_excel_items:
+                                                            list_of_excel_items.append(new_item)
                                             else:
                                                 new_item = ""
                                                 new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
