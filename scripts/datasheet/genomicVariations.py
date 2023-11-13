@@ -194,13 +194,10 @@ def location():
                     if isinstance(item, dict):
                         itemdict={}
                         for k2, v2 in item.items():
-                            print(k2)
                             if isinstance(v2, dict):
                                 itemdict[k2]={}
                                 for k1, v1 in v2.items():
                                     if isinstance(v1, dict):
-                                        print(k1)
-                                        
                                         if k1 == 'type':
                                             for k3, v3 in v1.items():
                                                 if v3 == 'string':
@@ -208,7 +205,6 @@ def location():
                                         elif k1 == 'value':
                                             for k3, v3 in v1.items():
                                                 if v3 == 'integer':
-                                                    print(k1)
                                                     itemdict[k2][k1]=0
                             else:
                                 itemdict[k2]=v2
@@ -704,7 +700,7 @@ for key, value in dict_properties.items():
                                 dict_properties[key][k]=new_list
 
 
-print(dict_properties)
+#print(dict_properties)
 
 
 list_of_definitions_required=[]
@@ -731,6 +727,7 @@ def generate(dict_properties):
         if isinstance(value, list):
             for item in value:
                 if isinstance(item, dict):
+                    #print(item)
                     for ki, vi in item.items():
                         if isinstance(vi, list):
                             for subitem in vi:
@@ -775,21 +772,37 @@ def generate(dict_properties):
         elif isinstance(value, dict):
             for kd, vd in value.items():
                 if isinstance(vd, list):
-                    if isinstance(vd[0], dict):
-                        for kd1, vd1 in vd[0].items():
-                            if isinstance(vd1, dict):
-                                for kd2, vd2 in vd1.items():
+                    for itemvd in vd:
+                        if isinstance(itemvd, dict):
+                            for kd1, vd1 in itemvd.items():
+                                if isinstance(vd1, dict):
+                                    for kd2, vd2 in vd1.items():
+                                        new_item = ""
+                                        new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                        list_of_excel_items.append(new_item)
+                                elif isinstance(vd1, list):
+                                    for item in vd1:
+                                        for kd2, vd2 in item.items():
+                                            if isinstance(vd2, dict):
+                                                for kd3, vd3 in vd2.items():
+                                                    new_item = ""
+                                                    new_item = key + "_" + kd + "_" + kd1 + "_" + kd2 + "_" + kd3 
+                                                    if new_item not in list_of_excel_items:
+                                                        list_of_excel_items.append(new_item)
+                                            else:
+                                                new_item = ""
+                                                new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                                if new_item not in list_of_excel_items:
+                                                    list_of_excel_items.append(new_item)
+                                else:
                                     new_item = ""
-                                    new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
-                                    list_of_excel_items.append(new_item)
-                            else:
-                                new_item = ""
-                                new_item = key + "_" + kd + "_" + kd1
-                                list_of_excel_items.append(new_item)
-                    else:
-                        new_item = ""
-                        new_item = key + "_" + kd
-                        list_of_excel_items.append(new_item)  
+                                    new_item = key + "_" + kd + "_" + kd1
+                                    if new_item not in list_of_excel_items:
+                                        list_of_excel_items.append(new_item)
+                        else:
+                            new_item = ""
+                            new_item = key + "_" + kd
+                            list_of_excel_items.append(new_item)  
                 elif isinstance(vd, dict):
                     for kd1, vd1 in vd.items():
                         if isinstance(vd1, dict):
