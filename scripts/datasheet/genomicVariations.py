@@ -589,6 +589,7 @@ def subtypes(file):
                         subdict['oneOf'].append(vval_splitted[-1])
     return subdict
 
+print(data)
 for key, value in data.items():
     if key == 'definitions':
         definitions_array=value
@@ -649,6 +650,7 @@ for key, value in data.items():
     if key == 'properties':
         properties_array=value
 
+
 for key, value in properties_array.items():
     for k, v in value.items():
         if k == '$ref':
@@ -682,7 +684,9 @@ for key, value in properties_array.items():
                     list_elements.append(ve_splitted[-1])
             dict_properties[key]={}
             dict_properties[key]['oneOf']=list_elements
-    
+
+#print(dict_properties)
+
 for k, v in dict_properties.items():
     if isinstance(v, str):
         if v != '':
@@ -740,7 +744,6 @@ for key, value in dict_properties.items():
                                 dict_properties[key][k]=new_list
 
 
-#print(dict_properties)
 
 
 list_of_definitions_required=[]
@@ -891,7 +894,7 @@ def generate(dict_properties):
 
 
 
-    print(list_of_excel_items)
+    #print(list_of_excel_items)
 
     i=0
     for element in list_of_excel_items:

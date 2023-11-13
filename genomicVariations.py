@@ -21,7 +21,7 @@ with open('files/dictionaries/genomicVariations.json') as json_file:
 
 
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
-    num_registries=1006
+    num_registries=3
     xls_Book = 'datasheets/genomicVariations.xlsx'
 
     wb = openpyxl.load_workbook(xls_Book)
@@ -103,10 +103,13 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 vi_list=[]
                                 for subitem in vi:
                                     if isinstance(subitem, dict):
+                                        subitem_dict={}
                                         for k, v in subitem.items():
+                                            subitem_dict[k]={}
                                             if isinstance(v, dict):
                                                 for k1, v1 in v.items():
                                                     if isinstance(v1, dict):
+                                                        
                                                         for k2, v2 in v1.items():
                                                             if isinstance(v2, dict): 
                                                                 for k3, v3 in v2.items():
@@ -133,21 +136,22 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                         new_item = key + "_" + ki + "_" + k + "_" + k1
                                                         for propk, propv in dict_of_properties.items():
                                                             if propk == new_item:
-                                                                subitem_dict={}
-                                                                subitem_dict[k]={}
+                                                                #print(propk)
+
+                                                                
                                                                 subitem_dict[k][k1]=propv    
                                             else:
                                                 new_item = ""
                                                 new_item = key + "_" + ki + "_" + k
                                                 for propk, propv in dict_of_properties.items():
                                                     if propk == new_item:
-                                                        subitem_dict={}
                                                         subitem_dict[k]=propv
                                                         if subitem_dict != {}:
                                                             if subitem_dict not in vi_list:
                                                                 vi_list.append(subitem_dict)
-                                                            item_dict[ki]=vi_list[0]
+                                                            item_dict[ki]=vi_list
                             elif isinstance(vi, dict):
+                                
                                 vi_dict={}
                                 for ki1, vi1 in vi.items():
                                     if isinstance(vi1, dict):
@@ -234,12 +238,12 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                             if isinstance(itemvd, dict):
                                 for kd1, vd1 in itemvd.items():
                                     if isinstance(vd1, dict):
+                                        value_dict[kd][kd1]={}
                                         for kd2, vd2 in vd1.items():
                                             new_item = ""
                                             new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
-                                                    value_dict[kd][kd1]={}
                                                     value_dict[kd][kd1][kd2]=propv
                                     elif isinstance(vd1, list):
                                         value_dict[kd][kd1]={}
