@@ -11,6 +11,9 @@ new_file = open(file_to_open,)
 # a dictionary 
 data = json.load(new_file) 
 
+vrs_file = open('ref_schemas/vrs.json')
+data_vrs = json.load(vrs_file)
+
    
 commonDefinitions = open('ref_schemas/commondefinitions.json')
 commonDefinitions = json.load(commonDefinitions)
@@ -18,6 +21,7 @@ commonComponents = open('ref_schemas/beaconcommoncomponents.json')
 commonComponents = json.load(commonComponents)
 
 dict_definitions={}
+dict_vrs_definitions={}
 dict_properties={}
 
 def location():
@@ -684,7 +688,8 @@ for key, value in properties_array.items():
             dict_properties[key]={}
             dict_properties[key]['oneOf']=list_elements
 
-#print(dict_properties)
+
+print(dict_properties)
 
 for k, v in dict_properties.items():
     if isinstance(v, str):
@@ -720,6 +725,8 @@ for k, v in dict_properties.items():
 
 for key, value in dict_properties.items():
     if isinstance(value, dict):
+        print(key)
+        print(value)
         for k, v in value.items():
             if isinstance(v, str):
                 if v != '':
@@ -877,7 +884,6 @@ def generate(dict_properties):
     for excel_item in list_of_excel_items:
         if '|start|iso8601duration' in excel_item:
             excel_splitted = excel_item.split('|start|iso8601duration')
-            print(excel_splitted[0])
             list_of_excel_items.append(excel_splitted[0])
     
     list_of_excel_items=sorted(list_of_excel_items)
