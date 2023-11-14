@@ -4,10 +4,10 @@ individualId
 info
 libraryLayout
 librarySelection
-librarySource_id
-librarySource_label
+librarySource|id
+librarySource|label
 libraryStrategy
 platform
-platformModel_id
-platformModel_label
+platformModel|id
+platformModel|label
 runDate

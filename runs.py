@@ -26,9 +26,9 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
     list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
                     'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW', 'BX', 'BY', 'BZ',
-                    'CA', 'CC', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ', 'CR', 'CS', 'CT', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ',
-                    'DA', 'DD', 'DD', 'DD', 'DE', 'DF', 'DG', 'DH', 'DI', 'DJ', 'DK', 'DL', 'DM', 'DN', 'DO', 'DP', 'DQ', 'DR', 'DS', 'DT', 'DU', 'DV', 'DW', 'DX', 'DY', 'DZ',
-                    'EA', 'EE', 'EE', 'EE', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
+                    'CA', 'CB', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ', 'CR', 'CS', 'CT', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ',
+                    'DA', 'DB', 'DC', 'DD', 'DE', 'DF', 'DG', 'DH', 'DI', 'DJ', 'DK', 'DL', 'DM', 'DN', 'DO', 'DP', 'DQ', 'DR', 'DS', 'DT', 'DU', 'DV', 'DW', 'DX', 'DY', 'DZ',
+                    'EA', 'EB', 'EC', 'ED', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
     ]
 
 
@@ -103,7 +103,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                             if isinstance(v2, dict): 
                                                                 for k3, v3 in v2.items():
                                                                     new_item = ""
-                                                                    new_item = key + "_" + ki + "_" + k + "_" + k1 + "_" + k2 + "_" + k3
+                                                                    new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2 + "|" + k3
                                                                     for propk, propv in dict_of_properties.items():
                                                                         if propk == new_item:
                                                                             subitem_dict[k][k1]={}
@@ -111,14 +111,14 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                                             subitem_dict[k][k1][k2][k3]=propv
                                                             else:
                                                                 new_item = ""
-                                                                new_item = key + "_" + ki + "_" + k + "_" + k1 + "_" + k2
+                                                                new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2
                                                                 for propk, propv in dict_of_properties.items():
                                                                     if propk == new_item:
                                                                         subitem_dict[k][k1]={}
                                                                         subitem_dict[k][k1][k2]=propv   
                                                     else:
                                                         new_item = ""
-                                                        new_item = key + "_" + ki + "_" + k + "_" + k1
+                                                        new_item = key + "|" + ki + "|" + k + "|" + k1
                                                         for propk, propv in dict_of_properties.items():
                                                             if propk == new_item:
                                                                 if subitem_dict == {}:
@@ -126,7 +126,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                                 subitem_dict[k][k1]=propv  
                                             else:
                                                 new_item = ""
-                                                new_item = key + "_" + ki + "_" + k
+                                                new_item = key + "|" + ki + "|" + k
                                                 for propk, propv in dict_of_properties.items():
                                                     if propk == new_item:
                                                         subitem_dict[k]=propv
@@ -144,7 +144,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                         vi_dict[ki1]={}
                                         if vi1 == {}:
                                             new_item = ""
-                                            new_item = key + "_" + ki + "_" + ki1
+                                            new_item = key + "|" + ki + "|" + ki1
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
                                                     propv = re.sub(r'\s', '', propv)
@@ -153,7 +153,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                         else:  
                                             for ki2, vi2 in vi1.items():
                                                 new_item = ""
-                                                new_item = key + "_" + ki + "_" + ki1 + "_" + ki2
+                                                new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
                                                 for propk, propv in dict_of_properties.items():
                                                     if propk == new_item:
                                                         vi_dict[ki1][ki2]=propv
@@ -167,14 +167,14 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                             item_dict[ki]=vi_dict    
                                     else:
                                         new_item = ""
-                                        new_item = key + "_" + ki + "_" + ki1
+                                        new_item = key + "|" + ki + "|" + ki1
                                         for propk, propv in dict_of_properties.items():
                                             if propk == new_item:
                                                 vi_dict[ki1]=propv 
                                                 item_dict[ki]=vi_dict
                             else:
                                 new_item = ""
-                                new_item = key + "_" + ki
+                                new_item = key + "|" + ki
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
                                         item_dict[ki]=propv
@@ -275,7 +275,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 if isinstance(vd1, dict):
                                     for kd2, vd2 in vd1.items():
                                         new_item = ""
-                                        new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                        new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                         for propk, propv in dict_of_properties.items():
                                             if propk == new_item:
                                                 value_dict[kd]={}
@@ -283,7 +283,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                 value_dict[kd][kd1][kd2]=propv
                                 else:
                                     new_item = ""
-                                    new_item = key + "_" + kd + "_" + kd1
+                                    new_item = key + "|" + kd + "|" + kd1
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
                                             if ',' in propv:
@@ -329,7 +329,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                             if isinstance(vd1, dict):
                                 for kd2, vd2 in vd1.items():
                                     new_item = ""
-                                    new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                    new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
                                             if value_dict == {}:
@@ -339,21 +339,21 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                             definitivedict[key]=value_dict
                             else:
                                 new_item = ""
-                                new_item = key + "_" + kd + "_" + kd1
+                                new_item = key + "|" + kd + "|" + kd1
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
                                         value_dict[kd][kd1]=propv
                                         definitivedict[key]=value_dict
                         else:
                             new_item = ""
-                            new_item = key + "_" + kd
+                            new_item = key + "|" + kd
                             for propk, propv in dict_of_properties.items():
                                 if propk == new_item:
                                     value_dict[kd]=propv
                                     definitivedict[key]=value_dict
                     else:
                         new_item = ""
-                        new_item = key + "_" + kd
+                        new_item = key + "|" + kd
                         for propk, propv in dict_of_properties.items():
                             if propk == new_item:
                                 value_dict[kd]=propv

@@ -870,39 +870,39 @@ def generate(dict_properties):
                                                         if isinstance(v2, dict):
                                                             for k3, v3 in v2.items():
                                                                 new_item = ""
-                                                                new_item = key + "_" + ki + "_" + k + "_" + k1 + "_" + k2 + "_" + k3
+                                                                new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2 + "|" + k3
                                                                 list_of_excel_items.append(new_item)            
                                                         else:
                                                             new_item = ""
-                                                            new_item = key + "_" + ki + "_" + k + "_" + k1 + "_" + k2
+                                                            new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2
                                                             list_of_excel_items.append(new_item)                                        
                                                 else:
                                                     new_item = ""
-                                                    new_item = key + "_" + ki + "_" + k + "_" + k1
+                                                    new_item = key + "|" + ki + "|" + k + "|" + k1
                                                     list_of_excel_items.append(new_item)
                                         else:
                                             new_item = ""
-                                            new_item = key + "_" + ki + "_" + k
+                                            new_item = key + "|" + ki + "|" + k
                                             list_of_excel_items.append(new_item)
                         elif isinstance(vi, dict):
                             for ki1, vi1 in vi.items():
                                 if isinstance(vi1, dict):
                                     if vi1 == {}:
                                         new_item = ""
-                                        new_item = key + "_" + ki + "_" + ki1
+                                        new_item = key + "|" + ki + "|" + ki1
                                         list_of_excel_items.append(new_item)  
                                     else:
                                         for ki2, vi2 in vi1.items():
                                             new_item = ""
-                                            new_item = key + "_" + ki + "_" + ki1 + "_" + ki2
+                                            new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
                                             list_of_excel_items.append(new_item)     
                                 else:
                                     new_item = ""
-                                    new_item = key + "_" + ki + "_" + ki1
+                                    new_item = key + "|" + ki + "|" + ki1
                                     list_of_excel_items.append(new_item)      
                         else:
                             new_item = ""
-                            new_item = key + "_" + ki
+                            new_item = key + "|" + ki
                             list_of_excel_items.append(new_item) 
         elif isinstance(value, dict):
             for kd, vd in value.items():
@@ -912,30 +912,30 @@ def generate(dict_properties):
                             if isinstance(vd1, dict):
                                 for kd2, vd2 in vd1.items():
                                     new_item = ""
-                                    new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                    new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                     list_of_excel_items.append(new_item)
                             else:
                                 new_item = ""
-                                new_item = key + "_" + kd + "_" + kd1
+                                new_item = key + "|" + kd + "|" + kd1
                                 list_of_excel_items.append(new_item)
                     else:
                         new_item = ""
-                        new_item = key + "_" + kd
+                        new_item = key + "|" + kd
                         list_of_excel_items.append(new_item)
                 elif isinstance(vd, dict):
                     for kd1, vd1 in vd.items():
                         if isinstance(vd1, dict):
                             for kd2, vd2 in vd1.items():
                                 new_item = ""
-                                new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                 list_of_excel_items.append(new_item)
                         else:
                             new_item = ""
-                            new_item = key + "_" + kd + "_" + kd1
+                            new_item = key + "|" + kd + "|" + kd1
                             list_of_excel_items.append(new_item)
                 else:
                     new_item = ""
-                    new_item = key + "_" + kd
+                    new_item = key + "|" + kd
                     list_of_excel_items.append(new_item)
             if value == {}:
                 new_item = key
@@ -954,9 +954,9 @@ def generate(dict_properties):
     list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
                     'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW', 'BX', 'BY', 'BZ',
-                    'CA', 'CC', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ', 'CR', 'CS', 'CT', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ',
-                    'DA', 'DD', 'DD', 'DD', 'DE', 'DF', 'DG', 'DH', 'DI', 'DJ', 'DK', 'DL', 'DM', 'DN', 'DO', 'DP', 'DQ', 'DR', 'DS', 'DT', 'DU', 'DV', 'DW', 'DX', 'DY', 'DZ',
-                    'EA', 'EE', 'EE', 'EE', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
+                    'CA', 'CB', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ', 'CR', 'CS', 'CT', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ',
+                    'DA', 'DB', 'DC', 'DD', 'DE', 'DF', 'DG', 'DH', 'DI', 'DJ', 'DK', 'DL', 'DM', 'DN', 'DO', 'DP', 'DQ', 'DR', 'DS', 'DT', 'DU', 'DV', 'DW', 'DX', 'DY', 'DZ',
+                    'EA', 'EB', 'EC', 'ED', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
     ]
 
 
