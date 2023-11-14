@@ -874,7 +874,13 @@ def generate(dict_properties):
             list_of_excel_items.append(new_item)
 
 
-
+    for excel_item in list_of_excel_items:
+        if '|start|iso8601duration' in excel_item:
+            excel_splitted = excel_item.split('|start|iso8601duration')
+            print(excel_splitted[0])
+            list_of_excel_items.append(excel_splitted[0])
+    
+    list_of_excel_items=sorted(list_of_excel_items)
 
 
     xls_Book = 'datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx'

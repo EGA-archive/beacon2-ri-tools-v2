@@ -56,9 +56,11 @@ def commas(prova):
 def generate(list_of_excel_items, list_of_properties_required, dict_properties):
 
 
-    wb = openpyxl.load_workbook('datasheets/individuals.xlsx')
 
-    sheet = wb['Sheet1']
+
+    wb = openpyxl.load_workbook('datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx')
+
+    sheet = wb['individuals']
 
     list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
@@ -89,8 +91,31 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
             
             valor = sheet[number_sheet].value
             if i > 1:
-                if valor != '':
+                if valor != None:
                     list_of_filled_items.append(property_value)
+            measures_list_1 = ['measures|measurementValue|referenceRange|high', 'measures|measurementValue|referenceRange|low', 'measures|measurementValue|referenceRange|unit|id', 'measures|measurementValue|referenceRange|unit|label']
+            measures_list_2 = ['measures|measurementValue|unit|id', 'measures|measurementValue|unit|label', 'measures|measurementValue|value']
+            measures_list_3 = ['measures|measurementValue|typedQuantities|quantity|referenceRange|high', 'measures|measurementValue|typedQuantities|quantity|referenceRange|low', 'measures|measurementValue|typedQuantities|quantity|referenceRange|unit', 'measures|measurementValue|typedQuantities|quantity|unit|id', 'measures|measurementValue|typedQuantities|quantity|unit|label', 'measures|measurementValue|typedQuantities|quantity|value']
+            measure_check_1=0
+            measure_check_2=0
+            measure_check_3=0
+            for measure in list_of_filled_items:
+                if 'measures' in measure:
+                    if measure in measures_list_1:
+                        measure_check_1+=1
+                    elif measure in measures_list_2:
+                        measure_check_2+=1
+                    elif measure in measures_list_3:
+                        measure_check_3+=1
+            if measure_check_1 > 0:
+                if measure_check_2>0 or measure_check_3>0:
+                    raise Exception(('please, choose only one {} format').format('measurementValue'))
+            elif measure_check_2 > 0:
+                if measure_check_1>0 or measure_check_3>0:
+                    raise Exception(('please, choose only one {} format').format('measurementValue'))
+            elif measure_check_3 > 0:
+                if measure_check_1>0 or measure_check_2>0:
+                    raise Exception(('please, choose only one {} format').format('measurementValue'))
 
 
 

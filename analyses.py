@@ -19,9 +19,9 @@ with open('files/dictionaries/analyses.json') as json_file:
 
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
 
-    wb = openpyxl.load_workbook('datasheets/analyses.xlsx')
+    wb = openpyxl.load_workbook('datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx')
 
-    sheet = wb['Sheet1']
+    sheet = wb['analyses']
 
     list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
