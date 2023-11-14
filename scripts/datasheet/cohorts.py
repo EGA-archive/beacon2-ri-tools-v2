@@ -945,11 +945,11 @@ def generate(dict_properties):
             new_item = key
             list_of_excel_items.append(new_item)
 
-    xls_Book = 'datasheets/cohorts.xlsx'
+    xls_Book = 'datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx'
 
     wb = openpyxl.load_workbook(xls_Book)
 
-    sheet = wb['Sheet1']
+    sheet = wb['cohorts']
 
     list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',

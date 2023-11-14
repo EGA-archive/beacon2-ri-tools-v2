@@ -16,46 +16,46 @@ for v in vcf:
     line = [v.CHROM, v.POS, v.ID, v.REF, ALT, v.QUAL, v.FILTER, v.INFO, v.FORMAT]
     line += [alt.value for alt in v.ALT]
     line += [call.data.get('GT') or './.' for call in v.calls]
-    dict_to_xls['variation_alternateBases'] = line[3]
-    dict_to_xls['variation_referenceBases'] = line[4]
+    dict_to_xls['variation|alternateBases'] = line[3]
+    dict_to_xls['variation|referenceBases'] = line[4]
     for k,v in line[7].items():
         if k == 'VT':
-            dict_to_xls['variation_variantType'] = v[0]
+            dict_to_xls['variation|variantType'] = v[0]
         elif k == 'ANN':
             line7splitted = v[0].split("|")
-            dict_to_xls['molecularAttributes_molecularEffects_label'] = line7splitted[1]
-            dict_to_xls['molecularAttributes_molecularEffects_id'] = "ENSGLOSSARY:0000174"
-            dict_to_xls['molecularAttributes_aminoacidChanges'] = "."
-            dict_to_xls['molecularAttributes_geneIds'] = line7splitted[3]
-    dict_to_xls['variantInternalId'] = 'chr' + str(line[0]) + '_' + str(line[1]) + '_' + str(line[3]) + '_' + str(line[4])
+            dict_to_xls['molecularAttributes|molecularEffects|label'] = line7splitted[1]
+            dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000174"
+            dict_to_xls['molecularAttributes|aminoacidChanges'] = "."
+            dict_to_xls['molecularAttributes|geneIds'] = line7splitted[3]
+    dict_to_xls['variantInternalId'] = 'chr' + str(line[0]) + '|' + str(line[1]) + '|' + str(line[3]) + '|' + str(line[4])
     zigosity={}
-    zigosity['0/1']='GENO_0000458'
-    zigosity['1/0']='GENO_0000458'
-    zigosity['1/1']='GENO_0000136'
+    zigosity['0/1']='GENO|0000458'
+    zigosity['1/0']='GENO|0000458'
+    zigosity['1/1']='GENO|0000136'
     j=0
-    dict_to_xls['caseLevelData_zygosity_id'] =''
-    dict_to_xls['caseLevelData_zygosity_label']=''
+    dict_to_xls['caseLevelData|zygosity|id'] =''
+    dict_to_xls['caseLevelData|zygosity|label']=''
     for zygo in line[9:-1]:
         num = 9 + j
-        if dict_to_xls['caseLevelData_zygosity_id'] == '':
+        if dict_to_xls['caseLevelData|zygosity|id'] == '':
             if zygo == '1/0' or zygo == '0/1' or zygo== '1/1':
-                dict_to_xls['caseLevelData_zygosity_id'] = zygo
-                dict_to_xls['caseLevelData_zygosity_label'] = zigosity[zygo]
-                dict_to_xls['caseLevelData_biosampleId'] = header_list[num]
+                dict_to_xls['caseLevelData|zygosity|id'] = zygo
+                dict_to_xls['caseLevelData|zygosity|label'] = zigosity[zygo]
+                dict_to_xls['caseLevelData|biosampleId'] = header_list[num]
         else:
             if zygo == '1/0' or zygo == '0/1' or zygo== '1/1':
-                dict_to_xls['caseLevelData_zygosity_id'] = dict_to_xls['caseLevelData_zygosity_id'] + ',' + zygo
-                dict_to_xls['caseLevelData_zygosity_label'] = dict_to_xls['caseLevelData_zygosity_label'] + ',' + zigosity[zygo]
-                dict_to_xls['caseLevelData_biosampleId'] = dict_to_xls['caseLevelData_biosampleId'] + ',' + header_list[num]
+                dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + ',' + zygo
+                dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + ',' + zigosity[zygo]
+                dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + ',' + header_list[num]
         j+=1
-    dict_to_xls['identifiers_genomicHGVSId'] = str(line[0]) + ':' + 'g.' + str(line[1]) + line[4] + '>' + line[3]
-    dict_to_xls['variation_location_interval_start_value'] = int(line[1]) -1
-    dict_to_xls['variation_location_interval_start_type']="Number"
-    dict_to_xls['variation_location_interval_end_value'] = int(line[1])
-    dict_to_xls['variation_location_interval_end_type']="Number"
-    dict_to_xls['variation_location_interval_type']="SequenceInterval"
-    dict_to_xls['variation_location_type']="SequenceLocation"
-    dict_to_xls['variation_location_sequence_id']="HGVSid:" + str(line[0]) + ":g." + str(line[1]) + line[4] + ">" + line[3]
+    dict_to_xls['identifiers|genomicHGVSId'] = str(line[0]) + ':' + 'g.' + str(line[1]) + line[4] + '>' + line[3]
+    dict_to_xls['variation|location|interval|start|value'] = int(line[1]) -1
+    dict_to_xls['variation|location|interval|start|type']="Number"
+    dict_to_xls['variation|location|interval|end|value'] = int(line[1])
+    dict_to_xls['variation|location|interval|end|type']="Number"
+    dict_to_xls['variation|location|interval|type']="SequenceInterval"
+    dict_to_xls['variation|location|type']="SequenceLocation"
+    dict_to_xls['variation|location|sequence|id']="HGVSid:" + str(line[0]) + ":g." + str(line[1]) + line[4] + ">" + line[3]
 
 
 

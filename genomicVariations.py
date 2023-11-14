@@ -355,6 +355,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 dict_generado=generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties)
 
 
-with open('output_schemas/genomicVariations.json', 'w') as f:
+with open('output_docs/genomicVariations.json', 'w') as f:
     json.dump(dict_generado, f)
 

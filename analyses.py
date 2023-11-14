@@ -41,26 +41,16 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
     while j < num_registries:
         i=0
         while i <(len(list_of_excel_items)+2):
-            
             property = list_columns[i]+str(1)
             property_value = sheet[property].value
-
-            number_sheet = list_columns[i]+str(j)
-            
-
-            
+            number_sheet = list_columns[i]+str(j)            
             valor = sheet[number_sheet].value
-
             if i > 1:
                 if valor is not None and valor != '':
                     list_of_filled_items.append(property_value)
-
-
             if valor:
                 dict_of_properties[property_value]=valor
             i +=1
-
-        
 
         for lispro in list_of_properties_required:
             if lispro not in list_of_filled_items:
@@ -369,7 +359,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 dict_generado=generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties)
 
 
-with open('output_schemas/analyses.json', 'w') as f:
+with open('output_docs/analyses.json', 'w') as f:
     json.dump(dict_generado, f)
 
         

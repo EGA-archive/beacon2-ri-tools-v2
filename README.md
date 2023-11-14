@@ -39,7 +39,7 @@ Once you have finished filling all data and saved the .xlsx file with the collec
 python genomicVariations.py
 ```
 
-This will generate the final .json file that is Beacon Friendly Format in the output_schemas folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. This file will be able to be directly imported into a mongoDB for beacon usage, for example for the [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
+This will generate the final .json file that is Beacon Friendly Format in the output_docs folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. This file will be able to be directly imported into a mongoDB for beacon usage, for example for the [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
 
 ### Version notes
 

@@ -299,6 +299,6 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
 dict_generado=generate(list_of_excel_items, list_of_properties_required, dict_properties)
 
 
-with open('output_schemas/individuals.json', 'w') as f:
+with open('output_docs/individuals.json', 'w') as f:
     json.dump(dict_generado, f)
 
