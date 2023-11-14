@@ -782,34 +782,34 @@ def generate(dict_properties):
                                                         if isinstance(v2, dict):
                                                             for k3, v3 in v2.items():
                                                                 new_item = ""
-                                                                new_item = key + "_" + ki + "_" + k + "_" + k1 + "_" + k2 + "_" + k3
+                                                                new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2 + "|" + k3
                                                                 list_of_excel_items.append(new_item)            
                                                         else:
                                                             new_item = ""
-                                                            new_item = key + "_" + ki + "_" + k + "_" + k1 + "_" + k2
+                                                            new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2
                                                             list_of_excel_items.append(new_item)                                        
                                                 else:
                                                     new_item = ""
-                                                    new_item = key + "_" + ki + "_" + k + "_" + k1
+                                                    new_item = key + "|" + ki + "|" + k + "|" + k1
                                                     list_of_excel_items.append(new_item)
                                         else:
                                             new_item = ""
-                                            new_item = key + "_" + ki + "_" + k
+                                            new_item = key + "|" + ki + "|" + k
                                             list_of_excel_items.append(new_item)
                         elif isinstance(vi, dict):
                             for ki1, vi1 in vi.items():
                                 if isinstance(vi1, dict):
                                     for ki2, vi2 in vi1.items():
                                         new_item = ""
-                                        new_item = key + "_" + ki + "_" + ki1 + "_" + ki2
+                                        new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
                                         list_of_excel_items.append(new_item)     
                                 else:
                                     new_item = ""
-                                    new_item = key + "_" + ki + "_" + ki1
+                                    new_item = key + "|" + ki + "|" + ki1
                                     list_of_excel_items.append(new_item)      
                         else:
                             new_item = ""
-                            new_item = key + "_" + ki
+                            new_item = key + "|" + ki
                             list_of_excel_items.append(new_item) 
         elif isinstance(value, dict):
             for kd, vd in value.items():
@@ -820,7 +820,7 @@ def generate(dict_properties):
                                 if isinstance(vd1, dict):
                                     for kd2, vd2 in vd1.items():
                                         new_item = ""
-                                        new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                        new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                         list_of_excel_items.append(new_item)
                                 elif isinstance(vd1, list):
                                     for item in vd1:
@@ -829,22 +829,22 @@ def generate(dict_properties):
                                                 for itemvd2 in vd2:
                                                     for kd3, vd3 in itemvd2.items():
                                                         new_item = ""
-                                                        new_item = key + "_" + kd + "_" + kd1 + "_" + kd2 + "_" + kd3
+                                                        new_item = key + "|" + kd + "|" + kd1 + "|" + kd2 + "|" + kd3
                                                         if new_item not in list_of_excel_items:
                                                             list_of_excel_items.append(new_item)
                                             else:
                                                 new_item = ""
-                                                new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                                new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                                 if new_item not in list_of_excel_items:
                                                     list_of_excel_items.append(new_item)
                                 else:
                                     new_item = ""
-                                    new_item = key + "_" + kd + "_" + kd1
+                                    new_item = key + "|" + kd + "|" + kd1
                                     if new_item not in list_of_excel_items:
                                         list_of_excel_items.append(new_item)
                         else:
                             new_item = ""
-                            new_item = key + "_" + kd
+                            new_item = key + "|" + kd
                             list_of_excel_items.append(new_item)  
                 elif isinstance(vd, dict):
                     for kd1, vd1 in vd.items():
@@ -853,20 +853,20 @@ def generate(dict_properties):
                                 if isinstance(vd2, dict):
                                     for kd3, vd3 in vd2.items():
                                         new_item = ""
-                                        new_item = key + "_" + kd + "_" + kd1 + "_" + kd2 + "_" + kd3
+                                        new_item = key + "|" + kd + "|" + kd1 + "|" + kd2 + "|" + kd3
                                         list_of_excel_items.append(new_item)
                                 else:
                                     new_item = ""
-                                    new_item = key + "_" + kd + "_" + kd1 + "_" + kd2
+                                    new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                     list_of_excel_items.append(new_item)
                         else:
                             new_item = ""
-                            new_item = key + "_" + kd + "_" + kd1
+                            new_item = key + "|" + kd + "|" + kd1
                             list_of_excel_items.append(new_item)
                 
                 else:
                     new_item = ""
-                    new_item = key + "_" + kd
+                    new_item = key + "|" + kd
                     list_of_excel_items.append(new_item)
 
         else:
