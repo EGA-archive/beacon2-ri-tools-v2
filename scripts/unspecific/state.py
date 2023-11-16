@@ -1,8 +1,5 @@
 import json
 
-vrs_file = open('ref_schemas/vrs.json')
-data_vrs = json.load(vrs_file)
-
 def location():
     initial_dict={}
     second_dict={}
@@ -17,24 +14,28 @@ def location():
         if key == 'definitions':
             initial_dict=value
     for key, value in initial_dict.items():
-        if key == 'Location':
+        if key == 'Allele':
             second_dict=value
     for key, value in second_dict.items():
+        if key == 'properties':
+            third_dict=value
+    
+    for key, value in third_dict.items():
+        if key == 'state':
+            fourth_dict=value
+    for key, value in fourth_dict.items():
         if key == 'oneOf':
             initial_list=value
     for item in initial_list:
         for k,v in item.items():
             v_splitted = v.split('/')
             second_list.append(v_splitted[-1])
-    for item in second_dict:
-        for key, value in initial_dict.items():
-            if key == item:
-                item_dict=value
     new_dict={}
     for key, value in initial_dict.items():
         for item in second_list:
             if key == item:
                 new_dict[key]=value
+    
     new_dict2={}
     for key, value in new_dict.items():
         for k, v in value.items():
@@ -65,6 +66,7 @@ def location():
                                  for krd, vrd in initial_dict.items():
                                      if krd == vr_splitted[-1]:
                                         new_dict3[key][k].append(vrd)
+    #print(new_dict3)
     new_dict4={}
     for key, value in new_dict3.items():
         new_dict4[key]={}
@@ -72,9 +74,15 @@ def location():
             if isinstance(v, dict):
                 for k1, v1 in v.items():
                     if k1 == 'properties':
+                        print(v1)
                         new_dict4[key][k]=v1
+                    elif k1 == 'type':
+                        if v1 == 'string':
+                            new_dict4[key][k]=''
             else:
+                print(k)
                 new_dict4[key][k]=v
+    print(new_dict4)
     new_dict5={}
     for key, value in new_dict4.items():
         new_dict5[key]={}
@@ -238,82 +246,7 @@ def location():
     list_of_locations=[]
     for key,value in new_dict9.items():
         list_of_locations.append(value)
+    #print(list_of_locations)
     return list_of_locations
 
-def vrs(data_vrs):
-    dict_vrs_definitions={}
-    for key, value in data_vrs.items():
-        if key == 'definitions':
-            initial_dict=value
-    second_dict={}
-    for k, v in initial_dict.items():
-        if k == 'SystemicVariation':
-            second_dict[k]=v
-        elif k == 'MolecularVariation':
-            second_dict[k]=v
-
-    third_dict={}
-    for key, value in second_dict.items():
-        for k, v in value.items():
-            if k == 'oneOf':
-                third_dict[key]=v
-    fourth_dict={}
-    for key, value in third_dict.items():
-        list_of_ref=[]
-        for item in value:
-            for k, v in item.items():
-                if k == '$ref':
-                    vsplitted = v.split('/')
-                    for ki, vi in initial_dict.items():
-                        if ki == vsplitted[-1]:
-                            list_of_ref.append(vi)
-            fourth_dict[key]=list_of_ref
-    #print(fourth_dict)
-    new_dict3={}
-    for key, value in fourth_dict.items():
-        new_dict3[key]=[]
-        for item in value:
-            for k, v in item.items():
-                if isinstance(v, dict):
-                    v1dict={}
-                    if k == 'properties':
-                        v1dict=v
-                    new_dict3[key].append(v1dict)
-    #print(new_dict3)
-    new_dict4={}
-    for key, value in new_dict3.items():
-        v1dict={}
-        new_dict4[key]=[]
-        for item in value:
-            for k, v in item.items():
-                if k == 'location':
-                    v1dict[k]=location()
-                elif isinstance(v, dict):
-                    for k1, v1 in v.items():
-                        if k1 == '$ref':
-                            v1_splitted = v1.split('/')
-                            if 'CURIE' in v1_splitted[-1]:
-                                v1dict[k]=""
-                            else:
-                                for kd, vd in initial_dict.items():
-                                    if kd == v1_splitted[-1]:
-                                        v1dict[k]=vd
-                        elif k1 == 'type':
-                            if v1 == 'string':
-                                v1dict[k]="" 
-
-
-
-
-
-
-                if v1dict not in new_dict4[key]:
-                    new_dict4[key].append(v1dict)
-    print(new_dict4)
-
-    #print(new_dict5)
-    
-
-
-
-vrs(data_vrs)
+location()
