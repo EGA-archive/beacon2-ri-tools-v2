@@ -992,8 +992,25 @@ for key, value in dict_properties.items():
                                 new_list=[]
                                 new_list.append(vl)
                                 dict_properties[key][k]=new_list
+    elif isinstance(value, list):
+        dict_properties[key]=[]
+        for item in value:
+            dictitem={}
+            for k, v in item.items():
+                if isinstance(v, str):
+                    if v != '':
+                        if v == 'Location':
+                            print(k)
+                            dictitem[k]=location()
+                    else:
+                        dictitem[k]=v
+                else:
+                    dictitem[k]=v
+            dict_properties[key].append(dictitem)
+                
 
 
+print(dict_properties)
 
 
 list_of_definitions_required=[]
@@ -1033,43 +1050,58 @@ def generate(dict_properties):
                                                             for k3, v3 in v2.items():
                                                                 new_item = ""
                                                                 new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2 + "|" + k3
-                                                                list_of_excel_items.append(new_item)            
+                                                                if new_item not in list_of_excel_items:
+                                                                    list_of_excel_items.append(new_item)            
                                                         else:
                                                             new_item = ""
                                                             new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2
-                                                            list_of_excel_items.append(new_item)                                        
+                                                            if new_item not in list_of_excel_items:
+                                                                list_of_excel_items.append(new_item)                                        
                                                 else:
                                                     new_item = ""
                                                     new_item = key + "|" + ki + "|" + k + "|" + k1
-                                                    list_of_excel_items.append(new_item)
+                                                    if new_item not in list_of_excel_items:
+                                                        list_of_excel_items.append(new_item)
                                         elif isinstance(v, list):
                                             for itemv in v:
                                                 if isinstance(itemv, dict):
                                                     for kiv, viv in itemv.items():
-                                                        new_item = ""
-                                                        new_item = key + "|" + ki + "|" + k + "|" + kiv
-                                                        print(new_item)
-                                                        list_of_excel_items.append(new_item)
+                                                        if isinstance(viv,list):
+                                                            for vivitem in viv:
+                                                                for kivi, vivi in vivitem.items():
+                                                                    new_item = ""
+                                                                    new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi
+                                                                    if new_item not in list_of_excel_items:
+                                                                        list_of_excel_items.append(new_item)
+                                                        else:
+                                                            new_item = ""
+                                                            new_item = key + "|" + ki + "|" + k + "|" + kiv
+                                                            if new_item not in list_of_excel_items:
+                                                                list_of_excel_items.append(new_item)
 
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + k
-                                            list_of_excel_items.append(new_item)
+                                            if new_item not in list_of_excel_items:
+                                                list_of_excel_items.append(new_item)
                         elif isinstance(vi, dict):
                             for ki1, vi1 in vi.items():
                                 if isinstance(vi1, dict):
                                     for ki2, vi2 in vi1.items():
                                         new_item = ""
                                         new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
-                                        list_of_excel_items.append(new_item)     
+                                        if new_item not in list_of_excel_items:
+                                            list_of_excel_items.append(new_item)     
                                 else:
                                     new_item = ""
                                     new_item = key + "|" + ki + "|" + ki1
-                                    list_of_excel_items.append(new_item)      
+                                    if new_item not in list_of_excel_items:
+                                        list_of_excel_items.append(new_item)      
                         else:
                             new_item = ""
                             new_item = key + "|" + ki
-                            list_of_excel_items.append(new_item) 
+                            if new_item not in list_of_excel_items:
+                                list_of_excel_items.append(new_item) 
         elif isinstance(value, dict):
             for kd, vd in value.items():
                 if isinstance(vd, list):
@@ -1080,7 +1112,8 @@ def generate(dict_properties):
                                     for kd2, vd2 in vd1.items():
                                         new_item = ""
                                         new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
-                                        list_of_excel_items.append(new_item)
+                                        if new_item not in list_of_excel_items:
+                                            list_of_excel_items.append(new_item)
                                 elif isinstance(vd1, list):
                                     for item in vd1:
                                         for kd2, vd2 in item.items():
@@ -1104,7 +1137,8 @@ def generate(dict_properties):
                         else:
                             new_item = ""
                             new_item = key + "|" + kd
-                            list_of_excel_items.append(new_item)  
+                            if new_item not in list_of_excel_items:
+                                list_of_excel_items.append(new_item)  
                 elif isinstance(vd, dict):
                     for kd1, vd1 in vd.items():
                         if isinstance(vd1, dict):
@@ -1113,31 +1147,37 @@ def generate(dict_properties):
                                     for kd3, vd3 in vd2.items():
                                         new_item = ""
                                         new_item = key + "|" + kd + "|" + kd1 + "|" + kd2 + "|" + kd3
-                                        list_of_excel_items.append(new_item)
+                                        if new_item not in list_of_excel_items:
+                                            list_of_excel_items.append(new_item)
                                 else:
                                     new_item = ""
                                     new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
-                                    list_of_excel_items.append(new_item)
+                                    if new_item not in list_of_excel_items:
+                                        list_of_excel_items.append(new_item)
                         else:
                             new_item = ""
                             new_item = key + "|" + kd + "|" + kd1
-                            list_of_excel_items.append(new_item)
+                            if new_item not in list_of_excel_items:
+                                list_of_excel_items.append(new_item)
                 
                 else:
                     new_item = ""
                     new_item = key + "|" + kd
-                    list_of_excel_items.append(new_item)
+                    if new_item not in list_of_excel_items:
+                        list_of_excel_items.append(new_item)
 
         else:
             new_item = ""
             new_item = key
-            list_of_excel_items.append(new_item)
+            if new_item not in list_of_excel_items:
+                list_of_excel_items.append(new_item)
 
 
     for excel_item in list_of_excel_items:
         if '|start|iso8601duration' in excel_item:
             excel_splitted = excel_item.split('|start|iso8601duration')
-            list_of_excel_items.append(excel_splitted[0])
+            if excel_splitted[0] not in list_of_excel_items:
+                list_of_excel_items.append(excel_splitted[0])
     
     list_of_excel_items=sorted(list_of_excel_items)
 
@@ -1155,6 +1195,9 @@ def generate(dict_properties):
                     'DA', 'DB', 'DC', 'DD', 'DE', 'DF', 'DG', 'DH', 'DI', 'DJ', 'DK', 'DL', 'DM', 'DN', 'DO', 'DP', 'DQ', 'DR', 'DS', 'DT', 'DU', 'DV', 'DW', 'DX', 'DY', 'DZ',
                     'EA', 'EB', 'EC', 'ED', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
                     'FA', 'FB', 'FC', 'FD', 'FE', 'FF', 'FG', 'FH', 'FI', 'FJ', 'FK', 'FL', 'FM', 'FN', 'FO', 'FP', 'FQ', 'FR', 'FS', 'FT', 'FU', 'FV', 'FW', 'FX', 'FY', 'FZ',
+                    'GA', 'GB', 'GC', 'GD', 'GE', 'GF', 'GG', 'GH', 'GI', 'GJ', 'GK', 'GL', 'GM', 'GN', 'GO', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GV', 'GW', 'GX', 'GY', 'GZ',
+                    'HA', 'HB', 'HC', 'HD', 'HE', 'HF', 'HG', 'HH', 'HI', 'HJ', 'HK', 'HL', 'HM', 'HN', 'HO', 'HP', 'HQ', 'HR', 'HS', 'HT', 'HU', 'HV', 'HW', 'HX', 'HY', 'HZ',
+                    'IA', 'IB', 'IC', 'ID', 'IE', 'IF', 'IG', 'IH', 'II', 'IJ', 'IK', 'IL', 'IM', 'IN', 'IO', 'IP', 'IQ', 'IR', 'IS', 'IT', 'IU', 'IV', 'IW', 'IX', 'IY', 'IZ',
 
     ]
 
