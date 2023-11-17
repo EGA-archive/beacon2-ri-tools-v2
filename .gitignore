@@ -4,3 +4,5 @@ individuals/__pycache__/*
 schemas/__pycache__/*
 snpEFF
 bcftools*
+scripts/datasheet/conf/__pycache__/*
+*.vcf.gz
