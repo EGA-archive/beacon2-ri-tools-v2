@@ -42,13 +42,13 @@ Last, **output_docs_folder** sets the folder where your final .json files will b
 Next step is to fill the .xlsx file writing the records according to the header columns, which indicate the field of the schema that this data will be placed in. Every new row will be appended to the final output file as a new and independent document. 
 First, copy the excel file to your host machine so you can then edit it with Excel, by executing the following command:
 ```bash
-docker cp ri-tools:/to/your/path/your_excel_name.xlsx .
+docker cp ri-tools:usr/src/app/datasheets/empty_model.xlsx .
 ```
 After that, fill in the datasheets, following the next rules:
 * If you want to write data that needs to be appended in the same document, please write data separated with |, for example if you need to write an id, e.g. HG00001|HG00002 then respect this order for their correlatives in the same document, as for the label of this id, e.g. labelforHG00001|labelforHG00002.
 * As the info field for each collection is very generic and can be filled with different data, you will need to fill the cell directly with json type data.
-* Please, note that the first two columns must remain in blank and respect the columns like the [empty_model.xlsx file](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/datasheets/empty_model.xlsx), as the script will read only these columns to make it go faster.
-* Note that you don't have to write inside all the columns, as some of the columns are optionals and other are part of a possible option of the Beacon specification but incompatible with other columns (an exception will arise in case a column is misfilled).
+* Please, respect the columns like the [empty_model.xlsx file](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/datasheets/empty_model.xlsx), as the script will read only these columns to make it go faster.
+* Note that you don't have to write inside all the columns, as some of the columns are optionals and other are part of a possible option of the Beacon specification but incompatible with other columns (an exception will raise in case a column is misfilled).
 
 ### Filling genomicVariations excel sheet from .vcf file
 
