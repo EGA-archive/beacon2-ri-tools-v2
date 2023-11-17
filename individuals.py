@@ -153,7 +153,7 @@ def commas(prova):
     array_of_newdicts=[]
     for key, value in prova.items():
         if isinstance(value, str):
-            valuesplitted = value.split(',')
+            valuesplitted = value.split('|')
             length_iter=len(valuesplitted)
     if length_iter > 0:
         i=0
@@ -161,16 +161,17 @@ def commas(prova):
             newdict={}
             for key, value in prova.items():
                 if isinstance(value, str):
-                    valuesplitted = value.split(',')
+                    valuesplitted = value.split('|')
                     newdict[key]=valuesplitted[i]
                 elif isinstance(value, int):
-                    valuesplitted = value.split(',')
+                    valuesplitted = value.split('|')
                     newdict[key]=valuesplitted[i]
                 elif isinstance(value, dict):
                     newdict[key]={}
                     for k, v in value.items():
                         if isinstance(v, str):
-                            vsplitted = v.split(',')
+                            vsplitted = v.split('|')
+                            #print(vsplitted)
                             newdict[key][k]=vsplitted[i]
                         elif isinstance(v, int):
                             newdict[key][k]=v
@@ -178,7 +179,7 @@ def commas(prova):
                             newdict[key][k]={}
                             for k1, v1 in v.items():
                                 if isinstance(v1, str):
-                                    v1splitted = v1.split(',')
+                                    v1splitted = v1.split('|')
                                     newdict[key][k][k1]=v1splitted[i]
 
             array_of_newdicts.append(newdict)
@@ -377,7 +378,7 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
                                             if '|' in propv:
-                                                propv_splitted = propv.split(',')
+                                                propv_splitted = propv.split('|')
                                                 for itemsplitted in propv:
                                                     value_dict[kd]={}
                                                     value_dict[kd][kd1]=propv_splitted
@@ -439,6 +440,8 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
 dict_generado=generate(list_of_excel_items, list_of_properties_required, dict_properties)
 
 
-with open('output_docs/individuals.json', 'w') as f:
+output = conf.output_docs_folder + 'individuals.json'
+
+with open(output, 'w') as f:
     json.dump(dict_generado, f)
 

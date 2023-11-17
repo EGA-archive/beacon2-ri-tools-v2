@@ -1,9 +1,6 @@
 import json
 import openpyxl
-import imp
 
-file, pathname, description = imp.find_module('beacon', [''])
-my_module = imp.load_module('beacon', file, pathname, description)
 
 from conf import conf
 
@@ -928,7 +925,7 @@ def generate(dict_properties):
     for excel_item in list_of_excel_items:
         if '|start|iso8601duration' in excel_item:
             excel_splitted = excel_item.split('|start|iso8601duration')
-            print(excel_splitted[0])
+            #print(excel_splitted[0])
             list_of_excel_items.append(excel_splitted[0])
     
     list_of_excel_items=sorted(list_of_excel_items)

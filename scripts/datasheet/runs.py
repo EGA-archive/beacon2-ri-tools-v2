@@ -1,9 +1,6 @@
 import json
 import openpyxl
-import imp
 
-file, pathname, description = imp.find_module('beacon', [''])
-my_module = imp.load_module('beacon', file, pathname, description)
 
 from conf import conf
 

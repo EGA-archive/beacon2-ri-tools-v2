@@ -28,6 +28,7 @@ collectionEvents|eventPhenotypes|distribution
 collectionEvents|eventTimeline|availability
 collectionEvents|eventTimeline|availabilityCount
 collectionEvents|eventTimeline|distribution
+exclusionCriteria|ageRange
 exclusionCriteria|ageRange|end|iso8601duration
 exclusionCriteria|ageRange|start|iso8601duration
 exclusionCriteria|diseaseConditions|ageOfOnset
@@ -59,6 +60,7 @@ exclusionCriteria|phenotypicConditions|severity|label
 exclusionCriteria|type|availability
 exclusionCriteria|type|availabilityCount
 id
+inclusionCriteria|ageRange
 inclusionCriteria|ageRange|end|iso8601duration
 inclusionCriteria|ageRange|start|iso8601duration
 inclusionCriteria|diseaseConditions|ageOfOnset

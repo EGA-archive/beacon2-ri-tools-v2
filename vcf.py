@@ -1,14 +1,16 @@
 import vcfpy
 import re
 import openpyxl
+from scripts.datasheet.conf import conf
+from tqdm import tqdm
 
 dict_to_xls={}
 new_dict_to_xls={}
-vcf = vcfpy.Reader.from_path('files/vcf/chr22.Test.1000G.phase3.joint.norm.ann.dbnsfp.clinvar.cosmic.vcf.gz')
+vcf = vcfpy.Reader.from_path(conf.vcf_filename)
 i=0
-header_list = ['#CHROM', 'POS','ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT'] + vcf.header.samples.names
+header_list = ['#CHROM', 'POS' , 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT'] + vcf.header.samples.names
 
-
+pbar = tqdm(total = conf.num_variants_registries)
 for v in vcf:
     i+=1
     for value in v.ALT:
@@ -44,9 +46,9 @@ for v in vcf:
                 dict_to_xls['caseLevelData|biosampleId'] = header_list[num]
         else:
             if zygo == '1/0' or zygo == '0/1' or zygo== '1/1':
-                dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + ',' + zygo
-                dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + ',' + zigosity[zygo]
-                dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + ',' + header_list[num]
+                dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zygo
+                dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + zigosity[zygo]
+                dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + header_list[num]
         j+=1
     dict_to_xls['identifiers|genomicHGVSId'] = str(line[0]) + ':' + 'g.' + str(line[1]) + line[4] + '>' + line[3]
     dict_to_xls['variation|location|interval|start|value'] = int(line[1]) -1
@@ -62,11 +64,11 @@ for v in vcf:
 
 
 
-    xls_Book = 'datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx'
+    xls_Book = conf.excel_filename
 
     wb = openpyxl.load_workbook(xls_Book)
 
-    sheet = wb['Sheet1']
+    sheet = wb['genomicVariations']
 
     list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
@@ -92,9 +94,11 @@ for v in vcf:
                 result = ''.join([i for i in k if not i.isdigit()])
                 result = result + str(i+1)
                 new_dict_to_xls[result]=value
-    print(i)
-    if i == 1005:
+    pbar.update(1)
+
+    if i == conf.num_variants_registries+1:
         break
+pbar.close()
 
 
 
