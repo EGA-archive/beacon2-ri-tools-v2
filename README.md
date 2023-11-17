@@ -16,9 +16,9 @@ docker-compose up -d --build
 
 Once the container is up and running you can start using beacon ri tools v2, congratulations!
 
-### Instruction manual
+## Instruction manual
 
-## Setting configuration and excel file
+### Setting configuration and excel file
 
 To start using beacon ri tools v2, you have to edit the configuration file [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf). Inside this file you will find the next information:
 ```bash
@@ -37,15 +37,20 @@ The **excel_filename** variable sets where is the .xlsx file the script will rea
 The **vcf_filename** variable sets where is the vcf file (already reannotated) that is going to be read by the vcf script.
 Last, **output_docs_folder** sets the folder where your final .json files will be saved once execution of beacon tools finishes. Please, remember to create this folder in case it is not, before executing the different scripts.
 
-## Filling in the excel file
+### Filling in the excel file
 
-Next step is to fill the .xlsx file writing the records according to the header columns, which indicate the field of the schema that this data will be placed in. Every new row will be appended to the final output file as a new and independent document. The main rules for this datasheet filling are the next ones:
+Next step is to fill the .xlsx file writing the records according to the header columns, which indicate the field of the schema that this data will be placed in. Every new row will be appended to the final output file as a new and independent document. 
+First, copy the excel file to your host machine so you can then edit it with Excel, by executing the following command:
+```bash
+docker cp ri-tools:/to/your/path/your_excel_name.xlsx .
+```
+After that, fill in the datasheets, following the next rules:
 * If you want to write data that needs to be appended in the same document, please write data separated with |, for example if you need to write an id, e.g. HG00001|HG00002 then respect this order for their correlatives in the same document, as for the label of this id, e.g. labelforHG00001|labelforHG00002.
 * As the info field for each collection is very generic and can be filled with different data, you will need to fill the cell directly with json type data.
 * Please, note that the first two columns must remain in blank and respect the columns like the [empty_model.xlsx file](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/datasheets/empty_model.xlsx), as the script will read only these columns to make it go faster.
 * Note that you don't have to write inside all the columns, as some of the columns are optionals and other are part of a possible option of the Beacon specification but incompatible with other columns (an exception will arise in case a column is misfilled).
 
-## Filling genomicVariations excel sheet from .vcf file
+### Filling genomicVariations excel sheet from .vcf file
 
 In case you want to use a .vcf file to obtain your final .json, this .vcf file needs to be a final .vcf reannotated following the [reannotating .vcf file instructions] (https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/download.sh). 
 Once you have the final .vcf, you will have to save the .vcf file in the same path that you wrote in the vcf_filename variable that is inside [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf/conf.py) file. 
@@ -55,7 +60,7 @@ docker exec -it ri-tools python vcf.py
 ```
 This will fill in the genomicVariations excel sheet with the .vcf file you provided.
 
-## Getting .json final documents
+### Getting .json final documents
 
 Once you have finished filling all data and saved the .xlsx file, please execute the next bash script from the root folder in your terminal (for the collection you have chosen, in this case for genomic Variations):
 
