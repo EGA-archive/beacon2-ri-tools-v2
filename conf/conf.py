@@ -1,2 +1,0 @@
-num_registries=1004
-excel_filename='datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx'

@@ -1,6 +1,11 @@
 import json
 import openpyxl
-import re
+import imp
+
+file, pathname, description = imp.find_module('beacon', [''])
+my_module = imp.load_module('beacon', file, pathname, description)
+
+from conf import conf
 
 file_to_open='ref_schemas/datasets.json'
 # Opening JSON file 
@@ -972,7 +977,7 @@ def generate(dict_properties):
     
     list_of_excel_items=sorted(list_of_excel_items)
 
-    xls_Book = 'datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx'
+    xls_Book = conf.excel_filename
 
     wb = openpyxl.load_workbook(xls_Book)
 

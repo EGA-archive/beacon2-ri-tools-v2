@@ -2,6 +2,7 @@ import json
 import openpyxl
 import re
 from tqdm import tqdm
+from scripts.datasheet.conf import conf
 
 list_of_excel_items=[]
 list_of_definitions_required=[]
@@ -21,7 +22,7 @@ with open('files/dictionaries/datasets.json') as json_file:
 
 
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
-    wb = openpyxl.load_workbook('datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx')
+    wb = openpyxl.load_workbook(conf.excel_filename)
 
     sheet = wb['datasets']
 
@@ -37,11 +38,11 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
     dict_of_properties={}
     list_of_filled_items=[]
     total_dict =[]
-    num_registries = 3
+    num_registries = conf.num_datasets_registries
     k=0
     j=2
-    pbar = tqdm(total = num_registries-2)
-    while j < num_registries:
+    pbar = tqdm(total = num_registries)
+    while j < num_registries+2:
         i=0
         while i <(len(list_of_excel_items)+2):
             

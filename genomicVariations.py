@@ -1,6 +1,7 @@
 import json
 import openpyxl
 from tqdm import tqdm
+from scripts.datasheet.conf import conf
 
 list_of_excel_items=[]
 list_of_definitions_required=[]
@@ -16,13 +17,9 @@ with open("files/headers/genomicVariations.txt", "r") as txt_file:
 with open('files/dictionaries/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
-
-
-
-
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
-    num_registries=1006
-    xls_Book = 'datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx'
+    num_registries=conf.num_variants_registries
+    xls_Book = conf.excel_filename
 
     wb = openpyxl.load_workbook(xls_Book)
 
@@ -46,8 +43,8 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 
     k=0
     j=2
-    pbar = tqdm(total = num_registries-2)
-    while j < num_registries:
+    pbar = tqdm(total = num_registries)
+    while j < num_registries+2:
         i=0
         while i <(len(list_of_excel_items)+2):
             

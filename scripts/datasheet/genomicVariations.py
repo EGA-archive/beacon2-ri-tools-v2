@@ -1,9 +1,9 @@
 import json
 import openpyxl
+from conf import conf
 
 collection = 'ref_schemas/genomicVariations'
 file_to_open= collection + '.json'
-num_registries = 4
 # Opening JSON file 
 new_file = open(file_to_open,) 
    
@@ -1000,7 +1000,6 @@ for key, value in dict_properties.items():
                 if isinstance(v, str):
                     if v != '':
                         if v == 'Location':
-                            print(k)
                             dictitem[k]=location()
                     else:
                         dictitem[k]=v
@@ -1010,7 +1009,7 @@ for key, value in dict_properties.items():
                 
 
 
-print(dict_properties)
+#print(dict_properties)
 
 
 list_of_definitions_required=[]
@@ -1182,7 +1181,7 @@ def generate(dict_properties):
     list_of_excel_items=sorted(list_of_excel_items)
 
 
-    xls_Book = 'datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx'
+    xls_Book = conf.excel_filename
 
     wb = openpyxl.load_workbook(xls_Book)
 
