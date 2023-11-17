@@ -196,7 +196,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                             for itemvl in value_list:
                                 for kvl, vvl in itemvl.items():
                                     if isinstance(vvl, str):
-                                        if ',' in vvl:
+                                        if '|' in vvl:
                                             v_array = vvl.split(',')
                                             for vitem in v_array:
                                                 v1_array.append(vitem)
@@ -285,7 +285,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                     new_item = key + "|" + kd + "|" + kd1
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
-                                            if ',' in propv:
+                                            if '|' in propv:
                                                 if propv_splitted_id != []:
                                                     propv_splitted_label = propv.split(',')
                                                 else:

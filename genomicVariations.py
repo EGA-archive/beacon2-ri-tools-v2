@@ -21,7 +21,7 @@ with open('files/dictionaries/genomicVariations.json') as json_file:
 
 
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
-    num_registries=3
+    num_registries=1006
     xls_Book = 'datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx'
 
     wb = openpyxl.load_workbook(xls_Book)
@@ -165,13 +165,9 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                             new_item = key + "|" + ki + "|" + k + "|" + kiv
                                                             for propk, propv in dict_of_properties.items():
                                                                 if propk == new_item:
-                                                                    #print(propv)
                                                                     vivdict[kiv]=propv
                                                             if itemvdict not in listitemv and itemvdict !={}:
-                                                                #print(itemvdict)
                                                                 listitemv.append(itemvdict)
-                                                                print(listitemv)
-                                                    #print(vivdict)
 
                                                 
                                                 subitem_dict[k]=vivdict
@@ -186,7 +182,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 if subitem_dict != {}:
                                     if subitem_dict not in vi_list and subitem_dict != {}:
                                         vi_list.append(subitem_dict)
-                                    #print(vi_list)
                                     
                                     item_dict[ki]=vi_list[0]
                             elif isinstance(vi, dict):
@@ -221,9 +216,66 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
                                         item_dict[ki]=propv
+    
                         if item_dict != {} and item_dict != [{}]:
-                            print(item_dict)
-                            definitivedict[key]=item_dict 
+                            outcome = 0
+                            for kit, vit in item_dict.items():
+                                if isinstance(vit, dict):
+                                    for kit1, vit1 in vit.items():
+                                        if '|' in vit1:
+                                            outcome +=1
+                            if outcome > 0:
+                                if item_dict not in value_list:
+                                    value_list.append(item_dict)
+                                if value_list != []:
+                                    itemdict={}
+                                    definitivedict[key]=[]
+                                    v_array=[]
+                                    for itemvl in value_list:
+
+                                        for kvl, vvl in itemvl.items():
+                                            if isinstance(vvl, str):
+                                                if '|' in vvl:
+                                                    itemv={}
+                                                    v_array = vvl.split(',')
+                                                    itemv[kvl]=v_array
+                                                    v_key = kvl
+                                            elif isinstance(vvl, dict):
+                                                v1_array=[]
+                                                itemdict[kvl]={}
+                                                v1_keys = []
+                                                for kvl1, vvl1 in vvl.items():
+                                                    itemdict[kvl][kvl1]={}
+                                                    if isinstance(vvl1, str) and ',' in vvl1:
+                                                        vvl1_array = vvl1.split(',')
+                                                        for vvlitem in vvl1_array:
+                                                            v1_array.append(vvlitem)
+                                                        v1_bigkeys = kvl
+                                                        if kvl1 not in v1_keys:
+                                                            v1_keys.append(kvl1)
+
+                                    if v1_keys != []:
+                                        n=0
+                                        list_to_def=[]
+                                        half_array_number = len(v1_array)/2
+                                        itemdict[v1_bigkeys]={}
+                                        while n < int(half_array_number):
+                                            newdict={}
+                                            newdict[v1_bigkeys]={}
+                                            num=int(half_array_number+n)
+                                            newdict[v_key]=v_array[n]
+                                            newdict[v1_bigkeys][v1_keys[0]]=v1_array[n]
+                                            newdict[v1_bigkeys][v1_keys[1]]=v1_array[num]
+                                            list_to_def.append(newdict)
+
+                                            n +=1
+                                        for itemldf in list_to_def:
+                                            definitivedict[key].append(itemldf)
+                                    else:
+                                        for itemvl in value_list:
+                                            definitivedict[key].append(itemvl) 
+                            else:
+                                definitivedict[key]=item_dict 
             elif isinstance(value, dict):
                 value_dict={}
                 for kd, vd in value.items():
@@ -269,7 +321,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                         new_item = key + "|" + kd + "|" + kd1
                                         for propk, propv in dict_of_properties.items():
                                             if propk == new_item:
-                                                if ',' in propv:
+                                                if '|' in propv:
                                                     propv_splitted = propv.split(',')
                                                     for itemsplitted in propv:
                                                         value_dict[kd][kd1]=propv_splitted

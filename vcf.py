@@ -62,7 +62,7 @@ for v in vcf:
 
 
 
-    xls_Book = 'datasheets/genomicVariations.xlsx'
+    xls_Book = 'datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx'
 
     wb = openpyxl.load_workbook(xls_Book)
 

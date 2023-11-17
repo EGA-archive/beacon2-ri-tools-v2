@@ -375,7 +375,7 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                                     new_item = key + "|" + kd + "|" + kd1
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
-                                            if ',' in propv:
+                                            if '|' in propv:
                                                 propv_splitted = propv.split(',')
                                                 for itemsplitted in propv:
                                                     value_dict[kd]={}

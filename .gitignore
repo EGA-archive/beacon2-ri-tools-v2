@@ -3,3 +3,4 @@ __pycache__/*
 individuals/__pycache__/*
 schemas/__pycache__/*
 snpEFF
+bcftools*
