@@ -1,0 +1,1 @@
+[{"caseLevelData": [{"alleleOrigin": {"id": "SO:0001777", "label": "somatic variant"}, "biosampleId": "bs001104"}], "variantInternalId": "var00001", "variation": [{"location": {"type": "ChromosomeLocation", "interval": {"type": "CytobandInterval", "start": "q22.3", "end": "q22.4"}}}]}]

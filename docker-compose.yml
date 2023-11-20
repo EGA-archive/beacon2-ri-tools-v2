@@ -9,3 +9,4 @@ services:
     volumes:
       - ./output_docs:/usr/src/app/output_docs
       - ./datasheets:/usr/src/app/datasheets
+      - ./scripts/datasheet/conf:/usr/src/app/scripts/datasheet/conf
