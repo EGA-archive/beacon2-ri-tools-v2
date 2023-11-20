@@ -50,9 +50,14 @@ After that, fill in the datasheets, following the next rules:
 * Please, respect the columns like the [empty_model.xlsx file](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/datasheets/empty_model.xlsx), as the script will read only these columns to make it go faster.
 * Note that you don't have to write inside all the columns, as some of the columns are optionals and other are part of a possible option of the Beacon specification but incompatible with other columns (an exception will raise in case a column is misfilled).
 
+Once you have correctly filled the excel file, please, copy it back again to the datasheets folder, using this command:
+```bash
+docker cp empty_model.xlsx ri-tools:usr/src/app/datasheets/empty_model.xlsx
+```
+
 ### Filling genomicVariations excel sheet from .vcf file
 
-In case you want to use a .vcf file to obtain your final .json, this .vcf file needs to be a final .vcf reannotated following the [reannotating .vcf file instructions] (https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/download.sh). 
+In case you want to use a .vcf file to obtain your final .json, this .vcf file needs to be a final .vcf reannotated following the [reannotating .vcf file instructions](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/download.sh). 
 Once you have the final .vcf, you will have to save the .vcf file in the same path that you wrote in the vcf_filename variable that is inside [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf/conf.py) file. 
 After that, please execute the next command from the root folder in your terminal:
 ```bash
