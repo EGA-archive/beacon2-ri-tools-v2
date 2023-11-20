@@ -234,7 +234,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                             if isinstance(vvl, str):
                                                 if '|' in vvl:
                                                     itemv={}
-                                                    v_array = vvl.split(',')
+                                                    v_array = vvl.split('|')
                                                     itemv[kvl]=v_array
                                                     v_key = kvl
                                             elif isinstance(vvl, dict):
@@ -243,8 +243,8 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                 v1_keys = []
                                                 for kvl1, vvl1 in vvl.items():
                                                     itemdict[kvl][kvl1]={}
-                                                    if isinstance(vvl1, str) and ',' in vvl1:
-                                                        vvl1_array = vvl1.split(',')
+                                                    if isinstance(vvl1, str) and '|' in vvl1:
+                                                        vvl1_array = vvl1.split('|')
                                                         for vvlitem in vvl1_array:
                                                             v1_array.append(vvlitem)
                                                         v1_bigkeys = kvl
@@ -319,7 +319,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                         for propk, propv in dict_of_properties.items():
                                             if propk == new_item:
                                                 if '|' in propv:
-                                                    propv_splitted = propv.split(',')
+                                                    propv_splitted = propv.split('|')
                                                     for itemsplitted in propv:
                                                         value_dict[kd][kd1]=propv_splitted
                                                         if value_dict not in vd_list:

@@ -73,13 +73,18 @@ Once you have finished filling all data and saved the .xlsx file, please execute
 docker exec -it ri-tools python genomicVariations.py
 ```
 
-This will generate the final .json file that is Beacon Friendly Format in the output_docs folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. This file will be able to be directly imported into a mongoDB for beacon usage, for example for the [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
+This will generate the final .json file that is Beacon Friendly Format in the output_docs folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. 
+You can also copy it to your localhost directory by using this command:
+```bash
+docker cp ri-tools:usr/src/app/output_docs/empty_model/genomicVariations.json .
+```
+
+This file will be able to be directly imported into a mongoDB for beacon usage, for example for the [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
 
 ### Version notes
 
 * Other file names and distribution of folder and files is not supported.
 
-
 ### Acknowlegments
 
-Thanks to the all the [EGA archive](https://ega-archive.org/) team especially Jordi Rambla for supporting, helping and making possible the development of this tool.
+Thanks to all the [EGA archive](https://ega-archive.org/) team especially Jordi Rambla for supporting, helping and making possible the development of this tool.

@@ -29,11 +29,11 @@ for v in vcf:
             dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000174"
             dict_to_xls['molecularAttributes|aminoacidChanges'] = "."
             dict_to_xls['molecularAttributes|geneIds'] = line7splitted[3]
-    dict_to_xls['variantInternalId'] = 'chr' + str(line[0]) + '|' + str(line[1]) + '|' + str(line[3]) + '|' + str(line[4])
+    dict_to_xls['variantInternalId'] = 'chr' + str(line[0]) + '_' + str(line[1]) + '_' + str(line[3]) + '_' + str(line[4])
     zigosity={}
-    zigosity['0/1']='GENO|0000458'
-    zigosity['1/0']='GENO|0000458'
-    zigosity['1/1']='GENO|0000136'
+    zigosity['0/1']='GENO_0000458'
+    zigosity['1/0']='GENO_0000458'
+    zigosity['1/1']='GENO_0000136'
     j=0
     dict_to_xls['caseLevelData|zygosity|id'] =''
     dict_to_xls['caseLevelData|zygosity|label']=''
