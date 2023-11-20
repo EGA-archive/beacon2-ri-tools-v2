@@ -106,5 +106,3 @@ for key, value in new_dict_to_xls.items():
     sheet[key].value = value
 
 wb.save(xls_Book)
-
-

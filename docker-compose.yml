@@ -6,3 +6,6 @@ services:
     build:
       context: ./
     container_name: ri-tools
+    volumes:
+      - ./output_docs:/usr/src/app/output_docs
+      - ./datasheets:/usr/src/app/datasheets
