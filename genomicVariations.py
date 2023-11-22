@@ -36,7 +36,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                     'IA', 'IB', 'IC', 'ID', 'IE', 'IF', 'IG', 'IH', 'II', 'IJ', 'IK', 'IL', 'IM', 'IN', 'IO', 'IP', 'IQ', 'IR', 'IS', 'IT', 'IU', 'IV', 'IW', 'IX', 'IY', 'IZ',
 
     ]
-
     dict_of_properties={}
     list_of_filled_items=[]
     total_dict =[]
@@ -80,6 +79,8 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                             pass
             if valor:
                 dict_of_properties[property_value]=valor
+            elif valor == 0:
+                dict_of_properties[property_value]=valor
             i +=1
 
         
@@ -90,23 +91,25 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                 
 
         
-
-
+        #print(dict_of_properties)
         definitivedict={}
         for key, value in dict_properties.items():
             if isinstance(value, list):
                 value_list=[]
+                item_dict={}
                 for item in value:
                     if isinstance(item, dict):
-                        item_dict={}
+                        
                         for ki, vi in item.items():
                             if isinstance(vi, list):
                                 vi_list=[]
+                                subitem_dict={}
                                 for subitem in vi:
                                     if isinstance(subitem, dict):
-                                        subitem_dict={}
+                                        
                                         for k, v in subitem.items():
                                             if isinstance(v, dict):
+                                                
                                                 subitem_dict[k]={}
                                                 for k1, v1 in v.items():
                                                     if isinstance(v1, dict):
@@ -140,45 +143,95 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                     del subitem_dict[k]  
                                             elif isinstance(v, list):
                                                 listitemv=[]
-                                                itemvdict={}
-                                                if isinstance(v[0], dict):
-                                                    vivdict={}
-                                                    for kiv, viv in v[0].items():
-                                                        if isinstance(viv, list):
-                                                            for itemviv in viv:
-                                                                if isinstance(itemviv, dict):
-                                                                    vivdict[kiv]={}
-                                                                    #print(vivdict)
-                                                                    for kivi, vivi in itemviv.items():
-                                                                        new_item = ""
-                                                                        new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi
-
-                                                                        for propk, propv in dict_of_properties.items():
-                                                                            if propk == new_item:
-                                                                                vivdict[kiv][kivi]=propv
-                                                                            elif propk == key + "|" + ki + "|" + k + "|" + kiv:
-                                                                                #print(propk)
-                                                                                #print(propv)
-                                                                                vivdict[kiv]=propv
-                                                                            
-                                                    
-
-
-                                                        else:
-                                                            new_item = ""
-                                                            new_item = key + "|" + ki + "|" + k + "|" + kiv
-                                                            for propk, propv in dict_of_properties.items():
-                                                                if propk == new_item:
-                                                                    #print(propk)
-                                                                    vivdict[kiv]=propv
-                                                            if itemvdict not in listitemv and itemvdict !={}:
-                                                                listitemv.append(itemvdict)
-
-
-                                                    
-
+                                                vivdict={}
+                                                for itemv in v:
                                                 
-                                                subitem_dict[k]=vivdict
+                                                    if isinstance(itemv, dict):
+                                                        #print('ki is {}'.format(ki))
+                                                        #print('k is {}'.format(k))
+                                                        #print(itemv)
+                                                        
+                                                        for kiv, viv in itemv.items():
+                                                            
+
+                                                            if isinstance(viv, list):
+
+                                                                for itemviv in viv:
+                                                                    if isinstance(itemviv, dict):
+                                                                        
+                                                                        for kivi, vivi in itemviv.items():
+                                                                            
+                                                                            if isinstance(vivi, list):
+                                                                                
+                                                                                for vivitem1 in vivi:
+                                                                                    
+                                                                                    for kivivi, vivivi in vivitem1.items():
+                                                                                        if isinstance(vivivi, dict):
+                                                                                            
+                                                                                            for kivivi1, vivivi1 in vivivi.items():
+                                                                                                new_item = ""
+                                                                                                new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi + "|" + kivivi + "|" + kivivi1
+                                                                                                for propk, propv in dict_of_properties.items():
+                                                                                                    if propk == new_item:
+                                                                                                        print(propk)
+                                                                                                        try:
+                                                                                                            vivdict[kiv][kivi][kivivi][kivivi1]=propv  
+                                                                                                        except Exception:
+                                                                                                            vivdict[kiv]={}
+                                                                                                            vivdict[kiv][kivi]={}
+                                                                                                            vivdict[kiv][kivi][kivivi]={}
+                                                                                                            vivdict[kiv][kivi][kivivi][kivivi1]=propv
+                                                                                                 
+                                                                                        else:
+                                                                                            
+                                                                                            new_item = ""
+                                                                                            new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi + "|" + kivivi
+                                                                                            #print(new_item)
+                                                                                            for propk, propv in dict_of_properties.items():
+                                                                                                if propk == new_item:
+                                                                                                    try:
+                                                                                                        vivdict[kiv][kivi][kivivi]=propv
+                                                                                                    except Exception:
+                                                                                                        vivdict[kiv]={}
+                                                                                                        vivdict[kiv][kivi]={}
+                                                                                                        vivdict[kiv][kivi][kivivi]=propv
+
+                                                                            else:
+                                                                                new_item = ""
+                                                                                new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi
+                                                                                for propk, propv in dict_of_properties.items():
+                                                                                    if propk == new_item:
+                                                                                        try:
+                                                                                            vivdict[kiv][kivi]=propv
+                                                                                        except Exception:
+                                                                                            vivdict[kiv]={}
+                                                                                            vivdict[kiv][kivi]=propv
+                                                                                    elif propk == key + "|" + ki + "|" + k + "|" + kiv:
+                                                                                        vivdict[kiv]=propv
+                                                                            
+
+
+
+                                                                                
+                                                        
+
+
+                                                            else:
+                                                                new_item = ""
+                                                                new_item = key + "|" + ki + "|" + k + "|" + kiv
+                                                                for propk, propv in dict_of_properties.items():
+                                                                    if propk == new_item:
+                                                                        vivdict[kiv]=propv
+
+
+
+
+
+                                                        
+
+                                                    if vivdict != {}:
+                                                        print(vivdict)
+                                                        subitem_dict[k]=vivdict
 
                                             else:
                                                 new_item = ""
@@ -187,13 +240,14 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                     if propk == new_item:
                                                         subitem_dict[k]=propv
 
-                                if subitem_dict != {}:
-                                    if subitem_dict not in vi_list and subitem_dict != {}:
-                                        vi_list.append(subitem_dict)
-                                    
-                                    item_dict[ki]=vi_list[0]
+
+                                    if subitem_dict != {}:
+                                        if subitem_dict not in vi_list and subitem_dict != {}:
+                                            vi_list.append(subitem_dict)
+                                        
+                                        item_dict[ki]=vi_list[0]
                             elif isinstance(vi, dict):
-                                
+
                                 vi_dict={}
                                 for ki1, vi1 in vi.items():
                                     if isinstance(vi1, dict):
@@ -213,7 +267,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                         new_item = key + "|" + ki + "|" + ki1
                                         for propk, propv in dict_of_properties.items():
                                             if propk == new_item:
-                                                print
                                                 vi_dict[ki1]=propv 
                                                 item_dict[ki]=vi_dict
                                 if vi_dict=={}:
@@ -230,8 +283,9 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                             for kit, vit in item_dict.items():
                                 if isinstance(vit, dict):
                                     for kit1, vit1 in vit.items():
-                                        if '|' in vit1:
-                                            outcome +=1
+                                        if isinstance(vit1, str):
+                                            if '|' in vit1:
+                                                outcome +=1
                             if outcome > 0:
                                 if item_dict not in value_list:
                                     value_list.append(item_dict)
@@ -267,7 +321,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                         list_to_def=[]
                                         half_array_number = len(v1_array)/2
                                         itemdict[v1_bigkeys]={}
-                                        print(v1_keys)
+
                                         while n < int(half_array_number):
                                             newdict={}
                                             newdict[v1_bigkeys]={}
@@ -284,8 +338,13 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                         for itemvl in value_list:
                                             definitivedict[key].append(itemvl) 
                             else:
-                                definitivedict[key]=[]
-                                definitivedict[key].append(item_dict)
+                                if key == 'caseLevelData':
+                                    definitivedict[key]=[]
+                                    definitivedict[key].append(item_dict)
+                                else:
+                                    #print(item_dict)
+                                    definitivedict[key]=item_dict
+                                
             elif isinstance(value, dict):
                 value_dict={}
                 for kd, vd in value.items():

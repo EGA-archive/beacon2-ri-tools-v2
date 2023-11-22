@@ -1085,10 +1085,18 @@ def generate(dict_properties):
                                                         if isinstance(viv,list):
                                                             for vivitem in viv:
                                                                 for kivi, vivi in vivitem.items():
-                                                                    new_item = ""
-                                                                    new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi
-                                                                    if new_item not in list_of_excel_items:
-                                                                        list_of_excel_items.append(new_item)
+                                                                    if isinstance(vivi, list):
+                                                                        for vivitem1 in vivi:
+                                                                            for kivivi, vivivi in vivitem1.items():
+                                                                                new_item = ""
+                                                                                new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi + "|" + kivivi
+                                                                                if new_item not in list_of_excel_items:
+                                                                                    list_of_excel_items.append(new_item)
+                                                                    else:
+                                                                        new_item = ""
+                                                                        new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi
+                                                                        if new_item not in list_of_excel_items:
+                                                                            list_of_excel_items.append(new_item)
                                                         else:
                                                             new_item = ""
                                                             new_item = key + "|" + ki + "|" + k + "|" + kiv
@@ -1097,7 +1105,6 @@ def generate(dict_properties):
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + k
-                                            #print(new_item)
                                             if new_item not in list_of_excel_items:
                                                 list_of_excel_items.append(new_item)
                         elif isinstance(vi, dict):
@@ -1216,7 +1223,7 @@ def generate(dict_properties):
                     'IA', 'IB', 'IC', 'ID', 'IE', 'IF', 'IG', 'IH', 'II', 'IJ', 'IK', 'IL', 'IM', 'IN', 'IO', 'IP', 'IQ', 'IR', 'IS', 'IT', 'IU', 'IV', 'IW', 'IX', 'IY', 'IZ',
     ]
 
-    print(list_of_excel_items)
+    #print(list_of_excel_items)
 
     i=0
     for element in list_of_excel_items:
