@@ -94,6 +94,15 @@ variation|location|sequence_id
 variation|location|species_id
 variation|location|type
 variation|referenceBases
+variation|state|components|location|_id
+variation|state|components|location|chr
+variation|state|components|location|interval
+variation|state|components|location|sequence_id
+variation|state|components|location|species_id
+variation|state|components|location|type
+variation|state|components|reverse_complement
+variation|state|components|sequence
+variation|state|components|type
 variation|state|count|comparator
 variation|state|count|max
 variation|state|count|min

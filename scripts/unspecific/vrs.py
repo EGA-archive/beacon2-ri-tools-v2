@@ -278,6 +278,7 @@ def state(datavrs):
         for k, v in value.items():
             if k == 'properties':
                 new_dict2[key]=v
+    #print(new_dict2)
     new_dict3={}
     for key, value in new_dict2.items():
         new_dict3[key]={}
@@ -303,6 +304,11 @@ def state(datavrs):
                                  for krd, vrd in initial_dict.items():
                                      if krd == vr_splitted[-1]:
                                         new_dict3[key][k].append(vrd)
+                    elif k1 == 'items':
+                         new_dict3[key][k]=[]
+                         for kit, vit in v1.items():
+                             new_dict3[key][k]=vit
+                             
     #print(new_dict3)
     new_dict4={}
     for key, value in new_dict3.items():
@@ -330,6 +336,15 @@ def state(datavrs):
                     for ki, vi in item.items():
                         if ki == 'properties':
                             new_dict41[key][k].append(vi)
+                        elif ki == '$ref':
+                            vi_splitted = vi.split('/')
+                            if 'CURIE' in vi_splitted[-1]:
+                                new_dict41[key][k].append("")
+                            else:
+                                for kd, vd in initial_dict.items():
+                                    if kd == vi_splitted[-1]:
+                                        new_dict3[key][k].append(vd)
+
             elif k == 'location':
                 new_dict41[key][k]='location'
             else:
@@ -370,7 +385,7 @@ def state(datavrs):
                 new_dict42[key][k]='location'
             else:
                 new_dict42[key][k]=v
-    
+    #print(new_dict42)
     new_dict43={}
     for key, value in new_dict42.items():
         new_dict43[key]={}
@@ -397,6 +412,7 @@ def state(datavrs):
     list_of_states=[]
     for key,value in new_dict43.items():
         list_of_states.append(value)
+    #print(list_of_states)
     return list_of_states
 
 def vrs(data_vrs):
@@ -475,7 +491,7 @@ def vrs(data_vrs):
     list_of_variations=[]
     for key,value in new_dict4.items():
         list_of_variations.append(value)
-    print(list_of_variations)
+    #print(list_of_variations)
     return list_of_variations
     
 
