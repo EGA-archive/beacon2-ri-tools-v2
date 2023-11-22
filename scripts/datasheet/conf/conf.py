@@ -1,5 +1,5 @@
 num_registries=4
-num_variants_registries=4
+num_variants_registries=1
 num_cohorts_registries=1
 num_datasets_registries=1
 excel_filename='datasheets/empty_model.xlsx'
