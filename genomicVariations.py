@@ -90,7 +90,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                 raise Exception(('error: you are not filling all the required fields. missing field is: {}').format(lispro))
                 
 
-        print(dict_properties)
+        #print(dict_properties)
         #print(dict_of_properties)
         definitivedict={}
         for key, value in dict_properties.items():
@@ -181,7 +181,26 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                                                                             vivdict[kiv][kivi]={}
                                                                                                             vivdict[kiv][kivi][kivivi]={}
                                                                                                             vivdict[kiv][kivi][kivivi][kivivi1]=propv
-                                                                                                 
+                                                                                        elif isinstance(vivivi, list):
+                                                                                            for vivivitem in vivivi:
+                                                                                                for kivitem, vivitem in vivivitem.items():
+                                                                                                    new_item = ""
+                                                                                                    new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi + "|" + kivivi + "|" + kivitem
+                                                                                                    for propk, propv in dict_of_properties.items():
+                                                                                                        if propk == new_item:
+                                                                                                            try:
+                                                                                                                vivdict[kiv][kivi][kivivi][kivitem]=propv
+                                                                                                            except Exception:
+                                                                                                                try:
+                                                                                                                    vivdict[kiv][kivi][kivivi]={}
+                                                                                                                    vivdict[kiv][kivi][kivivi][kivitem]=propv
+                                                                                                                except Exception:
+
+                                                                                                                    vivdict[kiv][kivi]={}
+                                                                                                                    vivdict[kiv][kivi][kivivi]={}
+                                                                                                                    vivdict[kiv][kivi][kivivi][kivitem]=propv
+                                                                                                                
+
                                                                                         else:
                                                                                             
                                                                                             new_item = ""

@@ -1093,10 +1093,19 @@ def generate(dict_properties):
                                                                     if isinstance(vivi, list):
                                                                         for vivitem1 in vivi:
                                                                             for kivivi, vivivi in vivitem1.items():
-                                                                                new_item = ""
-                                                                                new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi + "|" + kivivi
-                                                                                if new_item not in list_of_excel_items:
-                                                                                    list_of_excel_items.append(new_item)
+                                                                                if isinstance(vivivi, list):
+                                                                                    for vivivitem in vivivi:
+                                                                                        for kivitem, vivitem in vivivitem.items():
+                                                                                            new_item = ""
+                                                                                            new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi + "|" + kivivi + "|" + kivitem
+                                                                                            if new_item not in list_of_excel_items:
+                                                                                                print(new_item)
+                                                                                                list_of_excel_items.append(new_item)                                                                               
+                                                                                else:
+                                                                                    new_item = ""
+                                                                                    new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi + "|" + kivivi
+                                                                                    if new_item not in list_of_excel_items:
+                                                                                        list_of_excel_items.append(new_item)
                                                                     else:
                                                                         new_item = ""
                                                                         new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi
