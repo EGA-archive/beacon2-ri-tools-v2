@@ -130,6 +130,7 @@ variation|state|location|interval|type
 variation|state|location|sequence_id
 variation|state|location|species_id
 variation|state|location|type
+variation|state|reverse_complement
 variation|state|seq_expr|location|_id
 variation|state|seq_expr|location|chr
 variation|state|seq_expr|location|interval

@@ -90,7 +90,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                 raise Exception(('error: you are not filling all the required fields. missing field is: {}').format(lispro))
                 
 
-        
+        print(dict_properties)
         #print(dict_of_properties)
         definitivedict={}
         for key, value in dict_properties.items():
@@ -230,7 +230,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                         
 
                                                     if vivdict != {}:
-                                                        print(vivdict)
+                                                        #print(vivdict)
                                                         subitem_dict[k]=vivdict
 
                                             else:

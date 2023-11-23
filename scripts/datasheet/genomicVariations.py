@@ -317,6 +317,8 @@ def state(datavrs):
                     elif k1 == 'type':
                         if v1 == 'string':
                             new_dict3[key][k]=""  
+                        elif v1 == 'boolean':
+                            new_dict3[key][k]=True 
                     elif k1 == 'oneOf':
                          new_dict3[key][k]=[]
                          for item in v1:
@@ -343,6 +345,7 @@ def state(datavrs):
                     elif k1 == 'type':
                         if v1 == 'string':
                             new_dict4[key][k]=''
+
             else:
                 #print(k)
                 new_dict4[key][k]=v
@@ -375,6 +378,7 @@ def state(datavrs):
     for key, value in new_dict41.items():
         new_dict42[key]={}
         for k, v in value.items():
+            #print(k)
             if isinstance(v, list):
                 new_dict42[key][k]=[]
                 for item in v:
@@ -394,7 +398,7 @@ def state(datavrs):
                                             dictvi[ki]= ''
                                             
                                         elif vi1 == 'boolean':
-                                            dictvi[ki]= True
+                                            dictvi[ki]= ''
                                         elif vi1 == 'number':
                                             dictvi[ki]= 0
                                         elif vi1 == 'integer':
@@ -405,6 +409,7 @@ def state(datavrs):
             elif k == 'location':
                 new_dict42[key][k]='location'
             else:
+                #print(k)
                 new_dict42[key][k]=v
     #print(new_dict42)
     new_dict43={}
@@ -738,7 +743,7 @@ def overtypes(element):
                 new_value=""
                 overtypes[key]=new_value
             elif 'boolean' in value:
-                new_value=True
+                new_value=''
                 overtypes[key]=new_value
             elif isinstance(value, dict):
                 new_value=""
@@ -1100,6 +1105,7 @@ def generate(dict_properties):
                                                         else:
                                                             new_item = ""
                                                             new_item = key + "|" + ki + "|" + k + "|" + kiv
+                                                            #print(new_item)
                                                             if new_item not in list_of_excel_items:
                                                                 list_of_excel_items.append(new_item)
                                         else:
