@@ -1289,7 +1289,6 @@ def generate(dict_properties):
                                             #print(new_item)
                                             if new_item not in list_of_excel_items:
                                                 list_of_excel_items.append(new_item) 
-
                                 else:
                                     new_item = ""
                                     new_item = key + "|" + ki + "|" + ki1

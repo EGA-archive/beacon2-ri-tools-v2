@@ -1,6 +1,7 @@
 import json
 import openpyxl
 from tqdm import tqdm
+import re
 from scripts.datasheet.conf import conf
 
 list_of_excel_items=[]
@@ -251,13 +252,26 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                     if vivdict != {}:
                                                         #print(vivdict)
                                                         subitem_dict[k]=vivdict
+                                            elif ki == 'copies':
+                                                new_item = ""
+                                                new_item = key + "|" + ki
+                                                for propk, propv in dict_of_properties.items():
+                                                    if propk == new_item:
+                                                        propv = re.sub(r'\s', '', propv)
+                                                        respropv = json.loads(propv) 
+                                                        subitem_dict=respropv
 
                                             else:
                                                 new_item = ""
                                                 new_item = key + "|" + ki + "|" + k
                                                 for propk, propv in dict_of_properties.items():
                                                     if propk == new_item:
-                                                        subitem_dict[k]=propv
+                                                        try:
+                                                            propv = re.sub(r'\s', '', propv)
+                                                            respropv = json.loads(propv) 
+                                                            subitem_dict[k]=respropv
+                                                        except Exception:
+                                                            subitem_dict[k]=propv
 
 
                                     if subitem_dict != {}:
@@ -293,7 +307,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                         dictkvi={}
                                         for itemvi1 in vi1:
                                             for kvi, vvi in itemvi1.items():
-                                                
                                                 new_item = ""
                                                 new_item = key + "|" + ki + "|" + ki1 + "|" + kvi
                                                 for propk, propv in dict_of_properties.items():
@@ -315,6 +328,15 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
                                         item_dict[ki]=propv
+
+                            if ki == 'members':
+                                new_item = ""
+                                new_item = key + "|" + ki
+                                for propk, propv in dict_of_properties.items():
+                                    if propk == new_item:
+                                        propv = re.sub(r'\s', '', propv)
+                                        respropv = json.loads(propv)  
+                                        item_dict[ki]=respropv
     
                         if item_dict != {} and item_dict != [{}]:
                             outcome = 0
