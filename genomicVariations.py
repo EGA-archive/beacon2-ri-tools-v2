@@ -281,6 +281,25 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                 item_dict[ki]=vi_dict
                                         if vi_dict[ki1]=={}:
                                             del vi_dict[ki1]
+                                    elif ki1 == 'variation':
+                                        vi_dict[ki1]={}
+                                        new_item = ""
+                                        new_item = key + "|" + ki + "|" + ki1
+                                        for propk, propv in dict_of_properties.items():
+                                            if propk == new_item:
+                                                vi_dict[ki1]=propv
+                                    elif isinstance(vi1, list):
+                                        vi_dict[ki1]=[]
+                                        dictkvi={}
+                                        for itemvi1 in vi1:
+                                            for kvi, vvi in itemvi1.items():
+                                                
+                                                new_item = ""
+                                                new_item = key + "|" + ki + "|" + ki1 + "|" + kvi
+                                                for propk, propv in dict_of_properties.items():
+                                                    if propk == new_item:
+                                                        dictkvi[kvi]=vvi
+                                        vi_dict[ki1]=dictkvi
                                     else:
                                         new_item = ""
                                         new_item = key + "|" + ki + "|" + ki1

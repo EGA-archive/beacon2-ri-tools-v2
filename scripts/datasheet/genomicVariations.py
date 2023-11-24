@@ -441,6 +441,115 @@ def state(datavrs):
     #print(list_of_states)
     return list_of_states
 
+def count_list(countlist, data_vrs):
+    for key, value in data_vrs.items():
+        if key == 'definitions':
+            initial_dict=value
+
+    listnew=[]
+    for item in countlist:
+        for k, v in item.items():
+            vsplitted = v.split('/')
+            listnew.append(vsplitted[-1])
+    list2=[]
+    for item in  listnew:
+        for kd, vd in initial_dict.items():
+            if kd == item:
+                list2.append(vd)
+    #print(list2)
+    list3=[]
+    for item in list2:
+        for k, v in item.items():
+            if k == 'properties':
+                list3.append(v)
+    #print(list3)
+    list4=[]
+    
+    for item in list3:
+        dict4={}
+        for k, v in item.items():
+            for k1, v1 in v.items():
+                if k1 == 'type':
+                    if v1 == 'string':
+                        dict4[k]=''
+                    elif v1 == 'integer':
+                        dict4[k]=0
+                    elif v1 == 'number':
+                        dict4[k]=0
+
+        list4.append(dict4)
+    return list4
+
+
+def subject(list_subject):
+    initial_dict={}
+    new_list_subject=[]
+    vrs = 'ref_schemas/vrs'
+    file_vrs= vrs + '.json'
+    new_vrs = open(file_vrs,) 
+    datavrs = json.load(new_vrs)
+    for key, value in datavrs.items():
+        if key == 'definitions':
+            initial_dict=value
+    for subject in list_subject:
+        for k, v in subject.items():
+            vsplitted = v.split('/')
+            new_list_subject.append(vsplitted[-1])
+    v1dict={}
+    newlist2=[]
+    for subject in new_list_subject:
+        print(subject)
+        for kd, vd in initial_dict.items():
+            if kd == subject:
+                print(kd)
+                newlist2.append(vd)
+    newlist3=[]
+    for item in newlist2:
+        for k, v in item.items():
+            if k == 'properties':
+                newlist3.append(v)
+
+    newlist4=[]
+
+    #print(newlist3)
+
+    for item in newlist3:
+        v1dict={}
+        for k, v in item.items():
+            for k1, v1 in v.items():
+                if k1 == '$ref':
+                    v1_splitted = v1.split('/')
+                    if 'CURIE' in v1_splitted[-1]:
+                        v1dict[k]=""
+                    else:
+                        for kd, vd in initial_dict.items():
+                            if kd == v1_splitted[-1]:
+                                v1dict[k]=vd
+                elif k1 == 'type':
+                    if v1 == 'string':
+                        v1dict[k]=''
+                elif isinstance(v1, list):
+                    v1dict[k]=v1
+        newlist4.append(v1dict)
+
+    newlist5=[]
+
+    for item in newlist4:
+        v1dict={}
+        for k, v in item.items():
+            if isinstance(v, dict):
+                v1dict[k]=''
+            elif isinstance(v, list):
+                v1dict[k]=''
+                    
+            else:
+                v1dict[k]=v
+        newlist5.append(v1dict)
+
+
+
+    return newlist5
+
 def vrs(data_vrs):
     dict_vrs_definitions={}
     for key, value in data_vrs.items():
@@ -504,6 +613,34 @@ def vrs(data_vrs):
                         elif k1 == 'type':
                             if v1 == 'string':
                                 v1dict[k]="" 
+                        elif k1 == 'items':
+                            #print(v1)
+                            
+                            for k2, v2 in v1.items():
+                                if k2 == '$ref':
+                                    v2_splitted = v2.split('/')
+                                    for kd, vd in initial_dict.items():
+                                        if kd == v2_splitted[-1]:
+                                            
+                                            for kd1, vd1 in vd.items():
+                                                if kd1 == 'properties':
+                                                    vd3dict={}
+                                                    
+                                                    for kd2, vd2 in vd1.items():
+                                                        for kd3, vd3 in vd2.items():
+                                                            if vd3 == 'string':
+                                                                vd3dict[kd2]=''
+                                                            elif kd3 == 'oneOf':
+                                                                count=count_list(vd3,data_vrs)
+                                                                #print(count)
+                                                                vd3dict[kd2]=count
+                                                    v1dict[k]=vd3dict
+                        elif k1 == 'oneOf':
+                            v1dict[k]=[{'_id': '', 'type': '', 'species_id': '', 'chr': '', 'interval': ''}, {'type': '', 'gene_id': ''}, {'_id': '', 'type': '', 'sequence_id': '', 'interval': ''}]
+
+                            
+                                            
+
 
 
 
@@ -513,6 +650,7 @@ def vrs(data_vrs):
                 if v1dict not in new_dict4[key]:
                     new_dict4[key].append(v1dict)
     #print(new_dict4)
+
 
     list_of_variations=[]
     for key,value in new_dict4.items():
@@ -1099,7 +1237,7 @@ def generate(dict_properties):
                                                                                             new_item = ""
                                                                                             new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi + "|" + kivivi + "|" + kivitem
                                                                                             if new_item not in list_of_excel_items:
-                                                                                                print(new_item)
+                                                                                                #print(new_item)
                                                                                                 list_of_excel_items.append(new_item)                                                                               
                                                                                 else:
                                                                                     new_item = ""
@@ -1117,10 +1255,17 @@ def generate(dict_properties):
                                                             #print(new_item)
                                                             if new_item not in list_of_excel_items:
                                                                 list_of_excel_items.append(new_item)
+                                        elif ki == 'copies':
+                                            new_item = ""
+                                            new_item = key + "|" + ki
+                                            if new_item not in list_of_excel_items:
+                                                list_of_excel_items.append(new_item)
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + k
+                                            
                                             if new_item not in list_of_excel_items:
+                                                #print(new_item)
                                                 list_of_excel_items.append(new_item)
                         elif isinstance(vi, dict):
                             for ki1, vi1 in vi.items():
@@ -1129,7 +1274,22 @@ def generate(dict_properties):
                                         new_item = ""
                                         new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
                                         if new_item not in list_of_excel_items:
-                                            list_of_excel_items.append(new_item)     
+                                            list_of_excel_items.append(new_item)
+                                elif ki1 == 'variation':
+                                    new_item = ""
+                                    new_item = key + "|" + ki + "|" + ki1
+                                    #print(new_item)
+                                    if new_item not in list_of_excel_items:
+                                        list_of_excel_items.append(new_item)  
+                                elif isinstance(vi1, list):
+                                    for itemvi1 in vi1:
+                                        for kvi, vvi in itemvi1.items():
+                                            new_item = ""
+                                            new_item = key + "|" + ki + "|" + ki1 + "|" + kvi
+                                            #print(new_item)
+                                            if new_item not in list_of_excel_items:
+                                                list_of_excel_items.append(new_item) 
+
                                 else:
                                     new_item = ""
                                     new_item = key + "|" + ki + "|" + ki1
@@ -1139,7 +1299,13 @@ def generate(dict_properties):
                             new_item = ""
                             new_item = key + "|" + ki
                             if new_item not in list_of_excel_items:
-                                list_of_excel_items.append(new_item) 
+                                list_of_excel_items.append(new_item)
+                        if ki == 'members':
+                            new_item = ""
+                            new_item = key + "|" + ki
+                            if new_item not in list_of_excel_items:
+                                list_of_excel_items.append(new_item)
+
         elif isinstance(value, dict):
             for kd, vd in value.items():
                 if isinstance(vd, list):
@@ -1193,6 +1359,7 @@ def generate(dict_properties):
                                     if new_item not in list_of_excel_items:
                                         list_of_excel_items.append(new_item)
                         else:
+
                             new_item = ""
                             new_item = key + "|" + kd + "|" + kd1
                             if new_item not in list_of_excel_items:

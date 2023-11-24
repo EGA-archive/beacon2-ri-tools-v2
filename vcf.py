@@ -94,6 +94,7 @@ for v in vcf:
                 result = ''.join([i for i in k if not i.isdigit()])
                 result = result + str(i+1)
                 new_dict_to_xls[result]=value
+                print(value)
     pbar.update(1)
 
     if i == conf.num_variants_registries+1:
