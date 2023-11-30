@@ -413,6 +413,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                         value_dict[kd]={}
                         for itemvd in vd:
                             if isinstance(itemvd, dict):
+                                dict_mol={}
                                 for kd1, vd1 in itemvd.items():
                                     if isinstance(vd1, dict):
                                         value_dict[kd][kd1]={}
@@ -459,7 +460,15 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                 else:
                                                     if value_dict == {}:
                                                         value_dict[kd]={}
-                                                    value_dict[kd][kd1]=propv
+                                                    if 'molecularEffects' in kd:
+                                                        try:
+                                                            dict_mol[kd1]=propv
+                                                            value_dict[kd].append(dict_mol)
+                                                        except Exception:
+                                                            dict_mol[kd1]=propv
+                                                            value_dict[kd]=[]
+                                                    else:                                                          
+                                                        value_dict[kd][kd1]=propv
 
 
 
@@ -468,6 +477,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 new_item = key + "|" + kd
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
+                                        #print(propk)
                                         value_dict[kd]=[]
                                         value_dict[kd].append(propv)
 

@@ -171,8 +171,10 @@ def commas(prova):
                     for k, v in value.items():
                         if isinstance(v, str):
                             vsplitted = v.split('|')
-                            #print(vsplitted)
-                            newdict[key][k]=vsplitted[i]
+                            try:
+                                newdict[key][k]=float(vsplitted[i])
+                            except Exception:
+                                newdict[key][k]=vsplitted[i]
                         elif isinstance(v, int):
                             newdict[key][k]=v
                         elif isinstance(v, dict):

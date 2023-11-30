@@ -1,0 +1,1045 @@
+[
+    {
+        "caseLevelData": [
+            {
+                "biosampleId": "HG03771",
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                }
+            }
+        ],
+        "identifiers": {
+            "genomicHGVSId": "22:g.16050075G>A"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "."
+            ],
+            "geneIds": [
+                "CHR_START-DUXAP8"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000174",
+                    "label": "intergenic_region"
+                }
+            ]
+        },
+        "variantInternalId": "chr22_16050075_A_G",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:22:g.16050075G>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 16050074
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 16050075
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "G",
+            "variantType": "SNP"
+        }
+    },
+    {
+        "caseLevelData": [
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG01365"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02337"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02345"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02501"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02537"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02577"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02624"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02878"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03054"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03060"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03085"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03363"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03369"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03394"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03433"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03476"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA18517"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA18520"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA18861"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA18876"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA18909"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19028"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19107"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19129"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19138"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19214"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19225"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19463"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19711"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA20126"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA20334"
+            }
+        ],
+        "identifiers": {
+            "genomicHGVSId": "22:g.16050115A>G"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "."
+            ],
+            "geneIds": [
+                "CHR_START-DUXAP8"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000174",
+                    "label": "intergenic_region"
+                }
+            ]
+        },
+        "variantInternalId": "chr22_16050115_G_A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:22:g.16050115A>G",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 16050114
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 16050115
+                    }
+                }
+            },
+            "alternateBases": "G",
+            "referenceBases": "A",
+            "variantType": "SNP"
+        }
+    },
+    {
+        "caseLevelData": [
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG01438"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG01670"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG01912"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02111"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02113"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02583"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02611"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02648"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02676"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02716"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02774"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02805"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02808"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02811"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02817"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02854"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02881"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02890"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02943"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03049"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03063"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03163"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03202"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03304"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03518"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03538"
+            },
+            {
+                "zygosity": {
+                    "label": "1/1",
+                    "id": "GENO:GENO_0000136"
+                },
+                "biosampleId": "NA18874"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19025"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19095"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19116"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19172"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19248"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19257"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19317"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19404"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19428"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA20355"
+            }
+        ],
+        "identifiers": {
+            "genomicHGVSId": "22:g.16050213T>C"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "."
+            ],
+            "geneIds": [
+                "CHR_START-DUXAP8"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000174",
+                    "label": "intergenic_region"
+                }
+            ]
+        },
+        "variantInternalId": "chr22_16050213_C_T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:22:g.16050213T>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 16050212
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 16050213
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "T",
+            "variantType": "SNP"
+        }
+    },
+    {
+        "caseLevelData": [
+            {
+                "biosampleId": "HG01440",
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                }
+            }
+        ],
+        "identifiers": {
+            "genomicHGVSId": "22:g.16050319T>C"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "."
+            ],
+            "geneIds": [
+                "CHR_START-DUXAP8"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000174",
+                    "label": "intergenic_region"
+                }
+            ]
+        },
+        "variantInternalId": "chr22_16050319_C_T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:22:g.16050319T>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 16050318
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 16050319
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "T",
+            "variantType": "SNP"
+        }
+    },
+    {
+        "caseLevelData": [
+            {
+                "biosampleId": "HG01625",
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                }
+            }
+        ],
+        "identifiers": {
+            "genomicHGVSId": "22:g.16050527A>C"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "."
+            ],
+            "geneIds": [
+                "CHR_START-DUXAP8"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000174",
+                    "label": "intergenic_region"
+                }
+            ]
+        },
+        "variantInternalId": "chr22_16050527_C_A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:22:g.16050527A>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 16050526
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 16050527
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "A",
+            "variantType": "SNP"
+        }
+    },
+    {
+        "caseLevelData": [
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG01857"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02390"
+            }
+        ],
+        "identifiers": {
+            "genomicHGVSId": "22:g.16050568A>C"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "."
+            ],
+            "geneIds": [
+                "CHR_START-DUXAP8"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000174",
+                    "label": "intergenic_region"
+                }
+            ]
+        },
+        "variantInternalId": "chr22_16050568_C_A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:22:g.16050568A>C",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 16050567
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 16050568
+                    }
+                }
+            },
+            "alternateBases": "C",
+            "referenceBases": "A",
+            "variantType": "SNP"
+        }
+    },
+    {
+        "caseLevelData": [
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG00257"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG01257"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG01506"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA12874"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA20801"
+            }
+        ],
+        "identifiers": {
+            "genomicHGVSId": "22:g.16050607A>G"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "."
+            ],
+            "geneIds": [
+                "CHR_START-DUXAP8"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000174",
+                    "label": "intergenic_region"
+                }
+            ]
+        },
+        "variantInternalId": "chr22_16050607_G_A",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:22:g.16050607A>G",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 16050606
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 16050607
+                    }
+                }
+            },
+            "alternateBases": "G",
+            "referenceBases": "A",
+            "variantType": "SNP"
+        }
+    },
+    {
+        "caseLevelData": [
+            {
+                "biosampleId": "NA19720",
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                }
+            }
+        ],
+        "identifiers": {
+            "genomicHGVSId": "22:g.16050627T>G"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "."
+            ],
+            "geneIds": [
+                "CHR_START-DUXAP8"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000174",
+                    "label": "intergenic_region"
+                }
+            ]
+        },
+        "variantInternalId": "chr22_16050627_G_T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:22:g.16050627T>G",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 16050626
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 16050627
+                    }
+                }
+            },
+            "alternateBases": "G",
+            "referenceBases": "T",
+            "variantType": "SNP"
+        }
+    },
+    {
+        "caseLevelData": [
+            {
+                "biosampleId": "NA21091",
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                }
+            }
+        ],
+        "identifiers": {
+            "genomicHGVSId": "22:g.16050646T>G"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "."
+            ],
+            "geneIds": [
+                "CHR_START-DUXAP8"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000174",
+                    "label": "intergenic_region"
+                }
+            ]
+        },
+        "variantInternalId": "chr22_16050646_G_T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:22:g.16050646T>G",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 16050645
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 16050646
+                    }
+                }
+            },
+            "alternateBases": "G",
+            "referenceBases": "T",
+            "variantType": "SNP"
+        }
+    },
+    {
+        "caseLevelData": [
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG02508"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03129"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03259"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03432"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "HG03457"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA18979"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA19209"
+            },
+            {
+                "zygosity": {
+                    "label": "1/0",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA20362"
+            },
+            {
+                "zygosity": {
+                    "label": "0/1",
+                    "id": "GENO:GENO_0000458"
+                },
+                "biosampleId": "NA20412"
+            }
+        ],
+        "identifiers": {
+            "genomicHGVSId": "22:g.16050654CN0>A"
+        },
+        "molecularAttributes": {
+            "aminoacidChanges": [
+                "."
+            ],
+            "geneIds": [
+                "CHR_START-DUXAP8"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "ENSGLOSSARY:0000174",
+                    "label": "intergenic_region"
+                }
+            ]
+        },
+        "variantInternalId": "chr22_16050654_A_CN0",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:22:g.16050654CN0>A",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 16050653
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 16050654
+                    }
+                }
+            },
+            "alternateBases": "A",
+            "referenceBases": "CN0",
+            "variantType": "SV"
+        }
+    }
+]
