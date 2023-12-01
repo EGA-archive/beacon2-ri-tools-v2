@@ -345,6 +345,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 new_item = key + "|" + ki
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
+                                        #print(propk)
                                         propv = re.sub(r'\s', '', propv)
                                         respropv = json.loads(propv)  
                                         item_dict[ki]=respropv
@@ -403,7 +404,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                     elif len(v_array) > 1:
                                         list_to_def=[]
                                         
-                                        #print(v_array)
                                         for itva in v_array:
                                             newdict={}
                                             newdict[v_key]=itva
@@ -418,7 +418,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                     definitivedict[key]=[]
                                     definitivedict[key].append(item_dict)
                                 else:
-                                    #print(item_dict)
                                     definitivedict[key]=item_dict
                                 
             elif isinstance(value, dict):
@@ -493,7 +492,6 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                 new_item = key + "|" + kd
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
-                                        #print(propk)
                                         value_dict[kd]=[]
                                         value_dict[kd].append(propv)
 
