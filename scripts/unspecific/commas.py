@@ -3,7 +3,7 @@ import openpyxl
 
 collection = 'ref_schemas/genomicVariations'
 file_to_open= collection + '.json'
-num_registries = 1006
+num_registries = 2506
 
 
 
@@ -42,7 +42,7 @@ while j < num_registries:
             sheet[number_sheet].value = element
         i+=1
     j+=1
-
+'''
 sheet = wb['genomicVariations']
 
 j=1
@@ -58,6 +58,7 @@ while j < num_registries:
             sheet[number_sheet].value = element
         i+=1
     j+=1
+'''
 
 wb.save(xls_Book)
 

@@ -5,6 +5,7 @@ import openpyxl
 from scripts.datasheet.conf import conf
 from tqdm import tqdm
 
+num_variants_registries = conf.num_variants_registries
 
 def custom_formatwarning(msg, *args, **kwargs):
     # ignore everything except the message
@@ -17,10 +18,10 @@ vcf = vcfpy.Reader.from_path(conf.vcf_filename)
 i=0
 header_list = ['#CHROM', 'POS' , 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT'] + vcf.header.samples.names
 
-pbar = tqdm(total = conf.num_variants_registries)
+pbar = tqdm(total = num_variants_registries)
 for v in vcf:
     warning = False
-    i+=1
+    
     dict_to_xls={}
     try:
         for value in v.ALT:
@@ -30,18 +31,29 @@ for v in vcf:
     except Exception as e:
         for value in v.ALT:
             ALT = str(value.value)
+            
     line = [v.CHROM, v.POS, v.ID, v.REF, ALT, v.QUAL, v.FILTER, v.INFO, v.FORMAT]
     line += [alt.value for alt in v.ALT]
     line += [call.data.get('GT') or './.' for call in v.calls]
+    if TYPE == 'SYMBOLIC':
+        warnings.warn('variantType is SV. This type of variant is not supported. The VCF entry with ID: {} will not be converted'.format(line[2]), Warning)
+        warning = True
+        continue
     if line[3] != '':
         dict_to_xls['variation|alternateBases'] = line[3]
     else:
         warnings.warn('alternateBases NOT FOUND. The VCF entry with ID: {} will not be converted.'.format(line[2]), Warning)
         warning = True
+        continue
     dict_to_xls['variation|referenceBases'] = line[4]
     for k,v in line[7].items():
         if k == 'VT':
-            dict_to_xls['variation|variantType'] = v[0]
+            if v[0] == 'SV':
+                warnings.warn('variantType is SV. This type of variant is not supported. The VCF entry with ID: {} will not be converted'.format(line[2]), Warning)
+                continue
+            else:
+                dict_to_xls['variation|variantType'] = v[0]
+
         elif k == 'ANN':
             line7splitted = v[0].split("|")
             dict_to_xls['molecularAttributes|molecularEffects|label'] = line7splitted[1]
@@ -53,6 +65,8 @@ for v in vcf:
     except Exception:
         warnings.warn('VariantType NOT FOUND. The VCF entry with ID: {} will not be converted.'.format(line[2]), Warning)
         warning = True
+        i-=1
+        continue
     
     dict_to_xls['variantInternalId'] = 'chr' + str(line[0]) + '_' + str(line[1]) + '_' + str(line[3]) + '_' + str(line[4])
     zigosity={}
@@ -94,8 +108,7 @@ for v in vcf:
     dict_to_xls['variation|location|interval|end|type']="Number"
     dict_to_xls['variation|location|interval|type']="SequenceInterval"
     dict_to_xls['variation|location|type']="SequenceLocation"
-    dict_to_xls['variation|location|sequence|id']="HGVSid:" + str(line[0]) + ":g." + str(line[1]) + line[4] + ">" + line[3]
-
+    dict_to_xls['variation|location|sequence_id']="HGVSid:" + str(line[0]) + ":g." + str(line[1]) + line[4] + ">" + line[3]
 
 
 
@@ -116,6 +129,7 @@ for v in vcf:
     ]
 
     dict_columns={}
+    i+=1
     
     l=0
     if warning is not True:
@@ -132,13 +146,13 @@ for v in vcf:
                     result = ''.join([i for i in k if not i.isdigit()])
                     result = result + str(i+1)
                     new_dict_to_xls[result]=value
-                    #print(value)
 
-
-    if i == conf.num_variants_registries+1:
-        break
 
     pbar.update(1)
+    if i == num_variants_registries:
+        break
+
+    
 pbar.close()
 
 

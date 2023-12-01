@@ -350,6 +350,7 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                         if value_list != []:
                             for itemvl in value_list:
                                 list_to_def=commas(itemvl)
+                                #print(list_to_def)
                                 for itemldf in list_to_def:
                                     if itemldf not in definitivedict[key]:
                                         definitivedict[key].append(itemldf)
