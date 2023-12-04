@@ -24,26 +24,27 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 
 
     
-    list_of_filled_items=[]
+    
     total_dict =[]
 
     k=0
-    pbar = tqdm(total = num_registries+1)
+    pbar = tqdm(total = num_registries)
     with open('CINECA.csv', 'r' ) as theFile:
         reader = csv.DictReader(theFile)
+        i=1
         for line in reader:
-            i=1
             dict_of_properties={}
+            list_of_filled_items=[]
             for kline, vline in line.items():
-                
                 property_value = kline
-
 
                 
                 valor = vline
 
-                if i > 1:
+                if i > 0:
+                    
                     if valor != '':
+
                         list_of_filled_items.append(property_value)
 
                         
@@ -57,25 +58,24 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                         h2 = h2[0].lower() + h2[1:]
                                         if h2 not in list_of_properties_required:
                                             list_of_properties_required.append(h2)
-                for filled_item in list_of_filled_items:
-                    if isinstance(filled_item, str): 
-                        if 'variation' in filled_item:
-                            try:
-                                list_of_properties_required.remove('variation')
-                            except Exception:
-                                pass
-                
-
-                if valor:
-                    dict_of_properties[property_value]=valor
+                    for filled_item in list_of_filled_items:
+                        if isinstance(filled_item, str): 
+                            if 'variation' in filled_item:
+                                try:
+                                    list_of_properties_required.remove('variation')
+                                except Exception:
+                                    pass
                     
 
-                elif valor == 0:
-                    dict_of_properties[property_value]=valor
+                    if valor:
+                        dict_of_properties[property_value]=valor
+                        
 
-                i +=1
+                    elif valor == 0:
+                        dict_of_properties[property_value]=valor
 
-            
+                    
+
 
             for lispro in list_of_properties_required:
                 if lispro not in list_of_filled_items:
@@ -166,7 +166,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                                                                     new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi + "|" + kivivi + "|" + kivivi1
                                                                                                     for propk, propv in dict_of_properties.items():
                                                                                                         if propk == new_item:
-                                                                                                            print(propk)
+                                                                                                            #print(propk)
                                                                                                             try:
                                                                                                                 vivdict[kiv][kivi][kivivi][kivivi1]=propv  
                                                                                                             except Exception:
@@ -208,8 +208,12 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                                                     new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi
                                                                                     for propk, propv in dict_of_properties.items():
                                                                                         if propk == new_item:
+                                                                                            
                                                                                             try:
-                                                                                                vivdict[kiv][kivi]=propv
+                                                                                                if 'value' in propk:
+                                                                                                    vivdict[kiv][kivi]=int(propv)
+                                                                                                else:
+                                                                                                    vivdict[kiv][kivi]=propv
                                                                                             except Exception:
                                                                                                 vivdict[kiv]={}
                                                                                                 vivdict[kiv][kivi]=propv
@@ -228,6 +232,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                                                                     new_item = key + "|" + ki + "|" + k + "|" + kiv
                                                                     for propk, propv in dict_of_properties.items():
                                                                         if propk == new_item:
+                                                                            #print(propk)
                                                                             vivdict[kiv]=propv
 
 
@@ -530,8 +535,12 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                             definitivedict[key]=propv
 
             total_dict.append(definitivedict)
-            i+=1
+
             pbar.update(1)
+            if i == num_registries:
+                break
+            i+=1
+            
     pbar.close()
     return total_dict
 
