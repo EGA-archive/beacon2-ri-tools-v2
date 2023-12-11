@@ -29,7 +29,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 
     k=0
     pbar = tqdm(total = num_registries)
-    with open('CINECA.csv', 'r' ) as theFile:
+    with open(conf.csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:
