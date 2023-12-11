@@ -2,11 +2,11 @@ num_registries=2504
 num_variants_registries=1004
 num_cohorts_registries=1
 num_datasets_registries=1
-excel_filename='/Users/oriol/Desktop/beacon-ri-tools-v2/datasheets/allele.xlsx'
+excel_filename='datasheets/allele.xlsx'
 csv_filename='csv/genomicVariations.csv'
 collection='genomicVariations'
 vcf_folder='files/vcf/files_to_read/'
-output_docs_folder='output_docs/allele/'
+output_docs_folder='output_docs/prova/'
 
 
 '''

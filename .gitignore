@@ -6,4 +6,5 @@ snpEFF
 bcftools*
 scripts/datasheet/conf/__pycache__/*
 *.vcf.gz
+*.vcf
 vcf_BelCovid_2

@@ -32,7 +32,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
     total_dict =[]
     new_dict_to_xls={}
     i=1
-    for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
+    for vcf_filename in glob.glob("files/vcf/files_to_read/*"):
         print(vcf_filename)
         vcf = vcfpy.Reader.from_path(vcf_filename)
         header_list = ['#CHROM', 'POS' , 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT'] + vcf.header.samples.names
