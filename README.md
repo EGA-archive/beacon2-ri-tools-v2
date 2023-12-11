@@ -11,7 +11,7 @@ This repository contains the new Beacon ri tools v2.0, a software created with t
 
 The main goal of Beacon ri tools v2.0 is to obtain a BFF (json following Beacon v2 official specifications) file that can be injected to a beacon v2 mongoDB database. To obtain a beacon v2 with its mongodb and see how to inject this BFF files, you can check it out and download yours for free at the official repo of [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
 To get this json file, you can either convert your data from a vcf file or from a .xlsx file that you will later convert to .csv file. Please, see instruction manual to follow the right steps to do the data conversion. At the end, you will end completing one of the possible conversion processes that is shown in the next diagram:
-![Beacon tools v2 diagram](https://github.com/EGA-archive/beacon-ri-tools-v2/blob/files/beacontoolsv2.png)
+![Beacon tools v2 diagram](https://github.com/EGA-archive/beacon-ri-tools-v2/blob/main/files/beacontoolsv2.png)
 
 ## Installation guide with docker
 
