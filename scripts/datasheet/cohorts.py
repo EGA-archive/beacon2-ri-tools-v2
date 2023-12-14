@@ -667,7 +667,7 @@ for key, value in dict_types.items():
         for k, v in value.items():
             if k == 'required':
                 for item in v:
-                    all_name = key + '_' + item
+                    all_name = key + '|' + item
                     list_of_headers_definitions_required.append(key)
                     list_of_definitions_required.append(all_name)
 
