@@ -1,4 +1,4 @@
-# Beacon ri tools v2.0
+# Beacon 2 ri tools v2.0
 
 This repository contains the new Beacon ri tools v2.0, a software created with the main goal of generating BFF data from .xlsx or .vcf (and probably more types of datafiles in the future). This is based on the first beacon ri tools, a previous and different version that you can find here: [Beacon ri tools v1](https://github.com/EGA-archive/beacon2-ri-tools). The new features for beacon v2.0 are:
 

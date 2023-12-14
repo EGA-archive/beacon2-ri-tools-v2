@@ -653,7 +653,7 @@ def treatment():
     element=megaovertypes(element)
     return element
     
-#print(dict_types)
+print(dict_types)
 
 
 
@@ -667,14 +667,18 @@ for key, value in dict_types.items():
         for k, v in value.items():
             if k == 'required':
                 for item in v:
-                    all_name = key + '_' + item
+                    all_name = key + '|' + item
                     list_of_headers_definitions_required.append(key)
                     list_of_definitions_required.append(all_name)
 
 for key, value in dict_types.items():
     if key == 'required':
         for item in value:
-            list_of_properties_required.append(item)
+            if 'sex' in item:
+                item = item + '|id'
+                list_of_properties_required.append(item)
+            else:
+                list_of_properties_required.append(item)
 
 
 

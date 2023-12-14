@@ -217,6 +217,7 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                     
                     if valor != '':
 
+
                         list_of_filled_items.append(property_value)
 
                         
@@ -247,10 +248,9 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                         dict_of_properties[property_value]=valor
 
                     
-
+            print(list_of_filled_items)
             for lispro in list_of_properties_required:
-                lispro_id=lispro + '|id'
-                if lispro or lispro_id in list_of_filled_items:
+                if lispro in list_of_filled_items:
                     pass
                 else:
                     raise Exception(('error: you are not filling all the required fields. missing field is: {}').format(lispro))
