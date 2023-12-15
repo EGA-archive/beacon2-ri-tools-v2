@@ -33,19 +33,19 @@ Once the container is up and running you can start using beacon ri tools v2, con
 
 To start using beacon ri tools v2, you have to edit the configuration file [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf). Inside this file you will find the next information:
 ```bash
-num_registries=2504
-num_variants_registries=1004
-num_cohorts_registries=1
-num_datasets_registries=1
-excel_filename='datasheets/allele.xlsx'
-collection='genomicVariations'
-output_docs_folder='output_docs/allele/'
+num_registries=2507
+num_variants_registries=1500
+num_cohorts_registries=2
+num_datasets_registries=2
+excel_filename='datasheets/empty_model.xlsx'
+collection=['individuals', 'analyses']
+output_docs_folder='output_docs/prova/'
 ```
 The **num_registries**, **num_variants_registries**, **num_cohorts_registries** and **num_datasets_registries** are the variables to set how long is the spreadsheet (number of rows of the spreadsheet) for your collections, being **num_registries** useful for analyses, biosamples, individuals and runs, **num_variants_registries** for genomicVariations, **num_cohorts_registries** for cohorts and **num_datasets_registries** for datasets. Please, modify this parameter so the scripts will read and parse this amount of data and help to shorten the execution time.
 The **excel_filename** variable sets where is the .xlsx file the script will write and read data from. This .xlsx file needs to have 7 sheets, one with the name of each beacon collection: analyses, biosamples, cohorts, datasets, genomicVariations, individuals and runs. You have **two options** to do so:
  * (**RECOMMENDED**) Use empty_model.xlsx, rename it and save it inside datasheets directory (mandatory to save all .xlsx in this directory). Note that the first two columns of each sheet (A and B) must be always empty. 
  * (**NOT RECOMMENDED**) In case you need to create the excel from zero, to update headers or whatever other reason, please follow [generating excel file instructions](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/scripts/datasheet/README.md)
-The **collection** variable sets which is the collection of beacon you are working on, **this is the variable you have to fill first before executing any script**.
+The **collection** list variable sets which is the list of collections of beacon you want to convert from .xlsx to .csv file.
 Lastly, **output_docs_folder** sets the folder where your final .json files will be saved once execution of beacon tools finishes. This folder is mandatory to be always inside 'output_docs', so only the subdirectory inside output_docs can be modified in this path.
 
 ### Converting data from .vcf or .vcf.gz file

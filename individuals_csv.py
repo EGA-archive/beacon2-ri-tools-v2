@@ -194,7 +194,7 @@ def commas(prova):
 def generate(list_of_excel_items, list_of_properties_required, dict_properties):
     num_registries=conf.num_registries
 
-    csv_filename = 'csv/' + conf.collection + '.csv'
+    csv_filename = 'csv/' + 'individuals' + '.csv'
     
     
     total_dict =[]

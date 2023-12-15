@@ -1,1 +1,1 @@
-[{"id": "A1", "sex": {"id": "male"}}, {"id": "A2", "sex": {"id": "female"}}, {"id": "A3", "sex": {"id": "female"}}]
+[{"id": "A1", "sex": {"id": "male,female"}}, {"id": "A2", "sex": {"id": "female"}}, {"id": "A3", "sex": {"id": "female"}}]
