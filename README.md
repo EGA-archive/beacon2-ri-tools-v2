@@ -50,7 +50,7 @@ Lastly, **output_docs_folder** sets the folder where your final .json files will
 
 ### Converting data from .vcf or .vcf.gz file
 
-To convert data from .vcf (or .vcf.gz) to .json, you will have to copy all the files you want to convert inside the [files_to_read folder](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/files/vcf/files_to_read).
+To convert data from .vcf (or .vcf.gz) to .json, you will have to copy all the files you want to convert inside the [files_to_read folder](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/files/vcf/files_to_read).
 ```bash
 docker exec -it ri-tools python genomicVariations_vcf.py
 ```

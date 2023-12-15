@@ -10,3 +10,5 @@ read_file.to_csv (csv_filename,
 df = pd.DataFrame(pd.read_csv(csv_filename))
 
 df
+
+print('Successfully converted {}:spreadsheet({}) into {}'.format(conf.excel_filename, conf.collection, csv_filename))

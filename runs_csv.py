@@ -357,20 +357,30 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                             definitivedict[key]=propv
             total_dict.append(definitivedict)
             pbar.update(1)
+            i+=1
             if i == num_registries:
                 break
-            i+=1
+            
+        num_empty=0
+        while i+num_empty <= num_registries:
+            pbar.update(1)
+            num_empty+=1
     pbar.close()
-    return total_dict
+    return total_dict, i, num_empty
 
 
 
 
 
-dict_generado=generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties)
+dict_generado, total_i, num_empty=generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties)
 
 
 output = conf.output_docs_folder + 'runs.json'
+
+print('Successfully converted {} registries into {}'.format(total_i-1, output))
+print('A total of {} empty registries were encountered'.format(num_empty))
+
+
 
 with open(output, 'w') as f:
     json.dump(dict_generado, f)

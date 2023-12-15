@@ -1,7 +1,7 @@
-num_registries=2504
-num_variants_registries=1004
-num_cohorts_registries=1
-num_datasets_registries=1
+num_registries=2507
+num_variants_registries=1500
+num_cohorts_registries=2
+num_datasets_registries=2
 excel_filename='datasheets/empty_model.xlsx'
 collection='individuals'
 output_docs_folder='output_docs/prova/'
