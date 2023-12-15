@@ -542,6 +542,8 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
             pbar.update(1)
             i+=1
             if i == num_registries:
+                i+=1
+                pbar.update(1)
                 break
             
         num_empty=0

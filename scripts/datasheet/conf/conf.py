@@ -1,9 +1,9 @@
-num_registries=2507
+num_registries=2509
 num_variants_registries=1500
-num_cohorts_registries=2
-num_datasets_registries=2
-excel_filename='datasheets/empty_model.xlsx'
-collection=['individuals', 'analyses']
+num_cohorts_registries=3
+num_datasets_registries=3
+excel_filename='datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx'
+collection=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs']
 output_docs_folder='output_docs/prova/'
 
 
