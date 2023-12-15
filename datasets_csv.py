@@ -24,12 +24,12 @@ with open('files/dictionaries/datasets.json') as json_file:
 
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
     num_registries=conf.num_datasets_registries
-
+    csv_filename = 'csv/' + conf.collection + '.csv'
     total_dict =[]
 
     k=0
     pbar = tqdm(total = num_registries)
-    with open(conf.csv_filename, 'r' ) as theFile:
+    with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:

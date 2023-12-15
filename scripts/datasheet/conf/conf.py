@@ -3,9 +3,7 @@ num_variants_registries=1004
 num_cohorts_registries=1
 num_datasets_registries=1
 excel_filename='datasheets/empty_model.xlsx'
-csv_filename='csv/individuals.csv'
 collection='individuals'
-vcf_folder='files/vcf/files_to_read/'
 output_docs_folder='output_docs/prova/'
 
 

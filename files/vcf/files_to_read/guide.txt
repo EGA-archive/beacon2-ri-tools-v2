@@ -1,0 +1,1 @@
+Insert in this folder all the .vcf or .vcf.gz files you wish to be converted to BFF files.
