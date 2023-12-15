@@ -108,6 +108,17 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
                         dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity[zygo]
                         dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + header_list[num]
                 j+=1
+            if dict_to_xls['caseLevelData|zygosity|id'] == '':
+                zygo=line[10]
+                try:
+                    if zygo == '1/0' or zygo == '0/1' or zygo== '1/1':
+                        dict_to_xls['caseLevelData|zygosity|label'] = zygo
+                        dict_to_xls['caseLevelData|zygosity|id'] = zigosity[zygo]
+                        dict_to_xls['caseLevelData|biosampleId'] = header_list[num]
+                except Exception:
+                    pass
+
+
             dict_to_xls['identifiers|genomicHGVSId'] = str(line[0]) + ':' + 'g.' + str(line[1]) + line[4] + '>' + line[3]
             ''' Systemic Variation
             if conf.variation_model == 'SystemicVariation':

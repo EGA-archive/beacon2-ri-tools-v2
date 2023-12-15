@@ -87,6 +87,6 @@ This file will be able to be directly imported into a mongoDB for beacon usage, 
 
 * Other file names and distribution of folder and files is not supported.
 
-### Acknowlegments
+### Acknowledgements
 
 Thanks to all the [EGA archive](https://ega-archive.org/) team especially Jordi Rambla for supporting, helping and making possible the development of this tool.
