@@ -156,6 +156,11 @@ def commas(prova):
         if isinstance(value, str):
             valuesplitted = value.split('|')
             length_iter=len(valuesplitted)
+        elif isinstance(value, dict):
+            for kval, vval in value.items():
+                if isinstance(vval, str):
+                    valsplitted = vval.split('|')
+                    length_iter=len(valsplitted)
     if length_iter > 0:
         i=0
         while i < length_iter:
@@ -184,7 +189,6 @@ def commas(prova):
                                 if isinstance(v1, str):
                                     v1splitted = v1.split('|')
                                     newdict[key][k][k1]=v1splitted[i]
-
             array_of_newdicts.append(newdict)
             i+=1
     else:
@@ -248,7 +252,6 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                         dict_of_properties[property_value]=valor
 
                     
-            #print(list_of_filled_items)
             for lispro in list_of_properties_required:
                 if lispro in list_of_filled_items:
                     pass
@@ -330,7 +333,7 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                                                     if propk == new_item:
                                                         vi_dict[ki1][ki2]=propv
                                                 if vi_dict != {} and vi_dict[ki1] != {}:
-                                                    item_dict[ki]=vi_dict    
+                                                    item_dict[ki]=vi_dict
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + ki1
@@ -355,7 +358,7 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
                             if value_list != []:
                                 for itemvl in value_list:
                                     list_to_def=commas(itemvl)
-                                    #print(list_to_def)
+                                    print('the list to def is {}'.format(list_to_def))
                                     for itemldf in list_to_def:
                                         if itemldf not in definitivedict[key]:
                                             definitivedict[key].append(itemldf)
