@@ -27,7 +27,6 @@ def custom_formatwarning(msg, *args, **kwargs):
     return str(msg) + '\n'
 
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
-    num_registries=conf.num_variants_registries
     warnings.formatwarning = custom_formatwarning
     total_dict =[]
     new_dict_to_xls={}
@@ -35,12 +34,12 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
     for vcf_filename in glob.glob("files/vcf/files_to_read/*"):
         print(vcf_filename)
         vcf = vcfpy.Reader.from_path(vcf_filename)
+        
         header_list = ['#CHROM', 'POS' , 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT'] + vcf.header.samples.names
-
-        pbar = tqdm(total = num_registries)
+        num_rows=3000
+        pbar = tqdm(total = num_rows)
         for v in vcf:
             warning = False
-            
             dict_to_xls={}
             try:
                 for value in v.ALT:
@@ -651,13 +650,13 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
             #print(i)
             pbar.update(1)
             
-            if i == num_registries:
+            if i == num_rows:
                 i+=1
                 break
             i+=1
             
         num_empty=0
-        while i+num_empty <= num_registries:
+        while i+num_empty <= num_rows:
             pbar.update(1)
             num_empty+=1
     pbar.close()

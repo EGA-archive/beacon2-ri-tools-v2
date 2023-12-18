@@ -40,11 +40,11 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
     dict_of_properties={}
     list_of_filled_items=[]
     total_dict =[]
-    num_registries = conf.num_cohorts_registries
+    num_rows = 1
     k=0
     j=2
-    pbar = tqdm(total = num_registries)
-    while j < num_registries+2:
+    pbar = tqdm(total = num_rows)
+    while j < num_rows+2:
         i=0
         while i <(len(list_of_excel_items)+2):
             property = list_columns[i]+str(1)

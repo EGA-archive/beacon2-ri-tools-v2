@@ -23,12 +23,14 @@ with open('files/dictionaries/cohorts.json') as json_file:
 
 
 def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
-    num_registries=conf.num_cohorts_registries
     csv_filename = 'csv/' + 'cohorts' + '.csv'
     total_dict =[]
+    with open(csv_filename, 'r' ) as theFile:
+        reader = csv.DictReader(theFile)
+        num_rows = sum(1 for row in reader)
 
     k=0
-    pbar = tqdm(total = num_registries)
+    pbar = tqdm(total = num_rows)
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
@@ -347,11 +349,11 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
             total_dict.append(definitivedict)
             pbar.update(1)
             i+=1
-            if i == num_registries:
+            if i == num_rows:
                 break
             
         num_empty=0
-        while i+num_empty <= num_registries:
+        while i+num_empty <= num_rows:
             pbar.update(1)
             num_empty+=1
     pbar.close()

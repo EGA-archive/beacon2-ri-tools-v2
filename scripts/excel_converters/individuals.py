@@ -211,11 +211,11 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
     dict_of_properties={}
     list_of_filled_items=[]
     total_dict =[]
-    num_registries = conf.num_registries
+    num_rows = 2504
     k=0
     j=2
-    pbar = tqdm(total = num_registries)
-    while j < num_registries+2:
+    pbar = tqdm(total = num_rows)
+    while j < num_rows+2:
         i=0
         while i <(len(list_of_excel_items)+2):
             

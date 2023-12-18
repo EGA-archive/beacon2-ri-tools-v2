@@ -3,7 +3,7 @@ import openpyxl
 
 collection = 'ref_schemas/genomicVariations'
 file_to_open= collection + '.json'
-num_registries = 2506
+num_rows = 2506
 
 
 
@@ -30,7 +30,7 @@ list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 sheet = wb['individuals']
 
 j=1
-while j < num_registries:
+while j < num_rows:
     i=0
     while i < len(list_columns):
         number_sheet = list_columns[i]+str(j)
@@ -46,7 +46,7 @@ while j < num_registries:
 sheet = wb['genomicVariations']
 
 j=1
-while j < num_registries:
+while j < num_rows:
     i=0
     while i < len(list_columns):
         number_sheet = list_columns[i]+str(j)
