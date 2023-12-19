@@ -4,16 +4,13 @@ from tqdm import tqdm
 from scripts.datasheet.conf import conf
 import csv
 
-list_of_excel_items=[]
 list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
-with open("files/items/individuals.txt", "r") as txt_file:
-    list_of_excel_items=txt_file.read().splitlines() 
-with open("files/properties/individuals.txt", "r") as txt_file:
+with open("files/required/properties/individuals.txt", "r") as txt_file:
     list_of_properties_required=txt_file.read().splitlines() 
-with open('files/dictionaries/individuals.json') as json_file:
+with open('files/deref_schemas/individuals.json') as json_file:
     dict_properties = json.load(json_file)
 
 def check(name, list_of_filled_items):
@@ -195,7 +192,7 @@ def commas(prova):
         array_of_newdicts.append(prova)
     return(array_of_newdicts)
 
-def generate(list_of_excel_items, list_of_properties_required, dict_properties):
+def generate(list_of_properties_required, dict_properties):
 
     csv_filename = 'csv/' + 'individuals' + '.csv'
     with open(csv_filename, 'r' ) as theFile:
@@ -457,7 +454,7 @@ def generate(list_of_excel_items, list_of_properties_required, dict_properties):
 
 
     
-dict_generado, total_i, num_empty=generate(list_of_excel_items, list_of_properties_required, dict_properties)
+dict_generado, total_i, num_empty=generate(list_of_properties_required, dict_properties)
 
 
 output = conf.output_docs_folder + 'individuals.json'

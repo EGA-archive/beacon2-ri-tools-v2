@@ -1,5 +1,5 @@
 import json
-import openpyxl
+import csv
 
 
 from conf import conf
@@ -934,47 +934,28 @@ def generate(dict_properties):
     
     list_of_excel_items=sorted(list_of_excel_items)
 
-    xls_Book = conf.excel_filename
-
-    wb = openpyxl.load_workbook(xls_Book)
-
-    sheet = wb['individuals']
-
-    list_columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-                    'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
-                    'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW', 'BX', 'BY', 'BZ',
-                    'CA', 'CB', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ', 'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ', 'CR', 'CS', 'CT', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ',
-                    'DA', 'DB', 'DC', 'DD', 'DE', 'DF', 'DG', 'DH', 'DI', 'DJ', 'DK', 'DL', 'DM', 'DN', 'DO', 'DP', 'DQ', 'DR', 'DS', 'DT', 'DU', 'DV', 'DW', 'DX', 'DY', 'DZ',
-                    'EA', 'EB', 'EC', 'ED', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET', 'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
-    ]
-
+    with open('csv/templates/individuals.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(list_of_excel_items)
+        csvfile.close()
     
-
-    i=0
-    for element in list_of_excel_items:
-        number_sheet = list_columns[i]+str(1)
-        sheet[number_sheet].value = element
-        i+=1
-
-    wb.save(xls_Book)
-    
-    with open("files/items/individuals.txt", "w") as txt_file:
+    with open("files/headers/individuals.txt", "w") as txt_file:
         for line in list_of_excel_items:
             txt_file.write("".join(line) + "\n")
 
-    with open("files/definitions/individuals.txt", "w") as txt_file:
+    with open("files/required/definitions/individuals.txt", "w") as txt_file:
         for line in list_of_definitions_required:
             txt_file.write("".join(line) + "\n")
 
-    with open("files/headers/individuals.txt", "w") as txt_file:
+    with open("files/required/header_definitions/individuals.txt", "w") as txt_file:
         for line in list_of_headers_definitions_required:
             txt_file.write("".join(line) + "\n")
 
-    with open("files/properties/individuals.txt", "w") as txt_file:
+    with open("files/required/properties/individuals.txt", "w") as txt_file:
         for line in list_of_properties_required:
             txt_file.write("".join(line) + "\n")
 
-    with open('files/dictionaries/individuals.json', 'w') as f:
+    with open('files/deref_schemas/individuals.json', 'w') as f:
         json.dump(dict_properties, f)
 
 

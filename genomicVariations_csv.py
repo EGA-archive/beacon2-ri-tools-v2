@@ -5,21 +5,18 @@ import re
 from scripts.datasheet.conf import conf
 import csv
 
-list_of_excel_items=[]
 list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
-with open("files/items/genomicVariations.txt", "r") as txt_file:
-    list_of_excel_items=txt_file.read().splitlines() 
-with open("files/properties/genomicVariations.txt", "r") as txt_file:
+with open("files/required/properties/genomicVariations.txt", "r") as txt_file:
     list_of_properties_required=txt_file.read().splitlines() 
-with open("files/headers/genomicVariations.txt", "r") as txt_file:
+with open("files/required/header_definitions/genomicVariations.txt", "r") as txt_file:
     list_of_headers_definitions_required=txt_file.read().splitlines()
-with open('files/dictionaries/genomicVariations.json') as json_file:
+with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
-def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
+def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties):
 
     csv_filename = 'csv/' + 'genomicVariations' + '.csv'
 
@@ -558,7 +555,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 
 
     
-dict_generado, total_i, num_empty=generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties)
+dict_generado, total_i, num_empty=generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties)
 
 
 output = conf.output_docs_folder + 'genomicVariations.json'

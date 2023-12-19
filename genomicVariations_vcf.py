@@ -7,13 +7,10 @@ import re
 from scripts.datasheet.conf import conf
 import csv
 
-list_of_excel_items=[]
 list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
-with open("files/items/genomicVariations.txt", "r") as txt_file:
-    list_of_excel_items=txt_file.read().splitlines() 
 with open("files/properties/genomicVariations.txt", "r") as txt_file:
     list_of_properties_required=txt_file.read().splitlines() 
 with open("files/headers/genomicVariations.txt", "r") as txt_file:
@@ -26,7 +23,7 @@ def custom_formatwarning(msg, *args, **kwargs):
     # ignore everything except the message
     return str(msg) + '\n'
 
-def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
+def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties):
     warnings.formatwarning = custom_formatwarning
     total_dict =[]
     new_dict_to_xls={}
@@ -663,7 +660,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
     return total_dict, i, num_empty
 
     
-dict_generado, total_i, num_empty=generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties)
+dict_generado, total_i, num_empty=generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties)
 
 
 output = conf.output_docs_folder + 'genomicVariations.json'

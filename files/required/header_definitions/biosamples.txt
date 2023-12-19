@@ -1,0 +1,5 @@
+diagnosticMarkers
+measurements
+measurements
+pathologicalTnmFinding
+phenotypicFeatures

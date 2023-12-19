@@ -5,21 +5,18 @@ from tqdm import tqdm
 from scripts.datasheet.conf import conf
 import csv
 
-list_of_excel_items=[]
 list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
-with open("files/items/biosamples.txt", "r") as txt_file:
-    list_of_excel_items=txt_file.read().splitlines() 
-with open("files/properties/biosamples.txt", "r") as txt_file:
+with open("files/required/properties/biosamples.txt", "r") as txt_file:
     list_of_properties_required=txt_file.read().splitlines() 
-with open("files/headers/biosamples.txt", "r") as txt_file:
+with open("files/required/header_definitions/biosamples.txt", "r") as txt_file:
     list_of_headers_definitions_required=txt_file.read().splitlines()
-with open('files/dictionaries/biosamples.json') as json_file:
+with open('files/deref_schemas/biosamples.json') as json_file:
     dict_properties = json.load(json_file)
 
-def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
+def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties):
     csv_filename = 'csv/' + 'biosamples' + '.csv'
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
@@ -374,7 +371,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 
 
 
-dict_generado, total_i, num_empty=generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties)
+dict_generado, total_i, num_empty=generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties)
 
 
 output = conf.output_docs_folder + 'biosamples.json'

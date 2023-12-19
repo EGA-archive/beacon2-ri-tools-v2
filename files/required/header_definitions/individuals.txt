@@ -1,0 +1,13 @@
+diseases
+exposures
+exposures
+exposures
+exposures
+interventionsOrProcedures
+measures
+measures
+pedigrees
+pedigrees
+pedigrees
+phenotypicFeatures
+treatments

@@ -5,24 +5,21 @@ from tqdm import tqdm
 from scripts.datasheet.conf import conf
 import csv
 
-list_of_excel_items=[]
 list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
-with open("files/items/cohorts.txt", "r") as txt_file:
-    list_of_excel_items=txt_file.read().splitlines() 
-with open("files/properties/cohorts.txt", "r") as txt_file:
+with open("files/required/properties/cohorts.txt", "r") as txt_file:
     list_of_properties_required=txt_file.read().splitlines() 
-with open("files/headers/cohorts.txt", "r") as txt_file:
+with open("files/required/header_definitions/cohorts.txt", "r") as txt_file:
     list_of_headers_definitions_required=txt_file.read().splitlines()
-with open('files/dictionaries/cohorts.json') as json_file:
+with open('files/deref_schemas/cohorts.json') as json_file:
     dict_properties = json.load(json_file)
 
 
 
 
-def generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties):
+def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties):
     csv_filename = 'csv/' + 'cohorts' + '.csv'
     total_dict =[]
     with open(csv_filename, 'r' ) as theFile:
@@ -362,7 +359,7 @@ def generate(list_of_excel_items, list_of_properties_required, list_of_headers_d
 
 
 
-dict_generado, total_i, num_empty=generate(list_of_excel_items, list_of_properties_required, list_of_headers_definitions_required,dict_properties)
+dict_generado, total_i, num_empty=generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties)
 
 
 output = conf.output_docs_folder + 'cohorts.json'
