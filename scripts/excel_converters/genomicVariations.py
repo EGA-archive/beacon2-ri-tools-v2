@@ -2,7 +2,7 @@ import json
 import openpyxl
 from tqdm import tqdm
 import re
-from scripts.datasheet.conf import conf
+from . import conf
 
 list_of_excel_items=[]
 list_of_definitions_required=[]

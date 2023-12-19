@@ -1,8 +1,6 @@
 import json
 import csv
 
-from conf import conf
-
 file_to_open='ref_schemas/datasets.json'
 # Opening JSON file 
 f = open(file_to_open,) 

@@ -2,7 +2,7 @@ import json
 import openpyxl
 import re
 from tqdm import tqdm
-from scripts.datasheet.conf import conf
+import conf
 import csv
 
 list_of_definitions_required=[]
@@ -18,7 +18,7 @@ with open('files/deref_schemas/analyses.json') as json_file:
 
 def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties):
 
-    csv_filename = 'csv/' + 'analyses' + '.csv'
+    csv_filename = conf.csv_filename
     total_dict =[]
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)

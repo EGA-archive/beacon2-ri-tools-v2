@@ -2,7 +2,7 @@ import json
 import openpyxl
 import re
 from tqdm import tqdm
-from scripts.datasheet.conf import conf
+import conf
 import csv
 
 list_of_definitions_required=[]
@@ -17,7 +17,7 @@ with open('files/deref_schemas/biosamples.json') as json_file:
     dict_properties = json.load(json_file)
 
 def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties):
-    csv_filename = 'csv/' + 'biosamples' + '.csv'
+    csv_filename = conf.csv_filename
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)

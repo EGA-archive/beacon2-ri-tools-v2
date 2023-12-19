@@ -1,6 +1,6 @@
 import json
 import csv
-from conf import conf
+from . import conf
 
 collection = 'ref_schemas/genomicVariations'
 file_to_open= collection + '.json'

@@ -2,7 +2,7 @@ import json
 import openpyxl
 from tqdm import tqdm
 import re
-from scripts.datasheet.conf import conf
+import conf
 import csv
 
 list_of_definitions_required=[]
@@ -18,7 +18,7 @@ with open('files/deref_schemas/genomicVariations.json') as json_file:
 
 def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties):
 
-    csv_filename = 'csv/' + 'genomicVariations' + '.csv'
+    csv_filename = conf.csv_filename
 
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)

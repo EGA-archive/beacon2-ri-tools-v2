@@ -4,7 +4,7 @@ import json
 from tqdm import tqdm
 import glob
 import re
-from scripts.datasheet.conf import conf
+from . import conf
 import csv
 
 list_of_definitions_required=[]

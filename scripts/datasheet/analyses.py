@@ -2,9 +2,6 @@ import json
 import openpyxl
 import csv
 
-
-from conf import conf
-
 file_to_open='ref_schemas/analyses.json'
 # Opening JSON file 
 f = open(file_to_open,) 

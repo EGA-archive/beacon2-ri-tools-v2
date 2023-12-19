@@ -1,7 +1,7 @@
 import json
 import openpyxl
 from tqdm import tqdm
-from scripts.datasheet.conf import conf
+import conf
 import csv
 
 list_of_definitions_required=[]
@@ -194,7 +194,7 @@ def commas(prova):
 
 def generate(list_of_properties_required, dict_properties):
 
-    csv_filename = 'csv/' + 'individuals' + '.csv'
+    csv_filename = conf.csv_filename
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
@@ -356,7 +356,6 @@ def generate(list_of_properties_required, dict_properties):
                             if value_list != []:
                                 for itemvl in value_list:
                                     list_to_def=commas(itemvl)
-                                    print('the list to def is {}'.format(list_to_def))
                                     for itemldf in list_to_def:
                                         if itemldf not in definitivedict[key]:
                                             definitivedict[key].append(itemldf)

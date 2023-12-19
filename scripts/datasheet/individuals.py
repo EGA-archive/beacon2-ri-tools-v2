@@ -2,7 +2,7 @@ import json
 import csv
 
 
-from conf import conf
+from . import conf
 
 file_to_open='ref_schemas/individuals.json'
 # Opening JSON file 
