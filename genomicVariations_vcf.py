@@ -56,12 +56,18 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                 if TYPE == 'SYMBOLIC':
                     warnings.warn('variantType is SV. This type of variant is not supported. The VCF entry with ID: {} will not be converted'.format(line[2]), Warning)
                     warning = True
+                    i+=1
+                    l+=1
+                    pbar.update(1)
                     continue
                 if line[3] != '':
                     dict_to_xls['variation|alternateBases'] = line[3]
                 else:
                     warnings.warn('alternateBases NOT FOUND. The VCF entry with ID: {} will not be converted.'.format(line[2]), Warning)
                     warning = True
+                    i+=1
+                    l+=1
+                    pbar.update(1)
                     continue
                 dict_to_xls['variation|referenceBases'] = line[4]
                 for k,v in line[7].items():
@@ -83,7 +89,9 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                 except Exception:
                     warnings.warn('VariantType NOT FOUND. The VCF entry with ID: {} will not be converted.'.format(line[2]), Warning)
                     warning = True
-                    i-=1
+                    i+=1
+                    l+=1
+                    pbar.update(1)
                     continue
                 
                 dict_to_xls['variantInternalId'] = 'chr' + str(line[0]) + '_' + str(line[1]) + '_' + str(line[3]) + '_' + str(line[4])
@@ -648,10 +656,12 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                                 definitivedict[key]=propv
 
                 total_dict.append(definitivedict)
-                i+=1
                 pbar.update(1)
                 if i == num_rows:
                     break
+                i+=1
+                
+
             except Exception as e:
                 i+=1
                 l+=1
