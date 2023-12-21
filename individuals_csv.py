@@ -1,5 +1,4 @@
 import json
-import openpyxl
 from tqdm import tqdm
 import conf
 import csv
@@ -9,7 +8,9 @@ list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
 with open("files/required/properties/individuals.txt", "r") as txt_file:
-    list_of_properties_required=txt_file.read().splitlines() 
+    list_of_properties_required=txt_file.read().splitlines()
+with open("files/headers/individuals.txt", "r") as txt_file:
+    list_of_headers=txt_file.read().splitlines() 
 with open('files/deref_schemas/individuals.json') as json_file:
     dict_properties = json.load(json_file)
 
@@ -192,8 +193,7 @@ def commas(prova):
         array_of_newdicts.append(prova)
     return(array_of_newdicts)
 
-def generate(list_of_properties_required, dict_properties):
-
+def generate(list_of_properties_required, dict_properties, list_of_headers):
     csv_filename = conf.csv_filename
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
@@ -211,6 +211,10 @@ def generate(list_of_properties_required, dict_properties):
             list_of_filled_items=[]
             for kline, vline in line.items():
                 property_value = kline
+
+                if property_value not in list_of_headers:
+                    raise Exception(('the header {} is not allowed. Please, take a look at csv templates to check the headers allowed.').format(property_value))
+
 
                 
                 valor = vline
@@ -451,7 +455,7 @@ def generate(list_of_properties_required, dict_properties):
 
 
     
-dict_generado, total_i=generate(list_of_properties_required, dict_properties)
+dict_generado, total_i=generate(list_of_properties_required, dict_properties, list_of_headers)
 
 
 output = conf.output_docs_folder + 'individuals.json'

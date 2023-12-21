@@ -1,5 +1,4 @@
 import json
-import openpyxl
 import re
 from tqdm import tqdm
 import conf
@@ -11,12 +10,14 @@ list_of_headers_definitions_required=[]
 
 with open("files/required/properties/analyses.txt", "r") as txt_file:
     list_of_properties_required=txt_file.read().splitlines() 
+with open("files/headers/analyses.txt", "r") as txt_file:
+    list_of_headers=txt_file.read().splitlines() 
 with open("files/required/header_definitions/analyses.txt", "r") as txt_file:
     list_of_headers_definitions_required=txt_file.read().splitlines()
 with open('files/deref_schemas/analyses.json') as json_file:
     dict_properties = json.load(json_file)
 
-def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties):
+def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties, list_of_headers):
 
     csv_filename = conf.csv_filename
     total_dict =[]
@@ -33,6 +34,9 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
             list_of_filled_items=[]
             for kline, vline in line.items():
                 property_value = kline
+                property_value=property_value.replace('\ufeff', '')
+                if property_value not in list_of_headers:
+                    raise Exception(('the header {} is not allowed. Please, take a look at csv templates to check the headers allowed.').format(property_value))
 
                 
                 valor = vline
@@ -383,7 +387,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
 
 
 
-dict_generado, total_i=generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties)
+dict_generado, total_i=generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties, list_of_headers)
 
 output = conf.output_docs_folder + 'analyses.json'
 
