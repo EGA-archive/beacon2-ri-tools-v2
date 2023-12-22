@@ -650,11 +650,12 @@ def treatment():
     element=megaovertypes(element)
     return element
 
+first_list_of_definitions_required=[]
 list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
-
+list_of_ontology_terms=[]
 for key, value in dict_types.items():
     if isinstance(value, dict):
         for k, v in value.items():
@@ -662,7 +663,16 @@ for key, value in dict_types.items():
                 for item in v:
                     all_name = key + '|' + item
                     list_of_headers_definitions_required.append(key)
-                    list_of_definitions_required.append(all_name)
+                    first_list_of_definitions_required.append(all_name)
+            elif 'ontologyTerm' in v:
+                if k != 'type' and k != 'items':
+                    first_list_of_definitions_required.append(key + '|' + k+'|id')
+                    first_list_of_definitions_required.remove(key + '|' + k)
+                else:
+                    list_of_ontology_terms.append(key)
+
+
+
 
 for key, value in dict_types.items():
     if key == 'required':
@@ -930,6 +940,26 @@ def generate(dict_properties):
             list_of_excel_items.append(excel_splitted[0])
     
     list_of_excel_items=sorted(list_of_excel_items)
+
+    for defreq in first_list_of_definitions_required:
+        defreq_splitted = defreq.split('|')
+        #print(defreq)
+        #print(defreq_splitted[-1])
+        for propreq in list_of_excel_items:
+            #print(propreq)
+            if propreq.endswith(defreq_splitted[-1]):
+                if propreq not in list_of_definitions_required:
+                    list_of_definitions_required.append(propreq)
+            elif propreq.endswith('|id'):
+                if propreq not in list_of_definitions_required:
+                    list_of_definitions_required.append(propreq)
+            elif propreq.endswith('|iso8601duration'):
+                if propreq not in list_of_definitions_required:
+                    list_of_definitions_required.append(propreq)
+            elif propreq.endswith('|value'):
+                if propreq not in list_of_definitions_required:
+                    list_of_definitions_required.append(propreq)
+    print(list_of_definitions_required)
 
     with open('csv/templates/biosamples.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)

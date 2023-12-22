@@ -1,1 +1,1 @@
-[{"id": "PRO120", "sex": {"id": "NCIT:C16536"}}]
+[{"id": "a", "measures": [{"measurementValue": {"typedQuantities": {"quantity": {"unit": {"id": "2"}, "value": "4"}}}}], "sex": {"id": "b"}}]

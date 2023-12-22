@@ -1,6 +1,5 @@
 import json
 import csv
-from . import conf
 
 collection = 'ref_schemas/genomicVariations'
 file_to_open= collection + '.json'
@@ -1171,8 +1170,8 @@ for key, value in dict_properties.items():
 
 #print(dict_properties)
 
-
 list_of_definitions_required=[]
+first_list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
@@ -1183,12 +1182,14 @@ for key, value in definitions_array.items():
             for item in v:
                 all_name = key + '|' + item
                 list_of_headers_definitions_required.append(key)
-                list_of_definitions_required.append(all_name)
+                first_list_of_definitions_required.append(all_name)
 
 for key, value in data.items():
         if key == 'required':
             for item in value:
                 list_of_properties_required.append(item)
+
+
 
 def generate(dict_properties):
     list_of_excel_items=[]
@@ -1384,6 +1385,20 @@ def generate(dict_properties):
                 list_of_excel_items.append(excel_splitted[0])
     
     list_of_excel_items=sorted(list_of_excel_items)
+
+    for defreq in first_list_of_definitions_required:
+        defreq_splitted = defreq.split('|')
+        #print(defreq)
+        #print(defreq_splitted[-1])
+        for propreq in list_of_excel_items:
+            #print(propreq)
+            if propreq.endswith(defreq_splitted[-1]):
+                if propreq not in list_of_definitions_required:
+                    list_of_definitions_required.append(propreq)
+            elif propreq.endswith('|id'):
+                if propreq not in list_of_definitions_required:
+                    list_of_definitions_required.append(propreq)
+    #print(list_of_definitions_required)
 
 
     with open('csv/templates/genomicVariations.csv', 'w', newline='') as csvfile:

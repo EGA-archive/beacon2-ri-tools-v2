@@ -2,7 +2,7 @@ import json
 import csv
 
 
-from . import conf
+
 
 file_to_open='ref_schemas/individuals.json'
 # Opening JSON file 
@@ -656,7 +656,7 @@ def treatment():
 print(dict_types)
 
 
-
+first_list_of_definitions_required=[]
 list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
@@ -669,7 +669,7 @@ for key, value in dict_types.items():
                 for item in v:
                     all_name = key + '|' + item
                     list_of_headers_definitions_required.append(key)
-                    list_of_definitions_required.append(all_name)
+                    first_list_of_definitions_required.append(all_name)
 
 for key, value in dict_types.items():
     if key == 'required':
@@ -933,6 +933,26 @@ def generate(dict_properties):
             list_of_excel_items.append(excel_splitted[0])
     
     list_of_excel_items=sorted(list_of_excel_items)
+
+    for defreq in first_list_of_definitions_required:
+        defreq_splitted = defreq.split('|')
+        #print(defreq)
+        #print(defreq_splitted[-1])
+        for propreq in list_of_excel_items:
+            #print(propreq)
+            if propreq.endswith(defreq_splitted[-1]):
+                if propreq not in list_of_definitions_required:
+                    list_of_definitions_required.append(propreq)
+            elif propreq.endswith('|id'):
+                if propreq not in list_of_definitions_required:
+                    list_of_definitions_required.append(propreq)
+            elif propreq.endswith('|iso8601duration'):
+                if propreq not in list_of_definitions_required:
+                    list_of_definitions_required.append(propreq)
+            elif propreq.endswith('|value'):
+                if propreq not in list_of_definitions_required:
+                    list_of_definitions_required.append(propreq)
+    print(list_of_definitions_required)
 
     with open('csv/templates/individuals.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)

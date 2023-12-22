@@ -655,7 +655,6 @@ list_of_definitions_required=[]
 list_of_properties_required=[]
 list_of_headers_definitions_required=[]
 
-
 for key, value in dict_types.items():
     if isinstance(value, dict):
         for k, v in value.items():

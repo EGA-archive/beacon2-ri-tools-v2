@@ -12,12 +12,14 @@ with open("files/required/properties/genomicVariations.txt", "r") as txt_file:
     list_of_properties_required=txt_file.read().splitlines() 
 with open("files/headers/genomicVariations.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
+with open("files/required/definitions/genomicVariations.txt", "r") as txt_file:
+    list_of_definitions_required=txt_file.read().splitlines()
 with open("files/required/header_definitions/genomicVariations.txt", "r") as txt_file:
     list_of_headers_definitions_required=txt_file.read().splitlines()
 with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
-def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties,list_of_headers):
+def generate(list_of_properties_required, list_of_definitions_required,dict_properties,list_of_headers):
 
     csv_filename = conf.csv_filename
 
@@ -42,7 +44,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                 property_value=property_value.replace('\ufeff', '')
                 valor = vline
                 if property_value not in list_of_headers:
-                    raise Exception(('the header {} is not allowed. Please, take a look at csv templates to check the headers allowed.').format(property_value))
+                    raise Exception(('the header {} is not allowed. Please, take a look at files/headers/genomicVariations.txt to check the headers allowed.').format(property_value))
 
 
                 if i > 0:
@@ -87,7 +89,41 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                         pass
                     else:
                         raise Exception(('error: you are not filling all the required fields. missing field is: {}').format(lispro))
-                    
+            for lisdef in list_of_definitions_required:
+                print(lisdef)
+                lisdef_splitted=lisdef.split('|')
+                #print(lisdef_splitted[0])
+                for filled_item in list_of_filled_items:                    
+                    if len(lisdef_splitted)<3:
+                        if lisdef_splitted[0] in filled_item:
+                            if lisdef not in list_of_filled_items:
+                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
+                    elif len(lisdef_splitted)<4:
+                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]
+                        print(sumsplitted)
+                        if sumsplitted in filled_item and filled_item.count('|')<3:
+                            if lisdef not in list_of_filled_items:
+                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
+                    elif len(lisdef_splitted)<5:
+                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]
+                        print(sumsplitted)
+                        if sumsplitted in filled_item and filled_item.count('|')<4:
+                            if lisdef not in list_of_filled_items:
+                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
+                    elif len(lisdef_splitted)<6:
+                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]+'|'+lisdef_splitted[3]
+                        print(sumsplitted)
+                        if sumsplitted in filled_item and filled_item.count('|')<5:
+                            if lisdef not in list_of_filled_items:
+                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))       
+                    elif len(lisdef_splitted)<7:
+                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]+'|'+lisdef_splitted[3]+'|'+lisdef_splitted[4]
+                        print(sumsplitted)
+                        if sumsplitted in filled_item and filled_item.count('|')<6:
+                            if lisdef not in list_of_filled_items:
+                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))  
+            #print(dict_properties)
+            #print(dict_of_properties)
 
             #print(dict_properties)
             #print(dict_of_properties)
@@ -553,7 +589,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
 
 
     
-dict_generado, total_i=generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties,list_of_headers)
+dict_generado, total_i=generate(list_of_properties_required, list_of_definitions_required,dict_properties,list_of_headers)
 
 
 output = conf.output_docs_folder + 'genomicVariations.json'

@@ -36,7 +36,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                 property_value = kline
                 property_value=property_value.replace('\ufeff', '')
                 if property_value not in list_of_headers:
-                    raise Exception(('the header {} is not allowed. Please, take a look at csv templates to check the headers allowed.').format(property_value))
+                    raise Exception(('the header {} is not allowed. Please, take a look at files/headers/analyses.txt to check the headers allowed.').format(property_value))
 
                 
                 valor = vline
