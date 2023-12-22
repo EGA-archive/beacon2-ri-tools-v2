@@ -256,7 +256,7 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
                 else:
                     raise Exception(('error: you are not filling all the required fields. missing field is: {}').format(lispro))
             for lisdef in list_of_definitions_required:
-                print(lisdef)
+                #print(lisdef)
                 lisdef_splitted=lisdef.split('|')
                 #print(lisdef_splitted[0])
                 for filled_item in list_of_filled_items:                    
@@ -266,25 +266,25 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
                                 raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
                     elif len(lisdef_splitted)<4:
                         sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]
-                        print(sumsplitted)
+                        #print(sumsplitted)
                         if sumsplitted in filled_item and filled_item.count('|')<3:
                             if lisdef not in list_of_filled_items:
                                 raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
                     elif len(lisdef_splitted)<5:
                         sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]
-                        print(sumsplitted)
+                        #print(sumsplitted)
                         if sumsplitted in filled_item and filled_item.count('|')<4:
                             if lisdef not in list_of_filled_items:
                                 raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
                     elif len(lisdef_splitted)<6:
                         sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]+'|'+lisdef_splitted[3]
-                        print(sumsplitted)
+                        #print(sumsplitted)
                         if sumsplitted in filled_item and filled_item.count('|')<5:
                             if lisdef not in list_of_filled_items:
                                 raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))       
                     elif len(lisdef_splitted)<7:
                         sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]+'|'+lisdef_splitted[3]+'|'+lisdef_splitted[4]
-                        print(sumsplitted)
+                        #print(sumsplitted)
                         if sumsplitted in filled_item and filled_item.count('|')<6:
                             if lisdef not in list_of_filled_items:
                                 raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))  

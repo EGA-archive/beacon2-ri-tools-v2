@@ -110,6 +110,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                                                     new_item = key + "|" + ki + "|" + k
                                                     for propk, propv in dict_of_properties.items():
                                                         if propk == new_item:
+                                                            #print(propk)
                                                             subitem_dict[k]=propv
                                                             if subitem_dict != {} and subitem_dict[k] != {}:
                                                                 if subitem_dict not in vi_list:
@@ -145,13 +146,22 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                                             new_item = key + "|" + ki + "|" + ki1
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
-                                                    vi_dict[ki1]=propv 
-                                                    item_dict[ki]=vi_dict
+                                                    #print(propk)
+                                                    if propk.endswith('availability'):
+                                                        vi_dict[ki1]=bool(propv)
+                                                        item_dict[ki]=vi_dict
+                                                    elif propk.endswith('availabilityCount'):
+                                                        vi_dict[ki1]=int(propv)
+                                                        item_dict[ki]=vi_dict
+                                                    else:
+                                                        vi_dict[ki1]=propv
+                                                        item_dict[ki]=vi_dict
                                 else:
                                     new_item = ""
                                     new_item = key + "|" + ki
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
+                                            #print(propk)
                                             item_dict[ki]=propv
                                 if item_dict != {} and item_dict != [{}]:
                                     if item_dict not in value_list:
@@ -173,7 +183,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                                     for kvl, vvl in itemvl.items():
                                         if isinstance(vvl, str):
                                             if '|' in vvl:
-                                                v_array = vvl.split(',')
+                                                v_array = vvl.split('|')
                                                 for vitem in v_array:
                                                     v1_array.append(vitem)
                                                 if kvl not in v1_bigkeys:
@@ -182,8 +192,8 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                                             itemdict[kvl]={}
                                             for kvl1, vvl1 in vvl.items():
                                                 itemdict[kvl][kvl1]={}
-                                                if isinstance(vvl1, str) and ',' in vvl1:
-                                                    vvl1_array = vvl1.split(',')
+                                                if isinstance(vvl1, str) and '|' in vvl1:
+                                                    vvl1_array = vvl1.split('|')
                                                     for vvlitem in vvl1_array:
                                                         v1_array.append(vvlitem)
                                                     if kvl not in v1_bigkeys:
@@ -263,10 +273,10 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                                             if propk == new_item:
                                                 if '|' in propv:
                                                     if propv_splitted_id != []:
-                                                        propv_splitted_label = propv.split(',')
+                                                        propv_splitted_label = propv.split('|')
                                                     else:
                                                         
-                                                        propv_splitted_id = propv.split(',')
+                                                        propv_splitted_id = propv.split('|')
                                                     if propv_splitted_label != []:
                                                         n=0
                                                         while n < len(propv_splitted_id):
@@ -296,7 +306,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                                         if value_dict not in vd_list:
                                             vd_list.append(value_dict)
                                 if vd_list != []:
-                                    definitivedict[key]=vd_list
+                                    definitivedict[key]=vd_list[0]
 
 
                         elif isinstance(vd, dict):
