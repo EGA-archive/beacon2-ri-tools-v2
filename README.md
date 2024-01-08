@@ -1,6 +1,6 @@
 # Beacon 2 RI tools v2.0
 
-This repository contains the new Beacon ri tools v2.0, a software created with the main goal of generating BFF data from .xlsx or .vcf (and probably more types of datafiles in the future). This is based on the first beacon ri tools, a previous and different version that you can find here: [Beacon ri tools v1](https://github.com/EGA-archive/beacon2-ri-tools). The new features for beacon v2.0 are:
+This repository contains the new Beacon ri tools v2.0, a software created with the main goal of generating BFF data from .csv or .vcf (and probably more types of datafiles in the future). This is based on the first beacon ri tools, a previous and different version that you can find here: [Beacon ri tools v1](https://github.com/EGA-archive/beacon2-ri-tools). The new features for beacon v2.0 are:
 
 * Code Language is written in [Python 3.11](https://www.python.org/downloads/release/python-3110/)
 * The output gain are schemas that suit the very last version of [Beacon v2](https://github.com/ga4gh-beacon/beacon-v2) specifications, and ready to be deployed in a beacon v2 API compliant.
@@ -10,7 +10,7 @@ This repository contains the new Beacon ri tools v2.0, a software created with t
 ## Data conversion process
 
 The main goal of Beacon ri tools v2.0 is to obtain a BFF (json following Beacon v2 official specifications) file that can be injected to a beacon v2 mongoDB database. To obtain a beacon v2 with its mongodb and see how to inject this BFF files, you can check it out and download yours for free at the official repo of [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
-To get this json file, you can either convert your data from a .vcf file or from a .xlsx file that you will later convert to .csv file. Please, see instruction manual to follow the right steps to do the data conversion. At the end, you will end completing one of the possible conversion processes that is shown in the next diagram:
+To get this json file, you can either convert your data from a .vcf file or from a .csv file. Please, see instruction manual to follow the right steps to do the data conversion. At the end, you will end completing one of the possible conversion processes that is shown in the next diagram:
 ![Beacon tools v2 diagram](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/files/beacontoolsv2.png)
 
 ## Installation guide with docker
@@ -33,20 +33,14 @@ Once the container is up and running you can start using beacon ri tools v2, con
 
 To start using beacon ri tools v2, you have to edit the configuration file [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf). Inside this file you will find the next information:
 ```bash
-num_registries=2507
-num_variants_registries=1500
-num_cohorts_registries=2
-num_datasets_registries=2
-excel_filename='datasheets/empty_model.xlsx'
-collection=['individuals', 'analyses']
+csv_filename='csv/examples/cohorts.csv'
 output_docs_folder='output_docs/prova/'
+num_variants=1008
 ```
-The **num_registries**, **num_variants_registries**, **num_cohorts_registries** and **num_datasets_registries** are the variables to set how long is the spreadsheet (number of rows of the spreadsheet) for your collections, being **num_registries** useful for analyses, biosamples, individuals and runs, **num_variants_registries** for genomicVariations, **num_cohorts_registries** for cohorts and **num_datasets_registries** for datasets. Please, modify this parameter so the scripts will read and parse this amount of data and help to shorten the execution time.
-The **excel_filename** variable sets where is the .xlsx file the script will write and read data from. This .xlsx file needs to have 7 sheets, one with the name of each beacon collection: analyses, biosamples, cohorts, datasets, genomicVariations, individuals and runs. You have **two options** to do so:
- * (**RECOMMENDED**) Use empty_model.xlsx, rename it and save it inside datasheets directory (mandatory to save all .xlsx in this directory). Note that the first two columns of each sheet (A and B) must be always empty. 
- * (**NOT RECOMMENDED**) In case you need to create the excel from zero, to update headers or whatever other reason, please follow [generating excel file instructions](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/scripts/datasheet/README.md)
-The **collection** list variable sets which is the list of collections of beacon you want to convert from .xlsx to .csv file.
-Lastly, **output_docs_folder** sets the folder where your final .json files will be saved once execution of beacon tools finishes. This folder is mandatory to be always inside 'output_docs', so only the subdirectory inside output_docs can be modified in this path.
+
+The **csv_filename** variable sets where is the .csv file the script will write and read data from. This .csv file needs to have the headers written as you can find in the files inside [templates](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/csv/templates). Note that any header that has a different name from the ones that appear inside the files of this folder will not be read by the beacon ri tools v2.
+The **output_docs_folder** sets the folder where your final .json files will be saved once execution of beacon tools finishes. This folder is mandatory to be always inside 'output_docs', so only the subdirectory inside output_docs can be modified in this path.
+The **num_variants** is the variable you need to write in case you are doing executing the vcf conversor (genomicVariations_vcf.py). This will tell the script how many vcf lines will be read and converted from the file(s).
 
 ### Converting data from .vcf or .vcf.gz file
 
@@ -56,32 +50,37 @@ docker exec -it ri-tools python genomicVariations_vcf.py
 ```
 This will generate the final .json file that is Beacon Friendly Format in the output_docs folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. 
 
-### Filling in the excel file (if metadata or not having a vcf file for genomicVariations)
+### Creating the .csv file (if metadata or not having a vcf file for genomicVariations)
 
-If you want to convert metadata into BFF or fill a genomicVariations spreadsheet to convert to json, you will have to fill in the .xlsx file writing the records according to the header columns, which indicate the field of the schema that this data will be placed in. Every new row will be appended to the final output file as a new and independent document. 
-Fill in the datasheets, following the next rules:
+If you want to convert metadata into BFF or fill a genomicVariations csv to convert to json, you will have to create a .csv file writing the records according to the header columns, which indicate the field of the schema that this data will be placed in. Every new row will be appended to the final output file as a new and independent document. 
+Fill in the csv file, following the next rules:
 * If you want to write data that needs to be appended in the same document, please write data separated with |, for example if you need to write an id, e.g. HG00001|HG00002 then respect this order for their correlatives in the same document, as for the label of this id, e.g. labelforHG00001|labelforHG00002.
-* As the info field for each collection is very generic and can be filled with different data, you will need to fill the cell directly with json type data. For copies and subjects, json data is also needed.
-* Please, respect the columns like the [empty_model.xlsx file](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/datasheets/empty_model.xlsx), as the script will read only these columns to make it go faster.
+* As the info field for each collection is very generic and can be filled with different data, you will need to fill the column data directly with json type data. For copies and subjects for genomicVariations, json data is also needed.
+* Please, respect the columns like the files inside [templates](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/csv/templates), as the script will read only the columns with the "correctly spelled" headers.
 * Note that you don't have to write inside all the columns, as some of the columns are optionals and other are part of a possible option of the Beacon specification but incompatible with other columns (an exception will raise in case a column is misfilled).
-We have filled an example of a .xlsx ready to be converted to BFF with the CINECA dataset. Please, take a look at it if you wish [here](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/datasheets/CINECA_synthetic_cohort_EUROPE_UK1.xlsx).
+We have filled an example of a .csv for each collection ready to be converted to BFF with the CINECA dataset. Please, take a look at it if you wish [here](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/csv/examples).
 
 ### Getting .json final documents
 
-Before gettin the .json final documents, please make sure your collection in the conf.py file is pointing to the one that you want to get the docs for.
-Once you have finished filling all data and saved the .xlsx file, you will have to convert the .xlsx spreadsheet into a .csv file by executing the next command:
-```bash
-docker exec -it ri-tools python csv_converter.py
-```
-After that, execute the next bash script from the root folder in your terminal (for the collection you have chosen, in this case for genomic Variations):
+Before getting the .json final documents, please make sure your [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf) file is reading the right .csv document and execute the next bash script from the root folder in your terminal (for the collection you have chosen, in this case for genomic Variations):
 ```bash
 docker exec -it ri-tools python genomicVariations_csv.py
 ```
 
-This will generate the final .json file that is Beacon Friendly Format in the output_docs folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. 
-You can also copy it to your localhost directory by using this command:
+All the possible scripts you can execute (**individually**) to convert csv data for each collection are:
+```bash
+docker exec -it ri-tools python analyses_csv.py
+docker exec -it ri-tools python biosamples_csv.py
+docker exec -it ri-tools python cohorts_csv.py
+docker exec -it ri-tools python datasets_csv.py
+docker exec -it ri-tools python genomicVariations_csv.py
+docker exec -it ri-tools python individuals_csv.py
+docker exec -it ri-tools python runs_csv.py
+```
 
-This file will be able to be directly imported into a mongoDB for beacon usage, for example, as described in [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
+Once you execute one of the scripts listed above, it will generate the final .json file that is Beacon Friendly Format in the output_docs folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. 
+
+This file will be able to be used in a mongoDB for beacon usage. To know how to import in in a Beacon v2, please do as described in [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
 
 ### Version notes
 
