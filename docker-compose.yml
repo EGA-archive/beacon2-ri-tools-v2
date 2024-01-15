@@ -8,7 +8,7 @@ services:
     container_name: ri-tools
     volumes:
       - ./output_docs:/usr/src/app/output_docs
-      - ./datasheets:/usr/src/app/datasheets
+      - ${PWD}/conf.py:/usr/src/app/conf.py
       - ./scripts/datasheet/conf:/usr/src/app/scripts/datasheet/conf
       - ./files/vcf/files_to_read:/usr/src/app/files/vcf/files_to_read
       - ./csv:/usr/src/app/csv
