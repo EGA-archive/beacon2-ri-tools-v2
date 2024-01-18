@@ -29,14 +29,15 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
     new_dict_to_xls={}
     i=1
     l=0
-    for vcf_filename in glob.glob("files/vcf/files_to_read/*"):
+    for vcf_filename in glob.glob("files/vcf/files_to_read/ALL.chr1.phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz"):
         print(vcf_filename)
         vcf = vcfpy.Reader.from_path(vcf_filename)
-        
+        vcf_limits=vcf.fetch(conf.chromosome, conf.genomic_start_position, conf.genomic_end_position)
+
         header_list = ['#CHROM', 'POS' , 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT'] + vcf.header.samples.names
         num_rows=conf.num_variants
         pbar = tqdm(total = num_rows)
-        for v in vcf:
+        for v in vcf_limits:
             try:
                 warning = False
                 dict_to_xls={}

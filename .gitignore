@@ -7,4 +7,5 @@ bcftools*
 scripts/datasheet/conf/__pycache__/*
 *.vcf.gz
 *.vcf
+*.vcf.gz.tbi
 vcf_BelCovid_2

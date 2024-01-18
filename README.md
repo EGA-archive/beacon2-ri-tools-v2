@@ -33,18 +33,32 @@ Once the container is up and running you can start using beacon ri tools v2, con
 
 To start using beacon ri tools v2, you have to edit the configuration file [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf). Inside this file you will find the next information:
 ```bash
+#### Input and Output files config parameters ####
 csv_filename='csv/examples/cohorts.csv'
 output_docs_folder='output_docs/prova/'
-num_variants=1008
+
+#### VCF Conversion config parameters ####
+num_variants=100000
+chromosome='1'
+genomic_start_position=1
+genomic_end_position=12302370
 ```
 
+#### Generic config parameters
 The **csv_filename** variable sets where is the .csv file the script will write and read data from. This .csv file needs to have the headers written as you can find in the files inside [templates](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/csv/templates). Note that any header that has a different name from the ones that appear inside the files of this folder will not be read by the beacon ri tools v2.
 The **output_docs_folder** sets the folder where your final .json files will be saved once execution of beacon tools finishes. This folder is mandatory to be always inside 'output_docs', so only the subdirectory inside output_docs can be modified in this path.
-The **num_variants** is the variable you need to write in case you are doing executing the vcf conversor (genomicVariations_vcf.py). This will tell the script how many vcf lines will be read and converted from the file(s).
+
+#### VCF conversion config parameters
+The **num_variants** is the variable you need to write in case you are executing the vcf conversor (genomicVariations_vcf.py). This will tell the script how many vcf lines will be read and converted from the file(s).
+The **chromosme** is the variable you need to write to let the conversor know which chromosome is converting.
+The **genomic_start_position** is the variable you need to write to tell the conversor from which position in the genome to start converting variants.
+The **genomic_end_position** is the variable you need to write to tell the conversor from which position in the genome to finish converting variants.
 
 ### Converting data from .vcf or .vcf.gz file
 
 To convert data from .vcf (or .vcf.gz) to .json, you will have to copy all the files you want to convert inside the [files_to_read folder](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/files/vcf/files_to_read).
+You will need to provide one .vcf or .vcf.gz file and also one .vcf.gz.tbi file and save them in this folder. The .tbi file is the indexing file which helps the vcf converter to keep track of the file without having to use a lot of CPU memory. To create a .tbi file from a .vcf, you will need to download tabix and bgzip programs. Please, find a tutorial on how to create a .tbi file inside [UCSC Website](https://genome.ucsc.edu/goldenPath/help/vcf.html), following the step **Generating a VCF track**.
+
 ```bash
 docker exec -it ri-tools python genomicVariations_vcf.py
 ```
