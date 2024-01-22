@@ -4,7 +4,7 @@ import json
 from tqdm import tqdm
 import glob
 import re
-import conf
+import conf.conf as conf
 import subprocess
 
 list_of_definitions_required=[]

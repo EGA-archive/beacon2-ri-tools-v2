@@ -1,7 +1,7 @@
 import json
 import re
 from tqdm import tqdm
-import conf
+import conf.conf as conf
 import csv
 
 list_of_definitions_required=[]
