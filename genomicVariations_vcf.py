@@ -680,7 +680,12 @@ dict_generado, total_i, l=generate(list_of_properties_required, list_of_headers_
 
 output = conf.output_docs_folder + 'genomicVariations.json'
 
-print('Successfully converted {} variants into {}'.format(total_i-l, output))
+if total_i-l > 0:
+
+    print('Successfully converted {} registries into {}'.format(total_i-l, output))
+
+else:
+    print('No registries found.')
 
 with open(output, 'w') as f:
     json.dump(dict_generado, f)

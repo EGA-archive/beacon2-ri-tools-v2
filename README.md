@@ -31,7 +31,7 @@ Once the container is up and running you can start using beacon ri tools v2, con
 
 ### Setting configuration and excel file
 
-To start using beacon ri tools v2, you have to edit the configuration file [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf). Inside this file you will find the next information:
+To start using beacon ri tools v2, you have to edit the configuration file [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf). Inside this file you will find the next information:
 ```bash
 #### Input and Output files config parameters ####
 csv_filename='csv/examples/cohorts.csv'
@@ -94,7 +94,7 @@ docker exec -it ri-tools python runs_csv.py
 
 Once you execute one of the scripts listed above, it will generate the final .json file that is Beacon Friendly Format in the output_docs folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. 
 
-This file will be able to be used in a mongoDB for beacon usage. To know how to import in in a Beacon v2, please do as described in [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
+This file will be able to be used in a mongoDB for beacon usage. To know how to import in a Beacon v2, please do as described in [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
 
 ### Version notes
 

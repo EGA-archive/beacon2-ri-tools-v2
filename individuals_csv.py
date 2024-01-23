@@ -487,7 +487,12 @@ dict_generado, total_i=generate(list_of_properties_required, dict_properties, li
 
 output = conf.output_docs_folder + 'individuals.json'
 
-print('Successfully converted {} registries into {}'.format(total_i-1, output))
+if total_i-1 > 0:
+
+    print('Successfully converted {} registries into {}'.format(total_i-1, output))
+
+else:
+    print('No registries found.')
 
 with open(output, 'w') as f:
     json.dump(dict_generado, f)
