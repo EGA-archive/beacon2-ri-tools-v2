@@ -76,7 +76,7 @@ We have filled an example of a .csv for each collection ready to be converted to
 
 ### Getting .json final documents
 
-Before getting the .json final documents, please make sure your [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/scripts/datasheet/conf) file is reading the right .csv document and execute the next bash script from the root folder in your terminal (for the collection you have chosen, in this case for genomic Variations):
+Before getting the .json final documents, please make sure your [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf) file is reading the right .csv document and execute the next bash script from the root folder in your terminal (for the collection you have chosen, in this case for genomic Variations):
 ```bash
 docker exec -it ri-tools python genomicVariations_csv.py
 ```
