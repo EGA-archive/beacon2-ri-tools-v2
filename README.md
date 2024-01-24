@@ -11,7 +11,7 @@ This repository contains the new Beacon ri tools v2.0, a software created with t
 
 The main goal of Beacon ri tools v2.0 is to obtain a BFF (json following Beacon v2 official specifications) file that can be injected to a beacon v2 mongoDB database. To obtain a beacon v2 with its mongodb and see how to inject this BFF files, you can check it out and download yours for free at the official repo of [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
 To get this json file, you can either convert your data from a .vcf file or from a .csv file. Please, see instruction manual to follow the right steps to do the data conversion. At the end, you will end completing one of the possible conversion processes that is shown in the next diagram:
-![Beacon tools v2 diagram](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/files/beacontoolsv2.png)
+![Beacon tools v2 diagram](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/files/beacon-ri-tools-v2-figure.jpg)
 
 ## Installation guide with docker
 
@@ -35,11 +35,12 @@ To start using beacon ri tools v2, you have to edit the configuration file [conf
 ```bash
 #### Input and Output files config parameters ####
 csv_filename='csv/examples/cohorts.csv'
-output_docs_folder='output_docs/prova/'
+output_docs_folder='output_docs/CINECA_dataset/'
 
 #### VCF Conversion config parameters ####
 num_variants=100000
-chromosome='1'
+reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
+chromosome=['1','22']
 genomic_start_position=1
 genomic_end_position=12302370
 ```
@@ -50,14 +51,15 @@ The **output_docs_folder** sets the folder where your final .json files will be 
 
 #### VCF conversion config parameters
 The **num_variants** is the variable you need to write in case you are executing the vcf conversor (genomicVariations_vcf.py). This will tell the script how many vcf lines will be read and converted from the file(s).
-The **chromosme** is the variable you need to write to let the conversor know which chromosome is converting.
+The **reference_genome** is the genome reference your vcf file is using to map the position of the chromosomes.
+The **chromosme** is the variable you need to write to let the conversor know which chromosomes will convert. This variable is an array of chromosomes you want to convert from you vcf.gz file. Write the cromosomes the same exact way they are written in the vcf file, e.g. 'chr22', '22', ...
 The **genomic_start_position** is the variable you need to write to tell the conversor from which position in the genome to start converting variants.
 The **genomic_end_position** is the variable you need to write to tell the conversor from which position in the genome to finish converting variants.
 
-### Converting data from .vcf or .vcf.gz file
+### Converting data from .vcf (.vcf.gz) file
 
-To convert data from .vcf (or .vcf.gz) to .json, you will have to copy all the files you want to convert inside the [files_to_read folder](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/files/vcf/files_to_read).
-You will need to provide one .vcf or .vcf.gz file and also one .vcf.gz.tbi file and save them in this folder. The .tbi file is the indexing file which helps the vcf converter to keep track of the file without having to use a lot of CPU memory. To create a .tbi file from a .vcf, you will need to download tabix and bgzip programs. Please, find a tutorial on how to create a .tbi file inside [UCSC Website](https://genome.ucsc.edu/goldenPath/help/vcf.html), following the step **Generating a VCF track**.
+To convert data from .vcf (.vcf.gz) to .json, you will have to copy all the files you want to convert inside the [files_to_read folder](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/files/vcf/files_to_read).
+You will need to provide one .vcf.gz file and also one .vcf.gz.tbi file and save them in this folder. The .tbi file is the indexing file which helps the vcf converter to keep track of the file without having to use a lot of CPU memory. To create a .tbi file from a .vcf, you will need to download tabix and bgzip programs. Please, find a tutorial on how to create a .tbi file inside [UCSC Website](https://genome.ucsc.edu/goldenPath/help/vcf.html), following the step **Generating a VCF track**.
 
 ```bash
 docker exec -it ri-tools python genomicVariations_vcf.py
@@ -102,4 +104,5 @@ This file will be able to be used in a mongoDB for beacon usage. To know how to 
 
 ### Acknowledgements
 
-Thanks to all the [EGA archive](https://ega-archive.org/) team especially Jordi Rambla for supporting, helping and making possible the development of this tool.
+Thanks to all the [EGA archive](https://ega-archive.org/) team, and specially: 
+* Jordi Rambla, for guiding, supporting, helping and making possible the development of this tool.
