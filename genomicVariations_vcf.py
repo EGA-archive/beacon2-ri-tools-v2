@@ -5,7 +5,7 @@ from tqdm import tqdm
 import glob
 import re
 import conf.conf as conf
-import subprocess
+import uuid
 
 list_of_definitions_required=[]
 list_of_properties_required=[]
@@ -100,7 +100,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                         pbar.update(1)
                         continue
                     
-                    dict_to_xls['variantInternalId'] = 'chr' + str(line[0]) + '_' + str(line[1]) + '_' + str(line[3]) + '_' + str(line[4])
+                    
                     zigosity={}
                     zigosity['0/1']='GENO:GENO_0000458'
                     zigosity['1/0']='GENO:GENO_0000458'
@@ -151,7 +151,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                     dict_to_xls['variation|location|interval|type']="SequenceInterval"
                     dict_to_xls['variation|location|type']="SequenceLocation"
                     dict_to_xls['variation|location|sequence_id']="HGVSid:" + str(line[0]) + ":g." + str(line[1]) + line[3] + ">" + line[4]
-                
+                    dict_to_xls['variantInternalId'] = str(uuid.uuid1())+':' + str(line[3]) + ':' + str(line[4])
                     
 
                     k=0
