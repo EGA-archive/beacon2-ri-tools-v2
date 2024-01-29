@@ -6,6 +6,7 @@ import glob
 import re
 import conf.conf as conf
 import uuid
+import gc
 
 list_of_definitions_required=[]
 list_of_properties_required=[]
@@ -670,11 +671,13 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                 pbar.update(1)
                 print('this variant could not be converted because of the error: {}'.format(e))
             #print(i)
-            if i == 100000:
+            if i == 10000:
 
                 pbar.close()
+                vcf.close()
                 return total_dict, i, l, line[0], line[1]
     pbar.close()
+    vcf.close()
     return total_dict, i, l, line[0], line[1]
 
 pos=conf.genomic_start_position
@@ -700,6 +703,8 @@ for chr in conf.chromosome:
 
         with open(output, 'w') as f:
             json.dump(dict_generado, f)
+        del dict_generado
+        gc.collect()
 
 
 
