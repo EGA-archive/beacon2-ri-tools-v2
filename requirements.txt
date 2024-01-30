@@ -6,3 +6,4 @@ python-dateutil==2.8.2
 tqdm==4.66.1
 urllib3==2.0.7
 vcfpy==0.13.6
+ijson==3.2.3
