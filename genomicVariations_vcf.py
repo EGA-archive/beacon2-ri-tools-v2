@@ -7,14 +7,6 @@ import re
 import conf.conf as conf
 import uuid
 
-list_of_definitions_required=[]
-list_of_properties_required=[]
-list_of_headers_definitions_required=[]
-
-with open("files/required/properties/genomicVariations.txt", "r") as txt_file:
-    list_of_properties_required=txt_file.read().splitlines() 
-with open("files/required/header_definitions/genomicVariations.txt", "r") as txt_file:
-    list_of_headers_definitions_required=txt_file.read().splitlines()
 with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
@@ -23,7 +15,7 @@ def custom_formatwarning(msg, *args, **kwargs):
     # ignore everything except the message
     return str(msg) + '\n'
 
-def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties):
+def generate(dict_properties):
     warnings.formatwarning = custom_formatwarning
     total_dict =[]
     new_dict_to_xls={}
@@ -110,54 +102,20 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                 
 
                 dict_of_properties={}
-                list_of_filled_items=[]
                 for kline, vline in dict_to_xls.items():
                     property_value = kline
 
                     
                     valor = vline
 
-                    if i > 0:
-                        
-                        if valor != '':
-
-                            list_of_filled_items.append(property_value)
-
-                            
-                            for header in list_of_headers_definitions_required:
-                                header2 = header[0].lower() + header[1:]
-                                if header2 in header:
-                                    if header2 not in list_of_properties_required:
-                                        list_of_properties_required.append(header2)
-                                    for h2 in list_of_definitions_required:
-                                        if header in h2:
-                                            h2 = h2[0].lower() + h2[1:]
-                                            if h2 not in list_of_properties_required:
-                                                list_of_properties_required.append(h2)
-                        for filled_item in list_of_filled_items:
-                            if isinstance(filled_item, str): 
-                                if 'variation' in filled_item:
-                                    try:
-                                        list_of_properties_required.remove('variation')
-                                    except Exception:
-                                        pass
+                    if valor:
+                        dict_of_properties[property_value]=valor
                         
 
-                        if valor:
-                            dict_of_properties[property_value]=valor
-                            
+                    elif valor == 0:
+                        dict_of_properties[property_value]=valor
 
-                        elif valor == 0:
-                            dict_of_properties[property_value]=valor
-
-                        
-
-
-                for lispro in list_of_properties_required:
-                    if lispro not in list_of_filled_items:
-                        raise Exception(('error: you are not filling all the required fields. missing field is: {}').format(lispro))
-                        
-
+                
                 #print(dict_properties)
                 #print(dict_of_properties)
                 definitivedict={}
@@ -629,7 +587,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
     return total_dict, i, l
 
 
-dict_generado, total_i, l=generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties)
+dict_generado, total_i, l=generate(dict_properties)
 
 
 output = conf.output_docs_folder + 'genomicVariations.json'
