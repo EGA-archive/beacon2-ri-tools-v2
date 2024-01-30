@@ -7,6 +7,9 @@ import re
 import conf.conf as conf
 import uuid
 import gc
+import ijson
+import os
+
 
 list_of_definitions_required=[]
 list_of_properties_required=[]
@@ -671,7 +674,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                 pbar.update(1)
                 print('this variant could not be converted because of the error: {}'.format(e))
             #print(i)
-            if i == 10000:
+            if i == 1000:
 
                 pbar.close()
                 vcf.close()
@@ -692,7 +695,7 @@ for chr in conf.chromosome:
         print(chr)
         print(pos)
         
-        output = conf.output_docs_folder + 'genomicVariations' + str(chr) + str(pos) + '.json'
+        output = conf.output_docs_folder + 'chr' + str(chr) + 'pos' + str(pos) + '.json'
 
         if total_i-l > 0:
 
@@ -706,6 +709,23 @@ for chr in conf.chromosome:
         del dict_generado
         gc.collect()
 
+
+
+final_file= conf.output_docs_folder + 'genomicVariations.json'
+
+
+
+final_output= conf.output_docs_folder + 'chr*.json'
+lista_final=[]
+for file in glob.glob(final_output):
+    with open(file, 'r') as h:
+        for obj in ijson.items(h,'item'):
+            #print(obj)
+            lista_final.append(obj)
+    os.remove(file)
+#print(lista_final)
+with open(final_file, 'w') as f:
+    json.dump(lista_final, f, indent=0)
 
 
 
