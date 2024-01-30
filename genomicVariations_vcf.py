@@ -1,4 +1,4 @@
-import vcfpy
+from cyvcf2 import VCF
 import warnings
 import json
 from tqdm import tqdm
@@ -6,10 +6,6 @@ import glob
 import re
 import conf.conf as conf
 import uuid
-import gc
-import ijson
-import os
-
 
 list_of_definitions_required=[]
 list_of_properties_required=[]
@@ -27,7 +23,7 @@ def custom_formatwarning(msg, *args, **kwargs):
     # ignore everything except the message
     return str(msg) + '\n'
 
-def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties, pos, chr):
+def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties):
     warnings.formatwarning = custom_formatwarning
     total_dict =[]
     new_dict_to_xls={}
@@ -35,72 +31,31 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
     l=0
     for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
         print(vcf_filename)
-        vcf = vcfpy.Reader.from_path(vcf_filename)
-        try:
-            vcf_limits=vcf.fetch(chr, pos, conf.genomic_end_position)
-        except Exception:
-            continue
+        vcf = VCF(vcf_filename, strict_gt=True)
+        my_target_list = vcf.samples
 
-        header_list = ['#CHROM', 'POS' , 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT'] + vcf.header.samples.names
         num_rows=conf.num_variants
         pbar = tqdm(total = num_rows)
-        for v in vcf_limits:
+        for v in vcf:
             try:
                 warning = False
                 dict_to_xls={}
-                try:
-                    for value in v.ALT:
-                        ALT = str(value.value)
-                        TYPE = str(value.type)
-                        dict_to_xls['variation|variantType']=TYPE
-                except Exception as e:
-                    for value in v.ALT:
-                        ALT = str(value.value)
-                        
-                line = [v.CHROM, v.POS, v.ID, v.REF, ALT, v.QUAL, v.FILTER, v.INFO, v.FORMAT]
-                line += [alt.value for alt in v.ALT]
-                line += [call.data.get('GT') or './.' for call in v.calls]
-                #print(line)
-                if TYPE == 'SYMBOLIC':
-                    warnings.warn('variantType is SV. This type of variant is not supported. The VCF entry with ID: {} will not be converted'.format(line[2]), Warning)
-                    warning = True
-                    i+=1
-                    l+=1
-                    pbar.update(1)
-                    continue
-                if line[3] != '':
-                    dict_to_xls['variation|alternateBases'] = line[3]
-                else:
-                    warnings.warn('alternateBases NOT FOUND. The VCF entry with ID: {} will not be converted.'.format(line[2]), Warning)
-                    warning = True
-                    i+=1
-                    l+=1
-                    pbar.update(1)
-                    continue
-                dict_to_xls['variation|referenceBases'] = line[4]
-                for k,v in line[7].items():
-                    if k == 'VT':
-                        if v[0] == 'SV':
-                            warnings.warn('variantType is SV. This type of variant is not supported. The VCF entry with ID: {} will not be converted'.format(line[2]), Warning)
-                            continue
-                        else:
-                            dict_to_xls['variation|variantType'] = v[0]
+                ref=v.REF
+                chrom=v.CHROM
+                start=v.start
+                end=v.end
+                alt=v.ALT
+                dict_to_xls['variation|alternateBases'] = alt[0]
 
-                    elif k == 'ANN':
-                        line7splitted = v[0].split("|")
-                        dict_to_xls['molecularAttributes|molecularEffects|label'] = line7splitted[1]
-                        dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000174"
-                        dict_to_xls['molecularAttributes|aminoacidChanges'] = "."
-                        dict_to_xls['molecularAttributes|geneIds'] = line7splitted[3]
-                try:
-                    dict_to_xls['variation|variantType']
-                except Exception:
-                    warnings.warn('VariantType NOT FOUND. The VCF entry with ID: {} will not be converted.'.format(line[2]), Warning)
-                    warning = True
-                    i+=1
-                    l+=1
-                    pbar.update(1)
-                    continue
+                dict_to_xls['variation|referenceBases'] = ref
+                dict_to_xls['variation|variantType'] = v.INFO.get('VT')
+                #print(v.INFO.get('ANN'))
+                if v.INFO.get('ANN') is not None:
+                    line7splitted = v[0].split("|")
+                    dict_to_xls['molecularAttributes|molecularEffects|label'] = line7splitted[1]
+                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000174"
+                    dict_to_xls['molecularAttributes|aminoacidChanges'] = "."
+                    dict_to_xls['molecularAttributes|geneIds'] = line7splitted[3]
                 
                 
                 zigosity={}
@@ -110,50 +65,44 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                 j=0
                 dict_to_xls['caseLevelData|zygosity|id'] =''
                 dict_to_xls['caseLevelData|zygosity|label']=''
-                for zygo in line[9:-1]:
-                    num = 9 + j
-                    if dict_to_xls['caseLevelData|zygosity|id'] == '':
-                        if zygo == '1/0' or zygo == '0/1' or zygo== '1/1':
-                            dict_to_xls['caseLevelData|zygosity|label'] = zygo
-                            dict_to_xls['caseLevelData|zygosity|id'] = zigosity[zygo]
-                            dict_to_xls['caseLevelData|biosampleId'] = header_list[num]
-                    else:
-                        if zygo == '1/0' or zygo == '0/1' or zygo== '1/1':
-                            dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + zygo
-                            dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity[zygo]
-                            dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + header_list[num]
+                for zygo in v.genotypes:
+                    if zygo[0] == 1 and zygo[1]== 1:
+                        dict_to_xls['caseLevelData|zygosity|label'] = '1/1'
+                        dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/1']
+                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                    elif zygo[0] == 1 and zygo[1]== 0:
+                        dict_to_xls['caseLevelData|zygosity|label'] = '1/0'
+                        dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/0']
+                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                    elif zygo[0] == 0 and zygo[1]== 1:
+                        dict_to_xls['caseLevelData|zygosity|label'] = '0/1'
+                        dict_to_xls['caseLevelData|zygosity|id'] = zigosity['0/1']
+                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+
 
                     j+=1
-                if dict_to_xls['caseLevelData|zygosity|id'] == '':
-                    zygo=line[10]
-                    try:
-                        if zygo == '1/0' or zygo == '0/1' or zygo== '1/1':
-                            dict_to_xls['caseLevelData|zygosity|label'] = zygo
-                            dict_to_xls['caseLevelData|zygosity|id'] = zigosity[zygo]
-                            dict_to_xls['caseLevelData|biosampleId'] = header_list[num]
-                    except Exception:
-                        pass
-                chromos=re.sub(r"</?\[>", "", line[0])
-                if conf.reference_genome == 'GRCh37':
-                    dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.10' + ':' + 'g.' + str(line[1]) + line[3] + '>' + line[4]
-                elif conf.reference_genome == 'GRCh38':
-                    dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.11' + ':' + 'g.' + str(line[1]) + line[3] + '>' + line[4]
-                elif conf.reference_genome == 'NCBI36':
-                    dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.9' + ':' + 'g.' + str(line[1]) + line[3] + '>' + line[4]
 
-                dict_to_xls['variation|location|interval|start|value'] = int(line[1]) -1
+                chromos=re.sub(r"</?\[>", "", chrom)
+                if conf.reference_genome == 'GRCh37':
+                    dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.10' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+                elif conf.reference_genome == 'GRCh38':
+                    dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.11' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+                elif conf.reference_genome == 'NCBI36':
+                    dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.9' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+
+                dict_to_xls['variation|location|interval|start|value'] = int(start)
                 dict_to_xls['variation|location|interval|start|type']="Number"
-                dict_to_xls['variation|location|interval|end|value'] = int(line[1])
+                dict_to_xls['variation|location|interval|end|value'] = int(end)
                 dict_to_xls['variation|location|interval|end|type']="Number"
 
-                dict_to_xls['variation|location|interval|start|value'] = int(line[1]) -1
+                dict_to_xls['variation|location|interval|start|value'] = int(start)
                 dict_to_xls['variation|location|interval|start|type']="Number"
-                dict_to_xls['variation|location|interval|end|value'] = int(line[1])
+                dict_to_xls['variation|location|interval|end|value'] = int(end)
                 dict_to_xls['variation|location|interval|end|type']="Number"
                 dict_to_xls['variation|location|interval|type']="SequenceInterval"
                 dict_to_xls['variation|location|type']="SequenceLocation"
-                dict_to_xls['variation|location|sequence_id']="HGVSid:" + str(line[0]) + ":g." + str(line[1]) + line[3] + ">" + line[4]
-                dict_to_xls['variantInternalId'] = str(uuid.uuid1())+':' + str(line[3]) + ':' + str(line[4])
+                dict_to_xls['variation|location|sequence_id']="HGVSid:" + str(chrom) + ":g." + str(start) + ref + ">" + alt[0]
+                dict_to_xls['variantInternalId'] = str(uuid.uuid1())+':' + str(ref) + ':' + str(alt[0])
                 
 
                 k=0
@@ -663,7 +612,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
 
                 total_dict.append(definitivedict)
                 pbar.update(1)
-                if i == num_rows:
+                if i == 100000:
                     break
                 i+=1
                 
@@ -673,59 +622,24 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                 l+=1
                 pbar.update(1)
                 print('this variant could not be converted because of the error: {}'.format(e))
-            #print(i)
-            if i == 1000:
 
-                pbar.close()
-                vcf.close()
-                return total_dict, i, l, line[0], line[1]
+
+
     pbar.close()
-    vcf.close()
-    return total_dict, i, l, line[0], line[1]
-
-pos=conf.genomic_start_position
-chrom=conf.chromosome
-
-for chr in conf.chromosome:
-
-    while int(pos) < conf.genomic_end_position:
-
-        dict_generado, total_i, l, chr, pos=generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties, pos, chr)
-        
-        print(chr)
-        print(pos)
-        
-        output = conf.output_docs_folder + 'chr' + str(chr) + 'pos' + str(pos) + '.json'
-
-        if total_i-l > 0:
-
-            print('Successfully converted {} registries into {}'.format(total_i-l, output))
-
-        else:
-            print('No registries found.')
-
-        with open(output, 'w') as f:
-            json.dump(dict_generado, f)
-        del dict_generado
-        gc.collect()
+    return total_dict, i, l
 
 
-
-final_file= conf.output_docs_folder + 'genomicVariations.json'
-
+dict_generado, total_i, l=generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties)
 
 
-final_output= conf.output_docs_folder + 'chr*.json'
-lista_final=[]
-for file in glob.glob(final_output):
-    with open(file, 'r') as h:
-        for obj in ijson.items(h,'item'):
-            #print(obj)
-            lista_final.append(obj)
-    os.remove(file)
-#print(lista_final)
-with open(final_file, 'w') as f:
-    json.dump(lista_final, f, indent=0)
+output = conf.output_docs_folder + 'genomicVariations.json'
 
+if total_i-l > 0:
 
+    print('Successfully converted {} registries into {}'.format(total_i-l, output))
 
+else:
+    print('No registries found.')
+
+with open(output, 'w') as f:
+    json.dump(dict_generado, f)
