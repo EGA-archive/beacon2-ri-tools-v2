@@ -612,7 +612,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
 
                 total_dict.append(definitivedict)
                 pbar.update(1)
-                if i == 100000:
+                if i == num_rows:
                     break
                 i+=1
                 
