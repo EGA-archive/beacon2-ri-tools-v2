@@ -22,7 +22,7 @@ def generate(dict_properties):
         num_rows=conf.num_variants
         pbar = tqdm(total = num_rows)
         for v in vcf:
-            print(v)
+            #print(v)
             dict_to_xls={}
             ref=v.REF
             chrom=v.CHROM
