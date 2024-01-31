@@ -29,7 +29,7 @@ Once the container is up and running you can start using beacon ri tools v2, con
 
 ## Instruction manual
 
-### Setting configuration and excel file
+### Setting configuration and csv file
 
 To start using beacon ri tools v2, you have to edit the configuration file [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf). Inside this file you will find the next information:
 ```bash
@@ -40,9 +40,6 @@ output_docs_folder='output_docs/CINECA_dataset/'
 #### VCF Conversion config parameters ####
 num_variants=100000
 reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
-chromosome=['1','22']
-genomic_start_position=1
-genomic_end_position=12302370
 ```
 
 #### Generic config parameters
@@ -51,15 +48,12 @@ The **output_docs_folder** sets the folder where your final .json files will be 
 
 #### VCF conversion config parameters
 The **num_variants** is the variable you need to write in case you are executing the vcf conversor (genomicVariations_vcf.py). This will tell the script how many vcf lines will be read and converted from the file(s).
-The **reference_genome** is the genome reference your vcf file is using to map the position of the chromosomes.
-The **chromosme** is the variable you need to write to let the conversor know which chromosomes will convert. This variable is an array of chromosomes you want to convert from you vcf.gz file. Write the cromosomes the same exact way they are written in the vcf file, e.g. 'chr22', '22', ...
-The **genomic_start_position** is the variable you need to write to tell the conversor from which position in the genome to start converting variants.
-The **genomic_end_position** is the variable you need to write to tell the conversor from which position in the genome to finish converting variants.
+The **reference_genome** is the genome reference your the tool is using to map the position of the chromosomes.
 
 ### Converting data from .vcf (.vcf.gz) file
 
 To convert data from .vcf (.vcf.gz) to .json, you will have to copy all the files you want to convert inside the [files_to_read folder](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/files/vcf/files_to_read).
-You will need to provide one .vcf.gz file and also one .vcf.gz.tbi file and save them in this folder. The .tbi file is the indexing file which helps the vcf converter to keep track of the file without having to use a lot of CPU memory. To create a .tbi file from a .vcf, you will need to download tabix and bgzip programs. Please, find a tutorial on how to create a .tbi file inside [UCSC Website](https://genome.ucsc.edu/goldenPath/help/vcf.html), following the step **Generating a VCF track**.
+You will need to provide one .vcf.gz file file and save it in this folder.
 
 ```bash
 docker exec -it ri-tools python genomicVariations_vcf.py
