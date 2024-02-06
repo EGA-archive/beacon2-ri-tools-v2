@@ -304,12 +304,18 @@ def generate(dict_properties):
             total_dict.append(definitivedict)
             
             if i == num_rows:
-                s = json.dumps(total_dict[0:-1]).encode('utf-8')
+                s = json.dumps(total_dict)
+                s = s.replace('[', '')
+                s = s.replace(']', '')
+                s = s.encode('utf-8')
                 byt_combined+=s
                 pbar.update(1)
                 break
             elif (i/100000).is_integer():
-                s = json.dumps(total_dict[0:-1]).encode('utf-8')
+                s = json.dumps(total_dict[0:-1])
+                s = s.replace('[', '')
+                s = s.replace(']', '')
+                s = s.encode('utf-8')
                 byt_combined+=s+b','
                 del total_dict
                 gc.collect()
