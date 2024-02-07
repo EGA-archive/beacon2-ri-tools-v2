@@ -18,7 +18,6 @@ with open('files/deref_schemas/analyses.json') as json_file:
     dict_properties = json.load(json_file)
 
 def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties, list_of_headers):
-
     csv_filename = conf.csv_filename
     total_dict =[]
     with open(csv_filename, 'r' ) as theFile:

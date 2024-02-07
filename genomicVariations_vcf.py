@@ -325,6 +325,13 @@ def generate(dict_properties):
             
             pbar.update(1)
             i+=1
+    if i != num_rows:
+        s = json.dumps(total_dict)
+        s = s.replace('[', '')
+        s = s.replace(']', '')
+        s = s.encode('utf-8')
+        byt_combined+=s
+
     byt_combined+=b']'
     total_dict=json.loads(byt_combined.decode('utf-8'))
     pbar.close()
