@@ -13,7 +13,7 @@ with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
 def generate(dict_properties):
-    byt_combined=b''
+    byt_combined=b'['
     total_dict =[]
     i=1
     l=0
@@ -25,6 +25,8 @@ def generate(dict_properties):
         num_rows=conf.num_variants
         pbar = tqdm(total = num_rows)
         for v in vcf:
+            if v.INFO["AF"] > 0.1: continue
+            if v.INFO.get('VT') == 'SV': continue
             #print(v)
             dict_to_xls={}
             ref=v.REF
@@ -35,6 +37,7 @@ def generate(dict_properties):
             dict_to_xls['variation|alternateBases'] = alt[0]
 
             dict_to_xls['variation|referenceBases'] = ref
+
             dict_to_xls['variation|variantType'] = v.INFO.get('VT')
             #print(v.INFO.get('ANN'))
             if v.INFO.get('ANN') is not None:
@@ -53,6 +56,7 @@ def generate(dict_properties):
             j=0
             dict_to_xls['caseLevelData|zygosity|id'] =''
             dict_to_xls['caseLevelData|zygosity|label']=''
+
             for zygo in v.genotypes:
                 if dict_to_xls['caseLevelData|zygosity|id'] == '':
                     if zygo[0] == 1 and zygo[1]== 1:
@@ -67,6 +71,7 @@ def generate(dict_properties):
                         dict_to_xls['caseLevelData|zygosity|label'] = '0/1'
                         dict_to_xls['caseLevelData|zygosity|id'] = zigosity['0/1']
                         dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                        
                 else:
                     if zygo[0] == 1 and zygo[1]== 1:
                         dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/1'
@@ -80,7 +85,7 @@ def generate(dict_properties):
                         dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '0/1'
                         dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['0/1']
                         dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
-
+                    
 
                 j+=1
 
@@ -383,15 +388,18 @@ def generate(dict_properties):
             
             if i == num_rows:
                 s = json.dumps(total_dict)
-
+                s = s[0].replace('[','') + s[1:-1] + s[-1:].replace(']','')
                 s = s.encode('utf-8')
-                byt_combined+=s
+                byt_combined+=s+b']'
                 pbar.update(1)
                 break
-            elif (i/20000).is_integer():
-                s = json.dumps(total_dict[0:-1])
+            elif (i/2).is_integer():
+                s = json.dumps(total_dict)
+                s = s[0].replace('[','') + s[1:-1] + s[-1:].replace(']',',')
                 s = s.encode('utf-8')
-                byt_combined+=s+b','
+                byt_combined+=s
+                del s
+                del definitivedict
                 del total_dict
                 gc.collect()
                 total_dict=[]
@@ -402,10 +410,13 @@ def generate(dict_properties):
             i+=1
     if i != num_rows:
         s = json.dumps(total_dict)
+        s = s[0].replace('[','') + s[0:-1] + s[-1:].replace(']','')
         s = s.encode('utf-8')
-        byt_combined+=s
 
-    byt_combined+=b''
+        byt_combined+=s+b']'
+        
+        
+    #print(byt_combined)
     total_dict=json.loads(byt_combined.decode('utf-8'))
     pbar.close()
     return total_dict, i, l
