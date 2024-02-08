@@ -393,7 +393,7 @@ def generate(dict_properties):
                 byt_combined+=s+b']'
                 pbar.update(1)
                 break
-            elif (i/2).is_integer():
+            elif (i/25000).is_integer():
                 s = json.dumps(total_dict)
                 s = s[0].replace('[','') + s[1:-1] + s[-1:].replace(']',',')
                 s = s.encode('utf-8')
