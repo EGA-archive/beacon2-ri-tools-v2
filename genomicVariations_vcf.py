@@ -13,7 +13,7 @@ with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
 def generate(dict_properties):
-    byt_combined=b'['
+    byt_combined=b''
     total_dict =[]
     i=1
     l=0
@@ -54,18 +54,32 @@ def generate(dict_properties):
             dict_to_xls['caseLevelData|zygosity|id'] =''
             dict_to_xls['caseLevelData|zygosity|label']=''
             for zygo in v.genotypes:
-                if zygo[0] == 1 and zygo[1]== 1:
-                    dict_to_xls['caseLevelData|zygosity|label'] = '1/1'
-                    dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/1']
-                    dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
-                elif zygo[0] == 1 and zygo[1]== 0:
-                    dict_to_xls['caseLevelData|zygosity|label'] = '1/0'
-                    dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/0']
-                    dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
-                elif zygo[0] == 0 and zygo[1]== 1:
-                    dict_to_xls['caseLevelData|zygosity|label'] = '0/1'
-                    dict_to_xls['caseLevelData|zygosity|id'] = zigosity['0/1']
-                    dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                if dict_to_xls['caseLevelData|zygosity|id'] == '':
+                    if zygo[0] == 1 and zygo[1]== 1:
+                        dict_to_xls['caseLevelData|zygosity|label'] = '1/1'
+                        dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/1']
+                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                    elif zygo[0] == 1 and zygo[1]== 0:
+                        dict_to_xls['caseLevelData|zygosity|label'] = '1/0'
+                        dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/0']
+                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                    elif zygo[0] == 0 and zygo[1]== 1:
+                        dict_to_xls['caseLevelData|zygosity|label'] = '0/1'
+                        dict_to_xls['caseLevelData|zygosity|id'] = zigosity['0/1']
+                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                else:
+                    if zygo[0] == 1 and zygo[1]== 1:
+                        dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/1'
+                        dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/1']
+                        dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
+                    elif zygo[0] == 1 and zygo[1]== 0:
+                        dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/0'
+                        dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/0']
+                        dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
+                    elif zygo[0] == 0 and zygo[1]== 1:
+                        dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '0/1'
+                        dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['0/1']
+                        dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
 
 
                 j+=1
@@ -154,7 +168,7 @@ def generate(dict_properties):
                                                                                 new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi
                                                                                 for propk, propv in dict_of_properties.items():
                                                                                     if propk == new_item:
-                                                                                        #print(propk)
+                                                                                        
                                                                                         try:
                                                                                             if 'value' in propk:
                                                                                                 vivdict[kiv][kivi]=int(propv)
@@ -196,7 +210,6 @@ def generate(dict_properties):
                                                     new_item = key + "|" + ki + "|" + k
                                                     for propk, propv in dict_of_properties.items():
                                                         if propk == new_item:
-                                                            #print(propk)
                                                             try:
                                                                 propv = re.sub(r'\s', '', propv)
                                                                 respropv = json.loads(propv) 
@@ -211,7 +224,6 @@ def generate(dict_properties):
                                             
                                             item_dict[ki]=vi_list[0]
                                 elif isinstance(vi, dict):
-
                                     vi_dict={}
                                     for ki1, vi1 in vi.items():
                                         new_item = ""
@@ -232,14 +244,79 @@ def generate(dict_properties):
                                                 outcome +=1
                                                 v1_keys=[]
                                             item_dict[ki]=propv
-
         
                             if item_dict != {} and item_dict != [{}]:
-                                if key == 'caseLevelData':
-                                    definitivedict[key]=[]
-                                    definitivedict[key].append(item_dict)
+                                
+
+                                if outcome > 0:
+                                    if item_dict not in value_list:
+                                        value_list.append(item_dict)
+                                    if value_list != []:
+                                        itemdict={}
+                                        definitivedict[key]=[]
+                                        v_array=[]
+                                        for itemvl in value_list:
+
+                                            for kvl, vvl in itemvl.items():
+                                                if isinstance(vvl, str):
+                                                    if '|' in vvl:
+                                                        itemv={}
+                                                        v_array = vvl.split('|')
+                                                        itemv[kvl]=v_array
+                                                        v_key = kvl
+                                                elif isinstance(vvl, dict):
+                                                    
+                                                    v1_array=[]
+                                                    itemdict[kvl]={}
+                                                    v1_keys = []
+                                                    for kvl1, vvl1 in vvl.items():
+                                                        itemdict[kvl][kvl1]={}
+                                                        if isinstance(vvl1, str) and '|' in vvl1:
+                                                            vvl1_array = vvl1.split('|')
+                                                            for vvlitem in vvl1_array:
+                                                                v1_array.append(vvlitem)
+                                                            v1_bigkeys = kvl
+                                                            if kvl1 not in v1_keys:
+                                                                v1_keys.append(kvl1)
+
+                                        if v1_keys != []:
+                                            n=0
+                                            list_to_def=[]
+                                            half_array_number = len(v1_array)/2
+                                            itemdict[v1_bigkeys]={}
+
+                                            while n < int(half_array_number):
+                                                newdict={}
+                                                newdict[v1_bigkeys]={}
+                                                num=int(half_array_number+n)
+                                                #print(v_array)
+                                                #print(v1_array)
+                                                newdict[v_key]=v_array[n]
+                                                
+                                                newdict[v1_bigkeys][v1_keys[0]]=v1_array[n]
+                                                newdict[v1_bigkeys][v1_keys[1]]=v1_array[num]
+                                                list_to_def.append(newdict)
+                                                n +=1
+                                            for itemldf in list_to_def:
+                                                definitivedict[key].append(itemldf)
+                                        elif len(v_array) > 1:
+                                            list_to_def=[]
+                                            
+                                            for itva in v_array:
+                                                newdict={}
+                                                newdict[v_key]=itva
+                                                list_to_def.append(newdict)
+                                            for itemldf in list_to_def:
+                                                definitivedict[key].append(itemldf)
+                                        else:
+                                            for itemvl in value_list:
+                                                definitivedict[key].append(itemvl) 
                                 else:
-                                    definitivedict[key]=item_dict
+                                    if key == 'caseLevelData':
+                                        definitivedict[key]=[]
+                                        definitivedict[key].append(item_dict)
+                                    else:
+                                        definitivedict[key]=item_dict
                                     
                 elif isinstance(value, dict):
                     value_dict={}
@@ -301,20 +378,18 @@ def generate(dict_properties):
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             definitivedict[key]=propv
+
             total_dict.append(definitivedict)
             
             if i == num_rows:
                 s = json.dumps(total_dict)
-                s = s.replace('[', '')
-                s = s.replace(']', '')
+
                 s = s.encode('utf-8')
                 byt_combined+=s
                 pbar.update(1)
                 break
             elif (i/100000).is_integer():
                 s = json.dumps(total_dict[0:-1])
-                s = s.replace('[', '')
-                s = s.replace(']', '')
                 s = s.encode('utf-8')
                 byt_combined+=s+b','
                 del total_dict
@@ -327,12 +402,10 @@ def generate(dict_properties):
             i+=1
     if i != num_rows:
         s = json.dumps(total_dict)
-        s = s.replace('[', '')
-        s = s.replace(']', '')
         s = s.encode('utf-8')
         byt_combined+=s
 
-    byt_combined+=b']'
+    byt_combined+=b''
     total_dict=json.loads(byt_combined.decode('utf-8'))
     pbar.close()
     return total_dict, i, l
