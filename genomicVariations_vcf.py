@@ -27,7 +27,7 @@ def generate(dict_properties):
         
         pbar = tqdm(total = num_rows)
         for v in vcf:
-            #print(v)
+            '''
             try:
                 if v.INFO["AF"] > 0.1: continue
             except Exception:
@@ -36,6 +36,7 @@ def generate(dict_properties):
                 if v.INFO.get('VT') == 'SV': continue
             except Exception:
                 pass
+            '''
             #print(v)
             dict_to_xls={}
             ref=v.REF
@@ -409,7 +410,7 @@ def generate(dict_properties):
                 break
             elif (i/25000).is_integer():
                 s = json.dumps(total_dict)
-                print(s)
+                #print(s)
                 s = s[0].replace('[','') + s[1:-1] + s[-1:].replace(']',',')
                 s = s.encode('utf-8')
                 byt_combined+=s
