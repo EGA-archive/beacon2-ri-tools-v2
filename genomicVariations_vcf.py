@@ -409,6 +409,7 @@ def generate(dict_properties):
                 break
             elif (i/25000).is_integer():
                 s = json.dumps(total_dict)
+                print(s)
                 s = s[0].replace('[','') + s[1:-1] + s[-1:].replace(']',',')
                 s = s.encode('utf-8')
                 byt_combined+=s
@@ -425,14 +426,16 @@ def generate(dict_properties):
 
     if i != num_rows:
         s = json.dumps(total_dict)
-        s = s[0].replace('[','') + s[0:-1] + s[-1:].replace(']','')
+        s = s[0].replace('[','') + s[1:-1] + s[-1:].replace(']','')
         s = s.encode('utf-8')
 
         byt_combined+=s+b']'
         
         
     #print(byt_combined)
+
     total_dict=json.loads(byt_combined.decode('utf-8'))
+
     pbar.close()
     return total_dict, i, l
 
