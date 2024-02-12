@@ -27,7 +27,7 @@ def generate(dict_properties):
         
         pbar = tqdm(total = num_rows)
         for v in vcf:
-            print(v)
+            #print(v)
             try:
                 if v.INFO["AF"] > 0.1: continue
             except Exception:
@@ -431,7 +431,7 @@ def generate(dict_properties):
         byt_combined+=s+b']'
         
         
-    print(byt_combined)
+    #print(byt_combined)
     total_dict=json.loads(byt_combined.decode('utf-8'))
     pbar.close()
     return total_dict, i, l
@@ -440,10 +440,12 @@ dict_generado, total_i, l=generate(dict_properties)
 
 output = conf.output_docs_folder + 'genomicVariations.json'
 
+
+
+with open(output, 'w') as f:
+    json.dump(dict_generado, f)
+
 if total_i-l > 0:
     print('Successfully converted {} registries into {}'.format(total_i-l, output))
 else:
     print('No registries found.')
-
-with open(output, 'w') as f:
-    json.dump(dict_generado, f)
