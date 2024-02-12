@@ -19,7 +19,7 @@ def generate(dict_properties):
     l=0
     
     num_rows=conf.num_variants
-    for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf"):
+    for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
         print(vcf_filename)
         vcf = VCF(vcf_filename, strict_gt=True)
         my_target_list = vcf.samples
