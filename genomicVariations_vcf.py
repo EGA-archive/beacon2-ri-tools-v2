@@ -17,16 +17,25 @@ def generate(dict_properties):
     total_dict =[]
     i=1
     l=0
-    for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
+    
+    num_rows=conf.num_variants
+    for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf"):
         print(vcf_filename)
         vcf = VCF(vcf_filename, strict_gt=True)
         my_target_list = vcf.samples
 
-        num_rows=conf.num_variants
+        
         pbar = tqdm(total = num_rows)
         for v in vcf:
-            if v.INFO["AF"] > 0.1: continue
-            if v.INFO.get('VT') == 'SV': continue
+            print(v)
+            try:
+                if v.INFO["AF"] > 0.1: continue
+            except Exception:
+                pass
+            try:
+                if v.INFO.get('VT') == 'SV': continue
+            except Exception:
+                pass
             #print(v)
             dict_to_xls={}
             ref=v.REF
@@ -37,16 +46,21 @@ def generate(dict_properties):
             dict_to_xls['variation|alternateBases'] = alt[0]
 
             dict_to_xls['variation|referenceBases'] = ref
-
-            dict_to_xls['variation|variantType'] = v.INFO.get('VT')
+            try:
+                dict_to_xls['variation|variantType'] = v.INFO.get('VT')
+            except Exception:
+                pass
             #print(v.INFO.get('ANN'))
-            if v.INFO.get('ANN') is not None:
-                annot = v.INFO.get('ANN')
-                annotations = annot.split("|")
-                dict_to_xls['molecularAttributes|molecularEffects|label'] = annotations[1]
-                dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000174"
-                dict_to_xls['molecularAttributes|aminoacidChanges'] = "."
-                dict_to_xls['molecularAttributes|geneIds'] = annotations[3]
+            try:
+                if v.INFO.get('ANN') is not None:
+                    annot = v.INFO.get('ANN')
+                    annotations = annot.split("|")
+                    dict_to_xls['molecularAttributes|molecularEffects|label'] = annotations[1]
+                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000174"
+                    dict_to_xls['molecularAttributes|aminoacidChanges'] = "."
+                    dict_to_xls['molecularAttributes|geneIds'] = annotations[3]
+            except Exception:
+                pass
             
             
             zigosity={}
@@ -408,6 +422,7 @@ def generate(dict_properties):
             
             pbar.update(1)
             i+=1
+
     if i != num_rows:
         s = json.dumps(total_dict)
         s = s[0].replace('[','') + s[0:-1] + s[-1:].replace(']','')
@@ -416,7 +431,7 @@ def generate(dict_properties):
         byt_combined+=s+b']'
         
         
-    #print(byt_combined)
+    print(byt_combined)
     total_dict=json.loads(byt_combined.decode('utf-8'))
     pbar.close()
     return total_dict, i, l

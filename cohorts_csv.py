@@ -348,6 +348,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                         new_item = key
                         for propk, propv in dict_of_properties.items():
                             if propk == new_item:
+                                #print(propk)
                                 propvalue={}
                                 propvalue_splitted = propv.split(':')
                                 propvalue[propvalue_splitted[0]]=propvalue_splitted[1]
@@ -357,6 +358,10 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                     new_item = key
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
+                            try:
+                                propv = int(propv)
+                            except Exception:
+                                propv = propv
                             definitivedict[key]=propv
             total_dict.append(definitivedict)
 
