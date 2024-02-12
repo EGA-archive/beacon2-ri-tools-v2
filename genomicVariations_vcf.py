@@ -27,16 +27,11 @@ def generate(dict_properties):
         
         pbar = tqdm(total = num_rows)
         for v in vcf:
-            '''
-            try:
-                if v.INFO["AF"] > 0.1: continue
-            except Exception:
-                pass
             try:
                 if v.INFO.get('VT') == 'SV': continue
             except Exception:
                 pass
-            '''
+            
             #print(v)
             dict_to_xls={}
             ref=v.REF
@@ -52,16 +47,14 @@ def generate(dict_properties):
             except Exception:
                 pass
             #print(v.INFO.get('ANN'))
-            try:
-                if v.INFO.get('ANN') is not None:
-                    annot = v.INFO.get('ANN')
-                    annotations = annot.split("|")
-                    dict_to_xls['molecularAttributes|molecularEffects|label'] = annotations[1]
-                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000174"
-                    dict_to_xls['molecularAttributes|aminoacidChanges'] = "."
-                    dict_to_xls['molecularAttributes|geneIds'] = annotations[3]
-            except Exception:
-                pass
+            if v.INFO.get('ANN') is not None:
+                annot = v.INFO.get('ANN')
+                annotations = annot.split("|")
+                dict_to_xls['molecularAttributes|molecularEffects|label'] = annotations[1]
+                dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000174"
+                dict_to_xls['molecularAttributes|aminoacidChanges'] = "."
+                dict_to_xls['molecularAttributes|geneIds'] = annotations[3]
+
             
             
             zigosity={}
