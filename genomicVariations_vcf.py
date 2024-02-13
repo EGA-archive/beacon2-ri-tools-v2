@@ -7,23 +7,38 @@ import conf.conf as conf
 import uuid
 import json
 import gc
+from pymongo.mongo_client import MongoClient
+
+client = MongoClient(
+        #"mongodb://127.0.0.1:27017/"
+        "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
+            conf.database_user,
+            conf.database_password,
+            conf.database_host,
+            conf.database_port,
+            conf.database_name,
+            conf.database_auth_source,
+        )
+    )
 
 with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
 def generate(dict_properties):
-    byt_combined=b'['
     total_dict =[]
     i=1
     l=0
     
-    num_rows=conf.num_variants
+
     for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
         print(vcf_filename)
         vcf = VCF(vcf_filename, strict_gt=True)
         my_target_list = vcf.samples
-
+        count=0
         
+        
+
+        num_rows=conf.num_variants
         pbar = tqdm(total = num_rows)
         for v in vcf:
             try:
@@ -33,7 +48,7 @@ def generate(dict_properties):
             try:
                 allele_frequency = v.INFO.get('AF')
                 if isinstance(allele_frequency, float):
-                    if allele_frequency > 0.1: continue
+                    if allele_frequency > conf.allele_frequency: continue
             except Exception:
                 pass
             
@@ -49,8 +64,13 @@ def generate(dict_properties):
             dict_to_xls['variation|referenceBases'] = ref
             try:
                 dict_to_xls['variation|variantType'] = v.INFO.get('VT')
+                if v.INFO.get('VT') is None:
+                    if len(alt[0]) == len(ref):
+                        dict_to_xls['variation|variantType']='SNP'
+                    else:
+                        dict_to_xls['variation|variantType']='INDEL'
             except Exception:
-                pass
+                dict_to_xls['variation|variantType']='UNKNOWN'
             #print(v.INFO.get('ANN'))
             if v.INFO.get('ANN') is not None:
                 annot = v.INFO.get('ANN')
@@ -400,19 +420,12 @@ def generate(dict_properties):
             total_dict.append(definitivedict)
             
             if i == num_rows:
-                s = json.dumps(total_dict)
-                s = s[0].replace('[','') + s[1:-1] + s[-1:].replace(']','')
-                s = s.encode('utf-8')
-                byt_combined+=s+b']'
+
+                client.beacon.genomicVariations.insert_many(total_dict)
                 pbar.update(1)
                 break
-            elif (i/25000).is_integer():
-                s = json.dumps(total_dict)
-                #print(s)
-                s = s[0].replace('[','') + s[1:-1] + s[-1:].replace(']',',')
-                s = s.encode('utf-8')
-                byt_combined+=s
-                del s
+            elif (i/10000).is_integer():
+                client.beacon.genomicVariations.insert_many(total_dict)
                 del definitivedict
                 del total_dict
                 gc.collect()
@@ -424,30 +437,17 @@ def generate(dict_properties):
             i+=1
 
     if i != num_rows:
-        s = json.dumps(total_dict)
-        s = s[0].replace('[','') + s[1:-1] + s[-1:].replace(']','')
-        s = s.encode('utf-8')
-
-        byt_combined+=s+b']'
+        client.beacon.genomicVariations.insert_many(total_dict)
         
         
-    #print(byt_combined)
-
-    total_dict=json.loads(byt_combined.decode('utf-8'))
 
     pbar.close()
-    return total_dict, i, l
+    return i, l
 
-dict_generado, total_i, l=generate(dict_properties)
+total_i, l=generate(dict_properties)
 
-output = conf.output_docs_folder + 'genomicVariations.json'
-
-
-
-with open(output, 'w') as f:
-    json.dump(dict_generado, f)
 
 if total_i-l > 0:
-    print('Successfully converted {} registries into {}'.format(total_i-l, output))
+    print('Successfully inserted {} records into beacon'.format(total_i-l))
 else:
     print('No registries found.')

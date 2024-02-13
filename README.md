@@ -49,16 +49,21 @@ The **output_docs_folder** sets the folder where your final .json files will be 
 #### VCF conversion config parameters
 The **num_variants** is the variable you need to write in case you are executing the vcf conversor (genomicVariations_vcf.py). This will tell the script how many vcf lines will be read and converted from the file(s).
 The **reference_genome** is the genome reference your the tool is using to map the position of the chromosomes.
+The **allele_frequency** let's you set a threshold for the allele frequency of the variants you want to convert from the vcf file.
 
-### Converting data from .vcf (.vcf.gz) file
+### Converting data from .vcf.gz file
 
-To convert data from .vcf (.vcf.gz) to .json, you will have to copy all the files you want to convert inside the [files_to_read folder](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/files/vcf/files_to_read).
+To convert data from .vcf.gz to .json, you will need to copy all the files you want to convert inside the [files_to_read folder](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/files/vcf/files_to_read).
 You will need to provide one .vcf.gz file file and save it in this folder.
 
 ```bash
 docker exec -it ri-tools python genomicVariations_vcf.py
 ```
-This will generate the final .json file that is Beacon Friendly Format in the output_docs folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. 
+After that, if needed, export your documents from mongoDB to a .json file using this command:
+```bash
+docker exec ri-tools-mongo mongoexport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations | jq 'del(.[]._id)' > genomicVariations.json
+```
+This will generate the final .json file that is Beacon Friendly Format. Bear in mind that this time, the file will be saved in the directory you are located, so if you want to save it in the output_docs folder, add it in the path of the mongoexport.
 
 ### Creating the .csv file (if metadata or not having a vcf file for genomicVariations)
 

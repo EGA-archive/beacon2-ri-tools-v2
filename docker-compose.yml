@@ -1,5 +1,9 @@
 version: "3.8"
 
+networks:
+  my-app-network:
+    external: true
+
 services:
 
   beacon-ri-tools-v2:
@@ -12,3 +16,20 @@ services:
       - ./scripts/datasheet/conf:/usr/src/app/scripts/datasheet/conf
       - ./files/vcf/files_to_read:/usr/src/app/files/vcf/files_to_read
       - ./csv:/usr/src/app/csv
+    networks:
+      - my-app-network
+
+  db:
+    container_name: ri-tools-mongo
+    image: mongo:5
+    hostname: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: beacon
+    volumes:
+      - ./mongo-init/:/docker-entrypoint-initdb.d/:ro
+    networks:
+      - my-app-network

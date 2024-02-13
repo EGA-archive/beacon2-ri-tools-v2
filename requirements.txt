@@ -6,3 +6,4 @@ python-dateutil==2.8.2
 tqdm==4.66.1
 urllib3==2.0.7
 cyvcf2==0.30.28
+pymongo==4.6.1
