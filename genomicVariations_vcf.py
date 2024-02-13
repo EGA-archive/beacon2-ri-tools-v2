@@ -1,5 +1,4 @@
 from cyvcf2 import VCF
-import warnings
 import json
 from tqdm import tqdm
 import glob
@@ -29,6 +28,12 @@ def generate(dict_properties):
         for v in vcf:
             try:
                 if v.INFO.get('VT') == 'SV': continue
+            except Exception:
+                pass
+            try:
+                allele_frequency = v.INFO.get('AF')
+                if isinstance(allele_frequency, float):
+                    if allele_frequency > 0.1: continue
             except Exception:
                 pass
             
