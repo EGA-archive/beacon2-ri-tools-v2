@@ -355,6 +355,7 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
                                     for ki1, vi1 in vi.items():
                                         if isinstance(vi1, dict):
                                             vi_dict[ki1]={}
+                                            members={}
                                             for ki2, vi2 in vi1.items():
                                                 new_item = ""
                                                 new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
@@ -389,6 +390,12 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
                                     list_to_def=commas(itemvl)
                                     for itemldf in list_to_def:
                                         if itemldf not in definitivedict[key]:
+                                            if key == 'pedigrees':
+                                                for k, v in itemldf.items():
+                                                    if k == 'members':
+                                                        list_members=[]
+                                                        list_members.append(v)
+                                                itemldf['members']=list_members
                                             definitivedict[key].append(itemldf)
                             else:
                                 for itemvl in value_list:
