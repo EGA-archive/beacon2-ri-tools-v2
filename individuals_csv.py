@@ -354,22 +354,32 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
                                     vi_dict={}
                                     for ki1, vi1 in vi.items():
                                         if isinstance(vi1, dict):
-                                            vi_dict[ki1]={}
+                                            
                                             members={}
                                             for ki2, vi2 in vi1.items():
                                                 new_item = ""
                                                 new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
                                                 for propk, propv in dict_of_properties.items():
                                                     if propk == new_item:
-                                                        vi_dict[ki1][ki2]=propv
-                                                if vi_dict != {} and vi_dict[ki1] != {}:
+                                                        try:
+                                                            vi_dict[ki1][ki2]=propv
+                                                        except Exception:
+                                                            vi_dict[ki1]={}
+                                                            vi_dict[ki1][ki2]=propv
+
+                                                #if vi_dict != {} and vi_dict[ki1] != {}:
+                                                if vi_dict != {}:
                                                     item_dict[ki]=vi_dict
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + ki1
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
-                                                    vi_dict[ki1]=propv 
+                                                    try:
+                                                        vi_dict[ki1]=propv 
+                                                    except Exception:
+                                                        vi_dict[ki1]={}
+                                                        vi_dict[ki1]=propv 
                                                     item_dict[ki]=vi_dict
             
                                     if item_dict != {} and item_dict != [{}]:
@@ -395,7 +405,10 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
                                                     if k == 'members':
                                                         list_members=[]
                                                         list_members.append(v)
-                                                itemldf['members']=list_members
+                                                try:
+                                                    itemldf['members']=list_members
+                                                except Exception:
+                                                    pass
                                             definitivedict[key].append(itemldf)
                             else:
                                 for itemvl in value_list:
