@@ -375,7 +375,7 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
                                             new_item = key + "|" + ki + "|" + ki1
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
-                                                    if propv == 'true' or propv == 'false':
+                                                    if propv == 'true' or propv.lower() == 'true' or propv == 'false' or propv.lower()== 'false':
                                                         propv = bool(propv)
                                                     try:
                                                         vi_dict[ki1]=propv 
