@@ -17,6 +17,60 @@ with open("files/required/definitions/biosamples.txt", "r") as txt_file:
 with open('files/deref_schemas/biosamples.json') as json_file:
     dict_properties = json.load(json_file)
 
+def commas(prova):
+    length_iter=0
+    array_of_newdicts=[]
+    for key, value in prova.items():
+        if isinstance(value, str):
+            valuesplitted = value.split('|')
+            length_iter=len(valuesplitted)
+        elif isinstance(value, dict):
+            for kval, vval in value.items():
+                if isinstance(vval, str):
+                    valsplitted = vval.split('|')
+                    length_iter=len(valsplitted)
+    if length_iter > 0:
+        i=0
+        while i < length_iter:
+            newdict={}
+            for key, value in prova.items():
+                if isinstance(value, str):
+                    valuesplitted = value.split('|')
+                    newdict[key]=valuesplitted[i]
+                elif isinstance(value, int):
+                    valuesplitted = value.split('|')
+                    newdict[key]=valuesplitted[i]
+                elif isinstance(value, dict):
+                    newdict[key]={}
+                    for k, v in value.items():
+                        if isinstance(v, str):
+                            vsplitted = v.split('|')
+                            try:
+                                newdict[key][k]=float(vsplitted[i])
+                            except Exception:
+                                try:
+                                    newdict[key][k]=vsplitted[i]
+                                except Exception:
+                                    newdict[key][k]=vsplitted[0]
+                        elif isinstance(v, int):
+                            newdict[key][k]=v
+                        elif isinstance(v, dict):
+                            newdict[key][k]={}
+                            for k1, v1 in v.items():
+                                if isinstance(v1, str):
+                                    v1splitted = v1.split('|')
+                                    print(length_iter)
+                                    print(v1splitted)
+                                    try:
+                                        newdict[key][k][k1]=v1splitted[i]
+                                    except Exception:
+                                        newdict[key][k][k1]=v1splitted[0]
+            array_of_newdicts.append(newdict)
+            i+=1
+    else:
+        array_of_newdicts.append(prova)
+    return(array_of_newdicts)
+
 def generate(list_of_properties_required, list_of_definitions_required,dict_properties, list_of_headers):
     csv_filename = conf.csv_filename
     with open(csv_filename, 'r' ) as theFile:
@@ -186,79 +240,27 @@ def generate(list_of_properties_required, list_of_definitions_required,dict_prop
                                     if item_dict not in value_list:
                                         value_list.append(item_dict)
                             if value_list != []:
-                                itemdict={}
-                                definitivedict[key]=[]
-                                v_array=[]
-                                v1_array=[]
-                                v2_array=[]
-                                v1_keys = []
-                                v2_keys=[]
-                                kv2dict={}
-                                kvl2dict={}
-                                v1_bigkeys=[]
-                                v2_bigkeys=[]
-                                v3_bigkeys=[]
                                 for itemvl in value_list:
-                                    for kvl, vvl in itemvl.items():
-                                        if isinstance(vvl, str):
-                                            if '|' in vvl:
-                                                v_array = vvl.split(',')
-                                                for vitem in v_array:
-                                                    v1_array.append(vitem)
-                                                if kvl not in v1_bigkeys:
-                                                    v1_bigkeys.append(kvl)
-                                        elif isinstance(vvl, dict):
-                                            itemdict[kvl]={}
-                                            for kvl1, vvl1 in vvl.items():
-                                                itemdict[kvl][kvl1]={}
-                                                if isinstance(vvl1, str) and ',' in vvl1:
-                                                    vvl1_array = vvl1.split(',')
-                                                    for vvlitem in vvl1_array:
-                                                        v1_array.append(vvlitem)
-                                                    if kvl not in v1_bigkeys:
-                                                        v1_bigkeys.append(kvl)
-                                                    if kvl1 not in v1_keys:
-                                                        v1_keys.append(kvl1)
-                                                elif isinstance(vvl1, dict):
-                                                    if kvl1 not in v2_bigkeys:
-                                                        v2_bigkeys.append(kvl1)
-                                                        
-                                    if v1_keys != []:
-                                        n=0
-                                        list_to_def=[]
-                                        newdict={}
-                                        for v1bigkey in v1_bigkeys:
-                                            newdict[v1bigkey]={}
-                                            if v1bigkey == 'measurementValue':
-                                                newdict[v1bigkey][v2_bigkeys[0]]={}
-                                                newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[0]]=''
-                                                newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[1]]=''
-                                            elif v1bigkey == 'assayCode':
-                                                newdict[v1bigkey][v1_keys[0]]=""
-
-
-
-
-                                        while n < len(v_array):
-                                            num=int(n+len(v_array)-1)
-                                            num2=int(n+len(v_array))
-                                            num4=int(n+(len(v_array)*2))
-                                            num6=int(n+(len(v_array)*3))
-                                            for v1bigkey in v1_bigkeys:                                            
-                                                if v1bigkey == 'measurementValue':
-                                                    newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[0]]=v2_array[n]
-                                                    newdict[v1bigkey][v2_bigkeys[0]][v3_bigkeys[1]]=v2_array[num2]
-                                                    newdict[v1bigkey][v1_keys[3]]=v1_array[num6]
-                                                elif v1bigkey == 'assayCode':
-                                                    newdict[v1bigkey][v1_keys[0]]=v1_array[n]
-                                                    newdict[v1bigkey][v1_keys[1]]=v1_array[num2]
-                                                elif v1bigkey == 'date':
-                                                    newdict[v1bigkey]=v1_array[num4]
-                                            list_to_def.append(newdict)
-                                            
-                                            n +=1
-                                        for itemldf in list_to_def:
+                                    list_to_def=commas(itemvl)
+                                    for itemldf in list_to_def:
+                                        try:
+                                            if itemldf not in definitivedict[key]:
+                                                if key == 'pedigrees':
+                                                    for k, v in itemldf.items():
+                                                        if k == 'members':
+                                                            list_members=[]
+                                                            list_members.append(v)
+                                                    try:
+                                                        itemldf['members']=list_members
+                                                    except Exception:
+                                                        pass
+                                                definitivedict[key].append(itemldf)
+                                        except Exception:
+                                            definitivedict[key]=[]
                                             definitivedict[key].append(itemldf)
+                            else:
+                                for itemvl in value_list:
+                                    definitivedict[key].append(itemvl)     
                                 else:
                                     for itemvl in value_list:
                                         definitivedict[key].append(itemvl)       
@@ -292,10 +294,10 @@ def generate(list_of_properties_required, list_of_definitions_required,dict_prop
                                             if propk == new_item:
                                                 if '|' in propv:
                                                     if propv_splitted_id != []:
-                                                        propv_splitted_label = propv.split(',')
+                                                        propv_splitted_label = propv.split('|')
                                                     else:
                                                         
-                                                        propv_splitted_id = propv.split(',')
+                                                        propv_splitted_id = propv.split('|')
                                                     if propv_splitted_label != []:
                                                         n=0
                                                         while n < len(propv_splitted_id):
