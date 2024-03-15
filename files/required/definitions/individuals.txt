@@ -1,5 +1,4 @@
 diseases|ageOfOnset|end|iso8601duration
-diseases|ageOfOnset|id
 diseases|ageOfOnset|iso8601duration
 diseases|ageOfOnset|start|iso8601duration
 diseases|diseaseCode|id

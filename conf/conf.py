@@ -1,5 +1,5 @@
 #### Input and Output files config parameters ####
-csv_filename='csv/individuals.csv'
+csv_filename='csv/biosamples.csv'
 output_docs_folder='./output_docs/'
 
 #### VCF Conversion config parameters ####
