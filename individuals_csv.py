@@ -168,19 +168,23 @@ def commas(prova):
             for key, value in prova.items():
                 if isinstance(value, str):
                     valuesplitted = value.split('|')
-                    newdict[key]=valuesplitted[i]
+                    if valuesplitted[i]!='':
+                        newdict[key]=valuesplitted[i]
                 elif isinstance(value, int):
                     valuesplitted = value.split('|')
-                    newdict[key]=valuesplitted[i]
+                    if valuesplitted[i]!='':
+                        newdict[key]=valuesplitted[i]
                 elif isinstance(value, dict):
                     newdict[key]={}
                     for k, v in value.items():
                         if isinstance(v, str):
                             vsplitted = v.split('|')
                             try:
-                                newdict[key][k]=float(vsplitted[i])
+                                if vsplitted[i]!='':
+                                    newdict[key][k]=float(vsplitted[i])
                             except Exception:
-                                newdict[key][k]=vsplitted[i]
+                                if vsplitted[i]!='':
+                                    newdict[key][k]=vsplitted[i]
                         elif isinstance(v, int):
                             newdict[key][k]=v
                         elif isinstance(v, dict):
@@ -188,7 +192,8 @@ def commas(prova):
                             for k1, v1 in v.items():
                                 if isinstance(v1, str):
                                     v1splitted = v1.split('|')
-                                    newdict[key][k][k1]=v1splitted[i]
+                                    if v1splitted[i]!='':
+                                        newdict[key][k][k1]=v1splitted[i]
             array_of_newdicts.append(newdict)
             i+=1
     else:
