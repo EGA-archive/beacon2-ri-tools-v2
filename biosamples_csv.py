@@ -36,22 +36,23 @@ def commas(prova):
             for key, value in prova.items():
                 if isinstance(value, str):
                     valuesplitted = value.split('|')
-                    newdict[key]=valuesplitted[i]
+                    if valuesplitted[i]!='' or valuesplitted[i]!={}:
+                        newdict[key]=valuesplitted[i]
                 elif isinstance(value, int):
                     valuesplitted = value.split('|')
-                    newdict[key]=valuesplitted[i]
+                    if valuesplitted[i]!='' or valuesplitted[i]!={}:
+                        newdict[key]=valuesplitted[i]
                 elif isinstance(value, dict):
                     newdict[key]={}
                     for k, v in value.items():
                         if isinstance(v, str):
                             vsplitted = v.split('|')
                             try:
-                                newdict[key][k]=float(vsplitted[i])
+                                if vsplitted[i]!='' or vsplitted[i]!={}:
+                                    newdict[key][k]=float(vsplitted[i])
                             except Exception:
-                                try:
+                                if vsplitted[i]!='' or vsplitted[i]!={}:
                                     newdict[key][k]=vsplitted[i]
-                                except Exception:
-                                    newdict[key][k]=vsplitted[0]
                         elif isinstance(v, int):
                             newdict[key][k]=v
                         elif isinstance(v, dict):
@@ -59,12 +60,14 @@ def commas(prova):
                             for k1, v1 in v.items():
                                 if isinstance(v1, str):
                                     v1splitted = v1.split('|')
-                                    print(length_iter)
-                                    print(v1splitted)
                                     try:
-                                        newdict[key][k][k1]=v1splitted[i]
+                                        if v1splitted[i]!='' or v1splitted[i]!={} and len(v1splitted[i])!=0:
+                                            newdict[key][k][k1]=v1splitted[i]
                                     except Exception:
-                                        newdict[key][k][k1]=v1splitted[0]
+                                        pass
+
+                    if newdict[key][k]=={} or newdict[key][k]=="":
+                        del newdict[key]
             array_of_newdicts.append(newdict)
             i+=1
     else:

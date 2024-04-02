@@ -168,11 +168,11 @@ def commas(prova):
             for key, value in prova.items():
                 if isinstance(value, str):
                     valuesplitted = value.split('|')
-                    if valuesplitted[i]!='':
+                    if valuesplitted[i]!='' or valuesplitted[i]!={}:
                         newdict[key]=valuesplitted[i]
                 elif isinstance(value, int):
                     valuesplitted = value.split('|')
-                    if valuesplitted[i]!='':
+                    if valuesplitted[i]!='' or valuesplitted[i]!={}:
                         newdict[key]=valuesplitted[i]
                 elif isinstance(value, dict):
                     newdict[key]={}
@@ -180,10 +180,10 @@ def commas(prova):
                         if isinstance(v, str):
                             vsplitted = v.split('|')
                             try:
-                                if vsplitted[i]!='':
+                                if vsplitted[i]!='' or vsplitted[i]!={}:
                                     newdict[key][k]=float(vsplitted[i])
                             except Exception:
-                                if vsplitted[i]!='':
+                                if vsplitted[i]!='' or vsplitted[i]!={}:
                                     newdict[key][k]=vsplitted[i]
                         elif isinstance(v, int):
                             newdict[key][k]=v
@@ -192,8 +192,14 @@ def commas(prova):
                             for k1, v1 in v.items():
                                 if isinstance(v1, str):
                                     v1splitted = v1.split('|')
-                                    if v1splitted[i]!='':
-                                        newdict[key][k][k1]=v1splitted[i]
+                                    try:
+                                        if v1splitted[i]!='' or v1splitted[i]!={} and len(v1splitted[i])!=0:
+                                            newdict[key][k][k1]=v1splitted[i]
+                                    except Exception:
+                                        pass
+
+                    if newdict[key][k]=={} or newdict[key][k]=="":
+                        del newdict[key]
             array_of_newdicts.append(newdict)
             i+=1
     else:
@@ -348,6 +354,7 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
                                                     new_item = key + "|" + ki + "|" + k
                                                     for propk, propv in dict_of_properties.items():
                                                         if propk == new_item:
+                                                            #ageOfOnset print(propk)
                                                             subitem_dict[k]=propv
 
                                                 if subitem_dict != {}:
@@ -374,12 +381,14 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
 
                                                 #if vi_dict != {} and vi_dict[ki1] != {}:
                                                 if vi_dict != {}:
+                                                    #procedure: print(ki)
                                                     item_dict[ki]=vi_dict
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + ki1
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
+                                                    # dateOfprocedure print(propk)
                                                     if propv == 'true' or propv.lower() == 'true':
                                                         propv = bool(propv)
                                                     elif propv == 'false' or propv.lower()== 'false':

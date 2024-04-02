@@ -10,7 +10,6 @@ exposures|exposureCode|id
 exposures|unit|id
 geographicOrigin|id
 interventionsOrProcedures|ageAtProcedure|end|iso8601duration
-interventionsOrProcedures|ageAtProcedure|id
 interventionsOrProcedures|ageAtProcedure|iso8601duration
 interventionsOrProcedures|ageAtProcedure|start|iso8601duration
 interventionsOrProcedures|bodySite|id
