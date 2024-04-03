@@ -12,6 +12,8 @@ info
 measurements|assayCode|id
 measurements|assayCode|label
 measurements|date
+measurements|measurementValue|id
+measurements|measurementValue|label
 measurements|measurementValue|referenceRange|high
 measurements|measurementValue|referenceRange|low
 measurements|measurementValue|referenceRange|unit|id

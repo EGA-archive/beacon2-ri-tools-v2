@@ -48,6 +48,8 @@ karyotypicSex
 measures|assayCode|id
 measures|assayCode|label
 measures|date
+measures|measurementValue|id
+measures|measurementValue|label
 measures|measurementValue|referenceRange|high
 measures|measurementValue|referenceRange|low
 measures|measurementValue|referenceRange|unit|id

@@ -295,6 +295,10 @@ def oneof_function(oneof_array):
                             nou_dict[clau]=""
                             if nou_dict not in nova_llista:
                                 nova_llista.append(nou_dict)
+                        elif 'CURIE' in valor:
+                            nou_dict[clau]=""
+                            if nou_dict not in nova_llista:
+                                nova_llista.append(nou_dict)
             else:
                 if isinstance(v, dict):
                     new_dict={}
@@ -333,8 +337,11 @@ def oneof_function(oneof_array):
                         pass
                     else:
                         new_dict[k][key]=value
+
             elif k == 'value':
                 new_dict[k]=0
+            if new_dict[k]=={}:
+                new_dict[k]=''
 
         listing.append(new_dict)
     new_listing=[]
