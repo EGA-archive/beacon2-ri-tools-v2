@@ -3,21 +3,14 @@ import re
 from tqdm import tqdm
 import conf.conf as conf
 import csv
+from validators.runs import Runs
 
-list_of_definitions_required=[]
-list_of_properties_required=[]
-list_of_headers_definitions_required=[]
-
-with open("files/required/properties/runs.txt", "r") as txt_file:
-    list_of_properties_required=txt_file.read().splitlines() 
 with open("files/headers/runs.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
-with open("files/required/header_definitions/runs.txt", "r") as txt_file:
-    list_of_headers_definitions_required=txt_file.read().splitlines()
 with open('files/deref_schemas/runs.json') as json_file:
     dict_properties = json.load(json_file)
 
-def generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties,list_of_headers):
+def generate(dict_properties,list_of_headers):
     csv_filename = conf.csv_filename
     total_dict =[]
     with open(csv_filename, 'r' ) as theFile:
@@ -43,29 +36,8 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                     if valor is not None and valor != '':
                         list_of_filled_items.append(property_value)
 
-
-                for filled_item in list_of_filled_items:
-                    if isinstance(filled_item, str): 
-                        if 'biosampleStatus' in filled_item:
-                            try:
-                                
-                                list_of_properties_required.remove('biosampleStatus')
-                            except Exception:
-                                pass
-                        elif 'sampleOriginType' in filled_item:
-                            try:
-                                
-                                list_of_properties_required.remove('sampleOriginType')
-                            except Exception:
-                                pass
                 if valor:
                     dict_of_properties[property_value]=valor
-
-            
-
-            for lispro in list_of_properties_required:
-                if lispro not in list_of_filled_items:
-                    raise Exception(('error: you are not filling all the required fields. missing field is: {}').format(lispro))
 
             definitivedict={}
             for key, value in dict_properties.items():
@@ -357,6 +329,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             definitivedict[key]=propv
+            Runs(**definitivedict)
             total_dict.append(definitivedict)
 
             
@@ -371,7 +344,7 @@ def generate(list_of_properties_required, list_of_headers_definitions_required,d
 
 
 
-dict_generado, total_i=generate(list_of_properties_required, list_of_headers_definitions_required,dict_properties,list_of_headers)
+dict_generado, total_i=generate(dict_properties,list_of_headers)
 
 
 output = conf.output_docs_folder + 'runs.json'

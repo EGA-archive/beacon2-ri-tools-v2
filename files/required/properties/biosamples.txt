@@ -1,3 +1,0 @@
-id
-biosampleStatus|id
-sampleOriginType|id

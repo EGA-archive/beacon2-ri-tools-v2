@@ -8,6 +8,7 @@ import uuid
 import json
 import gc
 from pymongo.mongo_client import MongoClient
+from validators.genomicVariations import GenomicVariations
 
 client = MongoClient(
         #"mongodb://127.0.0.1:27017/"
@@ -382,7 +383,9 @@ def generate(dict_properties):
                     
 
                 j+=1
-
+                
+            if dict_to_xls['caseLevelData|zygosity|id'] == '':
+                continue
             chromos=re.sub(r"</?\[>", "", chrom)
             if conf.reference_genome == 'GRCh37':
                 dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.10' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
@@ -756,6 +759,7 @@ def generate(dict_properties):
                         if propk == new_item:
                             definitivedict[key]=propv
 
+            GenomicVariations(**definitivedict)
             total_dict.append(definitivedict)
             
             if i == num_rows:

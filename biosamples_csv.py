@@ -3,17 +3,10 @@ import re
 from tqdm import tqdm
 import conf.conf as conf
 import csv
+from validators.biosamples import Biosamples
 
-list_of_definitions_required=[]
-list_of_properties_required=[]
-list_of_headers_definitions_required=[]
-
-with open("files/required/properties/biosamples.txt", "r") as txt_file:
-    list_of_properties_required=txt_file.read().splitlines() 
 with open("files/headers/biosamples.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
-with open("files/required/definitions/biosamples.txt", "r") as txt_file:
-    list_of_definitions_required=txt_file.read().splitlines()
 with open('files/deref_schemas/biosamples.json') as json_file:
     dict_properties = json.load(json_file)
 
@@ -74,7 +67,7 @@ def commas(prova):
         array_of_newdicts.append(prova)
     return(array_of_newdicts)
 
-def generate(list_of_properties_required, list_of_definitions_required,dict_properties, list_of_headers):
+def generate(dict_properties, list_of_headers):
     csv_filename = conf.csv_filename
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
@@ -103,44 +96,6 @@ def generate(list_of_properties_required, list_of_definitions_required,dict_prop
                 if valor:
                     dict_of_properties[property_value]=valor
 
-            
-            for lispro in list_of_properties_required:
-                if lispro not in list_of_filled_items:
-                    raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lispro))
-                
-            for lisdef in list_of_definitions_required:
-                #print(lisdef)
-                lisdef_splitted=lisdef.split('|')
-                #print(lisdef_splitted[0])
-                for filled_item in list_of_filled_items:                    
-                    if len(lisdef_splitted)<3:
-                        if lisdef_splitted[0] in filled_item:
-                            if lisdef not in list_of_filled_items:
-                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
-                    elif len(lisdef_splitted)<4:
-                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]
-                        #print(sumsplitted)
-                        if sumsplitted in filled_item and filled_item.count('|')<3:
-                            if lisdef not in list_of_filled_items:
-                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
-                    elif len(lisdef_splitted)<5:
-                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]
-                        #print(sumsplitted)
-                        if sumsplitted in filled_item and filled_item.count('|')<4:
-                            if lisdef not in list_of_filled_items:
-                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
-                    elif len(lisdef_splitted)<6:
-                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]+'|'+lisdef_splitted[3]
-                        #print(sumsplitted)
-                        if sumsplitted in filled_item and filled_item.count('|')<5:
-                            if lisdef not in list_of_filled_items:
-                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))       
-                    elif len(lisdef_splitted)<7:
-                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]+'|'+lisdef_splitted[3]+'|'+lisdef_splitted[4]
-                        #print(sumsplitted)
-                        if sumsplitted in filled_item and filled_item.count('|')<6:
-                            if lisdef not in list_of_filled_items:
-                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))  
             #print(dict_properties)
             #print(dict_of_properties)
             definitivedict={}
@@ -381,6 +336,7 @@ def generate(list_of_properties_required, list_of_definitions_required,dict_prop
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             definitivedict[key]=propv
+            Biosamples(**definitivedict)
             total_dict.append(definitivedict)
 
             
@@ -394,7 +350,7 @@ def generate(list_of_properties_required, list_of_definitions_required,dict_prop
 
 
 
-dict_generado, total_i=generate(list_of_properties_required, list_of_definitions_required,dict_properties, list_of_headers)
+dict_generado, total_i=generate(dict_properties, list_of_headers)
 
 
 output = conf.output_docs_folder + 'biosamples.json'

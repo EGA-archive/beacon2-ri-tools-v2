@@ -2,15 +2,8 @@ import json
 from tqdm import tqdm
 import conf.conf as conf
 import csv
+from validators.individuals import Individuals
 
-list_of_definitions_required=[]
-list_of_properties_required=[]
-list_of_headers_definitions_required=[]
-
-with open("files/required/properties/individuals.txt", "r") as txt_file:
-    list_of_properties_required=txt_file.read().splitlines()
-with open("files/required/definitions/individuals.txt", "r") as txt_file:
-    list_of_definitions_required=txt_file.read().splitlines()
 with open("files/headers/individuals.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
 with open('files/deref_schemas/individuals.json') as json_file:
@@ -206,7 +199,7 @@ def commas(prova):
         array_of_newdicts.append(prova)
     return(array_of_newdicts)
 
-def generate(list_of_properties_required, dict_properties, list_of_headers, list_of_definitions_required):
+def generate(dict_properties, list_of_headers):
     csv_filename = conf.csv_filename
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
@@ -239,20 +232,6 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
 
                         list_of_filled_items.append(property_value)
 
-                        
-                        for header in list_of_headers_definitions_required:
-                            header2 = header[0].lower() + header[1:]
-                            if header2 in header:
-                                if header2 not in list_of_properties_required:
-                                    list_of_properties_required.append(header2)
-                                for h2 in list_of_definitions_required:
-                                    if header in h2:
-                                        h2 = h2[0].lower() + h2[1:]
-                                        if h2 not in list_of_properties_required:
-                                            list_of_properties_required.append(h2)
-
-                    
-
                     if valor:
                         dict_of_properties[property_value]=valor
                         
@@ -260,45 +239,6 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
                     elif valor == 0:
                         dict_of_properties[property_value]=valor
 
-                    
-            for lispro in list_of_properties_required:
-                if lispro in list_of_filled_items:
-                    pass
-                else:
-                    raise Exception(('error: you are not filling all the required fields. missing field is: {}').format(lispro))
-            for lisdef in list_of_definitions_required:
-                #print(lisdef)
-                lisdef_splitted=lisdef.split('|')
-                #print(lisdef_splitted[0])
-                for filled_item in list_of_filled_items:                    
-                    if len(lisdef_splitted)<3:
-                        if lisdef_splitted[0] in filled_item:
-                            if lisdef not in list_of_filled_items:
-                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
-                    elif len(lisdef_splitted)<4:
-                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]
-                        #print(sumsplitted)
-                        if sumsplitted in filled_item and filled_item.count('|')<3:
-                            if lisdef not in list_of_filled_items:
-                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
-                    elif len(lisdef_splitted)<5:
-                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]
-                        #print(sumsplitted)
-                        if sumsplitted in filled_item and filled_item.count('|')<4:
-                            if lisdef not in list_of_filled_items:
-                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))
-                    elif len(lisdef_splitted)<6:
-                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]+'|'+lisdef_splitted[3]
-                        #print(sumsplitted)
-                        if sumsplitted in filled_item and filled_item.count('|')<5:
-                            if lisdef not in list_of_filled_items:
-                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))       
-                    elif len(lisdef_splitted)<7:
-                        sumsplitted=lisdef_splitted[0]+'|'+lisdef_splitted[1]+'|'+lisdef_splitted[2]+'|'+lisdef_splitted[3]+'|'+lisdef_splitted[4]
-                        #print(sumsplitted)
-                        if sumsplitted in filled_item and filled_item.count('|')<6:
-                            if lisdef not in list_of_filled_items:
-                                raise Exception(('Error: you are not filling all the required fields. Missing field is: {}').format(lisdef))  
             #print(dict_properties)
             #print(dict_of_properties)
 
@@ -502,6 +442,8 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             definitivedict[key]=propv
+
+            Individuals(**definitivedict)
             total_dict.append(definitivedict)
 
             
@@ -520,7 +462,7 @@ def generate(list_of_properties_required, dict_properties, list_of_headers, list
 
 
     
-dict_generado, total_i=generate(list_of_properties_required, dict_properties, list_of_headers, list_of_definitions_required)
+dict_generado, total_i=generate(dict_properties, list_of_headers)
 
 
 output = conf.output_docs_folder + 'individuals.json'
