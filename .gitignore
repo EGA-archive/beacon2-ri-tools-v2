@@ -1,6 +1,7 @@
 .DS_Store
 conf/__pycache__/*
 __pycache__/*
+validators/__pycache__/*
 individuals/__pycache__/*
 schemas/__pycache__/*
 snpEFF
