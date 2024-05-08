@@ -171,11 +171,11 @@ def generate(dict_properties):
                 except Exception:
                     allele_frequency = allele_frequency.split(',')
                     allele_frequency=float(allele_frequency[0])
-
-                dict_to_xls['frequencyInPopulations|sourceReference']='gnomad.broadinstitute.org/'
-                dict_to_xls['frequencyInPopulations|source']='The Genome Aggregation Database (gnomAD)'
-                dict_to_xls['frequencyInPopulations|frequencies|population']=population
-                dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=allele_frequency
+                if allele_frequency != '' and population != '':
+                    dict_to_xls['frequencyInPopulations|sourceReference']='gnomad.broadinstitute.org/'
+                    dict_to_xls['frequencyInPopulations|source']='The Genome Aggregation Database (gnomAD)'
+                    dict_to_xls['frequencyInPopulations|frequencies|population']=population
+                    dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=allele_frequency
             except Exception:
                 dict_to_xls['frequencyInPopulations|sourceReference']=''
                 dict_to_xls['frequencyInPopulations|source']=''
