@@ -171,12 +171,16 @@ def generate(dict_properties):
                 except Exception:
                     allele_frequency = allele_frequency.split(',')
                     allele_frequency=float(allele_frequency[0])
+
                 dict_to_xls['frequencyInPopulations|sourceReference']='gnomad.broadinstitute.org/'
                 dict_to_xls['frequencyInPopulations|source']='The Genome Aggregation Database (gnomAD)'
                 dict_to_xls['frequencyInPopulations|frequencies|population']=population
                 dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=allele_frequency
             except Exception:
-                pass
+                dict_to_xls['frequencyInPopulations|sourceReference']=''
+                dict_to_xls['frequencyInPopulations|source']=''
+                dict_to_xls['frequencyInPopulations|frequencies|population']=''
+                dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=''
             try:
                 if v.INFO.get('VT') == 'SV': continue
             except Exception:
