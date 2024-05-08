@@ -251,6 +251,7 @@ def generate(dict_properties, list_of_headers):
                         if isinstance(item, dict):
                             item_dict={}
                             for ki, vi in item.items():
+                                
                                 if isinstance(vi, list):
                                     vi_list=[]
                                     for subitem in vi:
@@ -294,15 +295,18 @@ def generate(dict_properties, list_of_headers):
                                                     new_item = key + "|" + ki + "|" + k
                                                     for propk, propv in dict_of_properties.items():
                                                         if propk == new_item:
-                                                            #ageOfOnset print(propk)
                                                             subitem_dict[k]=propv
 
                                                 if subitem_dict != {}:
                                                     if subitem_dict not in vi_list:
                                                         vi_list.append(subitem_dict)
-                                                        item_dict[ki]=vi_list[0]
+                                                        if ki == 'modifiers':
+                                                            item_dict[ki]=vi_list
+                                                        else:
+                                                            item_dict[ki]=vi_list[0]
                     
                                 elif isinstance(vi, dict):
+                                    
                                     vi_dict={}
                                     for ki1, vi1 in vi.items():
                                         if isinstance(vi1, dict):
