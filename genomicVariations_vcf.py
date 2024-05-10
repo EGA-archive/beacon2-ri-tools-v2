@@ -357,38 +357,38 @@ def generate(dict_properties):
             dict_to_xls['caseLevelData|zygosity|label']=''
 
             for zygo in v.genotypes:
-                if dict_to_xls['caseLevelData|zygosity|id'] == '':
+                if dict_to_xls['caseLevelData|biosampleId'] == '':
                     if zygo[0] == 1 and zygo[1]== 1:
-                        dict_to_xls['caseLevelData|zygosity|label'] = '1/1'
-                        dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/1']
+                        #dict_to_xls['caseLevelData|zygosity|label'] = '1/1'
+                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/1']
                         dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
                     elif zygo[0] == 1 and zygo[1]== 0:
-                        dict_to_xls['caseLevelData|zygosity|label'] = '1/0'
-                        dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/0']
+                        #dict_to_xls['caseLevelData|zygosity|label'] = '1/0'
+                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/0']
                         dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
                     elif zygo[0] == 0 and zygo[1]== 1:
-                        dict_to_xls['caseLevelData|zygosity|label'] = '0/1'
-                        dict_to_xls['caseLevelData|zygosity|id'] = zigosity['0/1']
+                        #dict_to_xls['caseLevelData|zygosity|label'] = '0/1'
+                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['0/1']
                         dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
                         
                 else:
                     if zygo[0] == 1 and zygo[1]== 1:
-                        dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/1'
-                        dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/1']
+                        #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/1'
+                        #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/1']
                         dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
                     elif zygo[0] == 1 and zygo[1]== 0:
-                        dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/0'
-                        dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/0']
+                        #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/0'
+                        #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/0']
                         dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
                     elif zygo[0] == 0 and zygo[1]== 1:
-                        dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '0/1'
-                        dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['0/1']
+                        #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '0/1'
+                        #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['0/1']
                         dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
                     
 
                 j+=1
                 
-            if dict_to_xls['caseLevelData|zygosity|id'] == '':
+            if dict_to_xls['caseLevelData|biosampleId'] == '':
                 continue
             chromos=re.sub(r"</?\[>", "", chrom)
             if conf.reference_genome == 'GRCh37':
