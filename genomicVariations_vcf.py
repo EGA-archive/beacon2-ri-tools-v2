@@ -353,8 +353,7 @@ def generate(dict_properties):
             zigosity['1/0']='GENO:GENO_0000458'
             zigosity['1/1']='GENO:GENO_0000136'
             j=0
-            dict_to_xls['caseLevelData|zygosity|id'] =''
-            dict_to_xls['caseLevelData|zygosity|label']=''
+            dict_to_xls['caseLevelData|biosampleId'] =''
 
             for zygo in v.genotypes:
                 if dict_to_xls['caseLevelData|biosampleId'] == '':
