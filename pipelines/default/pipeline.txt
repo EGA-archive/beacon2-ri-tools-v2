@@ -1,0 +1,1 @@
+See https://github.com/EGA-archive/beacon2-ri-tools/blob/47c9eaf5af8856b0413c20f2f460db118e3694ba/BEACON/bin/run_vcf2bff.sh#L11

@@ -1,0 +1,30 @@
+{
+    "frequencyInPopulations|sourceReference": "gnomad.broadinstitute.org/",
+    "frequencyInPopulations|source": "The Genome Aggregation Database (gnomAD)",
+    "frequencyInPopulations|frequencies|population": [
+        {"fullname": "dbNSFP_gnomAD_genomes_NFE_AF",
+        "shortname": "NFE"},
+        {"fullname": "dbNSFP_gnomAD_genomes_FIN_AF",
+        "shortname": "FIN"},
+        {"fullname": "dbNSFP_gnomAD_genomes_SAS_AF",
+        "shortname": "SAS"},
+        {"fullname": "dbNSFP_gnomAD_genomes_AMI_AF",
+        "shortname": "AMI"},
+        {"fullname": "dbNSFP_gnomAD_genomes_ASJ_AF",
+        "shortname": "ASJ"},
+        {"fullname": "dbNSFP_gnomAD_genomes_POPMAX_AF",
+        "shortname": "POPMAX"},
+        {"fullname": "dbNSFP_gnomAD_genomes_AMR_AF",
+        "shortname": "AMR"},
+        {"fullname": "dbNSFP_gnomAD_genomes_AF",
+        "shortname": "gnomAD_genomes"},
+        {"fullname": "dbNSFP_gnomAD_genomes_EAS_AF",
+        "shortname": "EAS"},
+        {"fullname": "dbNSFP_gnomAD_genomes_AFR_AF",
+        "shortname": "AFR"}
+    ],
+    "caseLevelData|clinicalInterpretations|clinicalRelevance": "CLINVAR_CLNSIG",
+    "caseLevelData|clinicalInterpretations|conditionId": "customid",
+    "caseLevelData|clinicalInterpretations|effect|id": "CLINVAR_CLNDISDB",
+    "caseLevelData|clinicalInterpretations|effect|label": "CLINVAR_CLNDN"
+}
