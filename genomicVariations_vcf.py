@@ -376,6 +376,7 @@ def generate(dict_properties):
             if dict_to_xls['caseLevelData|biosampleId'] == '':
                 continue
             chromos=re.sub(r"</?\[>", "", chrom)
+            chromos=chromos.replace("chr","")
             if conf.reference_genome == 'GRCh37':
                 dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.10' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
             elif conf.reference_genome == 'GRCh38':
