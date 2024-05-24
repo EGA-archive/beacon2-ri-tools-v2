@@ -25,7 +25,7 @@ client = MongoClient(
 with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
-with open('pipelines/templates/default.json') as pipeline_file:
+with open('pipelines/default/templates/default.json') as pipeline_file:
     pipeline = json.load(pipeline_file)
 
 def commas(prova):
@@ -94,7 +94,7 @@ def generate(dict_properties):
         num_rows=conf.num_variants
         pbar = tqdm(total = num_rows)
         for v in vcf:
-            print(v)
+            #print(v)
             dict_to_xls={}
             vstringed = str(v)
             for population_splitted in pipeline['frequencyInPopulations|frequencies|population']:
