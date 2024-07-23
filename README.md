@@ -47,7 +47,6 @@ The **csv_filename** variable sets where is the .csv file the script will write 
 The **output_docs_folder** sets the folder where your final .json files will be saved once execution of beacon tools finishes. This folder is mandatory to be always inside 'output_docs', so only the subdirectory inside output_docs can be modified in this path.
 
 #### VCF conversion config parameters
-The **num_variants** is the variable you need to write in case you are executing the vcf conversor (genomicVariations_vcf.py). This will tell the script how many vcf lines will be read and converted from the file(s).
 The **reference_genome** is the genome reference your the tool is using to map the position of the chromosomes.
 The **allele_frequency** let's you set a threshold for the allele frequency of the variants you want to convert from the vcf file.
 
