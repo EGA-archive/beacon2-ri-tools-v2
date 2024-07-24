@@ -3,6 +3,8 @@ import re
 from tqdm import tqdm
 import conf.conf as conf
 import csv
+import sys
+import pandas as pd
 from validators.analyses import Analyses
 
 with open("files/headers/analyses.txt", "r") as txt_file:
@@ -10,8 +12,16 @@ with open("files/headers/analyses.txt", "r") as txt_file:
 with open('files/deref_schemas/analyses.json') as json_file:
     dict_properties = json.load(json_file)
 
+
+if len(sys.argv) != 3:
+    print("Usage: python analyses_csv.py <csv_input_path> <json_output_path>")
+    sys.exit(1)
+
+csv_filename = sys.argv[1]
+output_path = sys.argv[2]
+
 def generate(dict_properties, list_of_headers):
-    csv_filename = conf.csv_filename
+    #csv_filename = conf.csv_filename
     total_dict =[]
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)

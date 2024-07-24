@@ -34,7 +34,7 @@ Once the container is up and running you can start using beacon ri tools v2, con
 To start using beacon ri tools v2, you have to edit the configuration file [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf). Inside this file you will find the next information:
 ```bash
 #### Input and Output files config parameters ####
-csv_filename='csv/examples/cohorts.csv'
+csv_folder='csv/examples/'
 output_docs_folder='output_docs/CINECA_dataset/'
 
 #### VCF Conversion config parameters ####
@@ -43,7 +43,7 @@ reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
 ```
 
 #### Generic config parameters
-The **csv_filename** variable sets where is the .csv file the script will write and read data from. This .csv file needs to have the headers written as you can find in the files inside [templates](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/csv/templates). Note that any header that has a different name from the ones that appear inside the files of this folder will not be read by the beacon ri tools v2.
+The **csv_folder** variable sets where is the all .csv files the scripts will write and read data from. All the .csv file need to have the headers written as you can find in the files inside [templates](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/csv/templates). Note that any header that has a different name from the ones that appear inside the files of this folder will not be read by the beacon ri tools v2.
 The **output_docs_folder** sets the folder where your final .json files will be saved once execution of beacon tools finishes. This folder is mandatory to be always inside 'output_docs', so only the subdirectory inside output_docs can be modified in this path.
 
 #### VCF conversion config parameters
@@ -81,23 +81,12 @@ We have filled an example of a .csv for each collection ready to be converted to
 
 ### Getting .json final documents
 
-Before getting the .json final documents, please make sure your [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf) file is reading the right .csv document and execute the next bash script from the root folder in your terminal (for the collection you have chosen, in this case for genomic Variations):
+Before getting the .json final documents, please make sure your [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf) file is reading the right .csv document(s) and execute the next bash script from the root folder in your terminal. All .csv files contained in the specified csv_folder will be transformed into .json:
 ```bash
-docker exec -it ri-tools python genomicVariations_csv.py
+docker exec -it ri-tools python convert_csvTObff.py
 ```
 
-All the possible scripts you can execute (**individually**) to convert csv data for each collection are:
-```bash
-docker exec -it ri-tools python analyses_csv.py
-docker exec -it ri-tools python biosamples_csv.py
-docker exec -it ri-tools python cohorts_csv.py
-docker exec -it ri-tools python datasets_csv.py
-docker exec -it ri-tools python genomicVariations_csv.py
-docker exec -it ri-tools python individuals_csv.py
-docker exec -it ri-tools python runs_csv.py
-```
-
-Once you execute one of the scripts listed above, it will generate the final .json file that is Beacon Friendly Format in the output_docs folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. 
+The final generated .json files, which are Beacon Friendly Format, will be in the output_docs folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. 
 
 This file will be able to be used in a mongoDB for beacon usage. To know how to import in a Beacon v2, please do as described in [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
 
