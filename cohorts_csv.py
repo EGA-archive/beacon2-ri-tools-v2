@@ -3,7 +3,11 @@ import re
 from tqdm import tqdm
 import conf.conf as conf
 import csv
+import sys
 from validators.cohorts import Cohorts
+
+csv_filename = sys.argv[1]
+output_path = sys.argv[2]
 
 with open("files/headers/cohorts.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -14,7 +18,7 @@ with open('files/deref_schemas/cohorts.json') as json_file:
 
 
 def generate(dict_properties, list_of_headers):
-    csv_filename = conf.csv_filename
+    #csv_filename = conf.csv_filename
     total_dict =[]
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)

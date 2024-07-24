@@ -10,9 +10,9 @@ from pydantic import (
 
 from typing import Optional, Union
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-url", "--url")
-args = parser.parse_args()
+#parser = argparse.ArgumentParser()
+#parser.add_argument("-url", "--url")
+#args = parser.parse_args()
 
 class OntologyTerm(BaseModel, extra='forbid'):
     id: str

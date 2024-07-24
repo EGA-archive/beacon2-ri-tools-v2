@@ -3,6 +3,7 @@ from tqdm import tqdm
 import re
 import conf.conf as conf
 import csv
+import sys
 from validators.genomicVariations import GenomicVariations
 
 with open("files/headers/genomicVariations.txt", "r") as txt_file:
@@ -10,9 +11,12 @@ with open("files/headers/genomicVariations.txt", "r") as txt_file:
 with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
+csv_filename = sys.argv[1]
+output_path = sys.argv[2]
+
 def generate(dict_properties,list_of_headers):
 
-    csv_filename = conf.csv_filename
+    #csv_filename = conf.csv_filename
 
     with open(csv_filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)

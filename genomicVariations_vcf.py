@@ -7,6 +7,7 @@ import conf.conf as conf
 import uuid
 import json
 import gc
+import gzip
 from pymongo.mongo_client import MongoClient
 from validators.genomicVariations import GenomicVariations
 
@@ -78,6 +79,15 @@ def commas(prova):
         array_of_newdicts.append(prova)
     return(array_of_newdicts)
 
+def num_rows_in_vcf_files():
+    total_lines = 0
+    for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
+        with gzip.open(vcf_filename, 'rt') as f:
+            total_lines += sum(1 for line in f if not line.startswith('#'))
+    return total_lines
+
+num_rows = num_rows_in_vcf_files()
+
 def generate(dict_properties):
     total_dict =[]
     i=1
@@ -89,9 +99,7 @@ def generate(dict_properties):
         my_target_list = vcf.samples
         count=0
         
-        
-        
-        num_rows=conf.num_variants
+
         pbar = tqdm(total = num_rows)
         for v in vcf:
             #print(v)
