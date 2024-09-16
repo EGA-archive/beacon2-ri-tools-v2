@@ -789,6 +789,6 @@ total_i, l=generate(dict_properties)
 
 
 if total_i-l > 0:
-    print('Successfully inserted {} records into beacon'.format(total_i-l))
+    print('Successfully inserted {} records into beacon'.format(total_i-l-1))
 else:
     print('No registries found.')
