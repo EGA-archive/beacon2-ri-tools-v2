@@ -758,6 +758,7 @@ def generate(dict_properties):
                             definitivedict[key]=propv
 
             GenomicVariations(**definitivedict)
+            definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
             pbar.update(1)
             i+=1
