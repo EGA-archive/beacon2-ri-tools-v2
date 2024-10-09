@@ -43,6 +43,8 @@ reference_genome='GRCh38' # Choose one between NCBI36, GRCh37, GRCh38
 datasetId='coadread_tcga_pan_can_atlas_2018'
 ```
 
+Please, remember to make the datasetId match the id for your datasets.csv file.
+
 #### Generic config parameters
 The **csv_folder** variable sets where is the all .csv files the scripts will write and read data from. All the .csv file need to have the headers written as you can find in the files inside [templates](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/csv/templates). Note that any header that has a different name from the ones that appear inside the files of this folder will not be read by the beacon ri tools v2.
 The **output_docs_folder** sets the folder where your final .json files will be saved once execution of beacon tools finishes. This folder is mandatory to be always inside 'output_docs', so only the subdirectory inside output_docs can be modified in this path.
