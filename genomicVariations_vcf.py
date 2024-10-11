@@ -113,50 +113,51 @@ def generate(dict_properties):
                 else:
                     population = population_splitted['shortname']
 
-            clinicalRelevanceword=pipeline['caseLevelData|clinicalInterpretations|clinicalRelevance']+'='
-            effectIdWord=pipeline['caseLevelData|clinicalInterpretations|effect|id']+'='
-            effectLabelWord=pipeline['caseLevelData|clinicalInterpretations|effect|label']+'='
-            clinicalRelevance_splitted=vstringed.split(clinicalRelevanceword)
-            effectLabel_splitted=vstringed.split(effectLabelWord)
-            effectId_splitted=vstringed.split(effectIdWord)
-            try:
-                if len(clinicalRelevance_splitted) > 1 and len(effectLabel_splitted) >1:
-                    clinicalRelevance_resplitted = clinicalRelevance_splitted[1].split(';')
-                    effectLabel_resplitted = effectLabel_splitted[1].split(';')
-                    effectId_resplitted = effectId_splitted[1].split(';')
-                    clinicalRelevance = clinicalRelevance_resplitted[0]
-                    conditionId=pipeline['caseLevelData|clinicalInterpretations|conditionId']
-                    effectId_list=effectId_resplitted[0].split('|')
-                    effectlabel_list=effectLabel_resplitted[0].split('|')
-                    q=0
-                    while q < len(effectId_list):
-                        if q == 0:
-                            effect_Id_items = effectId_list[q].split(',')
-                            effect_label_items = effectlabel_list[q].split(',')
-                            effectlabel = effect_label_items[0]
-                            effect_Id_two_dots = effect_Id_items[0].split(':')
-                            effectId = effect_Id_two_dots[-2] + ':' + effect_Id_two_dots[-1]
-                            conditionId=conditionId+str(q)
-                        else:
-                            effect_Id_items = effectId_list[q].split(',')
-                            effect_label_items = effectlabel_list[q].split(',')
-                            effectlabel += '|'+ effect_label_items[0]
-                            effect_Id_two_dots = effect_Id_items[0].split(':')
-                            effectId += '|'+ effect_Id_two_dots[-2] + ':' + effect_Id_two_dots[-1]
-                            conditionId+= '|'+conditionId+str(q)
-                        q+=1
-                    clinicalRelevance = clinicalRelevance.replace("_", " ")
-                    if clinicalRelevance == 'Benign/Likely_benign':
-                        clinicalRelevance='likely benign'
-                    clinicalRelevance = clinicalRelevance.lower()
-                    if clinicalRelevance not in ["benign","likely benign","uncertain significance","likely pathogenic","pathogenic"]:
-                        clinicalRelevance = "uncertain significance"
-                    dict_to_xls['caseLevelData|clinicalInterpretations|clinicalRelevance']=clinicalRelevance
-                    dict_to_xls['caseLevelData|clinicalInterpretations|conditionId']=conditionId
-                    dict_to_xls['caseLevelData|clinicalInterpretations|effect|id']=effectId
-                    dict_to_xls['caseLevelData|clinicalInterpretations|effect|label']=effectlabel
-            except Exception:
-                pass
+            if conf.case_level_data == True:
+                clinicalRelevanceword=pipeline['caseLevelData|clinicalInterpretations|clinicalRelevance']+'='
+                effectIdWord=pipeline['caseLevelData|clinicalInterpretations|effect|id']+'='
+                effectLabelWord=pipeline['caseLevelData|clinicalInterpretations|effect|label']+'='
+                clinicalRelevance_splitted=vstringed.split(clinicalRelevanceword)
+                effectLabel_splitted=vstringed.split(effectLabelWord)
+                effectId_splitted=vstringed.split(effectIdWord)
+                try:
+                    if len(clinicalRelevance_splitted) > 1 and len(effectLabel_splitted) >1:
+                        clinicalRelevance_resplitted = clinicalRelevance_splitted[1].split(';')
+                        effectLabel_resplitted = effectLabel_splitted[1].split(';')
+                        effectId_resplitted = effectId_splitted[1].split(';')
+                        clinicalRelevance = clinicalRelevance_resplitted[0]
+                        conditionId=pipeline['caseLevelData|clinicalInterpretations|conditionId']
+                        effectId_list=effectId_resplitted[0].split('|')
+                        effectlabel_list=effectLabel_resplitted[0].split('|')
+                        q=0
+                        while q < len(effectId_list):
+                            if q == 0:
+                                effect_Id_items = effectId_list[q].split(',')
+                                effect_label_items = effectlabel_list[q].split(',')
+                                effectlabel = effect_label_items[0]
+                                effect_Id_two_dots = effect_Id_items[0].split(':')
+                                effectId = effect_Id_two_dots[-2] + ':' + effect_Id_two_dots[-1]
+                                conditionId=conditionId+str(q)
+                            else:
+                                effect_Id_items = effectId_list[q].split(',')
+                                effect_label_items = effectlabel_list[q].split(',')
+                                effectlabel += '|'+ effect_label_items[0]
+                                effect_Id_two_dots = effect_Id_items[0].split(':')
+                                effectId += '|'+ effect_Id_two_dots[-2] + ':' + effect_Id_two_dots[-1]
+                                conditionId+= '|'+conditionId+str(q)
+                            q+=1
+                        clinicalRelevance = clinicalRelevance.replace("_", " ")
+                        if clinicalRelevance == 'Benign/Likely_benign':
+                            clinicalRelevance='likely benign'
+                        clinicalRelevance = clinicalRelevance.lower()
+                        if clinicalRelevance not in ["benign","likely benign","uncertain significance","likely pathogenic","pathogenic"]:
+                            clinicalRelevance = "uncertain significance"
+                        dict_to_xls['caseLevelData|clinicalInterpretations|clinicalRelevance']=clinicalRelevance
+                        dict_to_xls['caseLevelData|clinicalInterpretations|conditionId']=conditionId
+                        dict_to_xls['caseLevelData|clinicalInterpretations|effect|id']=effectId
+                        dict_to_xls['caseLevelData|clinicalInterpretations|effect|label']=effectlabel
+                except Exception:
+                    pass
             try:
                 v_resplitted = v_splitted[1].split(';')
                 allele_frequency = v_resplitted[0]
@@ -357,42 +358,43 @@ def generate(dict_properties):
             zigosity['1/0']='GENO:GENO_0000458'
             zigosity['1/1']='GENO:GENO_0000136'
             j=0
-            dict_to_xls['caseLevelData|biosampleId'] =''
+            if conf.case_level_data == True:
+                dict_to_xls['caseLevelData|biosampleId'] =''
 
-            for zygo in v.genotypes:
-                if dict_to_xls['caseLevelData|biosampleId'] == '':
-                    if zygo[0] == 1 and zygo[1]== 1:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = '1/1'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/1']
-                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
-                    elif zygo[0] == 1 and zygo[1]== 0:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = '1/0'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/0']
-                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
-                    elif zygo[0] == 0 and zygo[1]== 1:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = '0/1'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['0/1']
-                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                for zygo in v.genotypes:
+                    if dict_to_xls['caseLevelData|biosampleId'] == '':
+                        if zygo[0] == 1 and zygo[1]== 1:
+                            #dict_to_xls['caseLevelData|zygosity|label'] = '1/1'
+                            #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/1']
+                            dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                        elif zygo[0] == 1 and zygo[1]== 0:
+                            #dict_to_xls['caseLevelData|zygosity|label'] = '1/0'
+                            #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/0']
+                            dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                        elif zygo[0] == 0 and zygo[1]== 1:
+                            #dict_to_xls['caseLevelData|zygosity|label'] = '0/1'
+                            #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['0/1']
+                            dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                            
+                    else:
+                        if zygo[0] == 1 and zygo[1]== 1:
+                            #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/1'
+                            #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/1']
+                            dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
+                        elif zygo[0] == 1 and zygo[1]== 0:
+                            #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/0'
+                            #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/0']
+                            dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
+                        elif zygo[0] == 0 and zygo[1]== 1:
+                            #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '0/1'
+                            #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['0/1']
+                            dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
                         
-                else:
-                    if zygo[0] == 1 and zygo[1]== 1:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/1'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/1']
-                        dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
-                    elif zygo[0] == 1 and zygo[1]== 0:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/0'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/0']
-                        dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
-                    elif zygo[0] == 0 and zygo[1]== 1:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '0/1'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['0/1']
-                        dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
-                    
 
-                j+=1
-                
-            if dict_to_xls['caseLevelData|biosampleId'] == '':
-                continue
+                    j+=1
+                    
+                if dict_to_xls['caseLevelData|biosampleId'] == '':
+                    continue
             chromos=re.sub(r"</?\[>", "", chrom)
             chromos=chromos.replace("chr","")
             if conf.reference_genome == 'GRCh37':
