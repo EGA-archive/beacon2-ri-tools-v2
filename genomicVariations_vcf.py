@@ -774,10 +774,13 @@ def generate(dict_properties):
 
             GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
-            definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCount"]=allele_count
-            definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleNumber"]=allele_number
-            definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"]=ac_hom
-            definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
+            try:
+                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCount"]=allele_count
+                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleNumber"]=allele_number
+                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"]=ac_hom
+                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
+            except Exception:
+                pass
             total_dict.append(definitivedict)
             pbar.update(1)
             i+=1
