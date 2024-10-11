@@ -172,20 +172,23 @@ def generate(dict_properties):
                     dict_to_xls['frequencyInPopulations|frequencies|population']=population
                     dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=allele_frequency
             except Exception:
-                allele_frequency=v.INFO.get('AF')
-                if isinstance(allele_frequency, tuple):
-                    allele_frequency=list(allele_frequency)
-                    allele_frequency[0]
-                else:
-                    allele_frequency = float(v.INFO.get('AF'))
-                allele_number = float(v.INFO.get('AN'))
-                allele_count = float(v.INFO.get('AC'))
-                ac_hom = float(v.INFO.get('AC_Hom'))
-                ac_het= float(v.INFO.get('AC_Het'))
-                dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]
-                dict_to_xls['frequencyInPopulations|source']=pipeline["frequencyInPopulations|source"]
-                dict_to_xls['frequencyInPopulations|frequencies|population']=pipeline["frequencyInPopulations|frequencies|population"][0]["fullname"]
-                dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=allele_frequency
+                try:
+                    allele_frequency=v.INFO.get('AF')
+                    if isinstance(allele_frequency, tuple):
+                        allele_frequency=list(allele_frequency)
+                        allele_frequency[0]
+                    else:
+                        allele_frequency = float(v.INFO.get('AF'))
+                    allele_number = float(v.INFO.get('AN'))
+                    allele_count = float(v.INFO.get('AC'))
+                    ac_hom = float(v.INFO.get('AC_Hom'))
+                    ac_het= float(v.INFO.get('AC_Het'))
+                    dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]
+                    dict_to_xls['frequencyInPopulations|source']=pipeline["frequencyInPopulations|source"]
+                    dict_to_xls['frequencyInPopulations|frequencies|population']=pipeline["frequencyInPopulations|frequencies|population"][0]["fullname"]
+                    dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=allele_frequency
+                except Exception:
+                    pass
             try:
                 if v.INFO.get('VT') == 'SV': continue
             except Exception:
