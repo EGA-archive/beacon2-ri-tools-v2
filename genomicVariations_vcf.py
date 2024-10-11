@@ -180,6 +180,7 @@ def generate(dict_properties):
                 allele_number = float(v.INFO.get('AN'))
                 allele_count = float(v.INFO.get('AC'))
                 ac_hom = float(v.INFO.get('AC_Hom'))
+                ac_het= float(v.INFO.get('AC_Het'))
                 dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]
                 dict_to_xls['frequencyInPopulations|source']=pipeline["frequencyInPopulations|source"]
                 dict_to_xls['frequencyInPopulations|frequencies|population']=pipeline["frequencyInPopulations|frequencies|population"][0]["fullname"]
@@ -771,6 +772,7 @@ def generate(dict_properties):
             definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCount"]=allele_count
             definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleNumber"]=allele_number
             definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"]=ac_hom
+            definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
             total_dict.append(definitivedict)
             pbar.update(1)
             i+=1
