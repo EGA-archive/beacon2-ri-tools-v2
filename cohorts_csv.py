@@ -350,6 +350,7 @@ def generate(dict_properties, list_of_headers):
                                 propv = propv
                             definitivedict[key]=propv
             Cohorts(**definitivedict)
+            definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
 
             
