@@ -197,7 +197,6 @@ def generate(dict_properties):
                     allele_count[0]
                 else:
                     allele_count = float(allele_count)
-                '''
                 ac_hom=v.INFO.get('AC_Hom')
                 if ac_hom == None:
                     i+=1
@@ -217,7 +216,6 @@ def generate(dict_properties):
                     ac_het[0]
                 else:
                     ac_het = float(v.INFO.get('AC_Het'))
-                '''
                 dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]
                 dict_to_xls['frequencyInPopulations|source']=pipeline["frequencyInPopulations|source"]
                 dict_to_xls['frequencyInPopulations|frequencies|population']=population
