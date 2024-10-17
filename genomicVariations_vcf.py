@@ -97,15 +97,13 @@ def generate(dict_properties):
         print(vcf_filename)
         vcf = VCF(vcf_filename)
         vcf.set_samples([])
-        vcf.set_index(index_path="files/vcf/files_to_read/pop11_sub2_chr1.vcf.bgz.tbi")
+
         #my_target_list = vcf.samples
         count=0
         
 
         pbar = tqdm(total = num_rows)
 
-        r=0
-    
         for v in vcf:
             #print(v)
             
@@ -813,8 +811,8 @@ def generate(dict_properties):
             try:
                 definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCount"]=allele_count
                 definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleNumber"]=allele_number
-                #definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"]=ac_hom
-                #definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
+                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"]=ac_hom
+                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
             except Exception:
                 pass
             total_dict.append(definitivedict)
