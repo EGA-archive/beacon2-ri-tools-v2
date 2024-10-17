@@ -86,7 +86,7 @@ def num_rows_in_vcf_files():
             total_lines += sum(1 for line in f if not line.startswith('#'))
     return total_lines
 
-num_rows = 10000000
+num_rows = 249250621
 
 def generate(dict_properties):
     total_dict =[]
@@ -95,13 +95,17 @@ def generate(dict_properties):
     
     for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
         print(vcf_filename)
-        vcf = VCF(vcf_filename, strict_gt=True)
-        vcf.set_index(index_path = "files/vcf/files_to_read/pop11_sub2_chr1.vcf.bgz.tbi")
+        vcf = VCF(vcf_filename)
+        vcf.set_samples([])
+        vcf.set_index(index_path="files/vcf/files_to_read/pop11_sub2_chr1.vcf.bgz.tbi")
         #my_target_list = vcf.samples
         count=0
         
 
         pbar = tqdm(total = num_rows)
+
+        r=0
+    
         for v in vcf:
             #print(v)
             
@@ -163,6 +167,7 @@ def generate(dict_properties):
                 allele_frequency=v.INFO.get('AF')
                 if allele_frequency == None:
                     i+=1
+                    pbar.update(1)
                     continue
                 if isinstance(allele_frequency, tuple):
                     allele_frequency=list(allele_frequency)
@@ -171,6 +176,7 @@ def generate(dict_properties):
                     allele_frequency = float(allele_frequency)
                 if allele_frequency == 0.0:
                     i+=1
+                    pbar.update(1)
                     continue
                 allele_number=v.INFO.get('AN')
                 if allele_number == None:
@@ -184,6 +190,7 @@ def generate(dict_properties):
                 allele_count=v.INFO.get('AC')
                 if allele_count == None:
                     i+=1
+                    pbar.update(1)
                     continue
                 elif isinstance(allele_count, tuple):
                     allele_count=list(allele_count)
@@ -289,7 +296,7 @@ def generate(dict_properties):
                                     dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001574"
                                 elif annotation == 'stop_retained_variant':
                                     dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001567"
-                                               
+                                            
                             else:
                                 dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+annotation
                                 if annotation == 'missense_variant':
@@ -828,6 +835,7 @@ def generate(dict_properties):
                 gc.collect()
                 total_dict=[]
                 pbar.update(1)
+            
 
             
 
