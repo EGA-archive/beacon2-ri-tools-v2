@@ -86,7 +86,7 @@ def num_rows_in_vcf_files():
             total_lines += sum(1 for line in f if not line.startswith('#'))
     return total_lines
 
-num_rows = 1000000000
+num_rows = 10000000
 
 def generate(dict_properties):
     total_dict =[]
@@ -96,17 +96,18 @@ def generate(dict_properties):
     for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
         print(vcf_filename)
         vcf = VCF(vcf_filename, strict_gt=True)
-        my_target_list = vcf.samples
+        vcf.set_index(index_path = "files/vcf/files_to_read/pop11_sub2_chr1.vcf.bgz.tbi")
+        #my_target_list = vcf.samples
         count=0
         
 
         pbar = tqdm(total = num_rows)
         for v in vcf:
             #print(v)
+            
             dict_to_xls={}
-            vstringed = str(v)
             population='COVID_pop11_fin_2'
-
+            '''
             if conf.case_level_data == True:
                 clinicalRelevanceword=pipeline['caseLevelData|clinicalInterpretations|clinicalRelevance']+'='
                 effectIdWord=pipeline['caseLevelData|clinicalInterpretations|effect|id']+'='
@@ -152,58 +153,72 @@ def generate(dict_properties):
                         dict_to_xls['caseLevelData|clinicalInterpretations|effect|label']=effectlabel
                 except Exception:
                     pass
+            '''
+            try:
+                varianttype=v.INFO.get('VT')
+                if varianttype == 'SV': continue
+            except Exception:
+                pass
             try:
                 allele_frequency=v.INFO.get('AF')
+                if allele_frequency == None:
+                    i+=1
+                    continue
                 if isinstance(allele_frequency, tuple):
                     allele_frequency=list(allele_frequency)
-                    allele_frequency[0]
+                    allele_frequency=allele_frequency[0]
                 else:
-                    allele_frequency = float(v.INFO.get('AF'))
+                    allele_frequency = float(allele_frequency)
                 if allele_frequency == 0.0:
+                    i+=1
                     continue
                 allele_number=v.INFO.get('AN')
                 if allele_number == None:
-                    pass
+                    i+=1
+                    continue
                 elif isinstance(allele_number, tuple):
                     allele_number=list(allele_number)
                     allele_number[0]
                 else:
-                    allele_number = float(v.INFO.get('AC'))
+                    allele_number = float(allele_number)
                 allele_count=v.INFO.get('AC')
                 if allele_count == None:
-                    pass
+                    i+=1
+                    continue
                 elif isinstance(allele_count, tuple):
                     allele_count=list(allele_count)
                     allele_count[0]
                 else:
-                    allele_count = float(v.INFO.get('AC'))
+                    allele_count = float(allele_count)
+                '''
                 ac_hom=v.INFO.get('AC_Hom')
                 if ac_hom == None:
-                    pass
+                    i+=1
+                    continue
                 elif isinstance(ac_hom, tuple):
                     ac_hom=list(ac_hom)
                     ac_hom[0]
                 else:
                     ac_hom = float(v.INFO.get('AC_Hom'))
                 ac_het=v.INFO.get('AC_Het')
+
                 if ac_het == None:
-                    pass
+                    i+=1
+                    continue
                 elif isinstance(ac_het, tuple):
                     ac_het=list(ac_het)
                     ac_het[0]
                 else:
                     ac_het = float(v.INFO.get('AC_Het'))
-
+                '''
                 dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]
                 dict_to_xls['frequencyInPopulations|source']=pipeline["frequencyInPopulations|source"]
                 dict_to_xls['frequencyInPopulations|frequencies|population']=population
                 dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=allele_frequency
             except Exception as e:
                 continue
-            try:
-                if v.INFO.get('VT') == 'SV': continue
-            except Exception:
-                pass
+            #print(allele_frequency)
+
             '''
             try:
                 allele_frequency = v.INFO.get('AF')
@@ -224,8 +239,8 @@ def generate(dict_properties):
 
             dict_to_xls['variation|referenceBases'] = ref
             try:
-                dict_to_xls['variation|variantType'] = v.INFO.get('VT')
-                if v.INFO.get('VT') is None:
+                dict_to_xls['variation|variantType'] = varianttype
+                if varianttype is None:
                     if len(alt[0]) == len(ref):
                         dict_to_xls['variation|variantType']='SNP'
                     else:
@@ -367,7 +382,7 @@ def generate(dict_properties):
                     dict_to_xls['molecularAttributes|geneIds'] = annotations[4]
 
 
-            '''
+
 
             
             
@@ -413,6 +428,7 @@ def generate(dict_properties):
                     
                 if dict_to_xls['caseLevelData|biosampleId'] == '':
                     continue
+            '''
             chromos=re.sub(r"</?\[>", "", chrom)
             chromos=chromos.replace("chr","")
             if conf.reference_genome == 'GRCh37':
@@ -792,11 +808,12 @@ def generate(dict_properties):
             try:
                 definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCount"]=allele_count
                 definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleNumber"]=allele_number
-                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"]=ac_hom
-                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
+                #definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"]=ac_hom
+                #definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
             except Exception:
                 pass
             total_dict.append(definitivedict)
+
             pbar.update(1)
             i+=1
             
