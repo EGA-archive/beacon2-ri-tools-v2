@@ -434,6 +434,10 @@ def generate(dict_properties):
             '''
             chromos=re.sub(r"</?\[>", "", chrom)
             chromos=chromos.replace("chr","")
+            if 'X' in chrom:
+                chromos = '23'
+            elif 'Y' in chrom:
+                chromos = '24'
             if conf.reference_genome == 'GRCh37':
                 dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.10' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
             elif conf.reference_genome == 'GRCh38':

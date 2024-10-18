@@ -1,2 +1,4 @@
 files/vcf/*
 files/vcf/files_to_read/*
+*.vcf.gz
+*.vcf.bgz
