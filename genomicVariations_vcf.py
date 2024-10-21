@@ -824,24 +824,25 @@ def generate(dict_properties):
             pbar.update(1)
             i+=1
             
-            if i == num_rows:
-                client.beacon.genomicVariations.insert_many(total_dict)
-                pbar.update(1)
-                break
-            elif (i/10000).is_integer():
-                client.beacon.genomicVariations.insert_many(total_dict)
-                del definitivedict
-                del total_dict
-                gc.collect()
-                total_dict=[]
-                pbar.update(1)
+            if total_dict != []:
+                if i == num_rows:
+                    client.beacon.genomicVariations.insert_many(total_dict)
+                    pbar.update(1)
+                    break
+                elif (i/10000).is_integer():
+                    client.beacon.genomicVariations.insert_many(total_dict)
+                    del definitivedict
+                    del total_dict
+                    gc.collect()
+                    total_dict=[]
+                    pbar.update(1)
             
 
             
 
-
-    if i != num_rows:
-        client.beacon.genomicVariations.insert_many(total_dict)
+    if total_dict != []:
+        if i != num_rows:
+            client.beacon.genomicVariations.insert_many(total_dict)
         
         
 
