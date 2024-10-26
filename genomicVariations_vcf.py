@@ -95,10 +95,11 @@ def generate(dict_properties):
     
     for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
         print(vcf_filename)
-        vcf = VCF(vcf_filename)
-        vcf.set_samples([])
-
-        #my_target_list = vcf.samples
+        vcf = VCF(vcf_filename, strict_gt=True)
+        if conf.case_level_data == False:
+            vcf.set_samples([])
+        else:
+            my_target_list = vcf.samples
         count=0
         
 
@@ -108,9 +109,9 @@ def generate(dict_properties):
             #print(v)
             
             dict_to_xls={}
-            population='COVID_pop11_fin_2'
             '''
             if conf.case_level_data == True:
+                vstringed = str(v)
                 clinicalRelevanceword=pipeline['caseLevelData|clinicalInterpretations|clinicalRelevance']+'='
                 effectIdWord=pipeline['caseLevelData|clinicalInterpretations|effect|id']+'='
                 effectLabelWord=pipeline['caseLevelData|clinicalInterpretations|effect|label']+'='
@@ -156,6 +157,7 @@ def generate(dict_properties):
                 except Exception:
                     pass
             '''
+            
             try:
                 varianttype=v.INFO.get('VT')
                 if varianttype == 'SV': continue
@@ -216,7 +218,7 @@ def generate(dict_properties):
                     ac_het = float(v.INFO.get('AC_Het'))
                 dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]
                 dict_to_xls['frequencyInPopulations|source']=pipeline["frequencyInPopulations|source"]
-                dict_to_xls['frequencyInPopulations|frequencies|population']=population
+                dict_to_xls['frequencyInPopulations|frequencies|population']=conf.datasetId
                 dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=allele_frequency
             except Exception as e:
                 continue
@@ -388,50 +390,47 @@ def generate(dict_properties):
 
 
             
-            
+            '''
+
             zigosity={}
             zigosity['0/1']='GENO:GENO_0000458'
             zigosity['1/0']='GENO:GENO_0000458'
             zigosity['1/1']='GENO:GENO_0000136'
             j=0
+            biosampleids=[]
             if conf.case_level_data == True:
-                dict_to_xls['caseLevelData|biosampleId'] =''
-
                 for zygo in v.genotypes:
-                    if dict_to_xls['caseLevelData|biosampleId'] == '':
-                        if zygo[0] == 1 and zygo[1]== 1:
-                            #dict_to_xls['caseLevelData|zygosity|label'] = '1/1'
-                            #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/1']
-                            dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
-                        elif zygo[0] == 1 and zygo[1]== 0:
-                            #dict_to_xls['caseLevelData|zygosity|label'] = '1/0'
-                            #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/0']
-                            dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
-                        elif zygo[0] == 0 and zygo[1]== 1:
-                            #dict_to_xls['caseLevelData|zygosity|label'] = '0/1'
-                            #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['0/1']
-                            dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
+                    dict_bio={}
+                    if zygo[0] == 1 and zygo[1]== 1:
+                        #dict_to_xls['caseLevelData|zygosity|label'] = '1/1'
+                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/1']
+                        #dict_bio["biosampleId"]=my_target_list[j]
+                        dict_bio["biosampleId"]=my_target_list[j]
+                        biosampleids.append(my_target_list[j])
+                    elif zygo[0] == 1 and zygo[1]== 0:
+                        #dict_to_xls['caseLevelData|zygosity|label'] = '1/0'
+                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/0']
+                        #dict_bio["biosampleId"]=my_target_list[j]
+                        dict_bio["biosampleId"]=my_target_list[j]
+                        biosampleids.append(my_target_list[j])
+                    elif zygo[0] == 0 and zygo[1]== 1:
+                        #dict_to_xls['caseLevelData|zygosity|label'] = '0/1'
+                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['0/1']
+                        #dict_bio["biosampleId"]=my_target_list[j]
+                        dict_bio["biosampleId"]=my_target_list[j]
+                        biosampleids.append(my_target_list[j])
+                
                             
-                    else:
-                        if zygo[0] == 1 and zygo[1]== 1:
-                            #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/1'
-                            #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/1']
-                            dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
-                        elif zygo[0] == 1 and zygo[1]== 0:
-                            #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/0'
-                            #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/0']
-                            dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
-                        elif zygo[0] == 0 and zygo[1]== 1:
-                            #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '0/1'
-                            #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['0/1']
-                            dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
                         
 
                     j+=1
+                #dict_to_xls['caseLevelData|biosampleId'] = 'hola'
                     
-                if dict_to_xls['caseLevelData|biosampleId'] == '':
-                    continue
-            '''
+                    
+                #if dict_to_xls['caseLevelData|biosampleId'] == '':
+                    #continue
+
+            #dict_to_xls['caseLevelData|biosampleId']='hola'
             chromos=re.sub(r"</?\[>", "", chrom)
             chromos=chromos.replace("chr","")
             if 'X' in chrom:
@@ -817,6 +816,8 @@ def generate(dict_properties):
                 definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleNumber"]=allele_number
                 definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"]=ac_hom
                 definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
+                if biosampleids != []:
+                    definitivedict["caseLevelData"]=biosampleids
             except Exception:
                 pass
             total_dict.append(definitivedict)
@@ -825,17 +826,30 @@ def generate(dict_properties):
             i+=1
             
             if total_dict != []:
-                if i == num_rows:
-                    client.beacon.genomicVariations.insert_many(total_dict)
-                    pbar.update(1)
-                    break
-                elif (i/10000).is_integer():
-                    client.beacon.genomicVariations.insert_many(total_dict)
-                    del definitivedict
-                    del total_dict
-                    gc.collect()
-                    total_dict=[]
-                    pbar.update(1)
+                if conf.case_level_data == True:
+                    if i == num_rows:
+                        client.beacon.genomicVariations.insert_many(total_dict)
+                        pbar.update(1)
+                        break
+                    elif (i/10).is_integer():
+                        client.beacon.genomicVariations.insert_many(total_dict)
+                        del definitivedict
+                        del total_dict
+                        gc.collect()
+                        total_dict=[]
+                        pbar.update(1)
+                else:
+                    if i == num_rows:
+                        client.beacon.genomicVariations.insert_many(total_dict)
+                        pbar.update(1)
+                        break
+                    elif (i/10000).is_integer():
+                        client.beacon.genomicVariations.insert_many(total_dict)
+                        del definitivedict
+                        del total_dict
+                        gc.collect()
+                        total_dict=[]
+                        pbar.update(1)  
             
 
             
