@@ -86,7 +86,7 @@ def num_rows_in_vcf_files():
             total_lines += sum(1 for line in f if not line.startswith('#'))
     return total_lines
 
-num_rows = 249250621
+num_rows = 7000000
 
 def generate(dict_properties):
     total_dict =[]
