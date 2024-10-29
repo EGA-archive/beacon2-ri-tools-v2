@@ -251,19 +251,16 @@ def generate(dict_properties):
             if conf.case_level_data == True:
                 j=0
                 biosampleids=[]
-                onefound=0
                 for zygo in v.gt_types:
                     if zygo==True:
-                        biosampleids.append(str(onefound)+'o')
-                        onefound=0
+                        biosampleids.append(str(j))
                         j+=1
                     else:
-                        onefound+=1
                         j+=1
                 
                 #dict_to_xls['caseLevelData|biosampleId'] = 'hola'
                     
-                biosampleids="".join(biosampleids)
+                biosampleids=",".join(biosampleids)
                 #if dict_to_xls['caseLevelData|biosampleId'] == '':
                     #continue
 
