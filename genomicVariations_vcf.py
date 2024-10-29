@@ -86,7 +86,7 @@ def num_rows_in_vcf_files():
             total_lines += sum(1 for line in f if not line.startswith('#'))
     return total_lines
 
-num_rows = 7000000
+num_rows = conf.num_rows
 
 def generate(dict_properties):
     total_dict =[]
@@ -94,6 +94,13 @@ def generate(dict_properties):
     dict_true={}
     i=1
     l=0
+    if conf.case_level_data == True:
+        try:
+            client.beacon.create_collection(name="caseLevelData")
+        except Exception:
+            pass
+
+
     
     for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
         print(vcf_filename)
@@ -102,8 +109,21 @@ def generate(dict_properties):
             vcf.set_samples([])
         else:
             my_target_list = vcf.samples
-            
-        count=0
+            try:
+                client.beacon.create_collection(name="targets")
+                found_item=client.beacon.targets.find_one({"datasetId": conf.datasetId})
+                if found_item == None:
+                    dict_target={}
+                    dict_target["datasetId"]=conf.datasetId
+                    dict_target["biosampleIds"]=my_target_list
+                    target_list=[dict_target]
+                    client.beacon.targets.insert_many(target_list)
+            except Exception:
+                dict_target={}
+                dict_target["datasetId"]=conf.datasetId
+                dict_target["biosampleIds"]=my_target_list
+                target_list=[dict_target]
+                client.beacon.targets.insert_many(target_list)
         
 
         pbar = tqdm(total = num_rows)
@@ -231,26 +251,16 @@ def generate(dict_properties):
             if conf.case_level_data == True:
                 j=0
                 biosampleids=[]
-                zerofound=0
                 onefound=0
                 for zygo in v.gt_types:
                     if zygo==True:
-                        if zerofound != 0:
-                            biosampleids.append(str(zerofound)+'z')
-                        zerofound=0
-                        onefound+=1
+                        biosampleids.append(str(onefound)+'o')
+                        onefound=0
                         j+=1
                     else:
-                        if onefound != 0:
-                            biosampleids.append(str(onefound)+'o')
-                        onefound=0
-                        zerofound+=1
+                        onefound+=1
                         j+=1
                 
-                if zerofound != 0:
-                    biosampleids.append(str(zerofound)+'z')
-                elif onefound !=0:
-                    biosampleids.append(str(onefound)+'o')
                 #dict_to_xls['caseLevelData|biosampleId'] = 'hola'
                     
                 biosampleids="".join(biosampleids)
@@ -631,11 +641,11 @@ def generate(dict_properties):
             if conf.case_level_data == True:
                 if total_dict2 != []:
                     if i == num_rows:
-                        client.beacon.individuals.insert_many(total_dict2)
+                        client.beacon.caseLevelData.insert_many(total_dict2)
                         pbar.update(1)
                         break
                     elif (i/10000).is_integer():
-                        client.beacon.individuals.insert_many(total_dict2)
+                        client.beacon.caseLevelData.insert_many(total_dict2)
                         del biosampleids
                         del total_dict2
                         gc.collect()
@@ -663,7 +673,7 @@ def generate(dict_properties):
     if conf.case_level_data == True:
         if total_dict2 != []:
             if i != num_rows:
-                client.beacon.individuals.insert_many(total_dict2)
+                client.beacon.caseLevelData.insert_many(total_dict2)
         
         
 

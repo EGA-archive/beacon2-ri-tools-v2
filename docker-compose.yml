@@ -22,6 +22,7 @@ services:
   db:
     container_name: ri-tools-mongo
     image: mongo:5
+    command: --wiredTigerCacheSizeGB 4
     hostname: mongo
     ports:
       - 27017:27017
