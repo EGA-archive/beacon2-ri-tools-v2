@@ -230,13 +230,11 @@ def generate(dict_properties):
                 biosampleids=[]
                 for zygo in v.gt_types:
                     if zygo==True:
-                        dict_true={}
-                        dict_true["biosampleId"]=my_target_list[j]
-                        biosampleids.append(dict_true)
+                        biosampleids.append(my_target_list[j])
                         j+=1
                     else:
                         j+=1
-                
+                biosampleids=set(biosampleids)
                 #dict_to_xls['caseLevelData|biosampleId'] = 'hola'
                     
                 #if dict_to_xls['caseLevelData|biosampleId'] == '':
@@ -601,7 +599,7 @@ def generate(dict_properties):
             except Exception:
                 pass
             if conf.case_level_data == True:
-                definitivedict["caseLevelData"]=biosampleids
+                definitivedict["b"]=list(biosampleids)
             total_dict.append(definitivedict)
 
 
@@ -614,7 +612,7 @@ def generate(dict_properties):
                     client.beacon.genomicVariations.insert_many(total_dict)
                     pbar.update(1)
                     break
-                elif (i/10000).is_integer():
+                elif (i/1000).is_integer():
                     client.beacon.genomicVariations.insert_many(total_dict)
                     del definitivedict
                     del total_dict
@@ -638,6 +636,6 @@ total_i, l=generate(dict_properties)
 
 
 if total_i-l > 0:
-    print('Successfully inserted {} records into beacon'.format(total_i-l-1))
+    print('Successfully processed {} records and inserted the ones that have AF > 0 in beacon'.format(total_i-l-1))
 else:
     print('No registries found.')
