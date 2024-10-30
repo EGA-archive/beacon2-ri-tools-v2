@@ -94,6 +94,14 @@ def generate(dict_properties):
     dict_true={}
     i=1
     l=0
+    if conf.case_level_data == True:
+        try:
+            client.beacon.create_collection(name="caseLevelData")
+        except Exception:
+            pass
+
+
+    
     for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
         print(vcf_filename)
         vcf = VCF(vcf_filename, strict_gt=True)
@@ -101,6 +109,21 @@ def generate(dict_properties):
             vcf.set_samples([])
         else:
             my_target_list = vcf.samples
+            try:
+                client.beacon.create_collection(name="targets")
+                found_item=client.beacon.targets.find_one({"datasetId": conf.datasetId})
+                if found_item == None:
+                    dict_target={}
+                    dict_target["datasetId"]=conf.datasetId
+                    dict_target["biosampleIds"]=my_target_list
+                    target_list=[dict_target]
+                    client.beacon.targets.insert_many(target_list)
+            except Exception:
+                dict_target={}
+                dict_target["datasetId"]=conf.datasetId
+                dict_target["biosampleIds"]=my_target_list
+                target_list=[dict_target]
+                client.beacon.targets.insert_many(target_list)
         
 
         pbar = tqdm(total = num_rows)
@@ -230,13 +253,14 @@ def generate(dict_properties):
                 biosampleids=[]
                 for zygo in v.gt_types:
                     if zygo==True:
-                        biosampleids.append(my_target_list[j])
+                        biosampleids.append(str(j))
                         j+=1
                     else:
                         j+=1
-                biosampleids=set(biosampleids)
+                
                 #dict_to_xls['caseLevelData|biosampleId'] = 'hola'
                     
+                biosampleids=",".join(biosampleids)
                 #if dict_to_xls['caseLevelData|biosampleId'] == '':
                     #continue
 
@@ -598,21 +622,38 @@ def generate(dict_properties):
                 definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
             except Exception:
                 pass
-            if conf.case_level_data == True:
-                definitivedict["b"]=list(biosampleids)
             total_dict.append(definitivedict)
-
+            if conf.case_level_data == True:
+                dict_true["id"]=HGVSId
+                dict_true["biosampleIds"]=biosampleids
+                dict_true["datasetId"]=conf.datasetId
+                total_dict2.append(dict_true)
+                dict_true={}
+                biosampleids=''
 
             pbar.update(1)
             i+=1
             
-
+            
+            if conf.case_level_data == True:
+                if total_dict2 != []:
+                    if i == num_rows:
+                        client.beacon.caseLevelData.insert_many(total_dict2)
+                        pbar.update(1)
+                        break
+                    elif (i/10000).is_integer():
+                        client.beacon.caseLevelData.insert_many(total_dict2)
+                        del biosampleids
+                        del total_dict2
+                        gc.collect()
+                        total_dict2=[]
+                        pbar.update(1)
             if total_dict != []:
                 if i == num_rows:
                     client.beacon.genomicVariations.insert_many(total_dict)
                     pbar.update(1)
                     break
-                elif (i/1000).is_integer():
+                elif (i/10000).is_integer():
                     client.beacon.genomicVariations.insert_many(total_dict)
                     del definitivedict
                     del total_dict
@@ -626,6 +667,10 @@ def generate(dict_properties):
     if total_dict != []:
         if i != num_rows:
             client.beacon.genomicVariations.insert_many(total_dict)
+    if conf.case_level_data == True:
+        if total_dict2 != []:
+            if i != num_rows:
+                client.beacon.caseLevelData.insert_many(total_dict2)
         
         
 
@@ -636,6 +681,6 @@ total_i, l=generate(dict_properties)
 
 
 if total_i-l > 0:
-    print('Successfully processed {} records and inserted the ones that have AF > 0 in beacon'.format(total_i-l-1))
+    print('Successfully inserted {} records into beacon'.format(total_i-l-1))
 else:
     print('No registries found.')
