@@ -100,8 +100,6 @@ def generate(dict_properties):
         except Exception:
             pass
 
-
-    
     for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
         print(vcf_filename)
         vcf = VCF(vcf_filename, strict_gt=True)
@@ -148,48 +146,47 @@ def generate(dict_properties):
                     allele_frequency=allele_frequency[0]
                 else:
                     allele_frequency = float(allele_frequency)
-                if allele_frequency == 0.0:
-                    i+=1
-                    pbar.update(1)
-                    continue
-                allele_number=v.INFO.get('AN')
-                if allele_number == None:
-                    i+=1
-                    continue
-                elif isinstance(allele_number, tuple):
-                    allele_number=list(allele_number)
-                    allele_number[0]
-                else:
-                    allele_number = float(allele_number)
-                allele_count=v.INFO.get('AC')
-                if allele_count == None:
-                    i+=1
-                    pbar.update(1)
-                    continue
-                elif isinstance(allele_count, tuple):
-                    allele_count=list(allele_count)
-                    allele_count[0]
-                else:
-                    allele_count = float(allele_count)
-                ac_hom=v.INFO.get('AC_Hom')
-                if ac_hom == None:
-                    i+=1
-                    continue
-                elif isinstance(ac_hom, tuple):
-                    ac_hom=list(ac_hom)
-                    ac_hom[0]
-                else:
-                    ac_hom = float(v.INFO.get('AC_Hom'))
-                ac_het=v.INFO.get('AC_Het')
+                if conf.allele_counts == True:
+                    allele_number=v.INFO.get('AN')
+                    if allele_number == None:
+                        i+=1
+                        continue
+                    elif isinstance(allele_number, tuple):
+                        allele_number=list(allele_number)
+                        allele_number[0]
+                    else:
+                        allele_number = float(allele_number)
+                    allele_count=v.INFO.get('AC')
+                    if allele_count == None:
+                        i+=1
+                        pbar.update(1)
+                        continue
+                    elif isinstance(allele_count, tuple):
+                        allele_count=list(allele_count)
+                        allele_count[0]
+                    else:
+                        allele_count = float(allele_count)
+                    if allele_count == 0.0:
+                        continue
+                    ac_hom=v.INFO.get('AC_Hom')
+                    if ac_hom == None:
+                        i+=1
+                        continue
+                    elif isinstance(ac_hom, tuple):
+                        ac_hom=list(ac_hom)
+                        ac_hom[0]
+                    else:
+                        ac_hom = float(v.INFO.get('AC_Hom'))
+                    ac_het=v.INFO.get('AC_Het')
 
-                if ac_het == None:
-                    i+=1
-                    continue
-                elif isinstance(ac_het, tuple):
-                    ac_het=list(ac_het)
-                    ac_het[0]
-                else:
-                    ac_het = float(v.INFO.get('AC_Het'))
+                    if ac_het == None:
+                        i+=1
+                        continue
+                    elif isinstance(ac_het, tuple):
+                        ac_het=list(ac_het)
+                        ac_het[0]
+                    else:
+                        ac_het = float(v.INFO.get('AC_Het'))
                 dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]
                 dict_to_xls['frequencyInPopulations|source']=pipeline["frequencyInPopulations|source"]
                 dict_to_xls['frequencyInPopulations|frequencies|population']=conf.datasetId
@@ -616,10 +613,11 @@ def generate(dict_properties):
             GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             try:
-                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCount"]=allele_count
-                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleNumber"]=allele_number
-                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"]=ac_hom
-                definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
+                if conf.allele_counts == True:
+                    definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCount"]=allele_count
+                    definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleNumber"]=allele_number
+                    definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"]=ac_hom
+                    definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
             except Exception:
                 pass
             total_dict.append(definitivedict)
