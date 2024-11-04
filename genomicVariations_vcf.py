@@ -187,6 +187,8 @@ def generate(dict_properties):
                         ac_het[0]
                     else:
                         ac_het = float(v.INFO.get('AC_Het'))
+                elif allele_frequency == 0.0:
+                    continue
                 dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]
                 dict_to_xls['frequencyInPopulations|source']=pipeline["frequencyInPopulations|source"]
                 dict_to_xls['frequencyInPopulations|frequencies|population']=conf.datasetId
