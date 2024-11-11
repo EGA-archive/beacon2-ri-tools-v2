@@ -348,6 +348,7 @@ def generate(dict_properties, list_of_headers):
                         if propk == new_item:
                             definitivedict[key]=propv
             Analyses(**definitivedict)
+            definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
 
             

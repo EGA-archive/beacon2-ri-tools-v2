@@ -86,110 +86,116 @@ def num_rows_in_vcf_files():
             total_lines += sum(1 for line in f if not line.startswith('#'))
     return total_lines
 
-num_rows = num_rows_in_vcf_files()
+num_rows = conf.num_rows
 
 def generate(dict_properties):
     total_dict =[]
+    total_dict2 =[]
+    dict_true={}
     i=1
     l=0
+    if conf.case_level_data == True:
+        try:
+            client.beacon.create_collection(name="caseLevelData")
+        except Exception:
+            pass
     
     for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
         print(vcf_filename)
         vcf = VCF(vcf_filename, strict_gt=True)
-        my_target_list = vcf.samples
-        count=0
-        
+        if conf.case_level_data == False:
+            vcf.set_samples([])
+        else:
+            my_target_list = vcf.samples
+            try:
+                client.beacon.create_collection(name="targets")
+                found_item=client.beacon.targets.find_one({"datasetId": conf.datasetId})
+                if found_item == None:
+                    dict_target={}
+                    dict_target["datasetId"]=conf.datasetId
+                    dict_target["biosampleIds"]=my_target_list
+                    target_list=[dict_target]
+                    client.beacon.targets.insert_many(target_list)
+            except Exception:
+                dict_target={}
+                dict_target["datasetId"]=conf.datasetId
+                dict_target["biosampleIds"]=my_target_list
+                target_list=[dict_target]
+                client.beacon.targets.insert_many(target_list)
+
 
         pbar = tqdm(total = num_rows)
-        for v in vcf:
-            #print(v)
-            dict_to_xls={}
-            vstringed = str(v)
-            for population_splitted in pipeline['frequencyInPopulations|frequencies|population']:
-                splitword=population_splitted['fullname']+'='
-                v_splitted = vstringed.split(splitword)
-                if len(v_splitted) < 2:
-                    continue
-                else:
-                    population = population_splitted['shortname']
 
-            clinicalRelevanceword=pipeline['caseLevelData|clinicalInterpretations|clinicalRelevance']+'='
-            effectIdWord=pipeline['caseLevelData|clinicalInterpretations|effect|id']+'='
-            effectLabelWord=pipeline['caseLevelData|clinicalInterpretations|effect|label']+'='
-            clinicalRelevance_splitted=vstringed.split(clinicalRelevanceword)
-            effectLabel_splitted=vstringed.split(effectLabelWord)
-            effectId_splitted=vstringed.split(effectIdWord)
+        for v in vcf:
+
+            dict_to_xls={}
+
             try:
-                if len(clinicalRelevance_splitted) > 1 and len(effectLabel_splitted) >1:
-                    clinicalRelevance_resplitted = clinicalRelevance_splitted[1].split(';')
-                    effectLabel_resplitted = effectLabel_splitted[1].split(';')
-                    effectId_resplitted = effectId_splitted[1].split(';')
-                    clinicalRelevance = clinicalRelevance_resplitted[0]
-                    conditionId=pipeline['caseLevelData|clinicalInterpretations|conditionId']
-                    effectId_list=effectId_resplitted[0].split('|')
-                    effectlabel_list=effectLabel_resplitted[0].split('|')
-                    q=0
-                    while q < len(effectId_list):
-                        if q == 0:
-                            effect_Id_items = effectId_list[q].split(',')
-                            effect_label_items = effectlabel_list[q].split(',')
-                            effectlabel = effect_label_items[0]
-                            effect_Id_two_dots = effect_Id_items[0].split(':')
-                            effectId = effect_Id_two_dots[-2] + ':' + effect_Id_two_dots[-1]
-                            conditionId=conditionId+str(q)
-                        else:
-                            effect_Id_items = effectId_list[q].split(',')
-                            effect_label_items = effectlabel_list[q].split(',')
-                            effectlabel += '|'+ effect_label_items[0]
-                            effect_Id_two_dots = effect_Id_items[0].split(':')
-                            effectId += '|'+ effect_Id_two_dots[-2] + ':' + effect_Id_two_dots[-1]
-                            conditionId+= '|'+conditionId+str(q)
-                        q+=1
-                    clinicalRelevance = clinicalRelevance.replace("_", " ")
-                    if clinicalRelevance == 'Benign/Likely_benign':
-                        clinicalRelevance='likely benign'
-                    clinicalRelevance = clinicalRelevance.lower()
-                    if clinicalRelevance not in ["benign","likely benign","uncertain significance","likely pathogenic","pathogenic"]:
-                        clinicalRelevance = "uncertain significance"
-                    dict_to_xls['caseLevelData|clinicalInterpretations|clinicalRelevance']=clinicalRelevance
-                    dict_to_xls['caseLevelData|clinicalInterpretations|conditionId']=conditionId
-                    dict_to_xls['caseLevelData|clinicalInterpretations|effect|id']=effectId
-                    dict_to_xls['caseLevelData|clinicalInterpretations|effect|label']=effectlabel
+                varianttype=v.INFO.get('VT')
+                if varianttype == 'SV': continue
             except Exception:
                 pass
             try:
-                v_resplitted = v_splitted[1].split(';')
-                allele_frequency = v_resplitted[0]
-                try:
+                allele_frequency=v.INFO.get('AF')
+                if allele_frequency == None:
+                    pass
+                if isinstance(allele_frequency, tuple):
+                    allele_frequency=list(allele_frequency)
+                    allele_frequency=allele_frequency[0]
+                else:
                     allele_frequency = float(allele_frequency)
-                except Exception:
-                    allele_frequency = allele_frequency.split(',')
-                    allele_frequency=float(allele_frequency[0])
-                if allele_frequency != '' and population != '':
-                    dict_to_xls['frequencyInPopulations|sourceReference']='gnomad.broadinstitute.org/'
-                    dict_to_xls['frequencyInPopulations|source']='The Genome Aggregation Database (gnomAD)'
-                    dict_to_xls['frequencyInPopulations|frequencies|population']=population
+                if allele_frequency == 0.0:
+                    i+=1
+                    pbar.update(1)
+                    continue
+                allele_number=v.INFO.get('AN')
+                if allele_number == None:
+                    pass
+                elif isinstance(allele_number, tuple):
+                    allele_number=list(allele_number)
+                    allele_number[0]
+                else:
+                    allele_number = float(allele_number)
+                allele_count=v.INFO.get('AC')
+                if allele_count == None:
+                    pass
+                elif isinstance(allele_count, tuple):
+                    allele_count=list(allele_count)
+                    allele_count=allele_count[0]
+                else:
+                    allele_count = float(allele_count)
+                if allele_count == 0.0:
+                    i+=1
+                    pbar.update(1)
+                    continue
+                ac_hom=v.INFO.get('AC_Hom')
+                if ac_hom == None:
+                    pass
+                elif isinstance(ac_hom, tuple):
+                    ac_hom=list(ac_hom)
+                    ac_hom=ac_hom[0]
+                else:
+                    ac_hom = float(v.INFO.get('AC_Hom'))
+                ac_het=v.INFO.get('AC_Het')
+
+                if ac_het == None:
+                    pass
+                elif isinstance(ac_het, tuple):
+                    ac_het=list(ac_het)
+                    ac_het=ac_het[0]
+                else:
+                    ac_het = float(v.INFO.get('AC_Het'))
+                if allele_frequency is not None:
+                    dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]
+                    dict_to_xls['frequencyInPopulations|source']=pipeline["frequencyInPopulations|source"]
+                    dict_to_xls['frequencyInPopulations|frequencies|population']=conf.datasetId
                     dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=allele_frequency
-            except Exception:
-                dict_to_xls['frequencyInPopulations|sourceReference']=''
-                dict_to_xls['frequencyInPopulations|source']=''
-                dict_to_xls['frequencyInPopulations|frequencies|population']=''
-                dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=''
-            try:
-                if v.INFO.get('VT') == 'SV': continue
-            except Exception:
+            except Exception as e:
                 pass
-            '''
-            try:
-                allele_frequency = v.INFO.get('AF')
-                if isinstance(allele_frequency, float):
-                    if allele_frequency > conf.allele_frequency: continue
-            except Exception:
-                pass
-            '''
-            
+            #print(allele_frequency)
+
             #print(v)
-            
+
             ref=v.REF
             chrom=v.CHROM
             start=v.start
@@ -199,204 +205,36 @@ def generate(dict_properties):
 
             dict_to_xls['variation|referenceBases'] = ref
             try:
-                dict_to_xls['variation|variantType'] = v.INFO.get('VT')
-                if v.INFO.get('VT') is None:
+                dict_to_xls['variation|variantType'] = varianttype
+                if varianttype is None:
                     if len(alt[0]) == len(ref):
                         dict_to_xls['variation|variantType']='SNP'
                     else:
                         dict_to_xls['variation|variantType']='INDEL'
             except Exception:
                 dict_to_xls['variation|variantType']='UNKNOWN'
-            #print(v.INFO.get('ANN'))
-            if v.INFO.get('ANN') is not None:
-                annot = v.INFO.get('ANN')
-                transcripts = annot.split(',')
-                dict_to_xls['molecularAttributes|molecularEffects|id'] = ""
-                for transcript in transcripts:
-                    annotations = transcript.split("|")
-                    if '&' in annotations[1]:
-                        annot_splitted = annotations[1].split('&')
-                        annot_splitted = list(dict.fromkeys(annot_splitted))
-                        for annotation in annot_splitted:
-                            if dict_to_xls['molecularAttributes|molecularEffects|id'] == "":
-                                dict_to_xls['molecularAttributes|molecularEffects|label'] = annotation
-                                if annotation == 'missense_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000150"
-                                elif annotation == 'intron_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000161"
-                                elif annotation == 'upstream_gene_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001631"
-                                elif annotation == '5_prime_UTR_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001623"
-                                elif annotation == 'synonymous_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001819"
-                                elif annotation == 'downstream_gene_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001632"
-                                elif annotation == 'non_coding_transcript_exon_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001792"
-                                elif annotation == '5_prime_UTR_premature_start_codon_gain_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001988"
-                                elif annotation == 'splice_region_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001630"
-                                elif annotation == 'intergenic_region':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0000605"
-                                elif annotation == 'splice_donor_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001575"
-                                elif annotation == '3_prime_UTR_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001624"
-                                elif annotation == 'splice_acceptor_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001574"
-                                elif annotation == 'stop_retained_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001567"
-                                               
-                            else:
-                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+annotation
-                                if annotation == 'missense_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"ENSGLOSSARY:0000150"
-                                elif annotation == 'intron_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"ENSGLOSSARY:0000161"
-                                elif annotation == 'upstream_gene_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001631"
-                                elif annotation == '5_prime_UTR_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001623"
-                                elif annotation == 'synonymous_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001819"
-                                elif annotation == 'downstream_gene_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001632"
-                                elif annotation == 'non_coding_transcript_exon_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001792"
-                                elif annotation == '5_prime_UTR_premature_start_codon_gain_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001988"
-                                elif annotation == 'splice_region_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001630"
-                                elif annotation == 'intergenic_region':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0000605"
-                                elif annotation == 'splice_donor_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001575"
-                                elif annotation == '3_prime_UTR_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001624"
-                                elif annotation == 'splice_acceptor_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001574"
-                                elif annotation == 'stop_retained_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001567"
-                                
-                    else:
-                        annotated_items=[]
-                        if annotations[1] not in annotated_items:
-                            annotated_items.append(annotations[1])
-                            if dict_to_xls['molecularAttributes|molecularEffects|id'] == "":
-                                dict_to_xls['molecularAttributes|molecularEffects|label'] = annotations[1]
-                                if annotations[1] == 'missense_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000150"
-                                elif annotations[1] == 'intron_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000161"
-                                elif annotations[1] == 'upstream_gene_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001631"
-                                elif annotations[1] == '5_prime_UTR_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001623"
-                                elif annotations[1] == 'synonymous_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001819"
-                                elif annotations[1] == 'downstream_gene_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001632"
-                                elif annotations[1] == 'non_coding_transcript_exon_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001792"
-                                elif annotations[1] == '5_prime_UTR_premature_start_codon_gain_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001988"
-                                elif annotations[1] == 'intergenic_region':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0000605"
-                                elif annotations[1] == '3_prime_UTR_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001624"
-                                elif annotations[1] == 'stop_retained_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001567"
-                            else:
-                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+annotations[1]
-                                if annotations[1] == 'missense_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"ENSGLOSSARY:0000150"
-                                elif annotations[1] == 'intron_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"ENSGLOSSARY:0000161"
-                                elif annotations[1] == 'upstream_gene_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001631"
-                                elif annotations[1] == '5_prime_UTR_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001623"
-                                elif annotations[1] == 'synonymous_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001819"
-                                elif annotations[1] == 'downstream_gene_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001632"
-                                elif annotations[1] == 'non_coding_transcript_exon_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001792"
-                                elif annotations[1] == '5_prime_UTR_premature_start_codon_gain_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001988"
-                                elif annotations[1] == 'intergenic_region':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0000605"
-                                elif annotations[1] == '3_prime_UTR_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+"SO:0001624"
-                                elif annotations[1] == 'stop_retained_variant':
-                                    dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001567"
-                    #print(dict_to_xls['molecularAttributes|molecularEffects|id'])
-                    #print(annotations)
-                    if annotations[10] == '':
-                        dict_to_xls['molecularAttributes|aminoacidChanges']='.'
-                    else:
-                        dict_to_xls['molecularAttributes|aminoacidChanges'] = annotations[10]
-                    dict_to_xls['molecularAttributes|geneIds'] = annotations[4]
 
-            
-            
-            zigosity={}
-            zigosity['0/1']='GENO:GENO_0000458'
-            zigosity['1/0']='GENO:GENO_0000458'
-            zigosity['1/1']='GENO:GENO_0000136'
-            j=0
-            dict_to_xls['caseLevelData|biosampleId'] =''
 
-            for zygo in v.genotypes:
-                if dict_to_xls['caseLevelData|biosampleId'] == '':
-                    if zygo[0] == 1 and zygo[1]== 1:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = '1/1'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/1']
-                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
-                    elif zygo[0] == 1 and zygo[1]== 0:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = '1/0'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['1/0']
-                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
-                    elif zygo[0] == 0 and zygo[1]== 1:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = '0/1'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = zigosity['0/1']
-                        dict_to_xls['caseLevelData|biosampleId'] = my_target_list[j]
-                        
-                else:
-                    if zygo[0] == 1 and zygo[1]== 1:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/1'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/1']
-                        dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
-                    elif zygo[0] == 1 and zygo[1]== 0:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '1/0'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['1/0']
-                        dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
-                    elif zygo[0] == 0 and zygo[1]== 1:
-                        #dict_to_xls['caseLevelData|zygosity|label'] = dict_to_xls['caseLevelData|zygosity|label'] + '|' + '0/1'
-                        #dict_to_xls['caseLevelData|zygosity|id'] = dict_to_xls['caseLevelData|zygosity|id'] + '|' + zigosity['0/1']
-                        dict_to_xls['caseLevelData|biosampleId'] = dict_to_xls['caseLevelData|biosampleId'] + '|' + my_target_list[j]
-                    
-
-                j+=1
-                
-            if dict_to_xls['caseLevelData|biosampleId'] == '':
-                continue
             chromos=re.sub(r"</?\[>", "", chrom)
             chromos=chromos.replace("chr","")
+            if 'X' in chrom:
+                chromos = '23'
+            elif 'Y' in chrom:
+                chromos = '24'
             if conf.reference_genome == 'GRCh37':
-                dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.10' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+                HGVSId='NC_0000'+str(chromos) + '.10' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+                dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
             elif conf.reference_genome == 'GRCh38':
-                dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.11' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+                HGVSId='NC_0000'+str(chromos) + '.11' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+                dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
             elif conf.reference_genome == 'NCBI36':
-                dict_to_xls['identifiers|genomicHGVSId'] = 'NC_0000'+str(chromos) + '.9' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+                HGVSId='NC_0000'+str(chromos) + '.9' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+                dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
 
             dict_to_xls['variation|location|interval|start|value'] = int(start)
             dict_to_xls['variation|location|interval|start|type']="Number"
             dict_to_xls['variation|location|interval|end|value'] = int(end)
             dict_to_xls['variation|location|interval|end|type']="Number"
-
             dict_to_xls['variation|location|interval|start|value'] = int(start)
             dict_to_xls['variation|location|interval|start|type']="Number"
             dict_to_xls['variation|location|interval|end|value'] = int(end)
@@ -405,26 +243,40 @@ def generate(dict_properties):
             dict_to_xls['variation|location|type']="SequenceLocation"
             dict_to_xls['variation|location|sequence_id']="HGVSid:" + str(chrom) + ":g." + str(start) + ref + ">" + alt[0]
             dict_to_xls['variantInternalId'] = str(uuid.uuid1())+':' + str(ref) + ':' + str(alt[0])
-            
+
+            if conf.case_level_data == True:
+                j=0
+                biosampleids=[]
+                for zygo in v.gt_types:
+                    if zygo==True:
+                        biosampleids.append(str(j))
+                        j+=1
+                    else:
+                        j+=1
+                
+                #dict_to_xls['caseLevelData|biosampleId'] = 'hola'
+
+                biosampleids=",".join(biosampleids)
+                #if dict_to_xls['caseLevelData|biosampleId'] == '':
+                    #continue
 
             k=0
-
 
             dict_of_properties={}
             for kline, vline in dict_to_xls.items():
                 property_value = kline
 
-                
+
                 valor = vline
 
                 if valor:
                     dict_of_properties[property_value]=valor
-                    
+
 
                 elif valor == 0:
                     dict_of_properties[property_value]=valor
 
-            
+
             #print(dict_properties)
             #print(dict_of_properties)
             definitivedict={}
@@ -435,7 +287,7 @@ def generate(dict_properties):
                     for item in value:
                         outcome = 0
                         if isinstance(item, dict):
-                            
+
                             for ki, vi in item.items():
                                 if isinstance(vi, list):
                                     vi_list=[]
@@ -447,26 +299,26 @@ def generate(dict_properties):
                                                     listitemv=[]
                                                     vivdict={}
                                                     for itemv in v:
-                                                    
+
                                                         if isinstance(itemv, dict):
                                                             #print('ki is {}'.format(ki))
                                                             #print('k is {}'.format(k))
                                                             #print(itemv)
-                                                            
+
                                                             for kiv, viv in itemv.items():
-                                                                
+
 
                                                                 if isinstance(viv, list):
 
                                                                     for itemviv in viv:
                                                                         if isinstance(itemviv, dict):
-                                                                            
+
                                                                             for kivi, vivi in itemviv.items():
                                                                                 new_item = ""
                                                                                 new_item = key + "|" + ki + "|" + k + "|" + kiv + "|" + kivi
                                                                                 for propk, propv in dict_of_properties.items():
                                                                                     if propk == new_item:
-                                                                                        
+
                                                                                         try:
                                                                                             if 'value' in propk:
                                                                                                 vivdict[kiv][kivi]=int(propv)
@@ -477,12 +329,12 @@ def generate(dict_properties):
                                                                                             vivdict[kiv][kivi]=propv
                                                                                     elif propk == key + "|" + ki + "|" + k + "|" + kiv:
                                                                                         vivdict[kiv]=propv
-                                                                                
 
 
 
-                                                                                    
-                                                            
+
+
+
 
 
                                                                 else:
@@ -497,7 +349,7 @@ def generate(dict_properties):
 
 
 
-                                                            
+
 
                                                         if vivdict != {}:
                                                             #print(vivdict)
@@ -518,7 +370,7 @@ def generate(dict_properties):
                                                     new_item = key + "|" + ki + "|" + k
                                                     for propk, propv in dict_of_properties.items():
                                                         if propk == new_item:
-                                                            
+
 
                                                             try:
                                                                 if ki == 'clinicalInterpretations':
@@ -533,7 +385,7 @@ def generate(dict_properties):
 
                                         if subitem_dict != {}:
                                             if subitem_dict not in vi_list and subitem_dict != {}:
-                                                
+
 
                                                 vi_list.append(subitem_dict)
 
@@ -563,7 +415,7 @@ def generate(dict_properties):
                                     if vi_dict=={}:
                                         del vi_dict
                                 else:
-                                    
+
                                     new_item = ""
                                     new_item = key + "|" + ki
                                     for propk, propv in dict_of_properties.items():
@@ -572,9 +424,9 @@ def generate(dict_properties):
                                                 outcome +=1
                                                 v1_keys=[]
                                             item_dict[ki]=propv
-        
+
                             if item_dict != {} and item_dict != [{}]:
-                                
+
 
                                 if outcome > 0:
                                     if item_dict not in value_list:
@@ -593,7 +445,7 @@ def generate(dict_properties):
                                                         itemv[kvl]=v_array
                                                         v_key = kvl
                                                 elif isinstance(vvl, dict):
-                                                    
+
                                                     v1_array=[]
                                                     itemdict[kvl]={}
                                                     v1_keys = []
@@ -620,7 +472,7 @@ def generate(dict_properties):
                                                 #print(v_array)
                                                 #print(v1_array)
                                                 newdict[v_key]=v_array[n]
-                                                
+
                                                 newdict[v1_bigkeys][v1_keys[0]]=v1_array[n]
                                                 newdict[v1_bigkeys][v1_keys[1]]=v1_array[num]
                                                 list_to_def.append(newdict)
@@ -629,7 +481,7 @@ def generate(dict_properties):
                                                 definitivedict[key].append(itemldf)
                                         elif len(v_array) > 1:
                                             list_to_def=[]
-                                            
+
                                             for itva in v_array:
                                                 newdict={}
                                                 newdict[v_key]=itva
@@ -645,7 +497,7 @@ def generate(dict_properties):
                                         definitivedict[key].append(item_dict)
                                     else:
                                         definitivedict[key]=item_dict
-                                    
+
                 elif isinstance(value, dict):
                     value_dict={}
                     for kd, vd in value.items():
@@ -657,7 +509,7 @@ def generate(dict_properties):
                                     dict_mol={}
                                     list_mol=[]
                                     for kd1, vd1 in itemvd.items():
-                                        
+
                                         new_item = ""
                                         new_item = key + "|" + kd + "|" + kd1
                                         for propk, propv in dict_of_properties.items():
@@ -666,20 +518,20 @@ def generate(dict_properties):
                                                     propv_splitted = propv.split('|')
                                                     propv_splitted=list(dict.fromkeys(propv_splitted))
                                                     t=0
-                                                    
+
 
                                                     while t < len(propv_splitted):
                                                         dict_mol={}
                                                         try:
                                                             dict_mol[kd1]=propv_splitted[t]
-                                                            
+
                                                         except Exception:
-                                                            
+
                                                             dict_mol[kd1]=propv_splitted[t]
-                                                            
+
                                                         t+=1
                                                         list_mol.append(dict_mol)
-                                                    
+
                                                     t=0
                                                     u=0
                                                     if kd1 == 'label':
@@ -711,7 +563,7 @@ def generate(dict_properties):
                                                                     u+=2
                                                             except Exception:
                                                                 pass
-                                                    
+
                                                     if value_dict not in vd_list:
                                                         vd_list.append(value_dict)
                                                 else:
@@ -758,29 +610,69 @@ def generate(dict_properties):
                             definitivedict[key]=propv
 
             GenomicVariations(**definitivedict)
+            definitivedict["datasetId"]=conf.datasetId
+            try:
+                if allele_count:
+                    definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCount"]=allele_count
+                if allele_number:
+                    definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleNumber"]=allele_number
+                if ac_hom:
+                    definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHomozygous"]=ac_hom
+                if ac_het:
+                    definitivedict["frequencyInPopulations"][0]["frequencies"][0]["alleleCountHeterozygous"]=ac_het
+            except Exception:
+                pass
             total_dict.append(definitivedict)
-            
-            if i == num_rows:
+            if conf.case_level_data == True:
+                dict_true["id"]=HGVSId
+                dict_true["biosampleIds"]=biosampleids
+                dict_true["datasetId"]=conf.datasetId
+                total_dict2.append(dict_true)
+                dict_true={}
+                biosampleids=''
 
-                client.beacon.genomicVariations.insert_many(total_dict)
-                pbar.update(1)
-                break
-            elif (i/10000).is_integer():
-                client.beacon.genomicVariations.insert_many(total_dict)
-                del definitivedict
-                del total_dict
-                gc.collect()
-                total_dict=[]
-                pbar.update(1)
-
-            
             pbar.update(1)
             i+=1
 
-    if i != num_rows:
-        client.beacon.genomicVariations.insert_many(total_dict)
-        
-        
+            
+            if conf.case_level_data == True:
+                if total_dict2 != []:
+                    if i == num_rows:
+                        client.beacon.caseLevelData.insert_many(total_dict2)
+                        pbar.update(1)
+                        break
+                    elif (i/10000).is_integer():
+                        client.beacon.caseLevelData.insert_many(total_dict2)
+                        del biosampleids
+                        del total_dict2
+                        gc.collect()
+                        total_dict2=[]
+                        pbar.update(1)
+            if total_dict != []:
+                if i == num_rows:
+                    client.beacon.genomicVariations.insert_many(total_dict)
+                    pbar.update(1)
+                    break
+                elif (i/10000).is_integer():
+                    client.beacon.genomicVariations.insert_many(total_dict)
+                    del definitivedict
+                    del total_dict
+                    gc.collect()
+                    total_dict=[]
+                    pbar.update(1)  
+
+
+
+
+    if total_dict != []:
+        if i != num_rows:
+            client.beacon.genomicVariations.insert_many(total_dict)
+    if conf.case_level_data == True:
+        if total_dict2 != []:
+            if i != num_rows:
+                client.beacon.caseLevelData.insert_many(total_dict2)
+
+
 
     pbar.close()
     return i, l
@@ -789,6 +681,6 @@ total_i, l=generate(dict_properties)
 
 
 if total_i-l > 0:
-    print('Successfully inserted {} records into beacon'.format(total_i-l))
+    print('Successfully inserted {} records into beacon'.format(total_i-l-1))
 else:
     print('No registries found.')

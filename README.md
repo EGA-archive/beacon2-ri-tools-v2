@@ -34,12 +34,16 @@ Once the container is up and running you can start using beacon ri tools v2, con
 To start using beacon ri tools v2, you have to edit the configuration file [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf). Inside this file you will find the next information:
 ```bash
 #### Input and Output files config parameters ####
-csv_folder='csv/examples/'
-output_docs_folder='output_docs/CINECA_dataset/'
+csv_folder = './csv/examples/'
+output_docs_folder='./output_docs/'
 
 #### VCF Conversion config parameters ####
-reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
+allele_frequency=1 # introduce float number, leave 1 if you want to convert all the variants
+reference_genome='GRCh38' # Choose one between NCBI36, GRCh37, GRCh38
+datasetId='coadread_tcga_pan_can_atlas_2018'
 ```
+
+Please, remember to make the datasetId match the id for your datasets.csv file.
 
 #### Generic config parameters
 The **csv_folder** variable sets where are all the .csv files the tool will work with. All the .csv files must follow a specific header structure. You can find an example here [templates](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/csv/templates). Note that any header with different column names from the ones that appear inside the files of this folder will not be read by the beacon ri tools v2.

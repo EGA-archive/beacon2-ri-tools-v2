@@ -452,6 +452,7 @@ def generate(dict_properties, list_of_headers):
                             definitivedict[key]=propv
 
             Individuals(**definitivedict)
+            definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
 
             
