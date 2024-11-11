@@ -41,6 +41,8 @@ output_docs_folder='./output_docs/'
 allele_frequency=1 # introduce float number, leave 1 if you want to convert all the variants
 reference_genome='GRCh38' # Choose one between NCBI36, GRCh37, GRCh38
 datasetId='coadread_tcga_pan_can_atlas_2018'
+case_level_data=False
+num_rows=7000000
 ```
 
 Please, remember to make the datasetId match the id for your datasets.csv file.
@@ -52,6 +54,20 @@ The **output_docs_folder** sets the folder where your final .json files will be 
 #### VCF conversion config parameters
 The **reference_genome** is the reference genome the tool will use to map the position of the chromosomes. Make sure to select the same version as the one used to generate your data. 
 The **allele_frequency** let's you set a threshold for the allele frequency of the variants you want to convert from the vcf file.
+The **datasetId** needs to match the id of your datasets.csv or datasets.json file. This will add a datasetId field in every record to match the record with the dataset it belongs to.
+The **case_level_data** is a boolean parameter (True or False) which will relate your variants to the samples they belong to. In case you set this to true, please, read as well the case level data paragraph below.
+The **num_rows** are the aproximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow sometimes to calculate all the variants number in a VCF.
+
+### Case Level Data conversion
+
+If you are converting with the paramater **case_level_data** to True, this will add data into two collections: **targets** and **caseLevelData**. If you need to export the variants to insert them in another mongoDB, you will need to export these two collections as well, by executing the next commands:
+
+```bash
+docker exec ri-tools-mongo mongoexport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection caseLevelData > caseLevelData.json
+```
+```bash
+docker exec ri-tools-mongo mongoexport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection targets > targets.json
+```
 
 ### Converting data from .vcf.gz file
 
