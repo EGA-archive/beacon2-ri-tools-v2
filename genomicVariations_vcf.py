@@ -243,20 +243,21 @@ def generate(dict_properties):
             dict_to_xls['variation|location|type']="SequenceLocation"
             dict_to_xls['variation|location|sequence_id']="HGVSid:" + str(chrom) + ":g." + str(start) + ref + ">" + alt[0]
             dict_to_xls['variantInternalId'] = str(uuid.uuid1())+':' + str(ref) + ':' + str(alt[0])
+            #dict_to_xls['molecularAttributes|geneIds']='KRAS'
 
             if conf.case_level_data == True:
                 j=0
-                biosampleids=[]
+                dict_trues={"id": HGVSId, "datasetId": conf.datasetId}
                 for zygo in v.gt_types:
                     if zygo==True:
-                        biosampleids.append(str(j))
+                        dict_trues[str(j)]="y"
                         j+=1
                     else:
                         j+=1
                 
                 #dict_to_xls['caseLevelData|biosampleId'] = 'hola'
 
-                biosampleids=",".join(biosampleids)
+                #biosampleids=",".join(biosampleids)
                 #if dict_to_xls['caseLevelData|biosampleId'] == '':
                     #continue
 
@@ -623,31 +624,15 @@ def generate(dict_properties):
             except Exception:
                 pass
             total_dict.append(definitivedict)
-            if conf.case_level_data == True:
-                dict_true["id"]=HGVSId
-                dict_true["biosampleIds"]=biosampleids
-                dict_true["datasetId"]=conf.datasetId
-                total_dict2.append(dict_true)
-                dict_true={}
-                biosampleids=''
+
 
             pbar.update(1)
             i+=1
 
-            
             if conf.case_level_data == True:
-                if total_dict2 != []:
-                    if i == num_rows:
-                        client.beacon.caseLevelData.insert_many(total_dict2)
-                        pbar.update(1)
-                        break
-                    elif (i/10000).is_integer():
-                        client.beacon.caseLevelData.insert_many(total_dict2)
-                        del biosampleids
-                        del total_dict2
-                        gc.collect()
-                        total_dict2=[]
-                        pbar.update(1)
+                client.beacon.caseLevelData.insert_one(dict_trues)
+            dict_trues={}
+
             if total_dict != []:
                 if i == num_rows:
                     client.beacon.genomicVariations.insert_many(total_dict)
