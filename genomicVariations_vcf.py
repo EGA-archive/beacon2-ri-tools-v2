@@ -152,129 +152,132 @@ def generate(dict_properties):
 
             if formatted == True:
                 annotation_list=v.INFO.get('CSQ')
-                annotation_list=annotation_list.split('|')
-                #print(annotation_list)
-                #print(varianttype_num)
-                varianttype=annotation_list[varianttype_num]
-                if '/' in varianttype:
-                    if len(varianttype)> 3:
-                        varianttype='INDEL'
+                if annotation_list != None:
+                    annotation_list=annotation_list.split('|')
+                    #print(annotation_list)
+                    #print(varianttype_num)
+                    varianttype=annotation_list[varianttype_num]
+                    if '/' in varianttype:
+                        if len(varianttype)> 3:
+                            varianttype='INDEL'
+                        else:
+                            varianttype='SNP'
                     else:
-                        varianttype='SNP'
-                else:
-                    varianttype='Structural Variant'
-                #print(varianttype)
-                gene=annotation_list[gene_num]
-                if gene != '':
-                    dict_to_xls['molecularAttributes|geneIds']=gene
-                protein=annotation_list[protein_num]
-                #print(protein)
-                if protein != '':
-                    protein=protein.split('p.')
-                    aminoacidchange=protein[1]
-                    dict_to_xls['molecularAttributes|aminoacidChanges']=aminoacidchange
-                moleculareffectt=annotation_list[moleculareffect_num]
-                
-                if "&" in moleculareffectt:
-                    moleculareffects=moleculareffectt.split("&")
-                    dict_to_xls['molecularAttributes|molecularEffects|id']=""
-                else:
-                    moleculareffects=[moleculareffectt]
-                    dict_to_xls['molecularAttributes|molecularEffects|id']=""
-                for moleculareffect in moleculareffects:
-                    if dict_to_xls['molecularAttributes|molecularEffects|id']=="":
-                        if moleculareffect == 'missense_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000150"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == 'intron_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000161"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == 'upstream_gene_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001631"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == '5_prime_UTR_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001623"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == 'synonymous_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001819"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == 'downstream_gene_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001632"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == 'non_coding_transcript_exon_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001792"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == '5_prime_UTR_premature_start_codon_gain_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001988"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == 'splice_region_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001630"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == 'intergenic_region':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0000605"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == 'splice_donor_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001575"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == '3_prime_UTR_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001624"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == 'splice_acceptor_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001574"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == 'stop_retained_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001567"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
-                        elif moleculareffect == 'coding_sequence_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id']="SO:0001580"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                        varianttype='Structural Variant'
+                    #print(varianttype)
+                    gene=annotation_list[gene_num]
+                    if gene != '':
+                        dict_to_xls['molecularAttributes|geneIds']=gene
+                    protein=annotation_list[protein_num]
+                    #print(protein)
+                    if protein != '':
+                        protein=protein.split('p.')
+                        aminoacidchange=protein[1]
+                        dict_to_xls['molecularAttributes|aminoacidChanges']=aminoacidchange
+                    moleculareffectt=annotation_list[moleculareffect_num]
+                    
+                    if "&" in moleculareffectt:
+                        moleculareffects=moleculareffectt.split("&")
+                        dict_to_xls['molecularAttributes|molecularEffects|id']=""
                     else:
-                        if moleculareffect == 'missense_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "ENSGLOSSARY:0000150"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == 'intron_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "ENSGLOSSARY:0000161"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == 'upstream_gene_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001631"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == '5_prime_UTR_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001623"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == 'synonymous_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001819"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == 'downstream_gene_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001632"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == 'non_coding_transcript_exon_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001792"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == '5_prime_UTR_premature_start_codon_gain_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001988"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == 'splice_region_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001630"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == 'intergenic_region':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0000605"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == 'splice_donor_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001575"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == '3_prime_UTR_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001624"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == 'splice_acceptor_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001574"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == 'stop_retained_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001567"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                        elif moleculareffect == 'coding_sequence_variant':
-                            dict_to_xls['molecularAttributes|molecularEffects|id']+= "|"+ "SO:0001580"
-                            dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
-                    #print(dict_to_xls['molecularAttributes|molecularEffects|id'])
+                        moleculareffects=[moleculareffectt]
+                        dict_to_xls['molecularAttributes|molecularEffects|id']=""
+                    for moleculareffect in moleculareffects:
+                        if dict_to_xls['molecularAttributes|molecularEffects|id']=="":
+                            if moleculareffect == 'missense_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000150"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == 'intron_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "ENSGLOSSARY:0000161"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == 'upstream_gene_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001631"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == '5_prime_UTR_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001623"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == 'synonymous_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001819"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == 'downstream_gene_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001632"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == 'non_coding_transcript_exon_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001792"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == '5_prime_UTR_premature_start_codon_gain_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001988"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == 'splice_region_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001630"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == 'intergenic_region':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0000605"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == 'splice_donor_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001575"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == '3_prime_UTR_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001624"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == 'splice_acceptor_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001574"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == 'stop_retained_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] = "SO:0001567"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                            elif moleculareffect == 'coding_sequence_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id']="SO:0001580"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] = moleculareffect
+                        else:
+                            if moleculareffect == 'missense_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "ENSGLOSSARY:0000150"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == 'intron_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "ENSGLOSSARY:0000161"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == 'upstream_gene_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001631"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == '5_prime_UTR_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001623"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == 'synonymous_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001819"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == 'downstream_gene_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001632"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == 'non_coding_transcript_exon_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001792"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == '5_prime_UTR_premature_start_codon_gain_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001988"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == 'splice_region_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001630"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == 'intergenic_region':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0000605"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == 'splice_donor_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001575"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == '3_prime_UTR_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001624"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == 'splice_acceptor_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001574"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == 'stop_retained_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id'] += "|"+ "SO:0001567"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                            elif moleculareffect == 'coding_sequence_variant':
+                                dict_to_xls['molecularAttributes|molecularEffects|id']+= "|"+ "SO:0001580"
+                                dict_to_xls['molecularAttributes|molecularEffects|label'] += "|"+  moleculareffect
+                        #print(dict_to_xls['molecularAttributes|molecularEffects|id'])
+                else:
+                    formatted=False
 
 
             else:
