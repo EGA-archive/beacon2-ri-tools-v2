@@ -5,7 +5,7 @@ output_docs_folder='./output_docs/'
 #### VCF Conversion config parameters ####
 allele_counts=True
 reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
-datasetId='COVID_pop11_fin_2'
+datasetId='test'
 case_level_data=False
 num_rows=7000000
 
