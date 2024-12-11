@@ -156,14 +156,17 @@ def generate(dict_properties):
                     annotation_list=annotation_list.split('|')
                     #print(annotation_list)
                     #print(varianttype_num)
-                    varianttype=annotation_list[varianttype_num]
-                    if '/' in varianttype:
-                        if len(varianttype)> 3:
-                            varianttype='INDEL'
+                    try:
+                        varianttype=annotation_list[varianttype_num]
+                        if '/' in varianttype:
+                            if len(varianttype)> 3:
+                                varianttype='INDEL'
+                            else:
+                                varianttype='SNP'
                         else:
-                            varianttype='SNP'
-                    else:
-                        varianttype='Structural Variant'
+                            varianttype='Structural Variant'
+                    except Exception:
+                        varianttype='UNKNOWN'
                     #print(varianttype)
                     gene=annotation_list[gene_num]
                     if gene != '':
@@ -284,7 +287,7 @@ def generate(dict_properties):
                 try:
                     varianttype=v.INFO.get('VT')
                 except Exception:
-                    varianttype='SV'
+                    varianttype='UNKNOWN'
                 
 
             
