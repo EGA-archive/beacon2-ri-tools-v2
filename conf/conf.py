@@ -1,13 +1,14 @@
 #### Input and Output files config parameters ####
-csv_folder = './csv/examples/'
+csv_folder = './csv/examples/Mireia/'
 output_docs_folder='./output_docs/'
 
 #### VCF Conversion config parameters ####
 allele_counts=True
 reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
-datasetId='test'
+datasetId='EGAD00001007774'
 case_level_data=False
-num_rows=7000000
+num_rows= 35474150
+population='Female'
 
 ### MongoDB parameters ###
 database_host = 'mongo'

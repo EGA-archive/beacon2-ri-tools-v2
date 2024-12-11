@@ -346,7 +346,7 @@ def generate(dict_properties):
                 if allele_frequency is not None:
                     dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]
                     dict_to_xls['frequencyInPopulations|source']=pipeline["frequencyInPopulations|source"]
-                    dict_to_xls['frequencyInPopulations|frequencies|population']=conf.datasetId
+                    dict_to_xls['frequencyInPopulations|frequencies|population']=conf.population
                     dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=allele_frequency
             except Exception as e:
                 pass
@@ -365,7 +365,9 @@ def generate(dict_properties):
                 ref=v.REF
                 end=v.INFO.get('END')
                 alt=v.ALT
-            if alt == []:
+            if '<' and '>' in alt[0]:
+                continue
+            elif alt == []:
                 alt=['N']
             dict_to_xls['variation|alternateBases'] = alt[0]
 
