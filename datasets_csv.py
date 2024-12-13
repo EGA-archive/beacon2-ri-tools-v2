@@ -301,7 +301,39 @@ def generate(dict_properties,list_of_headers):
                                                     value_dict[kd]={}
                                                 value_dict[kd][kd1]={}
                                                 value_dict[kd][kd1][kd2]=propv
-                                                definitivedict[key]=value_dict
+                                                definitivedict[key]=value_dict 
+                                elif isinstance(vd1, list):
+                                    arrayofkdvs=[]
+                                    new_item = ""
+                                    new_item = key + "|" + kd + "|" + kd1
+                                    for propk, propv in dict_of_properties.items():
+                                        if propk == new_item:
+                                            if '|' in propv:
+                                                if propv_splitted_id != [] and propv_splitted_label != []:
+                                                    propv_splitted_version = propv.split(',')
+                                                elif propv_splitted_id != []:
+                                                    propv_splitted_label = propv.split(',')
+                                                else:
+                                                    propv_splitted_id = propv.split(',')
+                                                if propv_splitted_version != []:
+                                                    n=0
+                                                    while n < len(propv_splitted_id):
+                                                        dicty={}
+                                                        dicty['id']=propv_splitted_id[n]
+                                                        dicty['label']=propv_splitted_label[n]
+                                                        dicty['version']=propv_splitted_version[n]
+                                                        for kdv, vdv in value_dict.items():
+                                                            arrayofkdvs.append(kdv)
+                                                        if kd not in arrayofkdvs:
+                                                            value_dict[kd]=[]
+                                                        value_dict[kd].append(dicty)
+                                                        n+=1
+                                            else:
+                                                jsonedpropv=json.loads(propv)
+                                                lofv[kd1]=[jsonedpropv]
+                                                if lofv not in list_of_values:
+                                                    list_of_values.append(lofv)
+                                                value_dict[kd]=list_of_values              
                                 else:
                                     arrayofkdvs=[]
                                     new_item = ""
