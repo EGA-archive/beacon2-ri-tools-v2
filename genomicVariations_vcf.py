@@ -330,17 +330,17 @@ def generate(dict_properties):
                                 pass
                             elif isinstance(allele_number, tuple):
                                 allele_number=list(allele_number)
-                                allele_number[0]
+                                allele_number=allele_number[0]
                             else:
-                                allele_number = float(allele_number)
+                                allele_number = int(allele_number)
                             if allele_count == None:
                                 pass
                             elif isinstance(allele_count, tuple):
                                 allele_count=list(allele_count)
                                 allele_count=allele_count[0]
                             else:
-                                allele_count = float(allele_count)
-                            if allele_count == 0.0:
+                                allele_count = int(allele_count)
+                            if allele_count == 0:
                                 i+=1
                                 pbar.update(1)
                                 continue
@@ -350,7 +350,7 @@ def generate(dict_properties):
                                 ac_hom=list(ac_hom)
                                 ac_hom=ac_hom[0]
                             else:
-                                ac_hom = float(ac_hom)
+                                ac_hom = int(ac_hom)
 
                             if ac_het == None:
                                 pass
@@ -358,7 +358,7 @@ def generate(dict_properties):
                                 ac_het=list(ac_het)
                                 ac_het=ac_het[0]
                             else:
-                                ac_het = float(ac_het)
+                                ac_het = int(ac_het)
                             if allele_frequency != 0 or allele_frequency != None:
                                 if allele_count != 0 or allele_count != None:
                                     if ac_hom == None and ac_het != None and allele_count != None:
