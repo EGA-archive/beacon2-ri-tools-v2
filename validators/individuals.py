@@ -314,7 +314,7 @@ class Pedigrees(BaseModel, extra='forbid'):
             Members(**member)
 
 class PhenotypicFeatures(BaseModel, extra='forbid'):
-    evidence: Optional[Evidence]=None
+    evidence: Optional[dict]=None
     id: Optional[str] = None
     excluded: Optional[bool]=None
     featureType: OntologyTerm
