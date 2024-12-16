@@ -237,6 +237,7 @@ def generate(dict_properties, list_of_headers):
                             
                             
                             if isinstance(vd[0], dict):
+                                value_dict[kd]={}
                                 dicty={}
                                 propv_splitted_id=[]
                                 propv_splitted_label=[]
@@ -249,9 +250,52 @@ def generate(dict_properties, list_of_headers):
                                             new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
-                                                    value_dict[kd]={}
-                                                    value_dict[kd][kd1]={}
-                                                    value_dict[kd][kd1][kd2]=propv
+                                                    try:
+                                                        value_dict[kd][0][kd1]={}
+                                                        value_dict[kd][0][kd1][kd2]=propv
+                                                    except Exception:
+                                                        value_dict[kd][kd1]={}
+                                                        value_dict[kd][kd1][kd2]=propv
+                                    elif isinstance(vd1, list):
+                                        arrayofkdvs=[]
+                                        new_item = ""
+                                        new_item = key + "|" + kd + "|" + kd1
+                                        for propk, propv in dict_of_properties.items():
+                                            if propk == new_item:
+                                                if '|' in propv:
+                                                    if propv_splitted_id != [] and propv_splitted_label != []:
+                                                        propv_splitted_version = propv.split(',')
+                                                    elif propv_splitted_id != []:
+                                                        propv_splitted_label = propv.split(',')
+                                                    else:
+                                                        propv_splitted_id = propv.split(',')
+                                                    if propv_splitted_version != []:
+                                                        n=0
+                                                        while n < len(propv_splitted_id):
+                                                            dicty={}
+                                                            dicty['id']=propv_splitted_id[n]
+                                                            dicty['label']=propv_splitted_label[n]
+                                                            dicty['version']=propv_splitted_version[n]
+                                                            for kdv, vdv in value_dict.items():
+                                                                arrayofkdvs.append(kdv)
+                                                            if kd not in arrayofkdvs:
+                                                                value_dict[kd]=[]
+                                                            value_dict[kd].append(dicty)
+                                                            n+=1
+                                                else:
+                                                    try:
+                                                        jsonedpropv=json.loads(propv)
+                                                        dicty[kd1]=[jsonedpropv]
+                                                        if dicty not in arrayofkdvs:
+                                                            arrayofkdvs.append(dicty)
+                                                        value_dict[kd]=arrayofkdvs
+                                                    except Exception:
+                                                        jsonedpropv=propv
+                                                        dicty[kd1]=jsonedpropv
+                                                        if dicty not in arrayofkdvs:
+                                                            arrayofkdvs.append(dicty)
+                                                        value_dict[kd]=arrayofkdvs
+
                                     else:
                                         new_item = ""
                                         new_item = key + "|" + kd + "|" + kd1
@@ -284,8 +328,11 @@ def generate(dict_properties, list_of_headers):
                                                         arrayofkdvs.append(kdv)
                                                     if kd not in arrayofkdvs:
                                                         value_dict[kd]=[]
-                                                    if dicty not in value_dict[kd]:
-                                                        value_dict[kd].append(dicty)
+                                                    try:
+                                                        if dicty not in value_dict[kd]:
+                                                            value_dict[kd].append(dicty)
+                                                    except Exception:
+                                                        value_dict[kd]=dicty
 
                                     
                                     if value_dict != {}:
@@ -296,6 +343,7 @@ def generate(dict_properties, list_of_headers):
 
 
                         elif isinstance(vd, dict):
+                            value_dict[kd]={}
                             for kd1, vd1 in vd.items():
                                 if isinstance(vd1, dict):
                                     for kd2, vd2 in vd1.items():
