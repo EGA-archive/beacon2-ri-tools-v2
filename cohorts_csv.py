@@ -133,11 +133,9 @@ def generate(dict_properties, list_of_headers):
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
                                                     if propk.endswith('availability'):
-                                                        print(propv)
                                                         vi_dict[ki1]=bool(propv)
                                                         item_dict[ki]=vi_dict
                                                     elif propk.endswith('availabilityCount'):
-                                                        print(propv)
                                                         vi_dict[ki1]=int(propv)
                                                         item_dict[ki]=vi_dict
                                                     else:
@@ -333,6 +331,8 @@ def generate(dict_properties, list_of_headers):
 
 
                                                 else:
+                                                    if propv == 'TRUE' or propv == 'true' or propv == 'FALSE' or propv == 'false':
+                                                        propv = bool(propv)
                                                     dicty[kd1]=propv
                                                     arrayofkdvs=[]
                                                     for kdv, vdv in value_dict.items():
@@ -418,7 +418,6 @@ def generate(dict_properties, list_of_headers):
                                 propv = propv
                             definitivedict[key]=propv
 
-            print(definitivedict)
             Cohorts(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
