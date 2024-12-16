@@ -746,11 +746,6 @@ for key, value in dict_types.items():
                         overtyped=overtypes(subtyped)
                         dictovertyped=dict_overtypes(overtyped)
                         finaldict[key][k]=dictovertyped
-                elif 'object' in v:
-                        finaldict[key][k]={}
-                        finaldict[key][k]['availability']=True
-                        finaldict[key][k]['availabilityCount']=0
-                        finaldict[key][k]['distribution']={}
                 elif isinstance(v, dict):
                     finaldict[key][k]={}
                     for k1, v1 in v.items():
@@ -959,18 +954,6 @@ def generate(dict_properties):
 
     with open("files/headers/cohorts.txt", "w") as txt_file:
         for line in list_of_excel_items:
-            txt_file.write("".join(line) + "\n")
-
-    with open("files/required/definitions/cohorts.txt", "w") as txt_file:
-        for line in list_of_definitions_required:
-            txt_file.write("".join(line) + "\n")
-
-    with open("files/required/header_definitions/cohorts.txt", "w") as txt_file:
-        for line in list_of_headers_definitions_required:
-            txt_file.write("".join(line) + "\n")
-
-    with open("files/required/properties/cohorts.txt", "w") as txt_file:
-        for line in list_of_properties_required:
             txt_file.write("".join(line) + "\n")
 
     with open('files/deref_schemas/cohorts.json', 'w') as f:

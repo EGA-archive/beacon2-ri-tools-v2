@@ -57,8 +57,6 @@ exclusionCriteria|phenotypicConditions|onset
 exclusionCriteria|phenotypicConditions|resolution
 exclusionCriteria|phenotypicConditions|severity|id
 exclusionCriteria|phenotypicConditions|severity|label
-exclusionCriteria|type|availability
-exclusionCriteria|type|availabilityCount
 id
 inclusionCriteria|ageRange
 inclusionCriteria|ageRange|end|iso8601duration
@@ -89,6 +87,4 @@ inclusionCriteria|phenotypicConditions|onset
 inclusionCriteria|phenotypicConditions|resolution
 inclusionCriteria|phenotypicConditions|severity|id
 inclusionCriteria|phenotypicConditions|severity|label
-inclusionCriteria|type|availability
-inclusionCriteria|type|availabilityCount
 name

@@ -116,9 +116,9 @@ def generate(dict_properties, list_of_headers):
                                                 for propk, propv in dict_of_properties.items():
                                                     if propk == new_item:
                                                         propv = re.sub(r'\s', '', propv)
-                                                        respropv = json.loads(propv)                                                    
+                                                        respropv = json.loads(propv)
                                                         item_dict[ki][ki1]=respropv 
-                                            else:  
+                                            else:
                                                 for ki2, vi2 in vi1.items():
                                                     new_item = ""
                                                     new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
@@ -132,11 +132,12 @@ def generate(dict_properties, list_of_headers):
                                             new_item = key + "|" + ki + "|" + ki1
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
-                                                    #print(propk)
                                                     if propk.endswith('availability'):
+                                                        print(propv)
                                                         vi_dict[ki1]=bool(propv)
                                                         item_dict[ki]=vi_dict
                                                     elif propk.endswith('availabilityCount'):
+                                                        print(propv)
                                                         vi_dict[ki1]=int(propv)
                                                         item_dict[ki]=vi_dict
                                                     else:
@@ -251,11 +252,14 @@ def generate(dict_properties, list_of_headers):
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
                                                     try:
-                                                        value_dict[kd][0][kd1]={}
                                                         value_dict[kd][0][kd1][kd2]=propv
                                                     except Exception:
-                                                        value_dict[kd][kd1]={}
-                                                        value_dict[kd][kd1][kd2]=propv
+                                                        try:
+                                                            value_dict[kd][0][kd1]={}
+                                                            value_dict[kd][0][kd1][kd2]=propv
+                                                        except Exception:
+                                                            value_dict[kd][kd1]={}
+                                                            value_dict[kd][kd1][kd2]=propv
                                     elif isinstance(vd1, list):
                                         arrayofkdvs=[]
                                         new_item = ""
@@ -285,7 +289,14 @@ def generate(dict_properties, list_of_headers):
                                                 else:
                                                     try:
                                                         jsonedpropv=json.loads(propv)
-                                                        dicty[kd1]=[jsonedpropv]
+                                                        if kd1 == 'ageOfOnset':
+                                                            dicty[kd1]=jsonedpropv
+                                                        elif kd1 == 'onset':
+                                                            dicty[kd1]=jsonedpropv
+                                                        elif kd1 == 'resolution':
+                                                            dicty[kd1]=jsonedpropv
+                                                        else:
+                                                            dicty[kd1]=[jsonedpropv]
                                                         if dicty not in arrayofkdvs:
                                                             arrayofkdvs.append(dicty)
                                                         value_dict[kd]=arrayofkdvs
@@ -329,10 +340,16 @@ def generate(dict_properties, list_of_headers):
                                                     if kd not in arrayofkdvs:
                                                         value_dict[kd]=[]
                                                     try:
-                                                        if dicty not in value_dict[kd]:
-                                                            value_dict[kd].append(dicty)
+                                                        value_dict[kd].append(dicty)
                                                     except Exception:
-                                                        value_dict[kd]=dicty
+                                                        if key == 'inclusionCriteria' or key == 'exclusionCriteria':
+                                                            try:
+                                                                value_dict[kd].append(dicty)
+                                                            except Exception:
+                                                                value_dict[kd]=[]
+                                                                value_dict[kd].append(dicty)
+                                                        else:
+                                                            value_dict[kd]=dicty
 
                                     
                                     if value_dict != {}:
@@ -376,7 +393,10 @@ def generate(dict_properties, list_of_headers):
                             for propk, propv in dict_of_properties.items():
                                 if propk == new_item:
                                     value_dict[kd]=propv
-                                    definitivedict[key]=value_dict
+                                    if key == 'cohortDataTypes':
+                                        definitivedict[key]=[value_dict]
+                                    else:
+                                        definitivedict[key]=value_dict
                     if value == {}:
                         new_item = ""
                         new_item = key
@@ -397,6 +417,8 @@ def generate(dict_properties, list_of_headers):
                             except Exception:
                                 propv = propv
                             definitivedict[key]=propv
+
+            print(definitivedict)
             Cohorts(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
