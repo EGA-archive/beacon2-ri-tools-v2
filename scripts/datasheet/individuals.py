@@ -970,18 +970,6 @@ def generate(dict_properties):
         for line in list_of_excel_items:
             txt_file.write("".join(line) + "\n")
 
-    with open("files/required/definitions/individuals.txt", "w") as txt_file:
-        for line in list_of_definitions_required:
-            txt_file.write("".join(line) + "\n")
-
-    with open("files/required/header_definitions/individuals.txt", "w") as txt_file:
-        for line in list_of_headers_definitions_required:
-            txt_file.write("".join(line) + "\n")
-
-    with open("files/required/properties/individuals.txt", "w") as txt_file:
-        for line in list_of_properties_required:
-            txt_file.write("".join(line) + "\n")
-
     with open('files/deref_schemas/individuals.json', 'w') as f:
         json.dump(dict_properties, f)
 
