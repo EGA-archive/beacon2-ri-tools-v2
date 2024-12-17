@@ -180,6 +180,8 @@ def commas(prova):
                                 if vsplitted[i]!='' or vsplitted[i]!={}:
                                     newdict[key][k]=float(vsplitted[i])
                             except Exception:
+                                print(vsplitted)
+                                print(i)
                                 if vsplitted[i]!='' or vsplitted[i]!={}:
                                     newdict[key][k]=vsplitted[i]
                         elif isinstance(v, int):
@@ -260,6 +262,7 @@ def generate(dict_properties, list_of_headers):
                                     vi_list=[]
                                     for subitem in vi:
                                         if isinstance(subitem, dict):
+
                                             subitem_dict={}
                                             for k, v in subitem.items():
                                                 if isinstance(v, dict):
@@ -283,6 +286,8 @@ def generate(dict_properties, list_of_headers):
                                                                     new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2
                                                                     for propk, propv in dict_of_properties.items():
                                                                         if propk == new_item:
+                                                                            #print(propk)
+                                                                            #print(propv)
                                                                             subitem_dict[k][k1][k2]=propv   
                                                             if subitem_dict[k][k1]=={}:
                                                                 del subitem_dict[k][k1]
@@ -306,6 +311,15 @@ def generate(dict_properties, list_of_headers):
                                                         vi_list.append(subitem_dict)
                                                         if ki == 'modifiers':
                                                             item_dict[ki]=vi_list
+                                                        elif ki == 'measurementValue' and len(vi_list)>2:
+                                                            #print(vi_list)
+                                                            dict_1=vi_list[0]
+                                                            dict_2=vi_list[1]
+                                                            dict_1['unit']=dict_2['unit']
+                                                            dict_1['value']=dict_2['value']
+
+                                                            item_dict[ki]=[dict_1]
+                                                            #print(item_dict)
                                                         else:
                                                             item_dict[ki]=vi_list[0]
                     
@@ -348,34 +362,65 @@ def generate(dict_properties, list_of_headers):
                                                         vi_dict[ki1]=propv 
                                                     item_dict[ki]=vi_dict
             
-                                    if item_dict != {} and item_dict != [{}]:
-                                        if item_dict not in value_list:
-                                            value_list.append(item_dict)
                                 else:
                                     new_item = ""
                                     new_item = key + "|" + ki
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
+                                            if propv == 'TRUE' or propv == 'true' or propv == 'FALSE' or propv == 'false':
+                                                propv = bool(propv)
                                             item_dict[ki]=propv
+                                #print(item_dict)
                                 if item_dict != {} and item_dict != [{}]:
                                     if item_dict not in value_list:
                                         value_list.append(item_dict)
+                                        #print(value_list)
 
                             if value_list != []:
-                                for itemvl in value_list:
-                                    list_to_def=commas(itemvl)
-                                    for itemldf in list_to_def:
-                                        if itemldf not in definitivedict[key]:
-                                            if key == 'pedigrees':
-                                                for k, v in itemldf.items():
-                                                    if k == 'members':
-                                                        list_members=[]
-                                                        list_members.append(v)
-                                                try:
-                                                    itemldf['members']=list_members
-                                                except Exception:
-                                                    pass
-                                            definitivedict[key].append(itemldf)
+                                list_to_def=[]
+                                #print(value_list)
+                                
+                                if key == 'pedigrees':
+                                    for itemvl in value_list:
+                                        list_to_def.append(itemvl)
+                                        
+                                        for itemldf in list_to_def:
+                                            if itemldf not in definitivedict[key]:
+                                                if key == 'pedigrees':
+                                                    digreesdict={}
+                                                    memberlist=[]
+                                                    for k, v in itemldf.items():
+                                                        if k == 'members':
+                                                            
+                                                            for kmem, vmem in v.items():
+                                                                if kmem == 'role':
+                                                                    for kmem1,vmem1 in vmem.items():
+                                                                        if kmem1 == 'id':
+                                                                            roleid=vmem1.split('|')
+                                                                        else:
+                                                                            rolelabel=vmem1.split('|')
+                                                                elif kmem == 'affected':
+                                                                    affected=vmem.split('|')
+                                                                elif kmem == 'memberId':
+                                                                    memberId = vmem.split('|')
+                                                            memberitems={}
+                                                            pnum=0
+                                                            while pnum < len(memberId):
+                                                                memberitems['affected']=bool(affected[i])
+                                                                memberitems['memberId']=memberId[i]
+                                                                memberitems['role']={}
+                                                                memberitems['role']['id']=roleid[i]
+                                                                memberitems['role']['label']=rolelabel[i]
+                                                                memberlist.append(memberitems)
+                                                                pnum+=1
+
+
+
+                                                            itemvl['members']=memberlist
+                                        definitivedict[key].append(itemvl)
+                                else:
+                                    definitivedict[key]=value_list
+
                             else:
                                 for itemvl in value_list:
                                     definitivedict[key].append(itemvl)     
@@ -450,7 +495,7 @@ def generate(dict_properties, list_of_headers):
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             definitivedict[key]=propv
-
+            #print(definitivedict)
             Individuals(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)

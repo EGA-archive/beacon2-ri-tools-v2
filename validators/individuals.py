@@ -254,7 +254,10 @@ class Measurement(BaseModel, extra='forbid'):
     def check_measurementValue(cls, v: Union[Quantity, OntologyTerm, list]= Field(union_mode='left_to_right')) -> Union[Quantity, OntologyTerm, list]:
         if isinstance(v, list):
             for measurement in v:
-                TypedQuantity(**measurement)
+                try:
+                    Quantity(**measurement)
+                except Exception:
+                    TypedQuantity(**measurement)
     @field_validator('observationMoment')
     @classmethod
     def check_observationMoment(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:
