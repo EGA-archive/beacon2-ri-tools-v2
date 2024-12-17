@@ -326,6 +326,8 @@ def generate(dict_properties, list_of_headers):
                                                                 arrayofkdvs.append(kdv)
                                                             if kd not in arrayofkdvs:
                                                                 value_dict[kd]=[]
+                                                            if value_dict[kd]=={}:
+                                                                value_dict[kd]=[]
                                                             value_dict[kd].append(dicty)
                                                             n+=1
 
