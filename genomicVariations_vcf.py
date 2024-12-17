@@ -395,7 +395,7 @@ def generate(dict_properties):
                 ref=v.REF
                 end=v.INFO.get('END')
                 alt=v.ALT
-            if '<' and '>' in alt[0]:
+            if alt != [] and '<' and '>' in alt[0]:
                 continue
             elif alt == []:
                 alt=['N']
