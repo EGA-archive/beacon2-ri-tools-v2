@@ -377,6 +377,72 @@ def generate(dict_properties):
                                 dict_per_population["population"]=popu
                             if dict_per_population != {} and allele_frequency !=None:
                                 frequencies.append(dict_per_population)
+                    else:
+                        allele_frequency=v.INFO.get('AF')
+                        if allele_frequency == None:
+                            pass
+                        if isinstance(allele_frequency, tuple):
+                            allele_frequency=list(allele_frequency)
+                            allele_frequency=allele_frequency[0]
+                        else:
+                            allele_frequency = float(allele_frequency)
+                        if allele_frequency == 0.0:
+                            i+=1
+                            pbar.update(1)
+                            continue
+                        allele_number=v.INFO.get('AN')
+                        if allele_number == None:
+                            pass
+                        elif isinstance(allele_number, tuple):
+                            allele_number=list(allele_number)
+                            allele_number=allele_number[0]
+                        else:
+                            allele_number = float(allele_number)
+                        allele_count=v.INFO.get('AC')
+                        if allele_count == None:
+                            pass
+                        elif isinstance(allele_count, tuple):
+                            allele_count=list(allele_count)
+                            allele_count=allele_count[0]
+                        else:
+                            allele_count = float(allele_count)
+                        if allele_count == 0.0:
+                            i+=1
+                            pbar.update(1)
+                            continue
+                        ac_hom=v.INFO.get('AC_Hom')
+                        if ac_hom == None:
+                            pass
+                        elif isinstance(ac_hom, tuple):
+                            ac_hom=list(ac_hom)
+                            ac_hom=ac_hom[0]
+                        else:
+                            ac_hom = float(v.INFO.get('AC_Hom'))
+                        ac_het=v.INFO.get('AC_Het')
+                        if ac_het == None:
+                            pass
+                        elif isinstance(ac_het, tuple):
+                            ac_het=list(ac_het)
+                            ac_het=ac_het[0]
+                        else:
+                            ac_het = float(v.INFO.get('AC_Het'))
+                if allele_frequency is not None:
+                    dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]
+                    dict_to_xls['frequencyInPopulations|source']=pipeline["frequencyInPopulations|source"]
+                    dict_to_xls['frequencyInPopulations|frequencies|population']="Total"
+                    dict_to_xls['frequencyInPopulations|frequencies|alleleFrequency']=allele_frequency
+                    if allele_frequency != 0 or allele_frequency != None:
+                        dict_per_population["alleleFrequency"]=allele_frequency
+                        if allele_count != None and allele_count != 0:
+                            dict_per_population["alleleCount"]=allele_count
+                            dict_per_population["alleleCountHomozygous"]=ac_hom
+                            dict_per_population["alleleCountHeterozygous"]=ac_het
+                        if allele_number != None and allele_number != 0:
+                            dict_per_population["alleleNumber"]=allele_number
+                        dict_per_population["population"]=popu
+                    if dict_per_population != {} and allele_frequency !=None:
+                        frequencies.append(dict_per_population)
+                        num_of_populations=1
 
             except Exception as e:
                 pass
