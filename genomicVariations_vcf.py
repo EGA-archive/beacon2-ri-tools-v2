@@ -511,15 +511,28 @@ def generate(dict_properties):
             
 
             if conf.case_level_data == True:
-                j=0
-                dict_trues={"id": HGVSId, "datasetId": conf.datasetId}
-                for zygo in v.gt_types:
-                    if zygo==True:
-                        dict_trues[str(j)]="y"
-                        j+=1
-                    else:
-                        j+=1
-                
+                if conf.zygosity == False:
+                    j=0
+                    dict_trues={"id": HGVSId, "datasetId": conf.datasetId}
+                    for zygo in v.gt_types:
+                        if zygo==True:
+                            dict_trues[str(j)]="y"
+                            j+=1
+                        else:
+                            j+=1
+                elif conf.zygosity == True:
+                    j=0
+                    dict_trues={"id": HGVSId, "datasetId": conf.datasetId}
+                    for zygo in v.genotypes:
+                        if zygo[0] == 1 and zygo[1]== 1:
+                            dict_trues[str(j)]="11"
+                            j+=1
+                        elif zygo[0] == 1 and zygo[1]== 0:
+                            dict_trues[str(j)]="10"
+                            j+=1
+                        elif zygo[0] == 0 and zygo[1]== 1:
+                            dict_trues[str(j)]="01"
+                            j+=1
                 #dict_to_xls['caseLevelData|biosampleId'] = 'hola'
 
                 #biosampleids=",".join(biosampleids)

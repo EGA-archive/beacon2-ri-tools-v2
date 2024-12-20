@@ -5,8 +5,9 @@ output_docs_folder='./output_docs/'
 #### VCF Conversion config parameters ####
 allele_counts=True
 reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
-datasetId='gnomad_exome_v2.1.1'
-case_level_data=False
+datasetId='test'
+case_level_data=True
+zygosity=True
 num_rows= 35474150
 
 ### MongoDB parameters ###
