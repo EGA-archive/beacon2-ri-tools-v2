@@ -4,8 +4,8 @@ output_docs_folder='./output_docs/'
 
 #### VCF Conversion config parameters ####
 allele_counts=True
-reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
-datasetId='test'
+reference_genome='GRCh38' # Choose one between NCBI36, GRCh37, GRCh38
+datasetId='CINECA_synthetic_cohort_EUROPE_UK1'
 case_level_data=True
 zygosity=True
 num_rows= 35474150
