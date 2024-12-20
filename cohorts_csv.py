@@ -258,6 +258,11 @@ def generate(dict_properties, list_of_headers):
                                                         except Exception:
                                                             value_dict[kd][kd1]={}
                                                             value_dict[kd][kd1][kd2]=propv
+                                                    try:
+                                                        vdictitem=value_dict[kd][0]
+                                                        value_dict[kd]=[vdictitem]
+                                                    except Exception:
+                                                        pass
                                     elif isinstance(vd1, list):
                                         arrayofkdvs=[]
                                         new_item = ""
@@ -342,7 +347,8 @@ def generate(dict_properties, list_of_headers):
                                                     if kd not in arrayofkdvs:
                                                         value_dict[kd]=[]
                                                     try:
-                                                        value_dict[kd].append(dicty)
+                                                        if dicty not in value_dict[kd]:
+                                                            value_dict[kd].append(dicty)
                                                     except Exception:
                                                         if key == 'inclusionCriteria' or key == 'exclusionCriteria':
                                                             try:

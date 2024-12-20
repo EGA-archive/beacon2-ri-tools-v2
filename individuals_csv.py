@@ -387,8 +387,8 @@ def generate(dict_properties, list_of_headers):
                                         for itemldf in list_to_def:
                                             if itemldf not in definitivedict[key]:
                                                 if key == 'pedigrees':
-                                                    digreesdict={}
                                                     memberlist=[]
+                                                    
                                                     for k, v in itemldf.items():
                                                         if k == 'members':
                                                             
@@ -403,14 +403,15 @@ def generate(dict_properties, list_of_headers):
                                                                     affected=vmem.split('|')
                                                                 elif kmem == 'memberId':
                                                                     memberId = vmem.split('|')
-                                                            memberitems={}
+                                                            
                                                             pnum=0
                                                             while pnum < len(memberId):
-                                                                memberitems['affected']=bool(affected[i])
-                                                                memberitems['memberId']=memberId[i]
+                                                                memberitems={}
+                                                                memberitems['affected']=bool(affected[pnum])
+                                                                memberitems['memberId']=memberId[pnum]
                                                                 memberitems['role']={}
-                                                                memberitems['role']['id']=roleid[i]
-                                                                memberitems['role']['label']=rolelabel[i]
+                                                                memberitems['role']['id']=roleid[pnum]
+                                                                memberitems['role']['label']=rolelabel[pnum]
                                                                 memberlist.append(memberitems)
                                                                 pnum+=1
 
