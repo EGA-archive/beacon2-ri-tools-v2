@@ -58,6 +58,9 @@ The **datasetId** needs to match the id of your datasets.csv or datasets.json fi
 The **case_level_data** is a boolean parameter (True or False) which will relate your variants to the samples they belong to. In case you set this to true, please, read as well the case level data paragraph below.
 The **num_rows** are the aproximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow sometimes to calculate all the variants number in a VCF.
 
+#### VCF headers
+Beacon RI Tools v2 is compatible to headers annotated by VEP. The parameters that are read from VEP are UPLOADED_ALLELE, for setting the variant type, SYMBOL, for setting the gene id, HGVSp, for setting the aminoacid change, and CONSEQUENCE, for setting the molecular effects. If your VCF isn't annotated with VEP you can write down in [pipelines](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/pipelines/default/templates), within the template.json file, which are the keynames for these different properties in your VCF header id and activate the template to true. Note that using template.json will deactivate reading the VEP headers.
+
 #### VCF pipelines for allele frequencies
 To read allele frequency variables, there is the populations.json pipeline inside [pipelines](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/pipelines/default/templates) folder.
 In order to let Beacon RI Tools v2 read all the INFO column from your VCF and parse the allele frequency variants entries, you will need to add how are the different entries named for each annotation. You will have to tell how many populations are there in your VCF setting the numberOfPopulations value, if there are no allele frequencies in the VCF, then you will need to set it to 0, and if there are but no specific populations, then fill the populations with a “Total” name. 
