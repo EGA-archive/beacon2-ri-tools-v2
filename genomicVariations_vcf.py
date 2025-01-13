@@ -126,7 +126,7 @@ def generate(dict_properties):
                     for entry in format_list:
                         if 'uploaded_allele' in entry.lower():
                             varianttype_num=w
-                        elif 'symbol' in entry.lower():
+                        elif entry.lower() == 'symbol':
                             gene_num=w
                         elif 'hgvsp' in entry.lower():
                             protein_num=w
