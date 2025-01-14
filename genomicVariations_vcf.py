@@ -164,7 +164,7 @@ def generate(dict_properties):
                 varianttype=v.INFO.get(template["variantType"])
                 gene=v.INFO.get(template["geneId"])
                 aminoacidchange=v.INFO.get(template["aminoacidChange"])
-                moleculareffectt=v.INGO.get(template["molecularEffects"])
+                moleculareffectt=v.INFO.get(template["molecularEffects"])
                 if "&" in moleculareffectt:
                     moleculareffects=moleculareffectt.split("&")
                     dict_to_xls['molecularAttributes|molecularEffects|id']=""
