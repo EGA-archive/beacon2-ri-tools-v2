@@ -73,6 +73,7 @@ def generate(dict_properties, list_of_headers):
                                                                         new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2 + "|" + k3
                                                                         for propk, propv in dict_of_properties.items():
                                                                             if propk == new_item:
+                                                                                #print(propk)
                                                                                 subitem_dict[k][k1]={}
                                                                                 subitem_dict[k][k1][k2]={}
                                                                                 subitem_dict[k][k1][k2][k3]=propv
@@ -81,6 +82,7 @@ def generate(dict_properties, list_of_headers):
                                                                     new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2
                                                                     for propk, propv in dict_of_properties.items():
                                                                         if propk == new_item:
+                                                                            #print(propk)
                                                                             subitem_dict[k][k1]={}
                                                                             subitem_dict[k][k1][k2]=propv   
                                                         else:
@@ -88,6 +90,7 @@ def generate(dict_properties, list_of_headers):
                                                             new_item = key + "|" + ki + "|" + k + "|" + k1
                                                             for propk, propv in dict_of_properties.items():
                                                                 if propk == new_item:
+                                                                    #print(propk)
                                                                     if subitem_dict == {}:
                                                                         subitem_dict[k]={}
                                                                     subitem_dict[k][k1]=propv  
@@ -115,6 +118,7 @@ def generate(dict_properties, list_of_headers):
                                                 new_item = key + "|" + ki + "|" + ki1
                                                 for propk, propv in dict_of_properties.items():
                                                     if propk == new_item:
+                                                        #print(propk)
                                                         propv = re.sub(r'\s', '', propv)
                                                         respropv = json.loads(propv)
                                                         item_dict[ki][ki1]=respropv 
@@ -124,6 +128,7 @@ def generate(dict_properties, list_of_headers):
                                                     new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
                                                     for propk, propv in dict_of_properties.items():
                                                         if propk == new_item:
+                                                            #print(propk)
                                                             vi_dict[ki1][ki2]=propv
                                                     if vi_dict != {}:
                                                         item_dict[ki]=vi_dict    
@@ -132,6 +137,7 @@ def generate(dict_properties, list_of_headers):
                                             new_item = key + "|" + ki + "|" + ki1
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
+                                                    #print(propk)
                                                     if propk.endswith('availability'):
                                                         vi_dict[ki1]=bool(propv)
                                                         item_dict[ki]=vi_dict
@@ -249,6 +255,7 @@ def generate(dict_properties, list_of_headers):
                                             new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
+                                                    #print(propk)
                                                     try:
                                                         value_dict[kd][0][kd1][kd2]=propv
                                                     except Exception:
@@ -269,6 +276,7 @@ def generate(dict_properties, list_of_headers):
                                         new_item = key + "|" + kd + "|" + kd1
                                         for propk, propv in dict_of_properties.items():
                                             if propk == new_item:
+                                                #print(propk)
                                                 if '|' in propv:
                                                     if propv_splitted_id != [] and propv_splitted_label != []:
                                                         propv_splitted_version = propv.split(',')
@@ -315,6 +323,7 @@ def generate(dict_properties, list_of_headers):
                                         new_item = key + "|" + kd + "|" + kd1
                                         for propk, propv in dict_of_properties.items():
                                             if propk == new_item:
+                                                #print(propk)
                                                 if '|' in propv:
                                                     if propv_splitted_id != []:
                                                         propv_splitted_label = propv.split('|')
@@ -348,14 +357,17 @@ def generate(dict_properties, list_of_headers):
                                                         value_dict[kd]=[]
                                                     try:
                                                         if dicty not in value_dict[kd]:
-                                                            value_dict[kd].append(dicty)
+                                                            if dicty != {}:
+                                                                value_dict[kd].append(dicty)
                                                     except Exception:
                                                         if key == 'inclusionCriteria' or key == 'exclusionCriteria':
                                                             try:
-                                                                value_dict[kd].append(dicty)
+                                                                if dicty != {}:
+                                                                    value_dict[kd].append(dicty)
                                                             except Exception:
-                                                                value_dict[kd]=[]
-                                                                value_dict[kd].append(dicty)
+                                                                if dicty != {}:
+                                                                    value_dict[kd]=[]
+                                                                    value_dict[kd].append(dicty)
                                                         else:
                                                             value_dict[kd]=dicty
 
@@ -364,7 +376,14 @@ def generate(dict_properties, list_of_headers):
                                         if value_dict not in vd_list:
                                             vd_list.append(value_dict)
                                 if vd_list != []:
-                                    definitivedict[key]=vd_list[0]
+                                    definitive_vd_dict={}
+                                    for kdv,vdv in vd_list[0].items():
+                                        if vdv == {}:
+                                            pass
+                                        else:
+                                            definitive_vd_dict[kdv]=vdv
+                                    if definitive_vd_dict!={}:
+                                        definitivedict[key]=definitive_vd_dict
 
 
                         elif isinstance(vd, dict):
@@ -376,6 +395,7 @@ def generate(dict_properties, list_of_headers):
                                         new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                         for propk, propv in dict_of_properties.items():
                                             if propk == new_item:
+                                                #print(propk)
                                                 if value_dict == {}:
                                                     value_dict[kd]={}
                                                 value_dict[kd][kd1]={}
@@ -386,6 +406,7 @@ def generate(dict_properties, list_of_headers):
                                     new_item = key + "|" + kd + "|" + kd1
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
+                                            #print(propk)
                                             value_dict[kd][kd1]=propv
                                             definitivedict[key]=value_dict
                             else:
@@ -393,6 +414,7 @@ def generate(dict_properties, list_of_headers):
                                 new_item = key + "|" + kd
                                 for propk, propv in dict_of_properties.items():
                                     if propk == new_item:
+                                        #print(propk)
                                         value_dict[kd]=propv
                                         definitivedict[key]=value_dict
                         else:
@@ -400,6 +422,7 @@ def generate(dict_properties, list_of_headers):
                             new_item = key + "|" + kd
                             for propk, propv in dict_of_properties.items():
                                 if propk == new_item:
+                                    #print(propk)
                                     value_dict[kd]=propv
                                     if key == 'cohortDataTypes':
                                         definitivedict[key]=[value_dict]
@@ -414,6 +437,8 @@ def generate(dict_properties, list_of_headers):
                                 propvalue={}
                                 propvalue_splitted = propv.split(':')
                                 propvalue[propvalue_splitted[0]]=propvalue_splitted[1]
+                                print(key)
+                                print(value)
                                 definitivedict[key]=propvalue
                 else:
                     new_item = ""
@@ -424,8 +449,10 @@ def generate(dict_properties, list_of_headers):
                                 propv = int(propv)
                             except Exception:
                                 propv = propv
+                            #print(key)
+                            #print(propv)
                             definitivedict[key]=propv
-
+            #print(definitivedict)
             Cohorts(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)

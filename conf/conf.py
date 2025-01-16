@@ -1,5 +1,5 @@
 #### Input and Output files config parameters ####
-csv_folder = './csv/examples/Mireia/'
+csv_folder = './csv/examples/'
 output_docs_folder='./output_docs/'
 
 #### VCF Conversion config parameters ####
