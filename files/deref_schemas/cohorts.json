@@ -7,6 +7,8 @@
         "id": "",
         "label": ""
     },
+    "cohortSize": 0,
+    "cohortType": "",
     "collectionEvents": [
         {
             "eventAgeRange": {
@@ -210,6 +212,7 @@
             }
         ]
     },
+    "id": "",
     "inclusionCriteria": {
         "ageRange": {
             "end": {
@@ -364,5 +367,6 @@
                 }
             }
         ]
-    }
+    },
+    "name": ""
 }

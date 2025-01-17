@@ -337,21 +337,42 @@ def generate(dict_properties, list_of_headers):
                                             
                                             members={}
                                             for ki2, vi2 in vi1.items():
-                                                new_item = ""
-                                                new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
-                                                for propk, propv in dict_of_properties.items():
-                                                    if propk == new_item:
-                                                        #print(propk)
-                                                        try:
-                                                            vi_dict[ki1][ki2]=propv
-                                                        except Exception:
-                                                            vi_dict[ki1]={}
-                                                            vi_dict[ki1][ki2]=propv
+                                                if isinstance(vi2, dict):
+                                                    for ki3, vi3 in vi2.items():
+                                                        new_item = ""
+                                                        new_item = key + "|" + ki + "|" + ki1 + "|" + ki2 + "|" + ki3
+                                                        for propk, propv in dict_of_properties.items():
+                                                            if propk == new_item:
+                                                                #print(propk)
+                                                                try:
+                                                                    vi_dict[ki1][ki2][ki3]=propv
+                                                                except Exception:
+                                                                    try:
+                                                                        vi_dict[ki1][ki2]={}
+                                                                        vi_dict[ki1][ki2][ki3]=propv
+                                                                    except Exception:
+                                                                        vi_dict[ki1]={}
+                                                                        vi_dict[ki1][ki2]={}
+                                                                        vi_dict[ki1][ki2][ki3]=propv
+                                                    if vi_dict != {}:
+                                                        #procedure: print(ki)
+                                                        item_dict[ki]=vi_dict
+                                                else:
+                                                    new_item = ""
+                                                    new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
+                                                    for propk, propv in dict_of_properties.items():
+                                                        if propk == new_item:
+                                                            #print(propk)
+                                                            try:
+                                                                vi_dict[ki1][ki2]=propv
+                                                            except Exception:
+                                                                vi_dict[ki1]={}
+                                                                vi_dict[ki1][ki2]=propv
 
-                                                #if vi_dict != {} and vi_dict[ki1] != {}:
-                                                if vi_dict != {}:
-                                                    #procedure: print(ki)
-                                                    item_dict[ki]=vi_dict
+                                                    #if vi_dict != {} and vi_dict[ki1] != {}:
+                                                    if vi_dict != {}:
+                                                        #procedure: print(ki)
+                                                        item_dict[ki]=vi_dict
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + ki1

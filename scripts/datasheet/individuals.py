@@ -658,6 +658,7 @@ def treatment():
     element=super_overtypes(element)
     element=super_overtypes(element)
     element=megaovertypes(element)
+    element['cumulativeDose']={'referenceRange':{'high': 'number', 'low': 'number', 'unit': {'id': '', 'label': ''}}}
     return element
     
 print(dict_types)
@@ -853,9 +854,10 @@ for key, value in dict_types.items():
 #print(finaldict)
 
 
-            
+
 
 def generate(dict_properties):
+    #print(dict_properties)
     list_of_excel_items=[]
 
     for key, value in dict_properties.items():
@@ -892,9 +894,17 @@ def generate(dict_properties):
                             for ki1, vi1 in vi.items():
                                 if isinstance(vi1, dict):
                                     for ki2, vi2 in vi1.items():
-                                        new_item = ""
-                                        new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
-                                        list_of_excel_items.append(new_item)     
+                                        if isinstance(vi2, dict):
+                                            for ki3, vi3 in vi2.items():
+                                                new_item = ""
+                                                new_item = key + "|" + ki + "|" + ki1 + "|" + ki2 + "|" + ki3
+                                                print(new_item)
+                                                list_of_excel_items.append(new_item)            
+                                        else:
+                                            new_item = ""
+                                            new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
+                                            print(new_item)
+                                            list_of_excel_items.append(new_item)     
                                 else:
                                     new_item = ""
                                     new_item = key + "|" + ki + "|" + ki1
@@ -938,7 +948,6 @@ def generate(dict_properties):
             excel_splitted = excel_item.split('|start|iso8601duration')
             #print(excel_splitted[0])
             list_of_excel_items.append(excel_splitted[0])
-    
     list_of_excel_items=sorted(list_of_excel_items)
 
     for defreq in first_list_of_definitions_required:
@@ -959,7 +968,6 @@ def generate(dict_properties):
             elif propreq.endswith('|value'):
                 if propreq not in list_of_definitions_required:
                     list_of_definitions_required.append(propreq)
-    print(list_of_definitions_required)
 
     with open('csv/templates/individuals.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)

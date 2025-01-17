@@ -130,8 +130,10 @@ phenotypicFeatures|severity|label
 sex|id
 sex|label
 treatments|ageAtOnset|iso8601duration
-treatments|cumulativeDose|referenceRange|id
-treatments|cumulativeDose|referenceRange|label
+treatments|cumulativeDose|referenceRange|high
+treatments|cumulativeDose|referenceRange|low
+treatments|cumulativeDose|referenceRange|unit|id
+treatments|cumulativeDose|referenceRange|unit|label
 treatments|doseIntervals|id
 treatments|doseIntervals|label
 treatments|routeOfAdministration|id
