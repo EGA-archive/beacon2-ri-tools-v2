@@ -2,14 +2,15 @@ cohortDataTypes|id
 cohortDataTypes|label
 cohortDesign|id
 cohortDesign|label
-cohortSize
-cohortType
 collectionEvents|eventAgeRange|availability
 collectionEvents|eventAgeRange|availabilityCount
 collectionEvents|eventAgeRange|distribution
+collectionEvents|eventCases
+collectionEvents|eventControls
 collectionEvents|eventDataTypes|availability
 collectionEvents|eventDataTypes|availabilityCount
 collectionEvents|eventDataTypes|distribution
+collectionEvents|eventDate
 collectionEvents|eventDiseases|availability
 collectionEvents|eventDiseases|availabilityCount
 collectionEvents|eventDiseases|distribution
@@ -22,12 +23,13 @@ collectionEvents|eventGenders|distribution
 collectionEvents|eventLocations|availability
 collectionEvents|eventLocations|availabilityCount
 collectionEvents|eventLocations|distribution
+collectionEvents|eventNum
 collectionEvents|eventPhenotypes|availability
 collectionEvents|eventPhenotypes|availabilityCount
 collectionEvents|eventPhenotypes|distribution
-collectionEvents|eventTimeline|availability
-collectionEvents|eventTimeline|availabilityCount
-collectionEvents|eventTimeline|distribution
+collectionEvents|eventSize
+collectionEvents|eventTimeline|end
+collectionEvents|eventTimeline|start
 exclusionCriteria|ageRange
 exclusionCriteria|ageRange|end|iso8601duration
 exclusionCriteria|ageRange|start|iso8601duration
@@ -57,7 +59,6 @@ exclusionCriteria|phenotypicConditions|onset
 exclusionCriteria|phenotypicConditions|resolution
 exclusionCriteria|phenotypicConditions|severity|id
 exclusionCriteria|phenotypicConditions|severity|label
-id
 inclusionCriteria|ageRange
 inclusionCriteria|ageRange|end|iso8601duration
 inclusionCriteria|ageRange|start|iso8601duration
@@ -87,4 +88,3 @@ inclusionCriteria|phenotypicConditions|onset
 inclusionCriteria|phenotypicConditions|resolution
 inclusionCriteria|phenotypicConditions|severity|id
 inclusionCriteria|phenotypicConditions|severity|label
-name

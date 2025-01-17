@@ -7,8 +7,6 @@
         "id": "",
         "label": ""
     },
-    "cohortSize": 0,
-    "cohortType": "",
     "collectionEvents": [
         {
             "eventAgeRange": {
@@ -16,11 +14,14 @@
                 "availabilityCount": 0,
                 "distribution": {}
             },
+            "eventCases": 0,
+            "eventControls": 0,
             "eventDataTypes": {
                 "availability": true,
                 "availabilityCount": 0,
                 "distribution": {}
             },
+            "eventDate": "",
             "eventDiseases": {
                 "availability": true,
                 "availabilityCount": 0,
@@ -41,15 +42,16 @@
                 "availabilityCount": 0,
                 "distribution": {}
             },
+            "eventNum": 0,
             "eventPhenotypes": {
                 "availability": true,
                 "availabilityCount": 0,
                 "distribution": {}
             },
+            "eventSize": 0,
             "eventTimeline": {
-                "availability": true,
-                "availabilityCount": 0,
-                "distribution": {}
+                "start": "",
+                "end": ""
             }
         }
     ],
@@ -208,7 +210,6 @@
             }
         ]
     },
-    "id": "",
     "inclusionCriteria": {
         "ageRange": {
             "end": {
@@ -363,6 +364,5 @@
                 }
             }
         ]
-    },
-    "name": ""
+    }
 }

@@ -702,18 +702,23 @@ for key, value in dict_types.items():
                     elif 'treatment' in v:
                         items_dict = treatment()
                 elif v == 'integer':
-                    if k != 'collectionEvents':
-                        finaldict[key]=0
+                    if k == 'type':
+                        pass
                     else:
                         items_dict[k]=0
                 elif v == 'object':
-                    items_dict[k]={}
-                    items_dict[k]['availability']=True
-                    items_dict[k]['availabilityCount']=0
-                    items_dict[k]['distribution']={}
+                    if k != 'eventTimeline':
+                        items_dict[k]={}
+                        items_dict[k]['availability']=True
+                        items_dict[k]['availabilityCount']=0
+                        items_dict[k]['distribution']={}
+                    else:
+                        items_dict[k]={}
+                        items_dict[k]['start']=''
+                        items_dict[k]['end']=''
                 elif v == 'string':
-                    if k != 'collectionEvents':
-                        finaldict[key]=''
+                    if k == 'type':
+                        pass
                     else:
                         items_dict[k]=''
                 elif k == 'type':
