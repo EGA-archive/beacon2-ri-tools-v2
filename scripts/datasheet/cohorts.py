@@ -702,7 +702,9 @@ for key, value in dict_types.items():
                     elif 'treatment' in v:
                         items_dict = treatment()
                 elif v == 'integer':
-                    if k == 'type':
+                    if key != 'collectionEvents':
+                        finaldict[key]=0
+                    elif k == 'type':
                         pass
                     else:
                         items_dict[k]=0
@@ -717,7 +719,9 @@ for key, value in dict_types.items():
                         items_dict[k]['start']=''
                         items_dict[k]['end']=''
                 elif v == 'string':
-                    if k == 'type':
+                    if key != 'collectionEvents':
+                        finaldict[key]=''
+                    elif k == 'type':
                         pass
                     else:
                         items_dict[k]=''
