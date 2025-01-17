@@ -318,6 +318,7 @@ def generate(dict_properties,list_of_headers):
                                 if outcome > 0:
                                     if item_dict not in value_list:
                                         value_list.append(item_dict)
+                                    #print(value_list)
                                     if value_list != []:
                                         itemdict={}
                                         definitivedict[key]=[]
@@ -510,6 +511,7 @@ def generate(dict_properties,list_of_headers):
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             definitivedict[key]=propv
+            #print(definitivedict)
             GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
