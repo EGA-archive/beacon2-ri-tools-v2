@@ -544,8 +544,9 @@ def generate(dict_properties):
                         ac_het=ac_het[0]
                     else:
                         ac_het = float(v.INFO.get('AC_Het'))
-                if allele_frequency == 0 or allele_frequency == 0.0 or allele_frequency is None:
-                    continue
+                if conf.allele_counts == True:
+                    if allele_frequency == 0 or allele_frequency == 0.0 or allele_frequency is None:
+                        continue
 
                 if allele_frequency is not None:
                     dict_to_xls['frequencyInPopulations|sourceReference']=pipeline["frequencyInPopulations|sourceReference"]

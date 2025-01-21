@@ -1,167 +1,111 @@
 {
-    "numberOfPopulations": 20,
+    "numberOfPopulations": 13,
     "source": "The Genome Aggregation Database (gnomAD)",
     "sourceReference": "gnomad.broadinstitute.org/",
     "populations": [
         {
             "population": "Total",
-            "alleleFrequency": "AF",
-            "alleleCount": "AC",
-            "alleleCountHomozygous": "nhomalt",
+            "alleleFrequency": "AF_joint",
+            "alleleCount": "AC_joint",
+            "alleleCountHomozygous": "nhomalt_joint",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN"
+            "alleleNumber": "AN_joint"
         },
         {
-            "population": "Southern European",
-            "alleleFrequency": "AF_nfe_seu",
-            "alleleCount": "AC_nfe_seu",
-            "alleleCountHomozygous": "nhomalt_nfe_seu",
+            "population": "African/African-American",
+            "alleleFrequency": "AF_joint_afr",
+            "alleleCount": "AC_joint_afr",
+            "alleleCountHomozygous": "nhomalt_joint_nhomaltr",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_nfe_seu"
-        },
-        {
-            "population": "African-American/African",
-            "alleleFrequency": "AF_afr",
-            "alleleCount": "AC_afr",
-            "alleleCountHomozygous": "nhomalt_afr",
-            "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_afr"
+            "alleleNumber": "AN_joint_afr"
         },
         {
             "population": "Admixed American",
-            "alleleFrequency": "AF_amr",
-            "alleleCount": "AC_amr",
-            "alleleCountHomozygous": "nhomalt_amr",
+            "alleleFrequency": "AF_joint_amr",
+            "alleleCount": "AC_joint_amr",
+            "alleleCountHomozygous": "nhomalt_joint_amr",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_amr"
+            "alleleNumber": "AN_joint_amr"
         },
         {
             "population": "East Asian",
-            "alleleFrequency": "AF_eas",
-            "alleleCount": "AC_eas",
-            "alleleCountHomozygous": "nhomalt_eas",
+            "alleleFrequency": "AF_joint_eas",
+            "alleleCount": "AC_joint_eas",
+            "alleleCountHomozygous": "nhomalt_joint_eas",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_eas"
+            "alleleNumber": "AN_joint_eas"
         },
         {
-            "population": "North-Western European",
-            "alleleFrequency": "AF_nfe_nwe",
-            "alleleCount": "AC_nfe_nwe",
-            "alleleCountHomozygous": "nhomalt_nfe_nwe",
+            "population": "Amish",
+            "alleleFrequency": "AF_joint_ami",
+            "alleleCount": "AC_joint_ami",
+            "alleleCountHomozygous": "nhomalt_joint_ami",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_nfe_nwe"
-        },
-        {
-            "population": "Estonian",
-            "alleleFrequency": "AF_nfe_est",
-            "alleleCount": "AC_nfe_est",
-            "alleleCountHomozygous": "nhomalt_nfe_est",
-            "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_nfe_est"
+            "alleleNumber": "AN_joint_ami"
         },
         {
             "population": "European (non-Finnish)",
-            "alleleFrequency": "AF_nfe",
-            "alleleCount": "AC_nfe",
-            "alleleCountHomozygous": "nhomalt_nfe",
+            "alleleFrequency": "AF_joint_nfe",
+            "alleleCount": "AC_joint_nfe",
+            "alleleCountHomozygous": "nhomalt_joint_nfe",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_nfe"
+            "alleleNumber": "AN_joint_nfe"
         },
         {
-            "population": "European (Finnish)",
-            "alleleFrequency": "AF_fin",
-            "alleleCount": "AC_fin",
-            "alleleCountHomozygous": "nhomalt_fin",
+            "population": "Finnish",
+            "alleleFrequency": "AF_joint_fin",
+            "alleleCount": "AC_joint_fin",
+            "alleleCountHomozygous": "nhomalt_joint_fin",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_fin"
+            "alleleNumber": "AN_joint_fin"
         },
         {
             "population": "Ashkenazi Jewish",
-            "alleleFrequency": "AF_asj",
-            "alleleCount": "AC_asj",
-            "alleleCountHomozygous": "nhomalt_asj",
+            "alleleFrequency": "AF_joint_asj",
+            "alleleCount": "AC_joint_asj",
+            "alleleCountHomozygous": "nhomalt_joint_asj",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_asj"
+            "alleleNumber": "AN_joint_asj"
         },
         {
-            "population": "Other",
-            "alleleFrequency": "AF_oth",
-            "alleleCount": "AC_oth",
-            "alleleCountHomozygous": "nhomalt_oth",
+            "population": "Remaining individuals",
+            "alleleFrequency": "AF_joint_remaining",
+            "alleleCount": "AC_joint_remaining",
+            "alleleCountHomozygous": "nhomalt_joint_remaining",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_oth"
+            "alleleNumber": "AN_joint_remaining"
         },
         {
             "population": "Males",
-            "alleleFrequency": "AF_male",
-            "alleleCount": "AC_male",
-            "alleleCountHomozygous": "nhomalt_male",
+            "alleleFrequency": "AF_joint_XY",
+            "alleleCount": "AC_joint_XY",
+            "alleleCountHomozygous": "nhomalt_joint_XY",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_male"
-        },
-        {
-            "population": "Swedish",
-            "alleleFrequency": "AF_nfe_swe",
-            "alleleCount": "AC_nfe_swe",
-            "alleleCountHomozygous": "nhomalt_nfe_swe",
-            "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_nfe_swe"
-        },
-        {
-            "population": "Bulgarian (Eastern European)",
-            "alleleFrequency": "AF_nfe_bgr",
-            "alleleCount": "AC_nfe_bgr",
-            "alleleCountHomozygous": "nhomalt_nfe_bgr",
-            "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_nfe_bgr"
-        },
-        {
-            "population": "Other Non-Finnish European",
-            "alleleFrequency": "AF_nfe_onf",
-            "alleleCount": "AC_nfe_onf",
-            "alleleCountHomozygous": "nhomalt_nfe_onf",
-            "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_nfe_onf"
-        },
-        {
-            "population": "Japanese",
-            "alleleFrequency": "AF_eas_jpn",
-            "alleleCount": "AC_eas_jpn",
-            "alleleCountHomozygous": "nhomalt_eas_jpn",
-            "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_eas_jpn"
-        },
-        {
-            "population": "Korean",
-            "alleleFrequency": "AF_eas_kor",
-            "alleleCount": "AC_eas_kor",
-            "alleleCountHomozygous": "nhomalt_eas_kor",
-            "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_eas_kor"
-        },
-        {
-            "population": "Other East Asian",
-            "alleleFrequency": "AF_eas_oea",
-            "alleleCount": "AC_eas_oea",
-            "alleleCountHomozygous": "nhomalt_eas_oea",
-            "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_eas_oea"
+            "alleleNumber": "AN_joint_XY"
         },
         {
             "population": "South Asian",
-            "alleleFrequency": "AF_sas",
-            "alleleCount": "AC_sas",
-            "alleleCountHomozygous": "nhomalt_sas",
+            "alleleFrequency": "AF_joint_sas",
+            "alleleCount": "AC_joint_sas",
+            "alleleCountHomozygous": "nhomalt_joint_sas",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_sas"
+            "alleleNumber": "AN_joint_sas"
         },
         {
-            "population": "Females",
-            "alleleFrequency": "AF_female",
-            "alleleCount": "AC_female",
-            "alleleCountHomozygous": "nhomalt_female",
+            "population": "Middle Eastern",
+            "alleleFrequency": "AF_joint_mid",
+            "alleleCount": "AC_joint_mid",
+            "alleleCountHomozygous": "nhomalt_joint_mid",
             "alleleCountHeterozygous": "",
-            "alleleNumber": "AN_female"
+            "alleleNumber": "AN_joint_mid"
+        },
+        {
+            "population": "FeXYs",
+            "alleleFrequency": "AF_joint_XX",
+            "alleleCount": "AC_joint_XX",
+            "alleleCountHomozygous": "nhomalt_joint_XX",
+            "alleleCountHeterozygous": "",
+            "alleleNumber": "AN_joint_XX"
         }
     ]
 }
