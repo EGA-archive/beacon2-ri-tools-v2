@@ -1,6 +1,6 @@
-# Beacon 2 RI tools v2.0
+# Beacon Data Tools
 
-This repository contains the new Beacon ri tools v2.0, a software created with the main goal of generating BFF data from .csv or .vcf (and probably more types of datafiles in the future). This is based on the first beacon ri tools, a previous and different version that you can find here: [Beacon ri tools v1](https://github.com/EGA-archive/beacon2-ri-tools). The new features for beacon v2.0 are:
+This repository contains the new Beacon Data Tools, a software created with the main goal of generating BFF data from .csv or .vcf (and probably more types of datafiles in the future). This is based on the first beacon ri tools, a previous and different version that you can find here: [Beacon ri tools v1](https://github.com/EGA-archive/beacon2-ri-tools). The new features for beacon v2.0 are:
 
 * Code Language is written in [Python 3.11](https://www.python.org/downloads/release/python-3110/)
 * The output gain is schemas that suit the very last version of [Beacon v2](https://github.com/ga4gh-beacon/beacon-v2) specifications, and ready to be deployed in a beacon v2 API compliant.
@@ -9,18 +9,18 @@ This repository contains the new Beacon ri tools v2.0, a software created with t
 
 ## Data conversion process
 
-The main goal of Beacon ri tools v2.0 is to obtain a BFF (json following Beacon v2 official specifications) file that can be injected to a beacon v2 mongoDB database. To obtain a beacon v2 with its mongodb and see how to inject these BFF files, you can check it out and download yours for free at the official repo of [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
+The main goal of Beacon ri tools v2.0 is to obtain a BFF (json following Beacon v2 official specifications) file that can be injected to a beacon v2 mongoDB database. To obtain a beacon v2 with its mongodb and see how to inject these BFF files, you can check it out and download yours for free at the official repo of [Beacon v2 PI api](https://github.com/EGA-archive/beacon2-pi-api).
 To get this json file, you can either convert your data from a .vcf file or from a .csv file. Please, see instruction manual to follow the right steps to do the data conversion. At the end, you will end completing one of the possible conversion processes that is shown in the next diagram:
-![Beacon tools v2 diagram](https://github.com/EGA-archive/beacon2-ri-tools-v2/blob/main/files/beacon-ri-tools-v2-figure-new.jpg)
+![Beacon tools v2 diagram](https://github.com/EGA-archive/beacon-data-tools/blob/main/files/beacon-ri-tools-v2-figure-new.jpg)
 
 ## Installation guide with docker
 
 First of all, clone or download the repository to your computer:
 ```bash
-git clone https://github.com/EGA-archive/beacon2-ri-tools-v2.git
+git clone https://github.com/EGA-archive/beacon-data-tools.git
 ```
 
-To light up the container with beacon ri tools v2, execute the next command inside the root folder:
+To light up the container with beacon data tools, execute the next command inside the root folder:
 ```bash
 docker-compose up -d --build
 ```
@@ -31,7 +31,7 @@ Once the container is up and running you can start using beacon ri tools v2, con
 
 ### Setting configuration and csv file
 
-To start using beacon ri tools v2, you have to edit the configuration file [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf). Inside this file you will find the next information:
+To start using beacon ri tools v2, you have to edit the configuration file [conf.py](https://github.com/EGA-archive/beacon-data-tools/tree/main/conf/conf.py) that you will find inside [conf](https://github.com/EGA-archive/beacon-data-tools/tree/main/conf). Inside this file you will find the next information:
 ```bash
 #### Input and Output files config parameters ####
 csv_folder = './csv/examples/'
@@ -48,7 +48,7 @@ num_rows=7000000
 Please, remember to make the datasetId match the id for your datasets.csv file.
 
 #### Generic config parameters
-The **csv_folder** variable sets where are all the .csv files the tool will work with. All the .csv files must follow a specific header structure. You can find an example here [templates](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/csv/templates). Note that any header with different column names from the ones that appear inside the files of this folder will not be read by the beacon ri tools v2.
+The **csv_folder** variable sets where are all the .csv files the tool will work with. All the .csv files must follow a specific header structure. You can find an example here [templates](https://github.com/EGA-archive/beacon-data-tools/tree/main/csv/templates). Note that any header with different column names from the ones that appear inside the files of this folder will not be read by the beacon ri tools v2.
 The **output_docs_folder** sets the folder where your final .json files will be saved once execution of beacon tools finishes.  This folder should always be located within 'output_docs', and the only part of the path that can be altered is the subdirectory of 'output_docs'.
 
 #### VCF conversion config parameters
@@ -59,10 +59,10 @@ The **case_level_data** is a boolean parameter (True or False) which will relate
 The **num_rows** are the aproximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow sometimes to calculate all the variants number in a VCF.
 
 #### VCF headers
-Beacon RI Tools v2 is compatible to headers annotated by VEP. The parameters that are read from VEP are UPLOADED_ALLELE, for setting the variant type, SYMBOL, for setting the gene id, HGVSp, for setting the aminoacid change, and CONSEQUENCE, for setting the molecular effects. If your VCF isn't annotated with VEP you can write down in [pipelines](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/pipelines/default/templates), within the template.json file, which are the keynames for these different properties in your VCF header id and activate the template to true. Note that using template.json will deactivate reading the VEP headers.
+Beacon RI Tools v2 is compatible to headers annotated by VEP. The parameters that are read from VEP are UPLOADED_ALLELE, for setting the variant type, SYMBOL, for setting the gene id, HGVSp, for setting the aminoacid change, and CONSEQUENCE, for setting the molecular effects. If your VCF isn't annotated with VEP you can write down in [pipelines](https://github.com/EGA-archive/beacon-data-tools/tree/main/pipelines/default/templates), within the template.json file, which are the keynames for these different properties in your VCF header id and activate the template to true. Note that using template.json will deactivate reading the VEP headers.
 
 #### VCF pipelines for allele frequencies
-To read allele frequency variables, there is the populations.json pipeline inside [pipelines](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/pipelines/default/templates) folder.
+To read allele frequency variables, there is the populations.json pipeline inside [pipelines](https://github.com/EGA-archive/beacon-data-tools/tree/main/pipelines/default/templates) folder.
 In order to let Beacon RI Tools v2 read all the INFO column from your VCF and parse the allele frequency variants entries, you will need to add how are the different entries named for each annotation. You will have to tell how many populations are there in your VCF setting the numberOfPopulations value, if there are no allele frequencies in the VCF, then you will need to set it to 0, and if there are but no specific populations, then fill the populations with a “Total” name. 
 
 ### Case Level Data conversion
@@ -78,7 +78,7 @@ docker exec ri-tools-mongo mongoexport --jsonArray --uri "mongodb://root:example
 
 ### Converting data from .vcf.gz file
 
-To convert data from .vcf.gz to .json you will need to copy all the .vcf.gz files you want to convert inside the [files_to_read folder](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/files/vcf/files_to_read).
+To convert data from .vcf.gz to .json you will need to copy all the .vcf.gz files you want to convert inside the [files_to_read folder](https://github.com/EGA-archive/beacon-data-tools/tree/main/files/vcf/files_to_read).
 
 ```bash
 docker exec -it ri-tools python genomicVariations_vcf.py
@@ -100,20 +100,20 @@ If you want to convert metadata into BFF or fill a genomicVariations csv to conv
 Fill in the csv file, following the next rules:
 * If you want to write data that needs to be appended in the same document, please write data separated with |, for example if you need to write an id, e.g. HG00001|HG00002 then respect this order for their correlatives in the same document, as for the label of this id, e.g. labelforHG00001|labelforHG00002.
 * As the info field for each collection is very generic and can be filled with different data, you will need to fill the column data directly with json type data. For copies and subjects for genomicVariations, json data is also needed.
-* Please, respect the column structure of the files inside [templates](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/csv/templates), as the script will only read the columns with the "correctly spelled" headers.
+* Please, respect the column structure of the files inside [templates](https://github.com/EGA-archive/beacon-data-tools/tree/main/csv/templates), as the script will only read the columns with the "correctly spelled" headers.
 * Note that you don't have to write inside all the columns, as some of them are optionals and others are incompatible among them, as they are part of different options of the Beacon specification (an exception will raise in case a column is misfilled).
-We have filled an example of a .csv for each collection ready to be converted to BFF with the CINECA dataset. Please, take a look at it if you wish [here](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/csv/examples).
+We have filled an example of a .csv for each collection ready to be converted to BFF with the CINECA dataset. Please, take a look at it if you wish [here](https://github.com/EGA-archive/beacon-data-tools/tree/main/csv/examples).
 
 ### Getting .json final documents
 
-Before getting the .json final documents, please make sure your [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py), that you will find inside [conf](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf), is reading the right .csv document(s) and execute the next bash script from the root folder in your terminal. All .csv files contained in the specified csv_folder will be transformed into .json:
+Before getting the .json final documents, please make sure your [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py), that you will find inside [conf](https://github.com/EGA-archive/beacon-data-tools/tree/main/conf), is reading the right .csv document(s) and execute the next bash script from the root folder in your terminal. All .csv files contained in the specified csv_folder will be transformed into .json:
 ```bash
 docker exec -it ri-tools python convert_csvTObff.py
 ```
 
 The final generated .json files, which are Beacon Friendly Format, will be in the output_docs folder with the name of the collection followed by .json extension, e.g. genomicVariations.json. 
 
-These BFF jsons will be used to populate a mongoDB for beacon usage. To know how to import in a Beacon v2, please do as described in [Beacon v2 ri api](https://github.com/EGA-archive/beacon2-ri-api).
+These BFF jsons will be used to populate a mongoDB for beacon usage. To know how to import in a Beacon v2, please do as described in [Beacon v2 PI api](https://github.com/EGA-archive/beacon2-pi-api).
 
 ### Version notes
 
