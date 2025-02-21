@@ -14,9 +14,6 @@ with open("files/headers/cohorts.txt", "r") as txt_file:
 with open('files/deref_schemas/cohorts.json') as json_file:
     dict_properties = json.load(json_file)
 
-
-
-
 def generate(dict_properties, list_of_headers):
     #csv_filename = conf.csv_filename
     total_dict =[]

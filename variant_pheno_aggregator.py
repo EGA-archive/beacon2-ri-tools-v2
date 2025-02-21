@@ -5,11 +5,24 @@ import conf.conf as conf
 import csv
 import sys
 from validators.genomicVariations import GenomicVariations
+from pymongo.mongo_client import MongoClient
 
 with open("files/headers/genomicVariations.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
 with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
+
+client = MongoClient(
+        #"mongodb://127.0.0.1:27017/"
+        "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
+            conf.database_user,
+            conf.database_password,
+            conf.database_host,
+            conf.database_port,
+            conf.database_name,
+            conf.database_auth_source,
+        )
+    )
 
 csv_filename = sys.argv[1]
 output_path = sys.argv[2]
@@ -261,10 +274,7 @@ def generate(dict_properties,list_of_headers):
                                                     if propk == new_item:
                                                         vi_dict[ki1][ki2]=propv
                                                 if vi_dict != {}:
-                                                    if ki == 'phenotypicEffects':
-                                                        item_dict[ki]=[vi_dict]
-                                                    else:
-                                                        item_dict[ki]=vi_dict
+                                                    item_dict[ki]=vi_dict
                                             if vi_dict[ki1]=={}:
                                                 del vi_dict[ki1]
                                         elif ki1 == 'variation':
@@ -291,10 +301,7 @@ def generate(dict_properties,list_of_headers):
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
                                                     vi_dict[ki1]=propv 
-                                                    if ki == 'phenotypicEffects':
-                                                        item_dict[ki]=[vi_dict]
-                                                    else:
-                                                        item_dict[ki]=vi_dict
+                                                    item_dict[ki]=vi_dict
                                     if vi_dict=={}:
                                         del vi_dict
                                 else:
@@ -306,10 +313,7 @@ def generate(dict_properties,list_of_headers):
                                             if '|' in propv:
                                                 outcome +=1
                                                 v1_keys=[]
-                                            if ki == 'phenotypicEffects':
-                                                item_dict[ki]=[propv]
-                                            else:
-                                                item_dict[ki]=propv
+                                            item_dict[ki]=propv
 
                                 if ki == 'members':
                                     new_item = ""
@@ -470,12 +474,7 @@ def generate(dict_properties,list_of_headers):
 
                                 value_dict = {ka:va for ka,va in value_dict.items() if va != {}}
                                 if value_dict != {}:
-                                    if kd == 'phenotypicEffects':
-                                        new_value_dict={}
-                                        new_value_dict[kd]=[value_dict[kd]]
-                                        definitivedict[key]=new_value_dict
-                                    else:
-                                        definitivedict[key]=value_dict
+                                    definitivedict[key]=value_dict
                         elif isinstance(vd, dict):
                             value_dict[kd]={}
                             for kd1, vd1 in vd.items():
@@ -525,11 +524,16 @@ def generate(dict_properties,list_of_headers):
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             definitivedict[key]=propv
-            print(definitivedict)
+            #print(definitivedict)
             GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
-
+            list_of_required_keys=[]
+            set_dict={}
+            for key, value in definitivedict.items():
+                if key not in list_of_required_keys:
+                    set_dict[key]=value
+            client.beacon.genomicVariations.update_one({"sequence_id": definitivedict["variation"]["location"]["sequence_id"], "start": definitivedict["variation"]["location"]["start"], "end": definitivedict["variation"]["location"]["end"]},{'$set': set_dict}, upsert=False)
             
             pbar.update(1)
             if i > num_rows:

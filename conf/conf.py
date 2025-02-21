@@ -1,12 +1,12 @@
 #### Input and Output files config parameters ####
-csv_folder = './csv/examples/test/'
+csv_folder = './csv/examples/new_test/'
 output_docs_folder='./output_docs/'
 
 #### VCF Conversion config parameters ####
 allele_counts=False
 reference_genome='GRCh38' # Choose one between NCBI36, GRCh37, GRCh38
-datasetId='synthetic_usecases_4beacon_testingV3'
-case_level_data=True
+datasetId='gnomad_joint_v4.1'
+case_level_data=False
 zygosity=True
 num_rows= 1535474150
 
