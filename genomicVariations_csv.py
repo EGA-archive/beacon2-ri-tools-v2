@@ -72,6 +72,8 @@ def generate(dict_properties,list_of_headers):
                             
                             for ki, vi in item.items():
                                 if isinstance(vi, list):
+                                    print('yyyy')
+                                    print(ki)
                                     vi_list=[]
                                     subitem_dict={}
                                     for subitem in vi:
@@ -112,6 +114,8 @@ def generate(dict_properties,list_of_headers):
                                                     if subitem_dict[k]=={}:
                                                         del subitem_dict[k]  
                                                 elif isinstance(v, list):
+                                                    print('wwww')
+                                                    print(ki)
                                                     listitemv=[]
                                                     vivdict={}
                                                     for itemv in v:
@@ -247,9 +251,11 @@ def generate(dict_properties,list_of_headers):
                                             if subitem_dict not in vi_list and subitem_dict != {}:
                                                 vi_list.append(subitem_dict)
                                             
-                                            item_dict[ki]=vi_list[0]
+                                            if ki == 'phenotypicEffects':
+                                                item_dict[ki]=vi_list
+                                            else:
+                                                item_dict[ki]=vi_list[0]
                                 elif isinstance(vi, dict):
-
                                     vi_dict={}
                                     for ki1, vi1 in vi.items():
                                         if isinstance(vi1, dict):
@@ -409,7 +415,13 @@ def generate(dict_properties,list_of_headers):
                                                 new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                                 for propk, propv in dict_of_properties.items():
                                                     if propk == new_item:
-                                                        value_dict[kd][kd1][kd2]=propv
+                                                        if kd == 'phenotypicEffects':
+                                                            subvaluedict={}
+                                                            subvaluedict[kd1]={}
+                                                            subvaluedict[kd1][kd2]=propv
+                                                            value_dict[kd]=[subvaluedict]
+                                                        else:
+                                                            value_dict[kd][kd1][kd2]=propv
                                             if value_dict[kd][kd1]=={}:
                                                 del value_dict[kd][kd1]
                                         elif isinstance(vd1, list):
@@ -424,13 +436,27 @@ def generate(dict_properties,list_of_headers):
                                                                 new_item = key + "|" + kd + "|" + kd1 + "|" + kd2 + "|" + kd3
                                                                 for propk, propv in dict_of_properties.items():
                                                                     if propk == new_item:
-                                                                        value_dict[kd][kd1][kd2][kd3]=propv
+                                                                        if kd == 'phenotypicEffects':
+                                                                            subvaluedict={}
+                                                                            subvaluedict[kd1]={}
+                                                                            subvaluedict[kd1][kd2]={}
+                                                                            subvaluedict[kd1][kd2][kd3]=propv
+                                                                            value_dict[kd]=[subvaluedict]
+                                                                        else:
+                                                                            value_dict[kd][kd1][kd2][kd3]=propv
+                                                                            value_dict[kd][kd1][kd2][kd3]=propv
                                                     else:
                                                         new_item = ""
                                                         new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                                         for propk, propv in dict_of_properties.items():
                                                             if propk == new_item:
-                                                                value_dict[kd][kd1][kd2]=propv
+                                                                if kd == 'phenotypicEffects':
+                                                                    subvaluedict={}
+                                                                    subvaluedict[kd1]={}
+                                                                    subvaluedict[kd1][kd2]=propv
+                                                                    value_dict[kd]=[subvaluedict]
+                                                                else:
+                                                                    value_dict[kd][kd1][kd2]=propv
                                             if value_dict[kd][kd1]=={}:
                                                 del value_dict[kd][kd1]
                                         else:
@@ -438,23 +464,33 @@ def generate(dict_properties,list_of_headers):
                                             new_item = key + "|" + kd + "|" + kd1
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
+                                                    print(propk)
                                                     if '|' in propv:
                                                         propv_splitted = propv.split('|')
                                                         for itemsplitted in propv:
-                                                            value_dict[kd][kd1]=propv_splitted
+                                                            if kd == 'phenotypicEffects':
+                                                                phenodict={}
+                                                                phenodict[kd1]=propv_splitted
+                                                                value_dict[kd]=[phenodict]
+                                                            else:
+                                                                value_dict[kd][kd1]=propv_splitted
                                                             if value_dict not in vd_list:
                                                                 vd_list.append(value_dict)
                                                     else:
                                                         if value_dict == {}:
                                                             value_dict[kd]={}
-                                                        if 'molecularEffects' in kd:
                                                             try:
-                                                                dict_mol[kd1]=propv
-                                                                value_dict[kd].append(dict_mol)
+                                                                if kd == 'phenotypicEffects':
+                                                                    phenodict={}
+                                                                    phenodict[kd1]=propv
+                                                                    value_dict[kd].append(dict_mol)                                                        
+                                                                else:
+                                                                    dict_mol[kd1]=propv
+                                                                    value_dict[kd].append(dict_mol)
                                                             except Exception:
                                                                 dict_mol[kd1]=propv
                                                                 value_dict[kd]=[]
-                                                        else:                                                          
+                                                        else:                                                      
                                                             value_dict[kd][kd1]=propv
 
 
@@ -489,22 +525,43 @@ def generate(dict_properties,list_of_headers):
                                                 new_item = key + "|" + kd + "|" + kd1 + "|" + kd2 + "|" + kd3
                                                 for propk, propv in dict_of_properties.items():
                                                     if propk == new_item:
-                                                        value_dict[kd][kd1][kd2][kd3]=propv
-                                                        definitivedict[key]=value_dict
+                                                        if kd == 'phenotypicEffects':
+                                                            subvaluedict={}
+                                                            subvaluedict[kd1]={}
+                                                            subvaluedict[kd1][kd2]={}
+                                                            subvaluedict[kd1][kd2][kd3]=propv
+                                                            value_dict[kd]=[subvaluedict]
+                                                            definitivedict[key]=value_dict
+                                                        else:
+                                                            value_dict[kd][kd1][kd2][kd3]=propv
+                                                            definitivedict[key]=value_dict
+
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
-                                                    value_dict[kd][kd1][kd2]=propv
-                                                    definitivedict[key]=value_dict
+                                                    if kd == 'phenotypicEffects':
+                                                        subvaluedict={}
+                                                        subvaluedict[kd1]={}
+                                                        subvaluedict[kd1][kd2]=propv
+                                                        value_dict[kd]=[subvaluedict]
+                                                        definitivedict[key]=value_dict
+                                                    else:
+                                                        value_dict[kd][kd1][kd2]=propv
+                                                        definitivedict[key]=value_dict
                                 else:
                                     new_item = ""
                                     new_item = key + "|" + kd + "|" + kd1
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
-                                            value_dict[kd][kd1]=propv
-                                            definitivedict[key]=value_dict
+                                            if kd == 'phenotypicEffects':
+                                                value_dict[kd][kd1]=[propv]
+                                                definitivedict[key]=value_dict
+                                            else:
+                                                value_dict[kd][kd1]=propv
+                                                definitivedict[key]=value_dict
+
                         else:
                             new_item = ""
                             new_item = key + "|" + kd
