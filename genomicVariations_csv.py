@@ -577,7 +577,7 @@ def generate(dict_properties,list_of_headers):
                 definitivedict['caseLevelData']['phenotypicEffects']=new_case_level_data
             except Exception:
                 pass
-            print(definitivedict)
+            #print(definitivedict)
             GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
