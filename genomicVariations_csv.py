@@ -209,8 +209,10 @@ def generate(dict_properties,list_of_headers):
                                                                     new_item = key + "|" + ki + "|" + k + "|" + kiv
                                                                     for propk, propv in dict_of_properties.items():
                                                                         if propk == new_item:
-                                                                            #print(propk)
-                                                                            vivdict[kiv]=propv
+                                                                            if kiv == 'start' or kiv == 'end':
+                                                                                vivdict[kiv]=int(propv)
+                                                                            else:
+                                                                                vivdict[kiv]=propv
 
 
 
@@ -249,7 +251,6 @@ def generate(dict_properties,list_of_headers):
                                             
                                             item_dict[ki]=vi_list[0]
                                 elif isinstance(vi, dict):
-
                                     vi_dict={}
                                     for ki1, vi1 in vi.items():
                                         if isinstance(vi1, dict):
@@ -398,12 +399,12 @@ def generate(dict_properties,list_of_headers):
                                                     pass
                                                 try:
                                                     if '*' in v1_keys[2]:
-                                                        if v1_array[int(num+n)] != '':
+                                                        if v1_array[int(num*2)] != '':
                                                             try:
-                                                                newdict[v1_bigkeys][v1_keys[2].replace('*','')][v2_keys[v2kcount]]=v1_array[int(num+n)]
+                                                                newdict[v1_bigkeys][v1_keys[2].replace('*','')][v2_keys[v2kcount]]=v1_array[int(num*2)]
                                                             except Exception:
                                                                 newdict[v1_bigkeys][v1_keys[2].replace('*','')]={}
-                                                                newdict[v1_bigkeys][v1_keys[2].replace('*','')][v2_keys[v2kcount]]=v1_array[int(num+n)]
+                                                                newdict[v1_bigkeys][v1_keys[2].replace('*','')][v2_keys[v2kcount]]=v1_array[int(num*2)]
                                                         v2kcount+=1
                                                     else:
                                                         newdict[v1_bigkeys][v1_keys[2].replace('*','')]=v1_array[int(num+n)]
@@ -576,7 +577,7 @@ def generate(dict_properties,list_of_headers):
                 definitivedict['caseLevelData']['phenotypicEffects']=new_case_level_data
             except Exception:
                 pass
-            #print(definitivedict)
+            print(definitivedict)
             GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
