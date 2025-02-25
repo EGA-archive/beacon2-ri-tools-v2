@@ -346,11 +346,24 @@ def generate(dict_properties,list_of_headers):
                                                             v1_bigkeys = kvl
                                                             if kvl1 not in v1_keys:
                                                                 v1_keys.append(kvl1)
+                                                        elif isinstance(vvl1, dict):
+                                                            v2_keys=[]
+                                                            for kvl2, vvl2 in vvl1.items():
+                                                                itemdict[kvl][kvl1][kvl2]={}
+                                                                if isinstance(vvl2, str) and '|' in vvl2:
+                                                                    vvl1_array = vvl2.split('|')
+                                                                    for vvlitem in vvl1_array:
+                                                                        v1_array.append(vvlitem)
+                                                                    v1_bigkeys = kvl
+                                                                    if kvl1 not in v1_keys:
+                                                                        v1_keys.append(kvl1+'*')
+                                                                    if kvl2 not in v2_keys:
+                                                                        v2_keys.append(kvl2)
 
                                         if v1_keys != []:
                                             n=0
                                             list_to_def=[]
-                                            half_array_number = len(v1_array)/2
+                                            half_array_number = len(v1_array)/len(v1_keys)
                                             itemdict[v1_bigkeys]={}
 
                                             while n < int(half_array_number):
@@ -358,12 +371,52 @@ def generate(dict_properties,list_of_headers):
                                                 newdict[v1_bigkeys]={}
                                                 num=int(half_array_number+n)
                                                 newdict[v_key]=v_array[n]
-                                                newdict[v1_bigkeys][v1_keys[0]]=v1_array[n]
-                                                newdict[v1_bigkeys][v1_keys[1]]=v1_array[num]
-                                                list_to_def.append(newdict)
+                                                v2kcount=0
+                                                if '*' in v1_keys[0]:
+                                                    if v1_array[n] != '':
+                                                        try:
+                                                            newdict[v1_bigkeys][v1_keys[0].replace('*','')]={}
+                                                            newdict[v1_bigkeys][v1_keys[0].replace('*','')][v2_keys[v2kcount]]=v1_array[n]
+                                                        except Exception:
+                                                            newdict[v1_bigkeys][v1_keys[0].replace('*','')][v2_keys[v2kcount]]=v1_array[n]
+                                                    v2kcount+=1
+                                                else:
+                                                    if v1_array[n] != '':
+                                                        newdict[v1_bigkeys][v1_keys[0]]=v1_array[n]
+                                                try:
+                                                    if '*' in v1_keys[1]:
+                                                        if v1_array[num] != '':
+                                                            try:
+                                                                newdict[v1_bigkeys][v1_keys[1].replace('*','')][v2_keys[v2kcount]]=v1_array[num]
+                                                            except Exception:
+                                                                newdict[v1_bigkeys][v1_keys[1].replace('*','')]={}
+                                                                newdict[v1_bigkeys][v1_keys[1].replace('*','')][v2_keys[v2kcount]]=v1_array[num]
+                                                        v2kcount+=1
+                                                    else:
+                                                        newdict[v1_bigkeys][v1_keys[1]]=v1_array[num]
+                                                except Exception:
+                                                    pass
+                                                try:
+                                                    if '*' in v1_keys[2]:
+                                                        if v1_array[int(num+n)] != '':
+                                                            try:
+                                                                newdict[v1_bigkeys][v1_keys[2].replace('*','')][v2_keys[v2kcount]]=v1_array[int(num+n)]
+                                                            except Exception:
+                                                                newdict[v1_bigkeys][v1_keys[2].replace('*','')]={}
+                                                                newdict[v1_bigkeys][v1_keys[2].replace('*','')][v2_keys[v2kcount]]=v1_array[int(num+n)]
+                                                        v2kcount+=1
+                                                    else:
+                                                        newdict[v1_bigkeys][v1_keys[2].replace('*','')]=v1_array[int(num+n)]
+                                                except Exception:
+                                                    pass
+                                                if newdict['phenotypicEffects']=={}:
+                                                    newdict.pop('phenotypicEffects')
+                                                if newdict != {}:
+                                                    list_to_def.append(newdict)
                                                 n +=1
-                                            for itemldf in list_to_def:
-                                                definitivedict[key].append(itemldf)
+                                            if list_to_def != [] or list_to_def != [{}]:
+                                                for itemldf in list_to_def:
+                                                    definitivedict[key].append(itemldf)
                                         elif len(v_array) > 1:
                                             list_to_def=[]
                                             
