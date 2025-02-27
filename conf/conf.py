@@ -1,12 +1,12 @@
 #### Input and Output files config parameters ####
-csv_folder = './csv/examples/new_test/'
+csv_folder = './csv/examples/test/'
 output_docs_folder='./output_docs/'
 
 #### VCF Conversion config parameters ####
 allele_counts=False
 reference_genome='GRCh38' # Choose one between NCBI36, GRCh37, GRCh38
-datasetId='gnomad_joint_v4.1'
-case_level_data=False
+datasetId='test'
+case_level_data=True
 zygosity=True
 num_rows= 1535474150
 
