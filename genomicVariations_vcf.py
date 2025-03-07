@@ -641,7 +641,7 @@ def generate(dict_properties):
                     j=0
                     dict_trues={"id": HGVSId, "datasetId": conf.datasetId}
                     for zygo in v.gt_types:
-                        if zygo==True:
+                        if zygo==1 or zygo ==3:
                             dict_trues[str(j)]="y"
                             j+=1
                         else:
