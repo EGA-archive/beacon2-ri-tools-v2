@@ -7,7 +7,7 @@ allele_counts=False
 reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
 datasetId='COVID_pop13_ger_1'
 case_level_data=True
-zygosity=False
+exact_heterozygosity=False
 num_rows=7000000
 
 ### MongoDB parameters ###

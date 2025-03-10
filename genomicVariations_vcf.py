@@ -637,16 +637,19 @@ def generate(dict_properties):
             
 
             if conf.case_level_data == True:
-                if conf.zygosity == False:
+                if conf.exact_heterozygosity == False:
                     j=0
                     dict_trues={"id": HGVSId, "datasetId": conf.datasetId}
                     for zygo in v.gt_types:
-                        if zygo==1 or zygo ==3:
+                        if zygo==1:
                             dict_trues[str(j)]="y"
+                            j+=1
+                        elif zygo ==3:
+                            dict_trues[str(j)]="11"
                             j+=1
                         else:
                             j+=1
-                elif conf.zygosity == True:
+                elif conf.exact_heterozygosity == True:
                     j=0
                     dict_trues={"id": HGVSId, "datasetId": conf.datasetId}
                     for zygo in v.genotypes:
