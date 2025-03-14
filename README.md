@@ -1,6 +1,6 @@
-# Beacon Data Tools
+# Beacon RI Tools v2
 
-This repository contains the new Beacon Data Tools, a software created with the main goal of generating BFF data from .csv or .vcf (and probably more types of datafiles in the future). This is based on the first beacon ri tools, a previous and different version that you can find here: [Beacon ri tools v1](https://github.com/EGA-archive/beacon2-ri-tools). The new features for beacon v2.0 are:
+This repository contains the new Beacon RI Tools v2, a software created with the main goal of generating BFF data from .csv or .vcf (and probably more types of datafiles in the future). This is based on the first beacon ri tools, a previous and different version that you can find here: [Beacon ri tools v1](https://github.com/EGA-archive/beacon2-ri-tools). The new features for beacon v2.0 are:
 
 * Code Language is written in [Python 3.11](https://www.python.org/downloads/release/python-3110/)
 * The output gain is schemas that suit the very last version of [Beacon v2](https://github.com/ga4gh-beacon/beacon-v2) specifications, and ready to be deployed in a beacon v2 API compliant.
@@ -57,11 +57,12 @@ The **csv_folder** variable sets where are all the .csv files the tool will work
 The **output_docs_folder** sets the folder where your final .json files will be saved once execution of beacon tools finishes.  This folder should always be located within 'output_docs', and the only part of the path that can be altered is the subdirectory of 'output_docs'.
 
 #### VCF conversion config parameters
-The **reference_genome** is the reference genome the tool will use to map the position of the chromosomes. Make sure to select the same version as the one used to generate your data. 
-The **allele_frequency** let's you set a threshold for the allele frequency of the variants you want to convert from the vcf file.
-The **datasetId** needs to match the id of your datasets.csv or datasets.json file. This will add a datasetId field in every record to match the record with the dataset it belongs to.
-The **case_level_data** is a boolean parameter (True or False) which will relate your variants to the samples they belong to. In case you set this to true, please, read as well the case level data paragraph below.
-The **num_rows** are the aproximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow sometimes to calculate all the variants number in a VCF.
+* The **reference_genome** is the reference genome the tool will use to map the position of the chromosomes. Make sure to select the same version as the one used to generate your data. 
+* The **datasetId** needs to match the id of your datasets.csv or datasets.json file. This will add a datasetId field in every record to match the record with the dataset it belongs to.
+* The **case_level_data** is a boolean parameter (True or False) which will relate your variants to the samples they belong to. In case you set this to true, please, read as well the case level data paragraph below.
+* The **exact_heterozygosity** is a boolean parameter (True or Falase) that, in case case_level_data is True, then, it will classify the biosamples in being heterozygous for either the reference or the alternate allele.
+* The **num_rows** are the aproximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow sometimes to calculate all the variants number in a VCF.
+* The **allele_counts** now is not implemented yet, just leave it as False.
 
 #### VCF headers
 Beacon RI Tools v2 is compatible to headers annotated by VEP. The parameters that are read from VEP are UPLOADED_ALLELE, for setting the variant type, SYMBOL, for setting the gene id, HGVSp, for setting the aminoacid change, and CONSEQUENCE, for setting the molecular effects. If your VCF isn't annotated with VEP you can write down in [pipelines](https://github.com/EGA-archive/beacon-data-tools/tree/main/pipelines/default/templates), within the template.json file, which are the keynames for these different properties in your VCF header id and activate the template to true. Note that using template.json will deactivate reading the VEP headers.
