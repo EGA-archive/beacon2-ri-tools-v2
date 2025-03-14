@@ -1,6 +1,6 @@
-# Beacon RI Tools v2
+# Beacon2 RI Tools v2
 
-This repository contains the new Beacon RI Tools v2, a software created with the main goal of generating BFF data from .csv or .vcf (and probably more types of datafiles in the future). This is based on the first beacon ri tools, a previous and different version that you can find here: [Beacon ri tools v1](https://github.com/EGA-archive/beacon2-ri-tools). The new features for beacon v2.0 are:
+This repository contains the new Beacon2 RI Tools v2, a software created with the main goal of generating BFF data from .csv or .vcf (and probably more types of datafiles in the future). This is based on the first beacon ri tools, a previous and different version that you can find here: [Beacon ri tools v1](https://github.com/EGA-archive/beacon2-ri-tools). The new features for beacon v2.0 are:
 
 * Code Language is written in [Python 3.11](https://www.python.org/downloads/release/python-3110/)
 * The output gain is schemas that suit the very last version of [Beacon v2](https://github.com/ga4gh-beacon/beacon-v2) specifications, and ready to be deployed in a beacon v2 API compliant.
@@ -65,11 +65,11 @@ The **output_docs_folder** sets the folder where your final .json files will be 
 * The **allele_counts** now is not implemented yet, just leave it as False.
 
 #### VCF headers
-Beacon RI Tools v2 is compatible to headers annotated by VEP. The parameters that are read from VEP are UPLOADED_ALLELE, for setting the variant type, SYMBOL, for setting the gene id, HGVSp, for setting the aminoacid change, and CONSEQUENCE, for setting the molecular effects. If your VCF isn't annotated with VEP you can write down in [pipelines](https://github.com/EGA-archive/beacon-data-tools/tree/main/pipelines/default/templates), within the template.json file, which are the keynames for these different properties in your VCF header id and activate the template to true. Note that using template.json will deactivate reading the VEP headers.
+Beacon2 RI Tools v2 is compatible to headers annotated by VEP. The parameters that are read from VEP are UPLOADED_ALLELE, for setting the variant type, SYMBOL, for setting the gene id, HGVSp, for setting the aminoacid change, and CONSEQUENCE, for setting the molecular effects. If your VCF isn't annotated with VEP you can write down in [pipelines](https://github.com/EGA-archive/beacon-data-tools/tree/main/pipelines/default/templates), within the template.json file, which are the keynames for these different properties in your VCF header id and activate the template to true. Note that using template.json will deactivate reading the VEP headers.
 
 #### VCF pipelines for allele frequencies
 To read allele frequency variables, there is the populations.json pipeline inside [pipelines](https://github.com/EGA-archive/beacon-data-tools/tree/main/pipelines/default/templates) folder.
-In order to let Beacon RI Tools v2 read all the INFO column from your VCF and parse the allele frequency variants entries, you will need to add how are the different entries named for each annotation. You will have to tell how many populations are there in your VCF setting the numberOfPopulations value, if there are no allele frequencies in the VCF, then you will need to set it to 0, and if there are but no specific populations, then fill the populations with a “Total” name. 
+In order to let Beacon2 RI Tools v2 read all the INFO column from your VCF and parse the allele frequency variants entries, you will need to add how are the different entries named for each annotation. You will have to tell how many populations are there in your VCF setting the numberOfPopulations value, if there are no allele frequencies in the VCF, then you will need to set it to 0, and if there are but no specific populations, then fill the populations with a “Total” name. 
 
 ### Case Level Data conversion
 
