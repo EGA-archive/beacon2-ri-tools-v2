@@ -7,6 +7,10 @@ This repository contains the new Beacon Data Tools, a software created with the 
 * This version raises exceptions that serve as a guide for users to know how to fill data correctly into the datasheets, so the final datafiles are correct and compliant with specifications.
 * All the possible combinations of docs that are compliant with specifications can be generated, for example, writing a variation either in LegacyVariation, MolecularVariation or SystemicVariation.
 
+## Documentation
+
+Please, go to [B2RI/B2PI docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon RI TOOLS v2.
+
 ## Data conversion process
 
 The main goal of Beacon ri tools v2.0 is to obtain a BFF (json following Beacon v2 official specifications) file that can be injected to a beacon v2 mongoDB database. To obtain a beacon v2 with its mongodb and see how to inject these BFF files, you can check it out and download yours for free at the official repo of [Beacon v2 PI api](https://github.com/EGA-archive/beacon2-pi-api).
@@ -38,11 +42,12 @@ csv_folder = './csv/examples/'
 output_docs_folder='./output_docs/'
 
 #### VCF Conversion config parameters ####
-allele_frequency=1 # introduce float number, leave 1 if you want to convert all the variants
-reference_genome='GRCh38' # Choose one between NCBI36, GRCh37, GRCh38
-datasetId='coadread_tcga_pan_can_atlas_2018'
+allele_counts=False
+reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
+datasetId='COVID_pop11_fin_2'
 case_level_data=False
-num_rows=7000000
+exact_heterozygosity=False
+num_rows=15000000
 ```
 
 Please, remember to make the datasetId match the id for your datasets.csv file.
