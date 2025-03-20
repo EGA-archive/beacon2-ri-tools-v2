@@ -155,6 +155,7 @@ def generate(dict_properties):
                 target_list=[dict_target]
                 client.beacon.targets.insert_many(target_list)
 
+        skipped_counts=0
 
         pbar = tqdm(total = num_rows)
 
@@ -413,7 +414,16 @@ def generate(dict_properties):
             
             
             try:
-                if varianttype == 'SV': continue
+                if varianttype == 'SV': 
+                    i+=1
+                    pbar.update(1)
+                    if conf.verbosity==True:
+                        ref=v.REF
+                        chrom=v.CHROM
+                        start=v.start
+                        print('variant in chr: {} with start position: {} and reference base: {} skipped because being of type Structural Variant, which is not supported yet'.format(chrom, start, ref))
+                    skipped_counts+=1
+                    continue
             except Exception:
                 pass
             try:
@@ -441,8 +451,6 @@ def generate(dict_properties):
                             else:
                                 allele_frequency = float(allele_frequency)
                             if allele_frequency == 0.0:
-                                i+=1
-                                pbar.update(1)
                                 continue
                             if allele_number == None:
                                 pass
@@ -459,8 +467,6 @@ def generate(dict_properties):
                             else:
                                 allele_count = int(allele_count)
                             if allele_count == 0:
-                                i+=1
-                                pbar.update(1)
                                 continue
                             if ac_hom == None:
                                 pass
@@ -495,7 +501,7 @@ def generate(dict_properties):
                                 dict_per_population["population"]=popu
                             if dict_per_population != {} and allele_frequency !=None:
                                 frequencies.append(dict_per_population)
-                else:
+                if pipeline is None or num_of_populations == 0:
                     allele_frequency=v.INFO.get('AF')
                     if allele_frequency == None:
                         pass
@@ -507,6 +513,12 @@ def generate(dict_properties):
                     if allele_frequency == 0.0:
                         i+=1
                         pbar.update(1)
+                        if conf.verbosity==True:
+                            ref=v.REF
+                            chrom=v.CHROM
+                            start=v.start
+                            print('variant in chr: {} with start position: {} and reference base: {} skipped because its allele frequency is 0'.format(chrom, start, ref))
+                        skipped_counts+=1
                         continue
                     allele_number=v.INFO.get('AN')
                     if allele_number == None:
@@ -527,6 +539,12 @@ def generate(dict_properties):
                     if allele_count == 0.0:
                         i+=1
                         pbar.update(1)
+                        if conf.verbosity==True:
+                            ref=v.REF
+                            chrom=v.CHROM
+                            start=v.start
+                            print('variant in chr: {} with start position: {} and reference base: {} skipped because its allele count is 0'.format(chrom, start, ref))
+                        skipped_counts+=1
                         continue
                     ac_hom=v.INFO.get('AC_Hom')
                     if ac_hom == None:
@@ -546,6 +564,14 @@ def generate(dict_properties):
                         ac_het = float(v.INFO.get('AC_Het'))
                 if conf.allele_counts == True:
                     if allele_frequency == 0 or allele_frequency == 0.0 or allele_frequency is None:
+                        i+=1
+                        pbar.update(1)
+                        if conf.verbosity==True:
+                            ref=v.REF
+                            chrom=v.CHROM
+                            start=v.start
+                            print('variant in chr: {} with start position: {} and reference base: {} skipped because its allele frequency is 0'.format(chrom, start, ref))
+                        skipped_counts+=1
                         continue
 
                 if allele_frequency is not None:
@@ -572,6 +598,14 @@ def generate(dict_properties):
             #print(allele_frequency)
             if frequencies == []:
                 if num_of_populations != 0:
+                    i+=1
+                    pbar.update(1)
+                    if conf.verbosity==True:
+                        ref=v.REF
+                        chrom=v.CHROM
+                        start=v.start
+                        print('variant in chr: {} with start position: {} and reference base: {} skipped because none of the populations had allele frequency greater than 0'.format(chrom, start, ref))
+                    skipped_counts+=1
                     continue
 
             #print(v)
@@ -588,6 +622,14 @@ def generate(dict_properties):
                 end=v.INFO.get('END')
                 alt=v.ALT
             if alt != [] and '<' and '>' in alt[0]:
+                i+=1
+                pbar.update(1)
+                if conf.verbosity==True:
+                    ref=v.REF
+                    chrom=v.CHROM
+                    start=v.start
+                    print('variant in chr: {} with start position: {} and reference base: {} skipped because alternateBases: {} format not supported'.format(ref, chrom, start, alt))
+                skipped_counts+=1
                 continue
             elif alt == []:
                 alt=['N']
@@ -662,11 +704,6 @@ def generate(dict_properties):
                         elif zygo[0] == 0 and zygo[1]== 1:
                             dict_trues[str(j)]="01"
                             j+=1
-                #dict_to_xls['caseLevelData|biosampleId'] = 'hola'
-
-                #biosampleids=",".join(biosampleids)
-                #if dict_to_xls['caseLevelData|biosampleId'] == '':
-                    #continue
 
             k=0
 
@@ -1043,7 +1080,7 @@ def generate(dict_properties):
             if total_dict != []:
                 if i == num_rows:
                     client.beacon.genomicVariations.insert_many(total_dict)
-                    pbar.update(1)
+                    #pbar.update(1)
                     break
                 elif (i/10000).is_integer():
                     client.beacon.genomicVariations.insert_many(total_dict)
@@ -1051,7 +1088,7 @@ def generate(dict_properties):
                     del total_dict
                     gc.collect()
                     total_dict=[]
-                    pbar.update(1)  
+                    #pbar.update(1)  
 
 
 
@@ -1067,12 +1104,14 @@ def generate(dict_properties):
 
 
     pbar.close()
-    return i, l
+    return i, skipped_counts
 
-total_i, l=generate(dict_properties)
+total_i, skipped_variants=generate(dict_properties)
 
 
-if total_i-l > 0:
-    print('Successfully inserted {} records into beacon'.format(total_i-l-1))
+if total_i-skipped_variants > 0:
+    print('Successfully inserted {} records into beacon'.format(total_i-skipped_variants-1))
+    print('A total of {} variants were processed'.format(total_i-1))
+    print('A total of {} variants were skipped'.format(skipped_variants))
 else:
     print('No registries found.')

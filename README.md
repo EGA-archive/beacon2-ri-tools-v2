@@ -48,6 +48,7 @@ datasetId='COVID_pop11_fin_2'
 case_level_data=False
 exact_heterozygosity=False
 num_rows=15000000
+verbosity=False
 ```
 
 Please, remember to make the datasetId match the id for your datasets.csv file.
@@ -62,6 +63,7 @@ The **output_docs_folder** sets the folder where your final .json files will be 
 * The **case_level_data** is a boolean parameter (True or False) which will relate your variants to the samples they belong to. In case you set this to true, please, read as well the case level data paragraph below.
 * The **exact_heterozygosity** is a boolean parameter (True or Falase) that, in case case_level_data is True, then, it will classify the biosamples in being heterozygous for either the reference or the alternate allele.
 * The **num_rows** are the aproximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow sometimes to calculate all the variants number in a VCF.
+* The **verbosity** will give streaming logs with the reason why a variant has been skipped to be inserted. Recommendation is to leave this as False.
 * The **allele_counts** now is not implemented yet, just leave it as False.
 
 #### VCF headers
