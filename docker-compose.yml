@@ -48,3 +48,13 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
     networks:
       - my-app-network
+
+  phenopackets-to-BFF:
+    image: ghcr.io/ega-archive/phenopackets-to-bff:latest
+    restart: always
+    hostname: phenopackets-to-BFF
+    container_name: phenopackets-to-BFF
+    volumes:
+      - ./phenopackets-to-BFF/:/usr/src/app/examples
+    networks:
+      - my-app-network
