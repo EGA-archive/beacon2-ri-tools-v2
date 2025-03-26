@@ -7,6 +7,8 @@ This repository contains the new Beacon2 RI Tools v2, a software created with th
 * This version raises exceptions that serve as a guide for users to know how to fill data correctly into the datasheets, so the final datafiles are correct and compliant with specifications.
 * All the possible combinations of docs that are compliant with specifications can be generated, for example, writing a variation either in LegacyVariation, MolecularVariation or SystemicVariation.
 
+**Please bear in mind that this is a beta version. If you encounter issues or have questions, feel free to open an issue in the [GitHub repository](https://github.com/EGA-archive/phenopackets-to-BFF/issues).**
+
 ## Documentation
 
 Please, go to [B2RI/B2PI docs website](https://b2ri-documentation-demo.ega-archive.org/) to know how to use Beacon RI TOOLS v2.
