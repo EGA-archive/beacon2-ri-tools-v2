@@ -217,6 +217,8 @@ Most of the mapping between the Phenopackets and Beacon models was straightforwa
 
 Fields containing important metadata that could not be mapped to a specific Beacon property were stored in the additionalInformation (notes) field to preserve as much information as possible.
 
+**Please bear in mind that this is a beta version. If you encounter issues or have questions, feel free to open an issue in the [GitHub repository](https://github.com/EGA-archive/phenopackets-to-BFF/issues).**
+
 #### Specific Mappings
 
 ##### Individuals.diseases.notes:
