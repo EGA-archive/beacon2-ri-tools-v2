@@ -410,8 +410,11 @@ def generate(dict_properties,list_of_headers):
                                                         newdict[v1_bigkeys][v1_keys[2].replace('*','')]=v1_array[int(num+n)]
                                                 except Exception:
                                                     pass
-                                                if newdict['phenotypicEffects']=={}:
-                                                    newdict.pop('phenotypicEffects')
+                                                try:
+                                                    if newdict['phenotypicEffects']=={}:
+                                                        newdict.pop('phenotypicEffects')
+                                                except Exception:
+                                                    pass
                                                 if newdict != {}:
                                                     list_to_def.append(newdict)
                                                 n +=1
