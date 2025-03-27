@@ -17,7 +17,7 @@ Beacon r.i tools v2.0 is a package of tools designed to simplify the population 
 
 To create your own Beacon v2 and learn how to populate it visit the official repo of the beacon v2 PI API where you can download all the necessary resources for free.
 
-![Beacon tools v2 diagram](https://github.com/EGA-archive/beacon-data-tools/blob/main/files/beacon-ri-tools-v2-figure-new.jpg)
+![Beacon tools v2 diagram](https://github.com/EGA-archive/beacon-data-tools/blob/main/files/beacon-ri-tools-v2-MAR25.png)
 
 ## Installation guide with docker
 
