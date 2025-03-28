@@ -95,7 +95,7 @@ To read allele frequency variables, there is the populations.json pipeline insid
 In order to let Beacon2 RI Tools v2 read all the INFO column from your VCF and parse the allele frequency variants entries, you will need to add how are the different entries named for each annotation. You will have to tell how many populations are there in your VCF setting the numberOfPopulations value, if there are no allele frequencies in the VCF, then you will need to set it to 0, and if there are but no specific populations, then fill the populations with a “Total” name. 
 You also have the option of populating your beacon with the allele frequency information of your variants. 
 
-In order to let Beacon RI Tools v2 read the INFO column from your VCF and parse the allele frequency variants entries you’ll need to modify [population.json][(/](https://github.com/EGA-archive/beacon-data-tools/tree/main/pipelines/default/templates/population.json). 
+In order to let Beacon RI Tools v2 read the INFO column from your VCF and parse the allele frequency variants entries you’ll need to modify [population.json](https://github.com/EGA-archive/beacon-data-tools/tree/main/pipelines/default/templates/population.json). 
 
 Basic example of populations.json:
 ```bash
@@ -164,7 +164,12 @@ Please, bear in mind the following statements :
 
 1. Only “correctly spelled” fields will be inserted into the beacon, respect the column structure and naming of the files inside templates. 
 2. Every new row will be appended to the final output file as a new and independent document. e.g 3. If in dataset.csv you have two rows you will be creating two independent datasets. 
-If your data needs to be appended to the same document, it will have to be separated by ‘ | ‘ and written in the same row. For example, in genomicVariations, if several samples have the same variant you will need to fill in the caseLevelData as in [UPLOAD REDUCED VERSION CASE LEVEL DATA]. Note that you can leave the pipe empty or write the condition multiple times.
+If your data needs to be appended to the same document, it will have to be separated by ‘ | ‘ and written in the same row. For example, in genomicVariations, if several samples have the same variant you will need to fill in caseLevelData properties as below. Note that you can leave the pipe empty or write the condition multiple times. e.g:
+```
+caseLevelData|biosampleId  caseLevelData|phenotypicEffects|conditionId
+SAMPLE2|SAMPLE3|SAMPLE4    Alzheimer||
+```
+
 4. The info field for each collection is very generic and can be filled with different data, you will need to fill the column data directly with json type data. For copies and subjects for genomicVariations, json data is also needed.
 5. Keep in mind that you don’t need to fill in all the columns. Some are optional, while others belong to specific Beacon specification options and may be incompatible with certain columns. If a column is misfilled, an exception will be raised. Beacon RI Tools v2 will only convert the columns that contain information, the rest can be removed if wanted.
 These are the mandatory fields for each collection:
