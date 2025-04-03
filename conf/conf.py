@@ -5,7 +5,7 @@ output_docs_folder='./output_docs/'
 #### VCF Conversion config parameters ####
 allele_counts=False # Variable still in test, leave it as False for now.
 reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
-datasetId='COVID_pop11_fin_2'
+datasetId='synthetic_usecases_4beacon_testingV3'
 case_level_data=True
 exact_heterozygosity=True
 num_rows=15000000
