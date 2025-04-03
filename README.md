@@ -62,15 +62,13 @@ The *output_docs_folder* variable sets the folder where your final .json files (
 
 
 #### VCF conversion config parameters
-*reference_genome* must be filled in with the assembly version used to map and call the VCF. Make sure to insert the correct information as beacon r.i tools will use the assembly stated to map the positions and show the correct variants once the beacon database is up.
-
-If you don’t want to include all the variants to your beacon database you can do some filtering with *allele_frequency*. It sets a threshold for the minimum allele frequency a variant has to have to be inserted in beacon. 
-
-*datasetID* field will be used to map the metadata to the variant. Please, make sure that datasetId matches the id stated in datasets.csv or datasets.json file. This way the phenotypic and metadata information will be linked to the variant. 
-
-The *case_level_data* is a boolean parameter (True or False) which will relate your variants to the samples they belong to. In case you set this to true, please, read as well the case level data paragraph below. 
-
-The *num_rows* is an approximation of the number of variants in the VCF. Make sure this is, at least, greater than the total variants expected. 
+* The **reference_genome** is the reference genome the tool will use to map the position of the chromosomes. Make sure to select the same version as the one used to generate your data. 
+* The **datasetId** needs to match the id of your datasets.csv or datasets.json file. This will add a datasetId field in every record to match the record with the dataset it belongs to.
+* The **case_level_data** is a boolean parameter (True or False) which will relate your variants to the samples they belong to. In case you set this to true, please, read as well the case level data paragraph below.
+* The **exact_heterozygosity** is a boolean parameter (True or Falase) that, in case case_level_data is True, then, it will classify the biosamples in being heterozygous for either the reference or the alternate allele.
+* The **num_rows** are the aproximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow sometimes to calculate all the variants number in a VCF.
+* The **verbosity** will give streaming logs with the reason why a variant has been skipped to be inserted. Recommendation is to leave this as False.
+* The **allele_counts** now is not implemented yet, just leave it as False.
 
 ### Populating a beacon instance from VCF
 
@@ -271,6 +269,16 @@ docker exec phenopackets-to-BFF python working-w-phenopackets.py /usr/src/app/ex
 Bear in mind that the path **/usr/src/app/examples** must remain unchanged. 
 
 You'll find your BFFs in the same folder where you saved the phenopacket, [phenopackets-to-BFF](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/phenopackets-to-BFF).
+
+### Removing a dataset
+
+If you wish, for some reason, delete a dataset from your entire database (all the collections) you can by executing the next command:
+
+```bash
+docker exec ri-tools python remove_dataset.py
+```
+
+Note that the dataset removed will be the one with the name that you declare the variable **datasetId** in the conf file has.
 
 ### Version notes
 
