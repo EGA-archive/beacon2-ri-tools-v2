@@ -653,14 +653,18 @@ def generate(dict_properties):
                 chromos = '23'
             elif 'Y' in chrom:
                 chromos = '24'
+            if len (str(chromos))>1:
+                rootHGVS='NC_0000'
+            else:
+                rootHGVS='NC_00000'
             if conf.reference_genome == 'GRCh37':
-                HGVSId='NC_0000'+str(chromos) + '.10' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+                HGVSId=rootHGVS+str(chromos) + '.10' + ':' + 'g.' + str(start+1) + ref + '>' + alt[0]
                 dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
             elif conf.reference_genome == 'GRCh38':
-                HGVSId='NC_0000'+str(chromos) + '.11' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+                HGVSId=rootHGVS+str(chromos) + '.11' + ':' + 'g.' + str(start+1) + ref + '>' + alt[0]
                 dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
             elif conf.reference_genome == 'NCBI36':
-                HGVSId='NC_0000'+str(chromos) + '.9' + ':' + 'g.' + str(start) + ref + '>' + alt[0]
+                HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.' + str(start+1) + ref + '>' + alt[0]
                 dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
 
             dict_to_xls['variation|location|interval|start|value'] = int(start)
