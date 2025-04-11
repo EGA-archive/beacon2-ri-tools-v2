@@ -89,42 +89,85 @@ This way, once your beacon instance is running, you’ll be able to query it usi
 
 
 #### VCF pipelines for allele frequencies
-To read allele frequency variables, there is the populations.json pipeline inside [pipelines](https://github.com/EGA-archive/beacon-data-tools/tree/main/pipelines/default/templates) folder.
-In order to let Beacon2 RI Tools v2 read all the INFO column from your VCF and parse the allele frequency variants entries, you will need to add how are the different entries named for each annotation. You will have to tell how many populations are there in your VCF setting the numberOfPopulations value, if there are no allele frequencies in the VCF, then you will need to set it to 0, and if there are but no specific populations, then fill the populations with a “Total” name. 
-You also have the option of populating your beacon with the allele frequency information of your variants. 
 
-In order to let Beacon RI Tools v2 read the INFO column from your VCF and parse the allele frequency variants entries you’ll need to modify [population.json](https://github.com/EGA-archive/beacon-data-tools/tree/main/pipelines/default/templates/population.json). 
+To include allele frequency (AF) data in your Beacon instance you must configure the [populations.json](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/pipelines/default/templates) file located in the pipelines folder. This file allows Beacon to correctly parse AF-related annotations from the INFO field of your VCF files.
 
-Basic example of populations.json:
-```bash
+##### Step-by-Step Instructions
+
+1. Enable INFO Field Parsing
+
+By default, Beacon2 RI Tools v2 does not parse the INFO column of your VCF. To extract allele frequency-related values, you need to explicitly define how these annotations are named in your VCF by modifying the populations.json file.
+
+2. Configure populations.json
+
+Set the numberOfPopulations field according to your VCF:
+
+- If no AF data is available, set numberOfPopulations to 0.
+
+- If AF data is present but not separated by sub-populations, use 1 and define a single population (e.g., "Total").
+
+- If multiple populations are present (e.g., stratified by sex or ethnicity), list each population and map their corresponding INFO field annotations.
+
+The population names and annotation keys must exactly match the field names in your VCF’s INFO column.
+
+**Example 1: Single Population**
+
+For VCF files containing aggregated data (e.g., total population only), your populations.json should look like:
+
+```
 {
-
-  "numberOfPopulations": 0,
-  
+  "numberOfPopulations": 1,
   "source": "The Genome Aggregation Database (gnomAD)",
-  
-  "sourceReference": "gnomad.broadinstitute.org/",
-    
-      "populations": [
-        
-        {
-            "population": "Total",
-            
-            "alleleFrequency": "AF_joint",
-            
-            "alleleCount": "AC_joint",
-            
-            "alleleCountHomozygous": "nhomalt_joint",
-            
-            "alleleCountHeterozygous": "",
-            
-            "alleleNumber": "AN_joint"
-        }
-    ]
+  "sourceReference": "https://gnomad.broadinstitute.org/",
+  "populations": [
+    {
+      "population": "Total",
+      "alleleFrequency": "AF",
+      "alleleCount": "AC",
+      "alleleCountHomozygous": "AC_hom",
+      "alleleCountHeterozygous": "AC_het",
+      "alleleNumber": "AN"
+    }
+  ]
 }
 ```
 
-With this populations.json you would be adding one population, Total, to the beacon. 
+**Example 2: Multiple Populations (e.g., by sex)**
+
+For VCFs containing population-stratified annotations:
+
+```
+{
+  "numberOfPopulations": 2,
+  "source": "The Genome Aggregation Database (gnomAD)",
+  "sourceReference": "https://gnomad.broadinstitute.org/",
+  "populations": [
+    {
+      "population": "Males",
+      "alleleFrequency": "AF_male",
+      "alleleCount": "AC_male",
+      "alleleCountHomozygous": "AC_hom_male",
+      "alleleCountHeterozygous": "AC_het_male",
+      "alleleNumber": "AN_male"
+    },
+    {
+      "population": "Females",
+      "alleleFrequency": "AF_female",
+      "alleleCount": "AC_female",
+      "alleleCountHomozygous": "AC_hom_female",
+      "alleleCountHeterozygous": "AC_het_female",
+      "alleleNumber": "AN_female"
+    }
+  ]
+}
+```
+
+By properly configuring the populations.json file, you ensure that Beacon can accurately report allele frequencies and related metrics for each population in your dataset.
+
+💡 Note: Double-check that the annotation keys (e.g., AF_male, AC_female, etc.) correspond exactly to the field names in the INFO column of your VCF.
+
+💡 Note2: For all the information to be correctly read, before processing the VCF split the multiallelic variants. 
+      
 
 #### Converting data from .vcf.gz file
 
