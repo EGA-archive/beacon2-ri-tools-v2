@@ -65,8 +65,8 @@ The *output_docs_folder* variable sets the folder where your final .json files (
 * The **reference_genome** is the reference genome the tool will use to map the position of the chromosomes. Make sure to select the same version as the one used to generate your data. 
 * The **datasetId** needs to match the id of your datasets.csv or datasets.json file. This will add a datasetId field in every record to match the record with the dataset it belongs to.
 * The **case_level_data** is a boolean parameter (True or False) which will relate your variants to the samples they belong to. In case you set this to true, please, read as well the case level data paragraph below.
-* The **exact_heterozygosity** is a boolean parameter (True or Falase) that, in case case_level_data is True, then, it will classify the biosamples in being heterozygous for either the reference or the alternate allele.
-* The **num_rows** are the aproximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow sometimes to calculate all the variants number in a VCF.
+* The **exact_heterozygosity** is a boolean parameter (True or False) that, in case case_level_data is True, then, it will classify the biosamples as being heterozygous for either the reference or the alternate allele.
+* The **num_rows** are the approximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow to calculate the total number of variants in the VCF.
 * The **verbosity** will give streaming logs with the reason why a variant has been skipped to be inserted. Recommendation is to leave this as False.
 * The **allele_counts** now is not implemented yet, just leave it as False.
 
@@ -191,13 +191,13 @@ This will generate the final .json file which is in Beacon Friendly Format (BFF)
 
 The 7 beacon models can be populated from CSVs files: 
 
-Runs
-Datasets
-Analyses
-Cohorts
-Biosamples
-Individuals 
-genomicVariations
+- Runs
+- Datasets
+- Analyses
+- Cohorts
+- Biosamples
+- Individuals
+- genomicVariations
 
 To convert the metadata to BFF or to save the variants information without a VCF you will need to fill in the CSV [templates](https://github.com/EGA-archive/beacon-data-tools/tree/main/csv/templates). 
 
