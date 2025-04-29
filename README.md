@@ -191,13 +191,13 @@ This will generate the final .json file which is in Beacon Friendly Format (BFF)
 
 The 7 beacon models can be populated from CSVs files: 
 
-Runs
-Datasets
-Analyses
-Cohorts
-Biosamples
-Individuals 
-genomicVariations
+- Runs
+- Datasets
+- Analyses
+- Cohorts
+- Biosamples
+- Individuals
+- genomicVariations
 
 To convert the metadata to BFF or to save the variants information without a VCF you will need to fill in the CSV [templates](https://github.com/EGA-archive/beacon-data-tools/tree/main/csv/templates). 
 
