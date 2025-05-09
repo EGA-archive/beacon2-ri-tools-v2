@@ -23,6 +23,7 @@ class OntologyTerm(BaseModel, extra='forbid'):
         return v.title()
             
 class DUODataUse(BaseModel, extra='forbid'):
+    description: str
     id: str
     label: Optional[str]=None
     modifiers: Optional[list] = None
