@@ -28,7 +28,7 @@ git clone https://github.com/EGA-archive/beacon-data-tools.git
 
 To light up the container with beacon data tools, execute the next command inside the root folder:
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 Once the container is up and running you can start using beacon ri tools v2, congratulations!
