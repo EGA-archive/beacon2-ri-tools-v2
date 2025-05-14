@@ -429,8 +429,8 @@ def generate(dict_properties, list_of_headers):
                                                                         else:
                                                                             rolelabel=vmem1.split('|')
                                                                 elif kmem == 'affected':
-                                                                    print(propk)
-                                                                    print(propv)
+                                                                    #print(propk)
+                                                                    #print(propv)
                                                                     try:
                                                                         affected=vmem.split('|')
                                                                     except Exception:
