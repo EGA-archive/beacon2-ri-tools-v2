@@ -429,7 +429,12 @@ def generate(dict_properties, list_of_headers):
                                                                         else:
                                                                             rolelabel=vmem1.split('|')
                                                                 elif kmem == 'affected':
-                                                                    affected=vmem.split('|')
+                                                                    print(propk)
+                                                                    print(propv)
+                                                                    try:
+                                                                        affected=vmem.split('|')
+                                                                    except Exception:
+                                                                        affected=['True']
                                                                 elif kmem == 'memberId':
                                                                     memberId = vmem.split('|')
                                                             
