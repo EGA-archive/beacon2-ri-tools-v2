@@ -891,6 +891,19 @@ def generate(dict_properties):
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
                                             list_of_excel_items.append(new_item)     
+                                elif isinstance(vi1, list):
+                                    for vi1item in vi1:
+                                        if isinstance(vi1item, dict):
+                                            for key1item, value1item in vi1item.items():
+                                                if isinstance(value1item, dict):
+                                                    for key2item, value2item in value1item.items():
+                                                        new_item = ""
+                                                        new_item = key + "|" + ki + "|" + ki1 + "|" + key1item + "|" + key2item
+                                                        list_of_excel_items.append(new_item) 
+                                                else:
+                                                    new_item = ""
+                                                    new_item = key + "|" + ki + "|" + ki1 + "|" + key1item
+                                                    list_of_excel_items.append(new_item) 
                                 else:
                                     new_item = ""
                                     new_item = key + "|" + ki + "|" + ki1
@@ -975,18 +988,6 @@ def generate(dict_properties):
 
     with open("files/headers/biosamples.txt", "w") as txt_file:
         for line in list_of_excel_items:
-            txt_file.write("".join(line) + "\n")
-
-    with open("files/required/definitions/biosamples.txt", "w") as txt_file:
-        for line in list_of_definitions_required:
-            txt_file.write("".join(line) + "\n")
-
-    with open("files/required/header_definitions/biosamples.txt", "w") as txt_file:
-        for line in list_of_headers_definitions_required:
-            txt_file.write("".join(line) + "\n")
-
-    with open("files/required/properties/biosamples.txt", "w") as txt_file:
-        for line in list_of_properties_required:
             txt_file.write("".join(line) + "\n")
 
     with open('files/deref_schemas/biosamples.json', 'w') as f:

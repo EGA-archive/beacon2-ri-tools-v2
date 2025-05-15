@@ -661,7 +661,7 @@ def treatment():
     element['cumulativeDose']={'referenceRange':{'high': 'number', 'low': 'number', 'unit': {'id': '', 'label': ''}}}
     return element
     
-print(dict_types)
+
 
 
 first_list_of_definitions_required=[]
@@ -851,7 +851,7 @@ for key, value in dict_types.items():
 
  
 
-#print(finaldict)
+print(finaldict)
 
 
 
@@ -877,18 +877,22 @@ def generate(dict_properties):
                                                             for k3, v3 in v2.items():
                                                                 new_item = ""
                                                                 new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2 + "|" + k3
+                                                                #print(new_item)
                                                                 list_of_excel_items.append(new_item)            
                                                         else:
                                                             new_item = ""
                                                             new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2
+                                                            #print(new_item)
                                                             list_of_excel_items.append(new_item)                                        
                                                 else:
                                                     new_item = ""
                                                     new_item = key + "|" + ki + "|" + k + "|" + k1
+                                                    #print(new_item)
                                                     list_of_excel_items.append(new_item)
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + k
+                                            #print(new_item)
                                             list_of_excel_items.append(new_item)
                         elif isinstance(vi, dict):
                             for ki1, vi1 in vi.items():
@@ -898,16 +902,31 @@ def generate(dict_properties):
                                             for ki3, vi3 in vi2.items():
                                                 new_item = ""
                                                 new_item = key + "|" + ki + "|" + ki1 + "|" + ki2 + "|" + ki3
-                                                print(new_item)
+                                                #print(new_item)
                                                 list_of_excel_items.append(new_item)            
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
-                                            print(new_item)
+                                            #print(new_item)
                                             list_of_excel_items.append(new_item)     
+                                elif isinstance(vi1, list):
+                                    for vi1item in vi1:
+                                        if isinstance(vi1item, dict):
+                                            for key1item, value1item in vi1item.items():
+                                                if isinstance(value1item, dict):
+                                                    for key2item, value2item in value1item.items():
+                                                        new_item = ""
+                                                        new_item = key + "|" + ki + "|" + ki1 + "|" + key1item + "|" + key2item
+                                                        list_of_excel_items.append(new_item) 
+                                                else:
+                                                    new_item = ""
+                                                    new_item = key + "|" + ki + "|" + ki1 + "|" + key1item
+                                                    list_of_excel_items.append(new_item) 
+                                                
                                 else:
                                     new_item = ""
                                     new_item = key + "|" + ki + "|" + ki1
+                                    #print(new_item)
                                     list_of_excel_items.append(new_item)      
                         else:
                             new_item = ""
@@ -922,10 +941,12 @@ def generate(dict_properties):
                                 for kd2, vd2 in vd1.items():
                                     new_item = ""
                                     new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
+                                    #print(new_item)
                                     list_of_excel_items.append(new_item)
                             else:
                                 new_item = ""
                                 new_item = key + "|" + kd + "|" + kd1
+                                #print(new_item)
                                 list_of_excel_items.append(new_item)
                     else:
                         new_item = ""
@@ -971,6 +992,7 @@ def generate(dict_properties):
 
     with open('csv/templates/individuals.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
+        #print(list_of_excel_items)
         writer.writerow(list_of_excel_items)
         csvfile.close()
     
