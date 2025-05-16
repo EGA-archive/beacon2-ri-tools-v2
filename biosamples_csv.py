@@ -362,7 +362,7 @@ def generate(dict_properties, list_of_headers):
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             definitivedict[key]=propv
-            print(definitivedict)
+            #print(definitivedict)
             Biosamples(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
