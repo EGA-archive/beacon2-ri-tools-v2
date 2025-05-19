@@ -1,0 +1,90 @@
+{
+    "id": "P0007498",
+    "sex": {
+        "id": "NCIT:C46112",
+        "label": "Male"
+    },
+    "diseases": [
+        {
+            "diseaseCode": {
+                "id": "Orphanet:97245",
+                "label": "Congenital myopathy"
+            }
+        },
+        {
+            "diseaseCode": {
+                "id": "OMIM:117000",
+                "label": "CENTRAL CORE DISEASE OF MUSCLE"
+            }
+        }
+    ],
+    "phenotypicFeatures": [
+        {
+            "featureType": {
+                "id": "HP:0001249",
+                "label": "Intellectual disability"
+            },
+            "excluded": true
+        },
+        {
+            "featureType": {
+                "id": "HP:0000467",
+                "label": "Neck muscle weakness"
+            }
+        },
+        {
+            "featureType": {
+                "id": "HP:0001252",
+                "label": "Muscular hypotonia"
+            }
+        },
+        {
+            "featureType": {
+                "id": "HP:0001319",
+                "label": "Neonatal hypotonia"
+            }
+        },
+        {
+            "featureType": {
+                "id": "HP:0001374",
+                "label": "Congenital hip dislocation"
+            }
+        },
+        {
+            "featureType": {
+                "id": "HP:0002540",
+                "label": "Inability to walk"
+            }
+        },
+        {
+            "featureType": {
+                "id": "HP:0002783",
+                "label": "Recurrent lower respiratory tract infections"
+            }
+        },
+        {
+            "featureType": {
+                "id": "HP:0002804",
+                "label": "Arthrogryposis multiplex congenita"
+            }
+        },
+        {
+            "featureType": {
+                "id": "HP:0003202",
+                "label": "Skeletal muscle atrophy"
+            }
+        },
+        {
+            "featureType": {
+                "id": "HP:0005684",
+                "label": "Distal arthrogryposis"
+            }
+        },
+        {
+            "featureType": {
+                "id": "HP:0030319",
+                "label": "Weakness of facial musculature"
+            }
+        }
+    ]
+}

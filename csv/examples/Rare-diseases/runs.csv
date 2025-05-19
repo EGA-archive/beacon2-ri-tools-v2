@@ -1,0 +1,2 @@
+biosampleId,id,individualId,info,libraryLayout,librarySelection,librarySource|id,librarySource|label,libraryStrategy,platform,platformModel|id,platformModel|label,runDate
+SAMEA10450712,EGAR00003021166,,,,,,,Whole genome sequencing,Illumina,OBI:0002001,Illumina HiSeq 2000,2021-10-22
