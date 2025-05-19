@@ -184,7 +184,29 @@ def generate(dict_properties, list_of_headers):
                                                                 vivilist.append(vivi)
                                                         for vivitem in vivilist:
                                                             if vivitem != {}:
-                                                                item_dict[ki]=vi_dict    
+                                                                item_dict[ki]=vi_dict  
+                                        elif isinstance(vi1, list):
+                                            for vi1item in vi1:
+                                                if isinstance(vi1item, dict):
+                                                    vi1item_dict={}
+                                                    for key1item, value1item in vi1item.items():
+                                                        if isinstance(value1item, dict):
+                                                            for key2item, value2item in value1item.items():
+                                                                new_item = ""
+                                                                new_item = key + "|" + ki + "|" + ki1 + "|" + key1item + "|" + key2item
+                                                                for propk, propv in dict_of_properties.items():
+                                                                    if propk == new_item:
+                                                                        vi1item_dict[key1item]={}
+                                                                        vi1item_dict[key1item][key2item]=propv
+                                                                        vi_dict[ki1]=vi1item_dict
+                                                        else:
+                                                            new_item = ""
+                                                            new_item = key + "|" + ki + "|" + ki1 + "|" + key1item
+                                                            for propk, propv in dict_of_properties.items():
+                                                                if propk == new_item:
+                                                                    vi1item_dict[key1item]=propv
+                                                                    vi_dict[ki1]=vi1item_dict
+  
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + ki1
@@ -340,6 +362,7 @@ def generate(dict_properties, list_of_headers):
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             definitivedict[key]=propv
+            #print(definitivedict)
             Biosamples(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             total_dict.append(definitivedict)
