@@ -306,7 +306,7 @@ To convert a phenopacket into Biosamples and Individuals schemas first save the 
 And then run: 
 
 ```bash
-python working-w-phenopackets.py /usr/src/app/examples/phenopacket.json datasetId
+docker exec phenopackets-to-BFF python working-w-phenopackets.py /usr/src/app/examples/phenopacket.json datasetId
 ```
 To link the *biosamples* and *individuals* information extracted from the Phenopackets to a dataset in the Beacon, 
 please make sure to include **the same datasetId in the query as the one defined in the dataset model.**
@@ -314,7 +314,7 @@ please make sure to include **the same datasetId in the query as the one defined
 If your beacon does not contain dataset information, simply run: 
 
 ```bash
-python working-w-phenopackets.py /usr/src/app/examples/phenopacket.json
+docker exec phenopackets-to-BFF python working-w-phenopackets.py /usr/src/app/examples/phenopacket.json
 ```
 
 Bear in mind that the path **/usr/src/app/examples** must remain unchanged. 
