@@ -18,6 +18,7 @@ services:
       - ./scripts/datasheet/conf:/usr/src/app/scripts/datasheet/conf
       - ./files/vcf/files_to_read:/usr/src/app/files/vcf/files_to_read
       - ./csv:/usr/src/app/csv
+      - ./files/updated_json:/usr/src/app/files/updated_json
     networks:
       - my-app-network
 

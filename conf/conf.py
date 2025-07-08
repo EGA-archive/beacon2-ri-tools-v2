@@ -11,6 +11,10 @@ exact_heterozygosity=True
 num_rows=15000000
 verbosity=False # This variable, if True, will make the program run slower but give logs about all the skipped variants and the reason why.
 
+### Update record ###
+genomicVariation=True # True if you are updating a variant record, else False
+collection='genomicVariations'
+
 ### MongoDB parameters ###
 database_host = 'mongo'
 database_port = 27017
