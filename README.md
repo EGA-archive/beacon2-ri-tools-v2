@@ -341,7 +341,7 @@ Note that the dataset removed will be the one with the name that you declare the
 
 ### Updating record(s)
 
-After having set the configuration parameters for **record_type** and **collection_name** in conf.py (see configuration above), you need to have a file in [json records to update folder](https://github.com/EGA-archive/beacon-data-tools/tree/main/files/updated_json) called **update.json**. Inside this file, you can have one record or more (remember to have them in a list between braces) with the final json as you want to have it. After that, execute the next command to update all the records inside the file:
+After having set the configuration parameters for **record_type** and **collection_name** in conf.py (see configuration above), you need to have a file in [json records to update folder](https://github.com/EGA-archive/beacon-data-tools/tree/main/files/updated_json) called **update.json**. Inside this file, you can have one record or more (remember to have them in a list between braces) with a valid beacon v2 json with an id and datasetId that matches an id and datasetId that is already in the database. The already existing record in mongoDB will be updated with all the fields that this updated json has and will also keep the remaining fields even if they are not in the updated json. After that, execute the next command to update all the records inside the file:
 
 ```bash
 docker exec ri-tools python update_record.py
