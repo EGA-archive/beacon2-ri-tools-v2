@@ -1,34 +1,109 @@
-[{
-    "identifiers": {
-        "genomicHGVSId": "NC_000001.10:g.1234567CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT>T"
-    },
-    "molecularAttributes": {
-        "geneIds": [
-            "UPDATEDGENE2"
-        ],
-        "molecularEffects": [
+    [{
+        "identifiers": {
+            "genomicHGVSId": "NC_000001.10:g.1234567CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT>T"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "UPDATEDGENE3"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "SO:0001631",
+                    "label": "upstream_gene_variant"
+                }
+            ]
+        },
+        "variantInternalId": "c3ef2890-5bcd-11f0-8afe-0242ac120003:CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:1:g.1234566CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 1234566
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 1234867
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT",
+            "variantType": "INDEL"
+        },
+        "datasetId": "test",
+        "frequencyInPopulations": [
             {
-                "id": "SO:0001631",
-                "label": "upstream_gene_variant"
+                "source": "The Genome Aggregation Database (gnomAD)",
+                "sourceReference": "gnomad.broadinstitute.org/",
+                "frequencies": [
+                    {
+                        "alleleFrequency": 0.550000011920929,
+                        "alleleCount": 22,
+                        "alleleCountHomozygous": 5,
+                        "alleleCountHeterozygous": 12,
+                        "alleleNumber": 40,
+                        "population": "Total"
+                    }
+                ]
             }
         ]
     },
-    "variantInternalId": "c3ef2890-5bcd-11f0-8afe-0242ac120003:CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT:T",
-    "datasetId": "test"
-},
-{
-    "molecularAttributes": {
-        "geneIds": [
-            "UPDATEDGENE"
-        ],
-        "molecularEffects": [
+        {
+        "identifiers": {
+            "genomicHGVSId": "NC_000001.10:g.169549811C>T"
+        },
+        "molecularAttributes": {
+            "geneIds": [
+                "UPDATEDGENE3"
+            ],
+            "molecularEffects": [
+                {
+                    "id": "SO:0001631",
+                    "label": "upstream_gene_variant"
+                }
+            ]
+        },
+        "variantInternalId": "c3ef6f4e-5bcd-11f0-8afe-0242ac120003:C:T",
+        "variation": {
+            "location": {
+                "type": "SequenceLocation",
+                "sequence_id": "HGVSid:1:g.169549810C>T",
+                "interval": {
+                    "type": "SequenceInterval",
+                    "start": {
+                        "type": "Number",
+                        "value": 169549810
+                    },
+                    "end": {
+                        "type": "Number",
+                        "value": 169549811
+                    }
+                }
+            },
+            "alternateBases": "T",
+            "referenceBases": "C",
+            "variantType": "SNP"
+        },
+        "datasetId": "test",
+        "frequencyInPopulations": [
             {
-                "id": "SO:0001631",
-                "label": "upstream_gene_variant"
+                "source": "The Genome Aggregation Database (gnomAD)",
+                "sourceReference": "gnomad.broadinstitute.org/",
+                "frequencies": [
+                    {
+                        "alleleFrequency": 0.05000000074505806,
+                        "alleleCount": 2,
+                        "alleleCountHomozygous": 0,
+                        "alleleCountHeterozygous": 2,
+                        "alleleNumber": 40,
+                        "population": "Total"
+                    }
+                ]
             }
         ]
-    },
-    "variantInternalId": "c3ef6f4e-5bcd-11f0-8afe-0242ac120003:C:T",
-    "datasetId": "test"
-}
+    }
 ]

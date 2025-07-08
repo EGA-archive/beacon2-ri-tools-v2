@@ -51,14 +51,18 @@ case_level_data=False
 exact_heterozygosity=False
 num_rows=15000000
 verbosity=False
+
+### Update record ###
+record_type='genomicVariation' # One between analysis, biosample, cohort, dataset, genomicVariation, individual or run
+collection_name='genomicVariations'
 ```
 
 Please, remember to make the datasetId match the id for your datasets.csv file.
 
 #### Generic config parameters
-The *csv_folder* variable sets the path of a folder containing all the CSVs that will be converted to BFF. 
+The **csv_folder** variable sets the path of a folder containing all the CSVs that will be converted to BFF. 
 
-The *output_docs_folder* variable sets the folder where your final .json files (BFF format) will be saved once execution of beacon tools finishes. This folder should always be located within the folder 'output_docs', but subdirectories can be created inside it. e.g output_docs_folder='./output_docs/test1'
+The **output_docs_folder** variable sets the folder where your final .json files (BFF format) will be saved once execution of beacon tools finishes. This folder should always be located within the folder 'output_docs', but subdirectories can be created inside it. e.g output_docs_folder='./output_docs/test1'
 
 
 #### VCF conversion config parameters
@@ -69,6 +73,10 @@ The *output_docs_folder* variable sets the folder where your final .json files (
 * The **num_rows** are the approximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow to calculate the total number of variants in the VCF.
 * The **verbosity** will give streaming logs with the reason why a variant has been skipped to be inserted. Recommendation is to leave this as False.
 * The **allele_counts** now is not implemented yet, just leave it as False.
+
+#### Update records parameters
+* The **record_type** is to let the RI Tools what type of entry type you are updating, can be one of analysis, biosample, cohort, dataset, genomicVariation, individual or run.
+* The **collection_name** parameter is to let the RI Tools know what is the name of the collection in MongoDB the record you want to be updated is located at.
 
 ### Populating a beacon instance from VCF
 
@@ -330,6 +338,16 @@ docker exec ri-tools python remove_dataset.py
 ```
 
 Note that the dataset removed will be the one with the name that you declare the variable **datasetId** in the conf file has.
+
+### Updating record(s)
+
+After having set the configuration parameters for **record_type** and **collection_name** in conf.py (see configuration above), you need to have a file in [json records to update folder](https://github.com/EGA-archive/beacon-data-tools/tree/main/files/updated_json) called **update.json**. Inside this file, you can have one record or more (remember to have them in a list between braces) with the final json as you want to have it. After that, execute the next command to update all the records inside the file:
+
+```bash
+docker exec ri-tools python update_record.py
+```
+
+Note that if the json doesn't match the Beacon v2 specification, the execution will complain.
 
 ### Version notes
 
