@@ -52,8 +52,16 @@ def convert_record(json_record):
         except Exception:
             print('record to update needs to include a variantInternalId')
         update_dict["$set"]=json_record
+        initial_record=client.beacon[conf.collection_name].find(search_dict)
         client.beacon[conf.collection_name].update_many(search_dict, update_dict)
-        print('record {} for dataset: {} updated successfully'.format(json_record["variantInternalId"],json_record["datasetId"]))
+        updated_record=client.beacon[conf.collection_name].find(search_dict)
+        try:
+            validate_record(updated_record[0])
+            print('record {} for dataset: {} updated successfully'.format(json_record["variantInternalId"],json_record["datasetId"]))
+        except Exception:
+            client.beacon[conf.collection_name].delete_one(search_dict)
+            client.beacon[conf.collection_name].insert_one(initial_record[0])
+            print('record {} for dataset: {} update failed. The document could not be validated against Beacon v2 standards. Please, compare the documents you are updating to resolve the confllicts.'.format(json_record["variantInternalId"],json_record["datasetId"]))
     else:
         search_dict={}
         try:
@@ -65,8 +73,16 @@ def convert_record(json_record):
         except Exception:
             print('record to update needs to include an id')
         update_dict["$set"]=json_record
+        initial_record=client.beacon[conf.collection_name].find(search_dict)
         client.beacon[conf.collection_name].update_many(search_dict, update_dict)
-        print('record {} for dataset: {} updated successfully'.format(json_record["id"],json_record["datasetId"]))
+        updated_record=client.beacon[conf.collection_name].find(search_dict)
+        try:
+            validate_record(updated_record[0])
+            print('record {} for dataset: {} updated successfully'.format(json_record["variantInternalId"],json_record["datasetId"]))
+        except Exception:
+            client.beacon[conf.collection_name].delete_one(search_dict)
+            client.beacon[conf.collection_name].insert_one(initial_record[0])
+            print('record {} for dataset: {} update failed. The document could not be validated against Beacon v2 standards. Please, compare the documents you are updating to resolve the confllicts.'.format(json_record["variantInternalId"],json_record["datasetId"]))
 
 def update_record():
     with open('files/updated_json/update.json') as json_file:
