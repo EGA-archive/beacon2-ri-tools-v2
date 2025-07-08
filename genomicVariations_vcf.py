@@ -1061,6 +1061,7 @@ def generate(dict_properties):
 
             GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
+            definitivedict["length"]=int(end)-int(start)
             try:
                 if num_of_populations != 0:
                     if frequencies!=[]:
