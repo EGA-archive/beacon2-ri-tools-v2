@@ -4,7 +4,7 @@
         },
         "molecularAttributes": {
             "geneIds": [
-                "UPDATEDGENE5"
+                "UPDATEDGENE8"
             ],
             "molecularEffects": [
                 {
@@ -54,11 +54,11 @@
     },
         {
         "identifiers": {
-            "genomicHGVSId": "NC_000001.10:g.169549811C>T"
+            "genomicHGVSId": "NC_000017.10:g.43045704G>A"
         },
         "molecularAttributes": {
             "geneIds": [
-                "UPDATEDGENE5"
+                "UPDATEDGENE8"
             ],
             "molecularEffects": [
                 {

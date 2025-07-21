@@ -1,4 +1,4 @@
-FROM python:3.11-buster AS BUILD
+FROM python:3.11-bullseye AS BUILD
 
 ENV DEBIAN_FRONTEND noninteractive
 
