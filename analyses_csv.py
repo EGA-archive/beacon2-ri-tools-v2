@@ -6,6 +6,7 @@ import csv
 import sys
 import pandas as pd
 from validators.analyses import Analyses
+import hashlib
 
 with open("files/headers/analyses.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -19,6 +20,9 @@ if len(sys.argv) != 3:
 
 csv_filename = sys.argv[1]
 output_path = sys.argv[2]
+
+def get_hash(string:str):
+    return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 def generate(dict_properties, list_of_headers):
     #csv_filename = conf.csv_filename
@@ -349,6 +353,7 @@ def generate(dict_properties, list_of_headers):
                             definitivedict[key]=propv
             Analyses(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
+            definitivedict["_id"]=get_hash(conf.datasetId+definitivedict["id"])
             total_dict.append(definitivedict)
 
             

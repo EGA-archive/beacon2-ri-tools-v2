@@ -5,6 +5,7 @@ import conf.conf as conf
 import csv
 import sys
 from validators.genomicVariations import GenomicVariations
+import hashlib
 
 with open("files/headers/genomicVariations.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -13,6 +14,9 @@ with open('files/deref_schemas/genomicVariations.json') as json_file:
 
 csv_filename = sys.argv[1]
 output_path = sys.argv[2]
+
+def get_hash(string:str):
+    return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 def generate(dict_properties,list_of_headers):
 
@@ -583,6 +587,7 @@ def generate(dict_properties,list_of_headers):
             #print(definitivedict)
             GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
+            definitivedict["_id"]=get_hash(conf.datasetId+definitivedict["identifiers"]["genomicHGVSId"])
             total_dict.append(definitivedict)
 
             

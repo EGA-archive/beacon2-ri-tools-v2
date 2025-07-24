@@ -4,6 +4,7 @@ import conf.conf as conf
 import csv
 import sys
 from validators.individuals import Individuals
+import hashlib
 
 with open("files/headers/individuals.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -12,6 +13,9 @@ with open('files/deref_schemas/individuals.json') as json_file:
 
 csv_filename = sys.argv[1]
 output_path = sys.argv[2]
+
+def get_hash(string:str):
+    return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 def check(name, list_of_filled_items):
     measures_list_1 = ['measures|measurementValue|referenceRange|high', 'measures|measurementValue|referenceRange|low', 'measures|measurementValue|referenceRange|unit|id', 'measures|measurementValue|referenceRange|unit|label']
@@ -567,6 +571,7 @@ def generate(dict_properties, list_of_headers):
             #print(definitivedict)
             Individuals(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
+            definitivedict["_id"]=get_hash(conf.datasetId+definitivedict["id"])
             total_dict.append(definitivedict)
 
             

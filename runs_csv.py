@@ -5,6 +5,7 @@ import conf.conf as conf
 import csv
 import sys
 from validators.runs import Runs
+import hashlib
 
 csv_filename = sys.argv[1]
 output_path = sys.argv[2]
@@ -14,7 +15,8 @@ with open("files/headers/runs.txt", "r") as txt_file:
 with open('files/deref_schemas/runs.json') as json_file:
     dict_properties = json.load(json_file)
 
-
+def get_hash(string:str):
+    return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 def generate(dict_properties,list_of_headers):
     #csv_filename = conf.csv_filename
@@ -338,6 +340,7 @@ def generate(dict_properties,list_of_headers):
                             definitivedict[key]=propv
             Runs(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
+            definitivedict["_id"]=get_hash(conf.datasetId+definitivedict["id"])
             total_dict.append(definitivedict)
 
             

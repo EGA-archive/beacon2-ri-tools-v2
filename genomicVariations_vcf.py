@@ -10,6 +10,8 @@ import gc
 import gzip
 from pymongo.mongo_client import MongoClient
 from validators.genomicVariations import GenomicVariations
+from pymongo.errors import BulkWriteError
+import hashlib
 
 client = MongoClient(
         #"mongodb://127.0.0.1:27017/"
@@ -39,6 +41,9 @@ try:
             template=None
 except Exception:
     template = None
+
+def get_hash(string:str):
+    return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 def commas(prova):
     length_iter=0
@@ -101,11 +106,13 @@ num_rows = conf.num_rows
 
 def generate(dict_properties):
     total_dict =[]
-    total_dict2 =[]
-    dict_true={}
     i=1
     l=0
     if conf.case_level_data == True:
+        try:
+            client.beacon.create_collection(name="targets")
+        except Exception:
+            pass
         try:
             client.beacon.create_collection(name="caseLevelData")
         except Exception:
@@ -139,21 +146,28 @@ def generate(dict_properties):
             vcf.set_samples([])
         else:
             my_target_list = vcf.samples
+            target_errors=[]
             try:
-                client.beacon.create_collection(name="targets")
-                found_item=client.beacon.targets.find_one({"datasetId": conf.datasetId})
-                if found_item == None:
-                    dict_target={}
-                    dict_target["datasetId"]=conf.datasetId
-                    dict_target["biosampleIds"]=my_target_list
-                    target_list=[dict_target]
-                    client.beacon.targets.insert_many(target_list)
-            except Exception:
                 dict_target={}
+                dict_target["_id"]=get_hash(conf.datasetId)
                 dict_target["datasetId"]=conf.datasetId
                 dict_target["biosampleIds"]=my_target_list
-                target_list=[dict_target]
-                client.beacon.targets.insert_many(target_list)
+                client.beacon.targets.insert_many([dict_target],ordered=False)
+            except BulkWriteError as BulkError:
+                start_point=len("batch op errors occurred, full error:")
+                error_stringed=str(BulkError)[start_point:]
+                new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                error_dicted=json.loads(new_string)
+                target_errors.append(error_dicted["writeErrors"][0]['op'])
+                pass
+            if target_errors != []:
+                for caught_error in target_errors:
+                    target_to_update=client.beacon.targets.find_one({"_id": caught_error["_id"]})
+                    biosampleIds_to_update=target_to_update["biosampleIds"]
+                    target_to_update["biosampleIds"] = list(set(biosampleIds_to_update + caught_error["biosampleIds"]))  
+                    set_dict={}
+                    set_dict["$set"]=target_to_update
+                    client.beacon.targets.update_one({"_id": caught_error["_id"]},set_dict)
 
         skipped_counts=0
 
@@ -684,31 +698,20 @@ def generate(dict_properties):
             
 
             if conf.case_level_data == True:
-                if conf.exact_heterozygosity == False:
-                    j=0
-                    dict_trues={"id": HGVSId, "datasetId": conf.datasetId}
-                    for zygo in v.gt_types:
-                        if zygo==1:
-                            dict_trues[str(j)]="y"
-                            j+=1
-                        elif zygo ==3:
-                            dict_trues[str(j)]="11"
-                            j+=1
-                        else:
-                            j+=1
-                elif conf.exact_heterozygosity == True:
-                    j=0
-                    dict_trues={"id": HGVSId, "datasetId": conf.datasetId}
-                    for zygo in v.genotypes:
-                        if zygo[0] == 1 and zygo[1]== 1:
-                            dict_trues[str(j)]="11"
-                            j+=1
-                        elif zygo[0] == 1 and zygo[1]== 0:
-                            dict_trues[str(j)]="10"
-                            j+=1
-                        elif zygo[0] == 0 and zygo[1]== 1:
-                            dict_trues[str(j)]="01"
-                            j+=1
+                j=0
+                dict_trues={"_id": get_hash(conf.datasetId+HGVSId),"id": HGVSId, "datasetId": conf.datasetId}
+                for zygo in v.genotypes:
+                    if zygo[0] == 1 and zygo[1]== 1:
+                        dict_trues[str(j)]="11"
+                        j+=1
+                    elif zygo[0] == 1 and zygo[1]== 0:
+                        dict_trues[str(j)]="10"
+                        j+=1
+                    elif zygo[0] == 0 and zygo[1]== 1:
+                        dict_trues[str(j)]="01"
+                        j+=1
+                
+
 
             k=0
 
@@ -1062,6 +1065,7 @@ def generate(dict_properties):
             GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             definitivedict["length"]=int(end)-int(start)
+            definitivedict["_id"]=get_hash(conf.datasetId+HGVSId)
             try:
                 if num_of_populations != 0:
                     if frequencies!=[]:
@@ -1078,34 +1082,86 @@ def generate(dict_properties):
 
             pbar.update(1)
             i+=1
-
             if conf.case_level_data == True:
-                client.beacon.caseLevelData.insert_one(dict_trues)
+                catch_errors=[]
+                try:
+                    client.beacon.caseLevelData.insert_many([dict_trues],ordered=False)
+                except BulkWriteError as BulkError:
+                    start_point=len("batch op errors occurred, full error:")
+                    error_stringed=str(BulkError)[start_point:]
+                    new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                    error_dicted=json.loads(new_string)
+                    catch_errors.append(error_dicted["writeErrors"][0]['op'])
+                    pass
+                if catch_errors != []:
+                    final_dict={}
+                    for caught_error in catch_errors:
+                        final_dict=caught_error
+                        caseLevelData_to_update=client.beacon.caseLevelData.find_one({"_id": caught_error["_id"]})
+                        for k, v in caseLevelData_to_update.items():
+                            final_dict[k]=v
+                        set_dict={}
+                        set_dict["$set"]=final_dict
+                        client.beacon.caseLevelData.update_one({"_id": caught_error["_id"]},set_dict)
+
+
             dict_trues={}
 
             if total_dict != []:
+                variants_errors=[]
                 if i == num_rows:
-                    client.beacon.genomicVariations.insert_many(total_dict)
+                    try:
+                        client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
+                    except BulkWriteError as BulkError:
+                        start_point=len("batch op errors occurred, full error:")
+                        error_stringed=str(BulkError)[start_point:]
+                        new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                        error_dicted=json.loads(new_string)
+                        for error in error_dicted["writeErrors"]:
+                            variants_errors.append(error['op'])
                     #pbar.update(1)
                     break
                 elif (i/10000).is_integer():
-                    client.beacon.genomicVariations.insert_many(total_dict)
+                    try:
+                        client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
+                    except BulkWriteError as BulkError:
+                        start_point=len("batch op errors occurred, full error:")
+                        error_stringed=str(BulkError)[start_point:]
+                        new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                        error_dicted=json.loads(new_string)
+                        for error in error_dicted["writeErrors"]:
+                            variants_errors.append(error['op'])
+
+
                     del definitivedict
                     del total_dict
                     gc.collect()
                     total_dict=[]
                     #pbar.update(1)  
+                for error in variants_errors:
+                    if conf.verbosity == True:
+                        print("following duplicated variant found was skipped: {}".format(error))
+                    skipped_counts+=1
 
 
 
 
     if total_dict != []:
+        variants_errors=[]
         if i != num_rows:
-            client.beacon.genomicVariations.insert_many(total_dict)
-    if conf.case_level_data == True:
-        if total_dict2 != []:
-            if i != num_rows:
-                client.beacon.caseLevelData.insert_many(total_dict2)
+            try:
+                client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
+            except BulkWriteError as BulkError:
+                start_point=len("batch op errors occurred, full error:")
+                error_stringed=str(BulkError)[start_point:]
+                new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                error_dicted=json.loads(new_string)
+                for error in error_dicted["writeErrors"]:
+                    variants_errors.append(error['op'])
+        for error in variants_errors:
+            if conf.verbosity == True:
+                print("following duplicated variant found was skipped: {}".format(error))
+            skipped_counts+=1
 
 
 

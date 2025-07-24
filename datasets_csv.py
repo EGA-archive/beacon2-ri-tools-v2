@@ -5,6 +5,7 @@ import conf.conf as conf
 import csv
 import sys
 from validators.datasets import Datasets
+import hashlib
 
 with open("files/headers/datasets.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -14,6 +15,8 @@ with open('files/deref_schemas/datasets.json') as json_file:
 csv_filename = sys.argv[1]
 output_path = sys.argv[2]
 
+def get_hash(string:str):
+    return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 def generate(dict_properties,list_of_headers):
     #csv_filename = conf.csv_filename
@@ -399,6 +402,7 @@ def generate(dict_properties,list_of_headers):
                         if propk == new_item:
                             definitivedict[key]=propv
             Datasets(**definitivedict)
+            definitivedict["_id"]=get_hash(definitivedict["id"])
             total_dict.append(definitivedict)
 
             
