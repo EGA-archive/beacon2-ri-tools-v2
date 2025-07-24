@@ -157,6 +157,7 @@ def generate(dict_properties):
                 start_point=len("batch op errors occurred, full error:")
                 error_stringed=str(BulkError)[start_point:]
                 new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                new_string=new_string.replace('None', '"None"')
                 error_dicted=json.loads(new_string)
                 target_errors.append(error_dicted["writeErrors"][0]['op'])
                 pass
@@ -1091,6 +1092,7 @@ def generate(dict_properties):
                     start_point=len("batch op errors occurred, full error:")
                     error_stringed=str(BulkError)[start_point:]
                     new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                    new_string=new_string.replace('None', '"None"')
                     error_dicted=json.loads(new_string)
                     catch_errors.append(error_dicted["writeErrors"][0]['op'])
                     pass
@@ -1118,6 +1120,7 @@ def generate(dict_properties):
                         start_point=len("batch op errors occurred, full error:")
                         error_stringed=str(BulkError)[start_point:]
                         new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                        new_string=new_string.replace('None', '"None"')
                         error_dicted=json.loads(new_string)
                         for error in error_dicted["writeErrors"]:
                             variants_errors.append(error['op'])
@@ -1130,6 +1133,7 @@ def generate(dict_properties):
                         start_point=len("batch op errors occurred, full error:")
                         error_stringed=str(BulkError)[start_point:]
                         new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                        new_string=new_string.replace('None', '"None"')
                         error_dicted=json.loads(new_string)
                         for error in error_dicted["writeErrors"]:
                             variants_errors.append(error['op'])
@@ -1157,6 +1161,7 @@ def generate(dict_properties):
                 start_point=len("batch op errors occurred, full error:")
                 error_stringed=str(BulkError)[start_point:]
                 new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                new_string=new_string.replace('None', '"None"')
                 error_dicted=json.loads(new_string)
                 for error in error_dicted["writeErrors"]:
                     variants_errors.append(error['op'])
