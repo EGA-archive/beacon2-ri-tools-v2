@@ -163,11 +163,12 @@ def generate(dict_properties):
             if target_errors != []:
                 for caught_error in target_errors:
                     target_to_update=client.beacon.targets.find_one({"_id": caught_error["_id"]})
-                    biosampleIds_to_update=target_to_update["biosampleIds"]
-                    target_to_update["biosampleIds"] = list(set(biosampleIds_to_update + caught_error["biosampleIds"]))  
-                    set_dict={}
-                    set_dict["$set"]=target_to_update
-                    client.beacon.targets.update_one({"_id": caught_error["_id"]},set_dict)
+                    if target_to_update != {}:
+                        biosampleIds_to_update=target_to_update["biosampleIds"]
+                        target_to_update["biosampleIds"] = list(set(biosampleIds_to_update + caught_error["biosampleIds"]))  
+                        set_dict={}
+                        set_dict["$set"]=target_to_update
+                        client.beacon.targets.update_one({"_id": caught_error["_id"]},set_dict)
 
         skipped_counts=0
 
@@ -1098,11 +1099,12 @@ def generate(dict_properties):
                     for caught_error in catch_errors:
                         final_dict=caught_error
                         caseLevelData_to_update=client.beacon.caseLevelData.find_one({"_id": caught_error["_id"]})
-                        for k, v in caseLevelData_to_update.items():
-                            final_dict[k]=v
-                        set_dict={}
-                        set_dict["$set"]=final_dict
-                        client.beacon.caseLevelData.update_one({"_id": caught_error["_id"]},set_dict)
+                        if caseLevelData_to_update != {}:
+                            for k, v in caseLevelData_to_update.items():
+                                final_dict[k]=v
+                            set_dict={}
+                            set_dict["$set"]=final_dict
+                            client.beacon.caseLevelData.update_one({"_id": caught_error["_id"]},set_dict)
 
 
             dict_trues={}
