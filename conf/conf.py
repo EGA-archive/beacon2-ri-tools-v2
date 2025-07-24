@@ -1,6 +1,6 @@
 #### Input and Output files config parameters ####
-csv_folder = './csv/examples/all-fields/'
-output_docs_folder='./output_docs/all-fields/'
+csv_folder = './csv/examples/Rare-diseases/'
+output_docs_folder='./output_docs/Rare-diseases/'
 
 #### VCF Conversion config parameters ####
 allele_counts=False # Variable still in test, leave it as False for now.
