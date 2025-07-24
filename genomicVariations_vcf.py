@@ -164,7 +164,7 @@ def generate(dict_properties):
             if target_errors != []:
                 for caught_error in target_errors:
                     target_to_update=client.beacon.targets.find_one({"_id": caught_error["_id"]})
-                    if target_to_update != {}:
+                    if target_to_update != {} and target_to_update != None:
                         biosampleIds_to_update=target_to_update["biosampleIds"]
                         target_to_update["biosampleIds"] = list(set(biosampleIds_to_update + caught_error["biosampleIds"]))  
                         set_dict={}
@@ -1101,7 +1101,7 @@ def generate(dict_properties):
                     for caught_error in catch_errors:
                         final_dict=caught_error
                         caseLevelData_to_update=client.beacon.caseLevelData.find_one({"_id": caught_error["_id"]})
-                        if caseLevelData_to_update != {}:
+                        if caseLevelData_to_update != {} and caseLevelData_to_update != None:
                             for k, v in caseLevelData_to_update.items():
                                 final_dict[k]=v
                             set_dict={}
