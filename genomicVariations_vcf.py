@@ -460,6 +460,7 @@ def generate(dict_properties):
                             allele_number=v.INFO.get(population["alleleNumber"])
                             ac_hom=v.INFO.get(population["alleleCountHomozygous"])
                             ac_het=v.INFO.get(population["alleleCountHeterozygous"])
+                            ac_hemi=v.INFO.get(population["alleleCountHemizygous"])
                             if allele_frequency == None:
                                 pass
                             if isinstance(allele_frequency, tuple):
@@ -492,7 +493,6 @@ def generate(dict_properties):
                                 ac_hom=ac_hom[0]
                             else:
                                 ac_hom = int(ac_hom)
-
                             if ac_het == None:
                                 pass
                             elif isinstance(ac_het, tuple):
@@ -500,12 +500,13 @@ def generate(dict_properties):
                                 ac_het=ac_het[0]
                             else:
                                 ac_het = int(ac_het)
-                            if allele_frequency != 0 or allele_frequency != None:
-                                if allele_count != 0 or allele_count != None:
-                                    if ac_hom == None and ac_het != None and allele_count != None:
-                                        ac_hom = allele_count - ac_het
-                                    elif ac_het == None and ac_hom != None and allele_count != None:
-                                        ac_het = allele_count - ac_hom
+                            if ac_hemi == None:
+                                pass
+                            elif isinstance(ac_hemi, tuple):
+                                ac_hemi=list(ac_hemi)
+                                ac_hemi=ac_hemi[0]
+                            else:
+                                ac_hemi = int(ac_hemi)
                             popu=population["population"]
                             if allele_frequency != 0 or allele_frequency != None:
                                 dict_per_population["alleleFrequency"]=allele_frequency
@@ -513,6 +514,7 @@ def generate(dict_properties):
                                     dict_per_population["alleleCount"]=allele_count
                                     dict_per_population["alleleCountHomozygous"]=ac_hom
                                     dict_per_population["alleleCountHeterozygous"]=ac_het
+                                    dict_per_population["alleleCountHemizygous"]=ac_hemi
                                 if allele_number != None and allele_number != 0:
                                     dict_per_population["alleleNumber"]=allele_number
                                 dict_per_population["population"]=popu
@@ -579,6 +581,14 @@ def generate(dict_properties):
                         ac_het=ac_het[0]
                     else:
                         ac_het = float(v.INFO.get('AC_Het'))
+                    ac_hemi=v.INFO.get('AC_Hemi')
+                    if ac_hemi == None:
+                        pass
+                    elif isinstance(ac_hemi, tuple):
+                        ac_hemi=list(ac_hemi)
+                        ac_hemi=ac_hemi[0]
+                    else:
+                        ac_hemi = float(v.INFO.get('AC_Hemi'))
                 if conf.allele_counts == True:
                     if allele_frequency == 0 or allele_frequency == 0.0 or allele_frequency is None:
                         i+=1
@@ -602,6 +612,7 @@ def generate(dict_properties):
                             dict_per_population["alleleCount"]=allele_count
                             dict_per_population["alleleCountHomozygous"]=ac_hom
                             dict_per_population["alleleCountHeterozygous"]=ac_het
+                            dict_per_population["alleleCountHemizygous"]=ac_hemi
                         if allele_number != None and allele_number != 0:
                             dict_per_population["alleleNumber"]=allele_number
                         dict_per_population["population"]=popu
