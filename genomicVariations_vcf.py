@@ -744,7 +744,7 @@ def generate(dict_properties):
             dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
 
 
-            _id=hash(conf.datasetId+HGVSId)
+            _id=get_hash(conf.datasetId+HGVSId)
 
             dict_to_xls['variation|location|interval|start|value'] = int(start)
             dict_to_xls['variation|location|interval|start|type']="Number"
@@ -757,7 +757,7 @@ def generate(dict_properties):
             dict_to_xls['variation|location|interval|type']="SequenceInterval"
             dict_to_xls['variation|location|type']="SequenceLocation"
             dict_to_xls['variation|location|sequence_id']="HGVSid:" + str(chrom) + ":g." + str(start) + ref + ">" + alt[0]
-            dict_to_xls['variantInternalId'] = str(uuid.uuid1())+':' + str(ref) + ':' + str(alt[0])
+            dict_to_xls['variantInternalId'] = _id
             
             
 
