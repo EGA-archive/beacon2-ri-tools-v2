@@ -14,11 +14,6 @@ with open("files/headers/analyses.txt", "r") as txt_file:
 with open('files/deref_schemas/analyses.json') as json_file:
     dict_properties = json.load(json_file)
 
-
-if len(sys.argv) != 3:
-    print("Usage: python analyses_csv.py <csv_input_path> <json_output_path>")
-    sys.exit(1)
-
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
