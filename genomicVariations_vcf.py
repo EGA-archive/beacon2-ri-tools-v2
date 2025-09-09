@@ -472,9 +472,18 @@ def generate(dict_properties, args):
                             allele_frequency=v.INFO.get(population["alleleFrequency"])
                             allele_count=v.INFO.get(population["alleleCount"])
                             allele_number=v.INFO.get(population["alleleNumber"])
-                            ac_hom=v.INFO.get(population["alleleCountHomozygous"])
-                            ac_het=v.INFO.get(population["alleleCountHeterozygous"])
-                            ac_hemi=v.INFO.get(population["alleleCountHemizygous"])
+                            if population["genotypeHomozygous"] != "":
+                                ac_hom=v.INFO.get(population["genotypeHomozygous"])
+                            else:
+                                ac_hom=None
+                            if population["genotypeHeterozygous"] != "":
+                                ac_het=v.INFO.get(population["genotypeHeterozygous"])
+                            else:
+                                ac_het=None
+                            if population["genotypeHemizygous"] != "":
+                                ac_hemi=v.INFO.get(population["genotypeHemizygous"])
+                            else:
+                                ac_hemi=None
                             if allele_frequency == None:
                                 pass
                             if isinstance(allele_frequency, tuple):
@@ -526,9 +535,9 @@ def generate(dict_properties, args):
                                 dict_per_population["alleleFrequency"]=allele_frequency
                                 if allele_count != None and allele_count != 0:
                                     dict_per_population["alleleCount"]=allele_count
-                                    dict_per_population["alleleCountHomozygous"]=ac_hom
-                                    dict_per_population["alleleCountHeterozygous"]=ac_het
-                                    dict_per_population["alleleCountHemizygous"]=ac_hemi
+                                    dict_per_population["genotypeHomozygous"]=ac_hom
+                                    dict_per_population["genotypeHeterozygous"]=ac_het
+                                    dict_per_population["genotypeHemizygous"]=ac_hemi
                                 if allele_number != None and allele_number != 0:
                                     dict_per_population["alleleNumber"]=allele_number
                                 dict_per_population["population"]=popu
@@ -624,9 +633,9 @@ def generate(dict_properties, args):
                         dict_per_population["alleleFrequency"]=allele_frequency
                         if allele_count != None and allele_count != 0:
                             dict_per_population["alleleCount"]=allele_count
-                            dict_per_population["alleleCountHomozygous"]=ac_hom
-                            dict_per_population["alleleCountHeterozygous"]=ac_het
-                            dict_per_population["alleleCountHemizygous"]=ac_hemi
+                            dict_per_population["genotypeHomozygous"]=ac_hom
+                            dict_per_population["genotypeHeterozygous"]=ac_het
+                            dict_per_population["genotypeHemizygous"]=ac_hemi
                         if allele_number != None and allele_number != 0:
                             dict_per_population["alleleNumber"]=allele_number
                         dict_per_population["population"]=popu
