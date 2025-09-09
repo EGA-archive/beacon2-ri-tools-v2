@@ -7,9 +7,9 @@
             "population": "Total",
             "alleleFrequency": "AF",
             "alleleCount": "AC",
-            "alleleCountHomozygous": "AC_Hom",
-            "alleleCountHeterozygous": "AC_Het",
-            "alleleCountHemizygous": "AC_Hemi",
+            "genotypeHomozygous": "AC_Hom",
+            "genotypeHeterozygous": "AC_Het",
+            "genotypeHemizygous": "AC_Hemi",
             "alleleNumber": "AN"
         }
     ]
