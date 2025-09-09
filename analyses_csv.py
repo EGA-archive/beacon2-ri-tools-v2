@@ -8,6 +8,7 @@ import pandas as pd
 from validators.analyses import Analyses
 import hashlib
 import argparse
+import os
 
 with open("files/headers/analyses.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -18,14 +19,14 @@ def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 def generate(dict_properties, list_of_headers, args):
-    #args.input+'analyses.csv' = conf.args.input+'analyses.csv'
+    #os.path.join(args.input, 'analyses.csv') = conf.os.path.join(args.input, 'analyses.csv')
     total_dict =[]
-    with open(args.input+'analyses.csv', 'r' ) as theFile:
+    with open(os.path.join(args.input, 'analyses.csv'), 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
     k=0
     pbar = tqdm(total = num_rows)
-    with open(args.input+'analyses.csv', 'r' ) as theFile:
+    with open(os.path.join(args.input, 'analyses.csv'), 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:
@@ -370,7 +371,7 @@ args = parser.parse_args()
 
 dict_generado, total_i=generate(dict_properties, list_of_headers, args)
 
-output = args.output + 'analyses.json'
+output = os.path.join(args.output, 'analyses.json')
 
 if total_i-1 > 0:
 

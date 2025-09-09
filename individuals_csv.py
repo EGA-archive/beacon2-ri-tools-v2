@@ -6,6 +6,7 @@ import sys
 from validators.individuals import Individuals
 import hashlib
 import argparse
+import os
 
 with open("files/headers/individuals.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -208,8 +209,8 @@ def commas(prova):
     return(array_of_newdicts)
 
 def generate(dict_properties, list_of_headers, args):
-    #args.input+'individuals.csv' = conf.args.input+'individuals.csv'
-    with open(args.input+'individuals.csv', 'r' ) as theFile:
+    #os.path.join(args.input, 'individuals.csv') = conf.os.path.join(args.input, 'individuals.csv')
+    with open(os.path.join(args.input, 'individuals.csv'), 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
     
@@ -217,7 +218,7 @@ def generate(dict_properties, list_of_headers, args):
 
     k=0
     pbar = tqdm(total = num_rows)
-    with open(args.input+'individuals.csv', 'r' ) as theFile:
+    with open(os.path.join(args.input, 'individuals.csv'), 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:
@@ -598,7 +599,7 @@ args = parser.parse_args()
 dict_generado, total_i=generate(dict_properties, list_of_headers, args)
 
 
-output = args.output + 'individuals.json'
+output = os.path.join(args.output, 'individuals.json')
 
 if total_i-1 > 0:
 

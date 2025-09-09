@@ -7,6 +7,7 @@ import sys
 from validators.genomicVariations import GenomicVariations
 from pymongo.mongo_client import MongoClient
 import argparse
+import os
 
 with open("files/headers/genomicVariations.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -28,8 +29,7 @@ client = MongoClient(
 
 
 def generate(dict_properties,list_of_headers, args):
-    csv_filename = args.input + 'genomicVariations.csv'
-    output_path = args.output
+    csv_filename = os.path.join(args.input, 'genomicVariations.csv')
 
     #csv_filename = conf.csv_filename
 
@@ -617,7 +617,6 @@ parser = argparse.ArgumentParser(
                     description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
 
 parser.add_argument('-i', '--input', default=conf.csv_folder)
-parser.add_argument('-o', '--output', default=conf.output_docs_folder)
 parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 args = parser.parse_args()
 

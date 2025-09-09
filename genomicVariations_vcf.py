@@ -12,6 +12,7 @@ from validators.genomicVariations import GenomicVariations
 from pymongo.errors import BulkWriteError
 import hashlib
 import argparse
+import os
 
 client = MongoClient(
         #"mongodb://127.0.0.1:27017/"
@@ -1245,9 +1246,9 @@ def generate(dict_properties, args):
                 else:
                     for variantdict in total_dict:
                         try:
-                            append_to_json(args.output+'genomicVariations.json', variantdict)
+                            append_to_json(os.path.join(args.output, 'genomicVariations.json'), variantdict)
                         except Exception:
-                            with open(args.output+'genomicVariations.json', 'w') as outfile:
+                            with open(os.path.join(args.output, 'genomicVariations.json'), 'w') as outfile:
                                 json.dump([variantdict], outfile)
 
 
@@ -1274,9 +1275,9 @@ def generate(dict_properties, args):
         else:
             for variantdict in total_dict:
                 try:
-                    append_to_json(args.output+'genomicVariations.json', variantdict)
+                    append_to_json(os.path.join(args.output, 'genomicVariations.json'), variantdict)
                 except Exception:
-                    with open(args.output+'genomicVariations.json', 'w') as outfile:
+                    with open(os.path.join(args.output, 'genomicVariations.json'), 'w') as outfile:
                         json.dump([variantdict], outfile)
 
 

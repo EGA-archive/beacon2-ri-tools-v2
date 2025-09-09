@@ -89,6 +89,12 @@ parser.add_argument('-d', '--datasetId', default=datasetId)
 parser.add_argument('-i', '--input', default=csv_folder)
 ```
 
+**genomicVariations_postprocessing.py**
+```bash
+parser.add_argument('-i', '--input', default=conf.csv_folder)
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+```
+
 **genomicVariations_vcf.py**
 ```bash
 parser.add_argument('-o', '--output', default=conf.output_docs_folder)
@@ -121,6 +127,8 @@ parser.add_argument('-f', '--file', default=conf.output_docs_folder+'update.json
 parser.add_argument('-r', '--recordType', default=conf.record_type)
 parser.add_argument('-c', '--collection', default=conf.collection_name)
 ```
+
+Note: All the input and output arguments expect a directory path, and file expect a file path.
 
 ### Populating a beacon instance from VCF
 
