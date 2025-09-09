@@ -12,6 +12,7 @@ from pymongo.mongo_client import MongoClient
 from validators.genomicVariations import GenomicVariations
 from pymongo.errors import BulkWriteError
 import hashlib
+import os
 
 client = MongoClient(
         #"mongodb://127.0.0.1:27017/"
@@ -685,15 +686,65 @@ def generate(dict_properties):
                 rootHGVS='NC_0000'
             else:
                 rootHGVS='NC_00000'
+            
             if conf.reference_genome == 'GRCh37':
-                HGVSId=rootHGVS+str(chromos) + '.10' + ':' + 'g.' + str(start+1) + ref + '>' + alt[0]
-                dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
+                if chromos in ['14', '21']:
+                    HGVSId=rootHGVS+str(chromos) + '.8' + ':' + 'g.' + str(start+1)
+                elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
+                    HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.' + str(start+1) 
+                elif chromos in ['1', '8', '10', '13', '17', '20', '22', '23']:
+                    HGVSId=rootHGVS+str(chromos) + '.10' + ':' + 'g.' + str(start+1) 
+                elif chromos in ['2', '3', '4', '6', '9', '12']:
+                    HGVSId=rootHGVS+str(chromos) + '.11' + ':' + 'g.' + str(start+1)
+                elif chromos == '7':
+                    HGVSId=rootHGVS+str(chromos) + '.13' + ':' + 'g.' + str(start+1) 
             elif conf.reference_genome == 'GRCh38':
-                HGVSId=rootHGVS+str(chromos) + '.11' + ':' + 'g.' + str(start+1) + ref + '>' + alt[0]
-                dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
+                if chromos in ['14', '21']:
+                    HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.' + str(start+1)
+                elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
+                    HGVSId=rootHGVS+str(chromos) + '.10' + ':' + 'g.' + str(start+1) 
+                elif chromos in ['1', '8', '10', '13', '17', '20', '22', '23']:
+                    HGVSId=rootHGVS+str(chromos) + '.11' + ':' + 'g.' + str(start+1) 
+                elif chromos in ['2', '3', '4', '6', '9', '12']:
+                    HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.' + str(start+1)
+                elif chromos == '7':
+                    HGVSId=rootHGVS+str(chromos) + '.14' + ':' + 'g.' + str(start+1) 
             elif conf.reference_genome == 'NCBI36':
-                HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.' + str(start+1) + ref + '>' + alt[0]
-                dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
+                if chromos in ['14', '21']:
+                    HGVSId=rootHGVS+str(chromos) + '.7' + ':' + 'g.' + str(start+1)
+                elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
+                    HGVSId=rootHGVS+str(chromos) + '.8' + ':' + 'g.' + str(start+1) 
+                elif chromos in ['1', '8', '10', '13', '17', '20', '22', '23']:
+                    HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.' + str(start+1) 
+                elif chromos in ['2', '3', '4', '6', '9', '12']:
+                    HGVSId=rootHGVS+str(chromos) + '.10' + ':' + 'g.' + str(start+1)
+                elif chromos == '7':
+                    HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.' + str(start+1)
+
+            if len(ref) > len(alt[0]):
+                if varianttype == 'DEL':
+                    if len(ref)-len(alt[0])==1:
+                        HGVSId = HGVSId + 'del' 
+                    else:
+                        HGVSId = HGVSId + '_' + str(start+1+len(ref)-len(alt[0])) + 'del' 
+                elif varianttype == 'INDEL':
+                    HGVSId = HGVSId + '_' + str(start+1+len(ref)-len(alt[0])) + 'delins' + alt[0]
+                else:
+                    HGVSId = HGVSId + 'del' 
+            elif len(ref) < len(alt[0]):
+                if varianttype == 'INS':
+                    HGVSId = HGVSId + '_' + str(start+2) + 'ins' + alt[0]
+                elif varianttype == 'INDEL':
+                    HGVSId = HGVSId + 'delins' + alt[0]
+                else:
+                    HGVSId = HGVSId + '_' + str(start+2) + 'ins' + alt[0]
+            else:
+                HGVSId = HGVSId + ref + '>' + alt[0]
+
+            dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
+
+
+            _id=get_hash(conf.datasetId+HGVSId)
 
             dict_to_xls['variation|location|interval|start|value'] = int(start)
             dict_to_xls['variation|location|interval|start|type']="Number"
@@ -706,13 +757,13 @@ def generate(dict_properties):
             dict_to_xls['variation|location|interval|type']="SequenceInterval"
             dict_to_xls['variation|location|type']="SequenceLocation"
             dict_to_xls['variation|location|sequence_id']="HGVSid:" + str(chrom) + ":g." + str(start) + ref + ">" + alt[0]
-            dict_to_xls['variantInternalId'] = str(uuid.uuid1())+':' + str(ref) + ':' + str(alt[0])
+            dict_to_xls['variantInternalId'] = _id
             
             
 
             if conf.case_level_data == True:
                 j=0
-                dict_trues={"_id": get_hash(conf.datasetId+HGVSId),"id": HGVSId, "datasetId": conf.datasetId}
+                dict_trues={"_id": _id,"id": HGVSId, "datasetId": conf.datasetId}
                 for zygo in v.genotypes:
                     if zygo[0] == 1 and zygo[1]== 1:
                         dict_trues[str(j)]="11"
@@ -1078,7 +1129,7 @@ def generate(dict_properties):
             GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=conf.datasetId
             definitivedict["length"]=int(end)-int(start)
-            definitivedict["_id"]=get_hash(conf.datasetId+HGVSId)
+            definitivedict["_id"]=_id
             try:
                 if num_of_populations != 0:
                     if frequencies!=[]:

@@ -312,6 +312,7 @@ class CollectionEvent(BaseModel, extra='forbid'):
     eventLocations: Optional[DataAvailabilityAndDistribution]=None
     eventNum: Optional[int] = None
     eventPhenotypes: Optional[DataAvailabilityAndDistribution]=None
+    eventSize: Optional[int] = None
     eventTimeline: Optional[EventTimeline] = None
     @field_validator('eventDate')
     @classmethod
