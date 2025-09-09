@@ -7,6 +7,7 @@ import sys
 from validators.genomicVariations import GenomicVariations
 import hashlib
 import argparse
+import os
 
 with open("files/headers/genomicVariations.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -18,9 +19,9 @@ def get_hash(string:str):
 
 def generate(dict_properties,list_of_headers, args):
 
-    #args.input+'genomicVariations.csv' = conf.args.input+'genomicVariations.csv'
+    #os.path.join(args.input, 'genomicVariations.csv') = conf.os.path.join(args.input, 'genomicVariations.csv')
 
-    with open(args.input+'genomicVariations.csv', 'r' ) as theFile:
+    with open(os.path.join(args.input, 'genomicVariations.csv'), 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
     
@@ -29,7 +30,7 @@ def generate(dict_properties,list_of_headers, args):
 
     k=0
     pbar = tqdm(total = num_rows)
-    with open(args.input+'genomicVariations.csv', 'r' ) as theFile:
+    with open(os.path.join(args.input, 'genomicVariations.csv'), 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:
@@ -609,7 +610,7 @@ args = parser.parse_args()
 dict_generado, total_i=generate(dict_properties,list_of_headers, args)
 
 
-output = args.output + 'genomicVariations.json'
+output = os.path.join(args.output, 'genomicVariations.json')
 
 if total_i-1 > 0:
 
