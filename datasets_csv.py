@@ -6,29 +6,27 @@ import csv
 import sys
 from validators.datasets import Datasets
 import hashlib
+import argparse
 
 with open("files/headers/datasets.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
 with open('files/deref_schemas/datasets.json') as json_file:
     dict_properties = json.load(json_file)
 
-csv_filename = sys.argv[1]
-output_path = sys.argv[2]
-
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
-def generate(dict_properties,list_of_headers):
-    #csv_filename = conf.csv_filename
+def generate(dict_properties,list_of_headers, args):
+    #args.input+'datasets.csv' = conf.args.input+'datasets.csv'
     total_dict =[]
 
-    with open(csv_filename, 'r' ) as theFile:
+    with open(args.input+'datasets.csv', 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
 
     k=0
     pbar = tqdm(total = num_rows)
-    with open(csv_filename, 'r' ) as theFile:
+    with open(args.input+'datasets.csv', 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:
@@ -415,13 +413,20 @@ def generate(dict_properties,list_of_headers):
 
 
 
+parser = argparse.ArgumentParser(
+                    prog='datasetsCSVtOBFF',
+                    description='This script translates a datasets csv to BFF')
+parser.add_argument('-o', '--output', default=conf.output_docs_folder)
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+parser.add_argument('-i', '--input', default=conf.csv_folder)
+
+args = parser.parse_args()
 
 
+dict_generado, total_i=generate(dict_properties,list_of_headers, args)
 
-dict_generado, total_i=generate(dict_properties,list_of_headers)
 
-
-output = conf.output_docs_folder + 'datasets.json'
+output = args.output + 'datasets.json'
 
 if total_i-1 > 0:
 

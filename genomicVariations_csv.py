@@ -6,23 +6,21 @@ import csv
 import sys
 from validators.genomicVariations import GenomicVariations
 import hashlib
+import argparse
 
 with open("files/headers/genomicVariations.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
 with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
-csv_filename = sys.argv[1]
-output_path = sys.argv[2]
-
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
-def generate(dict_properties,list_of_headers):
+def generate(dict_properties,list_of_headers, args):
 
-    #csv_filename = conf.csv_filename
+    #args.input+'genomicVariations.csv' = conf.args.input+'genomicVariations.csv'
 
-    with open(csv_filename, 'r' ) as theFile:
+    with open(args.input+'genomicVariations.csv', 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
     
@@ -31,7 +29,7 @@ def generate(dict_properties,list_of_headers):
 
     k=0
     pbar = tqdm(total = num_rows)
-    with open(csv_filename, 'r' ) as theFile:
+    with open(args.input+'genomicVariations.csv', 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:
@@ -586,8 +584,8 @@ def generate(dict_properties,list_of_headers):
                 pass
             #print(definitivedict)
             GenomicVariations(**definitivedict)
-            definitivedict["datasetId"]=conf.datasetId
-            definitivedict["_id"]=get_hash(conf.datasetId+definitivedict["identifiers"]["genomicHGVSId"])
+            definitivedict["datasetId"]=args.datasetId
+            definitivedict["_id"]=get_hash(args.datasetId+definitivedict["identifiers"]["genomicHGVSId"])
             total_dict.append(definitivedict)
 
             
@@ -598,12 +596,20 @@ def generate(dict_properties,list_of_headers):
     pbar.close()
     return total_dict, i
 
+parser = argparse.ArgumentParser(
+                    prog='genomicVariationsCSVtOBFF',
+                    description='This script translates a genomicVariations csv to BFF')
 
+parser.add_argument('-o', '--output', default=conf.output_docs_folder)
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+parser.add_argument('-i', '--input', default=conf.csv_folder)
+
+args = parser.parse_args()
     
-dict_generado, total_i=generate(dict_properties,list_of_headers)
+dict_generado, total_i=generate(dict_properties,list_of_headers, args)
 
 
-output = conf.output_docs_folder + 'genomicVariations.json'
+output = args.output + 'genomicVariations.json'
 
 if total_i-1 > 0:
 
