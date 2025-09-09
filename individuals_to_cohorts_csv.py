@@ -2,215 +2,18 @@ import json
 from tqdm import tqdm
 import conf.conf as conf
 import csv
-import sys
 from validators.cohorts import Cohorts
 import hashlib
+import argparse
 
 with open("files/headers/individuals.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
-with open('files/deref_schemas/individuals.json') as json_file:
-    dict_properties = json.load(json_file)
-
-csv_filename = "csv/examples/CINECA_synthetic_cohort_EUROPE_UK1/individuals.csv"
 
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
-def check(name, list_of_filled_items):
-    measures_list_1 = ['measures|measurementValue|referenceRange|high', 'measures|measurementValue|referenceRange|low', 'measures|measurementValue|referenceRange|unit|id', 'measures|measurementValue|referenceRange|unit|label']
-    measures_list_2 = ['measures|measurementValue|unit|id', 'measures|measurementValue|unit|label', 'measures|measurementValue|value']
-    measures_list_3 = ['measures|measurementValue|typedQuantities|quantity|referenceRange|high', 'measures|measurementValue|typedQuantities|quantity|referenceRange|low', 'measures|measurementValue|typedQuantities|quantity|referenceRange|unit', 'measures|measurementValue|typedQuantities|quantity|unit|id', 'measures|measurementValue|typedQuantities|quantity|unit|label', 'measures|measurementValue|typedQuantities|quantity|value']
-    observation_list_1 = ['measures|observationMoment']
-    observation_list_2 = ['measures|observationMoment|days', 'measures|observationMoment|weeks']
-    observation_list_3 = ['measures|observationMoment|end', 'measures|observationMoment|start']
-    observation_list_4 = ['measures|observationMoment|end|iso8601duration', 'measures|observationMoment|start|iso8601duration']
-    observation_list_5 = ['measures|observationMoment|iso8601duration']
-    observation_list_6 = ['measures|observationMoment|id', 'measures|observationMoment|label']
-    ageOfOnset_list_1 = ['diseases|ageOfOnset']
-    ageOfOnset_list_2 = ['diseases|ageOfOnset|days', 'diseases|ageOfOnset|weeks']
-    ageOfOnset_list_3 = ['diseases|ageOfOnset|end', 'diseases|ageOfOnset|start']
-    ageOfOnset_list_4 = ['diseases|ageOfOnset|end|iso8601duration', 'diseases|ageOfOnset|start|iso8601duration']
-    ageOfOnset_list_5 = ['diseases|ageOfOnset|iso8601duration']
-    ageOfOnset_list_6 = ['diseases|ageOfOnset|id', 'diseases|ageOfOnset|label']
-    onset_list_1 = ['phenotypicFeatures|onset']
-    onset_list_2 = ['phenotypicFeatures|onset|days', 'phenotypicFeatures|onset|weeks']
-    onset_list_3 = ['phenotypicFeatures|onset|end', 'phenotypicFeatures|onset|start']
-    onset_list_4 = ['phenotypicFeatures|onset|end|iso8601duration', 'phenotypicFeatures|onset|start|iso8601duration']
-    onset_list_5 = ['phenotypicFeatures|onset|iso8601duration']
-    onset_list_6 = ['phenotypicFeatures|onset|id', 'phenotypicFeatures|onset|label']
-    measure_check=0
-
-    list_of_checks=[]
-    i=0
-    if name == 'measures':
-        for measure in list_of_filled_items:
-            if 'measurementValue' in measure:
-                if measure in measures_list_1:
-                    measure_check+=1
-                    measures_list_1=[]
-                elif measure in measures_list_2:
-                    measure_check+=1
-                    measures_list_2=[]
-                elif measure in measures_list_3:
-                    measure_check+=1
-                    measures_list_3=[]
-        if measure_check > 1:
-            raise Exception(('please, choose only one {} format').format('measurementValue'))
-    elif name == 'observations':
-        for measure in list_of_filled_items:
-            if 'observationMoment' in measure:
-                if measure in observation_list_1:
-                    measure_check+=1
-                    observation_list_1=[]
-                elif measure in observation_list_2:
-                    measure_check+=1
-                    observation_list_2=[]
-                elif measure in observation_list_3:
-                    measure_check+=1
-                    observation_list_3=[]
-                elif measure in observation_list_4:
-                    measure_check+=1
-                    observation_list_4=[]
-                elif measure in observation_list_5:
-                    measure_check+=1
-                    observation_list_5=[]
-                elif measure in observation_list_6:
-                    measure_check+=1
-                    observation_list_6=[]
-        if measure_check>1:
-                raise Exception(('please, choose only one {} format').format('observationMoment'))
-    elif name == 'procedures':
-        for measure in list_of_filled_items:
-            if 'ageAtProcedure' in measure:
-                if measure in ageAtProcedure_list_1:
-                    measure_check+=1
-                    ageAtProcedure_list_1=[]
-                elif measure in ageAtProcedure_list_2:
-                    measure_check+=1
-                    ageAtProcedure_list_2=[]
-                elif measure in ageAtProcedure_list_3:
-                    measure_check+=1
-                    ageAtProcedure_list_3=[]
-                elif measure in ageAtProcedure_list_4:
-                    measure_check+=1
-                    ageAtProcedure_list_4=[]
-                elif measure in ageAtProcedure_list_5:
-                    measure_check+=1
-                    ageAtProcedure_list_5=[]
-                elif measure in ageAtProcedure_list_6:
-                    measure_check+=1
-                    ageAtProcedure_list_6=[]
-        if measure_check>1:
-                raise Exception(('please, choose only one {} format').format('ageAtProcedure'))
-    elif name == 'diseases':
-        for measure in list_of_filled_items:
-            if 'ageOfOnset' in measure:
-                if measure in ageOfOnset_list_1:
-                    measure_check+=1
-                    ageOfOnset_list_1=[]
-                elif measure in ageOfOnset_list_2:
-                    measure_check+=1
-                    ageOfOnset_list_2=[]
-                elif measure in ageOfOnset_list_3:
-                    measure_check+=1
-                    ageOfOnset_list_3=[]
-                elif measure in ageOfOnset_list_4:
-                    measure_check+=1
-                    ageOfOnset_list_4=[]
-                elif measure in ageOfOnset_list_5:
-                    measure_check+=1
-                    ageOfOnset_list_5=[]
-                elif measure in ageOfOnset_list_6:
-                    measure_check+=1
-                    ageOfOnset_list_6=[]
-        if measure_check>1:
-                raise Exception(('please, choose only one {} format').format('ageOfOnset'))
-    elif name == 'phenotypic':
-        for measure in list_of_filled_items:
-            if 'onset' in measure:
-                if measure in onset_list_1:
-                    measure_check+=1
-                    onset_list_1=[]
-                elif measure in onset_list_2:
-                    measure_check+=1
-                    onset_list_2=[]
-                elif measure in onset_list_3:
-                    measure_check+=1
-                    onset_list_3=[]
-                elif measure in onset_list_4:
-                    measure_check+=1
-                    onset_list_4=[]
-                elif measure in onset_list_5:
-                    measure_check+=1
-                    onset_list_5=[]
-                elif measure in onset_list_6:
-                    measure_check+=1
-                    onset_list_6=[]
-        if measure_check>1:
-                raise Exception(('please, choose only one {} format').format('onset'))
-
-def commas(prova):
-    length_iter=0
-    array_of_newdicts=[]
-    for key, value in prova.items():
-        if isinstance(value, str):
-            valuesplitted = value.split('|')
-            length_iter=len(valuesplitted)
-        elif isinstance(value, dict):
-            for kval, vval in value.items():
-                if isinstance(vval, str):
-                    valsplitted = vval.split('|')
-                    length_iter=len(valsplitted)
-    if length_iter > 0:
-        i=0
-        while i < length_iter:
-            newdict={}
-            for key, value in prova.items():
-                if isinstance(value, str):
-                    valuesplitted = value.split('|')
-                    if valuesplitted[i]!='' or valuesplitted[i]!={}:
-                        newdict[key]=valuesplitted[i]
-                elif isinstance(value, int):
-                    valuesplitted = value.split('|')
-                    if valuesplitted[i]!='' or valuesplitted[i]!={}:
-                        newdict[key]=valuesplitted[i]
-                elif isinstance(value, dict):
-                    newdict[key]={}
-                    for k, v in value.items():
-                        if isinstance(v, str):
-                            vsplitted = v.split('|')
-                            try:
-                                if vsplitted[i]!='' or vsplitted[i]!={}:
-                                    newdict[key][k]=float(vsplitted[i])
-                            except Exception:
-                                #print(vsplitted)
-                                #print(i)
-                                if vsplitted[i]!='' or vsplitted[i]!={}:
-                                    newdict[key][k]=vsplitted[i]
-                        elif isinstance(v, int):
-                            newdict[key][k]=v
-                        elif isinstance(v, dict):
-                            newdict[key][k]={}
-                            for k1, v1 in v.items():
-                                if isinstance(v1, str):
-                                    v1splitted = v1.split('|')
-                                    try:
-                                        if v1splitted[i]!='' or v1splitted[i]!={} and len(v1splitted[i])!=0:
-                                            newdict[key][k][k1]=v1splitted[i]
-                                    except Exception:
-                                        pass
-
-                    if newdict[key][k]=={} or newdict[key][k]=="":
-                        del newdict[key]
-            array_of_newdicts.append(newdict)
-            i+=1
-    else:
-        array_of_newdicts.append(prova)
-    return(array_of_newdicts)
-
-def generate(dict_properties, list_of_headers):
-    #csv_filename = conf.csv_filename
-    with open(csv_filename, 'r' ) as theFile:
+def generate(list_of_headers, args):
+    with open(args.input, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
     
@@ -218,13 +21,13 @@ def generate(dict_properties, list_of_headers):
 
     k=0
     pbar = tqdm(total = num_rows)
-    with open(csv_filename, 'r' ) as theFile:
+    with open(args.input, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         definitivedict={}
-        definitivedict["id"]='cohortId'
-        definitivedict["name"]='cohortName'
-        definitivedict["cohortType"]='user-defined'
+        definitivedict["id"]=args.cohortId
+        definitivedict["name"]=args.cohortName
+        definitivedict["cohortType"]=args.cohortType
         definitivedict["collectionEvents"]=[]
         event={}
         event["eventSize"]=num_rows
@@ -360,13 +163,6 @@ def generate(dict_properties, list_of_headers):
                                         event["eventPhenotypes"]["distribution"][str(valor)]+=1
                                     except Exception:
                                         event["eventPhenotypes"]["distribution"][str(valor)]=1
-
-
-
-
-            
-
-
             
             pbar.update(1)
             if i > num_rows:
@@ -374,19 +170,28 @@ def generate(dict_properties, list_of_headers):
             i+=1
     definitivedict["collectionEvents"].append(event)
     Cohorts(**definitivedict)
-    definitivedict["datasetId"]=conf.datasetId
-    definitivedict["_id"]=get_hash(conf.datasetId+definitivedict["id"])
+    definitivedict["datasetId"]=args.datasetId
+    definitivedict["_id"]=get_hash(args.datasetId+definitivedict["id"])
     total_dict.append(definitivedict)
     pbar.close()
     return total_dict, i
 
 
+parser = argparse.ArgumentParser(
+                    prog='IndividualsToCohorts',
+                    description='This script translates a csv of individuals to a beaconized json of cohorts')
 
+parser.add_argument('-i', '--input', default='csv/examples/CINECA_synthetic_cohort_EUROPE_UK1/individuals.csv')
+parser.add_argument('-o', '--output', default=conf.output_docs_folder+'cohorts.json')
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+parser.add_argument('-c', '--cohortId', default='cohortId')
+parser.add_argument('-n', '--cohortName', default='cohortName')
+parser.add_argument('-t', '--cohortType', default='user-defined')
+args = parser.parse_args()
 
-dict_generado, total_i=generate(dict_properties, list_of_headers)
+dict_generado, total_i=generate(list_of_headers, args)
 
-
-output = conf.output_docs_folder + 'cohorts.json'
+output = args.output
 
 if total_i-1 > 0:
 
