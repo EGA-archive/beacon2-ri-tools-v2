@@ -6,9 +6,7 @@ import csv
 import sys
 from validators.cohorts import Cohorts
 import hashlib
-
-csv_filename = sys.argv[1]
-output_path = sys.argv[2]
+import argparse
 
 with open("files/headers/cohorts.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -18,16 +16,16 @@ with open('files/deref_schemas/cohorts.json') as json_file:
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
-def generate(dict_properties, list_of_headers):
-    #csv_filename = conf.csv_filename
+def generate(dict_properties, list_of_headers, args):
+    #args.input+'cohorts.csv' = conf.args.input+'cohorts.csv'
     total_dict =[]
-    with open(csv_filename, 'r' ) as theFile:
+    with open(args.input+'cohorts.csv', 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
 
     k=0
     pbar = tqdm(total = num_rows)
-    with open(csv_filename, 'r' ) as theFile:
+    with open(args.input+'cohorts.csv', 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:
@@ -455,8 +453,8 @@ def generate(dict_properties, list_of_headers):
                             definitivedict[key]=propv
             #print(definitivedict)
             Cohorts(**definitivedict)
-            definitivedict["datasetId"]=conf.datasetId
-            definitivedict["_id"]=get_hash(conf.datasetId+definitivedict["id"])
+            definitivedict["datasetId"]=args.datasetId
+            definitivedict["_id"]=get_hash(args.datasetId+definitivedict["id"])
             total_dict.append(definitivedict)
 
             
@@ -468,12 +466,19 @@ def generate(dict_properties, list_of_headers):
     return total_dict, i
 
 
+parser = argparse.ArgumentParser(
+                    prog='cohortsCSVtOBFF',
+                    description='This script translates a cohorts csv to BFF')
+parser.add_argument('-o', '--output', default=conf.output_docs_folder)
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+parser.add_argument('-i', '--input', default=conf.csv_folder)
+
+args = parser.parse_args()
+
+dict_generado, total_i=generate(dict_properties, list_of_headers, args)
 
 
-dict_generado, total_i=generate(dict_properties, list_of_headers)
-
-
-output = conf.output_docs_folder + 'cohorts.json'
+output = args.output + 'cohorts.json'
 
 if total_i-1 > 0:
 

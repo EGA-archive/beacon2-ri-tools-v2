@@ -78,6 +78,50 @@ The **output_docs_folder** variable sets the folder where your final .json files
 * The **record_type** is to let the RI Tools what type of entry type you are updating, can be one of analysis, biosample, cohort, dataset, genomicVariation, individual or run.
 * The **collection_name** parameter is to let the RI Tools know what is the name of the collection in MongoDB the record you want to be updated is located at.
 
+#### Parsing config parameters from the command line as arguments
+
+All the config parameters can be parsed through command line for each script. Here is the relationship of scripts and their command line arguments:
+
+**convert_csvTObff.py**
+```bash
+parser.add_argument('-o', '--output', default=output_docs_folder)
+parser.add_argument('-d', '--datasetId', default=datasetId)
+parser.add_argument('-i', '--input', default=csv_folder)
+```
+
+**genomicVariations_vcf.py**
+```bash
+parser.add_argument('-o', '--output', default=conf.output_docs_folder)
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+parser.add_argument('-r', '--refGen', default=conf.reference_genome)
+parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
+parser.add_argument('-n', '--numRows', default=conf.num_rows)
+parser.add_argument('-v', '--verbosity', default=conf.verbosity)
+parser.add_argument('-j', '--json', default=False, action=argparse.BooleanOptionalAction)
+```
+
+**individuals_to_cohorts_csv.py**
+```bash
+parser.add_argument('-i', '--input', default=conf.csv_folder)
+parser.add_argument('-o', '--output', default=conf.output_docs_folder+'cohorts.json')
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+parser.add_argument('-c', '--cohortId', default='cohortId')
+parser.add_argument('-n', '--cohortName', default='cohortName')
+parser.add_argument('-t', '--cohortType', default='user-defined')
+```
+
+**remove_dataset.py**
+```bash
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+```
+
+**update_record.py**
+```bash
+parser.add_argument('-f', '--file', default=conf.output_docs_folder+'update.json')
+parser.add_argument('-r', '--recordType', default=conf.record_type)
+parser.add_argument('-c', '--collection', default=conf.collection_name)
+```
+
 ### Populating a beacon instance from VCF
 
 Populate genomicVaritiatons model from a VCF
@@ -255,7 +299,9 @@ docker exec -it ri-tools python convert_csvTObff.py
 
 The Beacon Friendly Format JSONs will be generated in the output_docs folder, with the name of the collection followed by .json extension, e.g. genomicVariations.json. 
 
-These BFF jsons will be used to populate a mongoDB for beacon usage. To know how to import thme into a Beacon v2, please do as described in [Beacon v2 PI api](https://github.com/EGA-archive/beacon2-pi-api).
+These BFF jsons will be used to populate a mongoDB for beacon usage. To know how to import theme into a Beacon v2, please do as described in [Beacon v2 PI api](https://github.com/EGA-archive/beacon2-pi-api).
+
+
 
 ### Populating a beacon instance from Phenopackets
 

@@ -7,32 +7,25 @@ import sys
 import pandas as pd
 from validators.analyses import Analyses
 import hashlib
+import argparse
 
 with open("files/headers/analyses.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
 with open('files/deref_schemas/analyses.json') as json_file:
     dict_properties = json.load(json_file)
 
-
-if len(sys.argv) != 3:
-    print("Usage: python analyses_csv.py <csv_input_path> <json_output_path>")
-    sys.exit(1)
-
-csv_filename = sys.argv[1]
-output_path = sys.argv[2]
-
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
-def generate(dict_properties, list_of_headers):
-    #csv_filename = conf.csv_filename
+def generate(dict_properties, list_of_headers, args):
+    #args.input+'analyses.csv' = conf.args.input+'analyses.csv'
     total_dict =[]
-    with open(csv_filename, 'r' ) as theFile:
+    with open(args.input+'analyses.csv', 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
     k=0
     pbar = tqdm(total = num_rows)
-    with open(csv_filename, 'r' ) as theFile:
+    with open(args.input+'analyses.csv', 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:
@@ -352,8 +345,8 @@ def generate(dict_properties, list_of_headers):
                         if propk == new_item:
                             definitivedict[key]=propv
             Analyses(**definitivedict)
-            definitivedict["datasetId"]=conf.datasetId
-            definitivedict["_id"]=get_hash(conf.datasetId+definitivedict["id"])
+            definitivedict["datasetId"]=args.datasetId
+            definitivedict["_id"]=get_hash(args.datasetId+definitivedict["id"])
             total_dict.append(definitivedict)
 
             
@@ -365,12 +358,19 @@ def generate(dict_properties, list_of_headers):
     return total_dict, i
 
 
+parser = argparse.ArgumentParser(
+                    prog='analysesCSVtOBFF',
+                    description='This script translates an analyses csv to BFF')
+parser.add_argument('-o', '--output', default=conf.output_docs_folder)
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+parser.add_argument('-i', '--input', default=conf.csv_folder)
+
+args = parser.parse_args()
 
 
+dict_generado, total_i=generate(dict_properties, list_of_headers, args)
 
-dict_generado, total_i=generate(dict_properties, list_of_headers)
-
-output = conf.output_docs_folder + 'analyses.json'
+output = args.output + 'analyses.json'
 
 if total_i-1 > 0:
 

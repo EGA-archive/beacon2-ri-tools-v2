@@ -6,9 +6,7 @@ import csv
 import sys
 from validators.runs import Runs
 import hashlib
-
-csv_filename = sys.argv[1]
-output_path = sys.argv[2]
+import argparse
 
 with open("files/headers/runs.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -18,17 +16,17 @@ with open('files/deref_schemas/runs.json') as json_file:
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
-def generate(dict_properties,list_of_headers):
-    #csv_filename = conf.csv_filename
+def generate(dict_properties,list_of_headers, args):
+    #args.input+'runs.csv' = conf.args.input+'runs.csv'
     total_dict =[]
 
-    with open(csv_filename, 'r' ) as theFile:
+    with open(args.input+'runs.csv', 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
 
     k=0
     pbar = tqdm(total = num_rows)
-    with open(csv_filename, 'r' ) as theFile:
+    with open(args.input+'runs.csv', 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:
@@ -339,8 +337,8 @@ def generate(dict_properties,list_of_headers):
                         if propk == new_item:
                             definitivedict[key]=propv
             Runs(**definitivedict)
-            definitivedict["datasetId"]=conf.datasetId
-            definitivedict["_id"]=get_hash(conf.datasetId+definitivedict["id"])
+            definitivedict["datasetId"]=args.datasetId
+            definitivedict["_id"]=get_hash(args.datasetId+definitivedict["id"])
             total_dict.append(definitivedict)
 
             
@@ -352,13 +350,20 @@ def generate(dict_properties,list_of_headers):
     return total_dict, i
 
 
+parser = argparse.ArgumentParser(
+                    prog='runsCSVtOBFF',
+                    description='This script translates a runs csv to BFF')
+parser.add_argument('-o', '--output', default=conf.output_docs_folder)
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+parser.add_argument('-i', '--input', default=conf.csv_folder)
+
+args = parser.parse_args()
 
 
+dict_generado, total_i=generate(dict_properties,list_of_headers, args)
 
-dict_generado, total_i=generate(dict_properties,list_of_headers)
 
-
-output = conf.output_docs_folder + 'runs.json'
+output = args.output + 'runs.json'
 
 if total_i-1 > 0:
 
