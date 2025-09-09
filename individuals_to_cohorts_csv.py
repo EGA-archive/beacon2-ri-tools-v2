@@ -181,7 +181,7 @@ parser = argparse.ArgumentParser(
                     prog='IndividualsToCohorts',
                     description='This script translates a csv of individuals to a beaconized json of cohorts')
 
-parser.add_argument('-i', '--input', default='csv/examples/CINECA_synthetic_cohort_EUROPE_UK1/individuals.csv')
+parser.add_argument('-i', '--input', default=conf.csv_folder)
 parser.add_argument('-o', '--output', default=conf.output_docs_folder+'cohorts.json')
 parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 parser.add_argument('-c', '--cohortId', default='cohortId')

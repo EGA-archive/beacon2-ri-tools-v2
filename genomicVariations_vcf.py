@@ -4,7 +4,6 @@ from tqdm import tqdm
 import glob
 import re
 import conf.conf as conf
-import uuid
 import json
 import gc
 import gzip
@@ -12,7 +11,7 @@ from pymongo.mongo_client import MongoClient
 from validators.genomicVariations import GenomicVariations
 from pymongo.errors import BulkWriteError
 import hashlib
-import os
+import argparse
 
 client = MongoClient(
         #"mongodb://127.0.0.1:27017/"
@@ -45,6 +44,8 @@ except Exception:
 
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
+
+
 
 def commas(prova):
     length_iter=0
@@ -96,20 +97,28 @@ def commas(prova):
         array_of_newdicts.append(prova)
     return(array_of_newdicts)
 
-def num_rows_in_vcf_files():
-    total_lines = 0
-    for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
-        with gzip.open(vcf_filename, 'rt') as f:
-            total_lines += sum(1 for line in f if not line.startswith('#'))
-    return total_lines
+def append_to_json(file, data):
+    chunk = " , " + json.dumps(data) + "]"
 
-num_rows = conf.num_rows
+    with open(file, 'r+') as f:
 
-def generate(dict_properties):
+        f.seek(0, 2)
+        index = f.tell()
+
+        while not f.read().startswith(']'):
+            index -= 1
+            if index == 0:
+                raise ValueError("{} is not a JSON formatted file".format(file))
+            f.seek(index)
+
+        f.seek(index)
+        f.write(chunk)  
+
+def generate(dict_properties, args):
     total_dict =[]
     i=1
     l=0
-    if conf.case_level_data == True:
+    if args.caseLevelData == True:
         try:
             client.beacon.create_collection(name="targets")
         except Exception:
@@ -143,17 +152,21 @@ def generate(dict_properties):
                         w+=1
             except Exception:
                 continue
-        if conf.case_level_data == False:
+        if args.caseLevelData == False:
             vcf.set_samples([])
         else:
             my_target_list = vcf.samples
             target_errors=[]
             try:
                 dict_target={}
-                dict_target["_id"]=get_hash(conf.datasetId)
-                dict_target["datasetId"]=conf.datasetId
+                dict_target["_id"]=get_hash(args.datasetId)
+                dict_target["datasetId"]=args.datasetId
                 dict_target["biosampleIds"]=my_target_list
-                client.beacon.targets.insert_many([dict_target],ordered=False)
+                if args.json == False:
+                    client.beacon.targets.insert_many([dict_target],ordered=False)
+                else:
+                    with open(args.output+'targets.json', 'w') as outfile:
+                        json.dump([dict_target], outfile)
             except BulkWriteError as BulkError:
                 start_point=len("batch op errors occurred, full error:")
                 error_stringed=str(BulkError)[start_point:]
@@ -174,7 +187,7 @@ def generate(dict_properties):
 
         skipped_counts=0
 
-        pbar = tqdm(total = num_rows)
+        pbar = tqdm(total = args.numRows)
 
         for v in vcf:
             dict_to_xls={}
@@ -435,7 +448,7 @@ def generate(dict_properties):
                 if varianttype == 'SV': 
                     i+=1
                     pbar.update(1)
-                    if conf.verbosity==True:
+                    if args.verbosity==True:
                         ref=v.REF
                         chrom=v.CHROM
                         start=v.start
@@ -533,7 +546,7 @@ def generate(dict_properties):
                     if allele_frequency == 0.0:
                         i+=1
                         pbar.update(1)
-                        if conf.verbosity==True:
+                        if args.verbosity==True:
                             ref=v.REF
                             chrom=v.CHROM
                             start=v.start
@@ -559,7 +572,7 @@ def generate(dict_properties):
                     if allele_count == 0.0:
                         i+=1
                         pbar.update(1)
-                        if conf.verbosity==True:
+                        if args.verbosity==True:
                             ref=v.REF
                             chrom=v.CHROM
                             start=v.start
@@ -594,7 +607,7 @@ def generate(dict_properties):
                     if allele_frequency == 0 or allele_frequency == 0.0 or allele_frequency is None:
                         i+=1
                         pbar.update(1)
-                        if conf.verbosity==True:
+                        if args.verbosity==True:
                             ref=v.REF
                             chrom=v.CHROM
                             start=v.start
@@ -629,7 +642,7 @@ def generate(dict_properties):
                 if num_of_populations != 0:
                     i+=1
                     pbar.update(1)
-                    if conf.verbosity==True:
+                    if args.verbosity==True:
                         ref=v.REF
                         chrom=v.CHROM
                         start=v.start
@@ -653,7 +666,7 @@ def generate(dict_properties):
             if alt != [] and '<' and '>' in alt[0]:
                 i+=1
                 pbar.update(1)
-                if conf.verbosity==True:
+                if args.verbosity==True:
                     ref=v.REF
                     chrom=v.CHROM
                     start=v.start
@@ -687,7 +700,7 @@ def generate(dict_properties):
             else:
                 rootHGVS='NC_00000'
             
-            if conf.reference_genome == 'GRCh37':
+            if args.refGen == 'GRCh37':
                 if chromos in ['14', '21']:
                     HGVSId=rootHGVS+str(chromos) + '.8' + ':' + 'g.' + str(start+1)
                 elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
@@ -698,7 +711,7 @@ def generate(dict_properties):
                     HGVSId=rootHGVS+str(chromos) + '.11' + ':' + 'g.' + str(start+1)
                 elif chromos == '7':
                     HGVSId=rootHGVS+str(chromos) + '.13' + ':' + 'g.' + str(start+1) 
-            elif conf.reference_genome == 'GRCh38':
+            elif args.refGen == 'GRCh38':
                 if chromos in ['14', '21']:
                     HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.' + str(start+1)
                 elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
@@ -709,7 +722,7 @@ def generate(dict_properties):
                     HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.' + str(start+1)
                 elif chromos == '7':
                     HGVSId=rootHGVS+str(chromos) + '.14' + ':' + 'g.' + str(start+1) 
-            elif conf.reference_genome == 'NCBI36':
+            elif args.refGen == 'NCBI36':
                 if chromos in ['14', '21']:
                     HGVSId=rootHGVS+str(chromos) + '.7' + ':' + 'g.' + str(start+1)
                 elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
@@ -733,18 +746,20 @@ def generate(dict_properties):
                     HGVSId = HGVSId + 'del' 
             elif len(ref) < len(alt[0]):
                 if varianttype == 'INS':
-                    HGVSId = HGVSId + '_' + str(start+2) + 'ins' + alt[0]
-                elif varianttype == 'INDEL':
+                    HGVSId = HGVSId + '_' + str(start+1) + 'ins' + alt[0]
+                elif varianttype == 'INDEL' and len(alt[0])-len(ref)==1:
                     HGVSId = HGVSId + 'delins' + alt[0]
+                elif varianttype == 'INDEL':
+                    HGVSId = HGVSId + '_' + str(start+len(alt[0])+1) + 'delins' + alt[0]
                 else:
-                    HGVSId = HGVSId + '_' + str(start+2) + 'ins' + alt[0]
+                    HGVSId = HGVSId + '_' + str(start+1) + 'ins' + alt[0]
             else:
                 HGVSId = HGVSId + ref + '>' + alt[0]
 
             dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
 
 
-            _id=get_hash(conf.datasetId+HGVSId)
+            _id=get_hash(args.datasetId+HGVSId)
 
             dict_to_xls['variation|location|interval|start|value'] = int(start)
             dict_to_xls['variation|location|interval|start|type']="Number"
@@ -761,9 +776,9 @@ def generate(dict_properties):
             
             
 
-            if conf.case_level_data == True:
+            if args.caseLevelData == True:
                 j=0
-                dict_trues={"_id": _id,"id": HGVSId, "datasetId": conf.datasetId}
+                dict_trues={"_id": _id,"id": HGVSId, "datasetId": args.datasetId}
                 for zygo in v.genotypes:
                     if zygo[0] == 1 and zygo[1]== 1:
                         dict_trues[str(j)]="11"
@@ -1127,7 +1142,7 @@ def generate(dict_properties):
                             definitivedict[key]=propv
 
             GenomicVariations(**definitivedict)
-            definitivedict["datasetId"]=conf.datasetId
+            definitivedict["datasetId"]=args.datasetId
             definitivedict["length"]=int(end)-int(start)
             definitivedict["_id"]=_id
             try:
@@ -1146,7 +1161,7 @@ def generate(dict_properties):
 
             pbar.update(1)
             i+=1
-            if conf.case_level_data == True:
+            if args.caseLevelData == True and args.json == False:
                 catch_errors=[]
                 try:
                     client.beacon.caseLevelData.insert_many([dict_trues],ordered=False)
@@ -1169,75 +1184,113 @@ def generate(dict_properties):
                             set_dict={}
                             set_dict["$set"]=final_dict
                             client.beacon.caseLevelData.update_one({"_id": caught_error["_id"]},set_dict)
+            elif args.caseLevelData == True:
+                try:
+                    append_to_json(args.output+'caseLevelData.json', dict_trues)
+                except Exception:
+                    with open(args.output+'caseLevelData.json', 'w') as outfile:
+                        json.dump([dict_trues], outfile)
+                
 
 
             dict_trues={}
 
             if total_dict != []:
-                variants_errors=[]
-                if i == num_rows:
-                    try:
-                        client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
-                    except BulkWriteError as BulkError:
-                        start_point=len("batch op errors occurred, full error:")
-                        error_stringed=str(BulkError)[start_point:]
-                        new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
-                        new_string=new_string.replace('None', '"None"')
-                        error_dicted=json.loads(new_string)
-                        for error in error_dicted["writeErrors"]:
-                            variants_errors.append(error['op'])
-                    #pbar.update(1)
-                    break
-                elif (i/10000).is_integer():
-                    try:
-                        client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
-                    except BulkWriteError as BulkError:
-                        start_point=len("batch op errors occurred, full error:")
-                        error_stringed=str(BulkError)[start_point:]
-                        new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
-                        new_string=new_string.replace('None', '"None"')
-                        error_dicted=json.loads(new_string)
-                        for error in error_dicted["writeErrors"]:
-                            variants_errors.append(error['op'])
+                if args.json == False:
+                    variants_errors=[]
+                    if i == args.numRows:
+                        try:
+                            client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
+                        except BulkWriteError as BulkError:
+                            start_point=len("batch op errors occurred, full error:")
+                            error_stringed=str(BulkError)[start_point:]
+                            new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                            new_string=new_string.replace('None', '"None"')
+                            error_dicted=json.loads(new_string)
+                            for error in error_dicted["writeErrors"]:
+                                variants_errors.append(error['op'])
+                        #pbar.update(1)
+                        break
+                    elif (i/10000).is_integer():
+                        try:
+                            client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
+                        except BulkWriteError as BulkError:
+                            start_point=len("batch op errors occurred, full error:")
+                            error_stringed=str(BulkError)[start_point:]
+                            new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                            new_string=new_string.replace('None', '"None"')
+                            error_dicted=json.loads(new_string)
+                            for error in error_dicted["writeErrors"]:
+                                variants_errors.append(error['op'])
 
 
-                    del definitivedict
-                    del total_dict
-                    gc.collect()
-                    total_dict=[]
-                    #pbar.update(1)  
-                for error in variants_errors:
-                    if conf.verbosity == True:
-                        print("following duplicated variant found was skipped: {}".format(error))
-                    skipped_counts+=1
+                        del definitivedict
+                        del total_dict
+                        gc.collect()
+                        total_dict=[]
+                        #pbar.update(1)  
+                    for error in variants_errors:
+                        if args.verbosity == True:
+                            print("following duplicated variant found was skipped: {}".format(error))
+                        skipped_counts+=1
+                else:
+                    for variantdict in total_dict:
+                        try:
+                            append_to_json(args.output+'genomicVariations.json', variantdict)
+                        except Exception:
+                            with open(args.output+'genomicVariations.json', 'w') as outfile:
+                                json.dump([variantdict], outfile)
 
 
 
 
     if total_dict != []:
-        variants_errors=[]
-        if i != num_rows:
-            try:
-                client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
-            except BulkWriteError as BulkError:
-                start_point=len("batch op errors occurred, full error:")
-                error_stringed=str(BulkError)[start_point:]
-                new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
-                new_string=new_string.replace('None', '"None"')
-                error_dicted=json.loads(new_string)
-                for error in error_dicted["writeErrors"]:
-                    variants_errors.append(error['op'])
-        for error in variants_errors:
-            if conf.verbosity == True:
-                print("following duplicated variant found was skipped: {}".format(error))
-            skipped_counts+=1
+        if args.json == False:
+            variants_errors=[]
+            if i != args.numRows:
+                try:
+                    client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
+                except BulkWriteError as BulkError:
+                    start_point=len("batch op errors occurred, full error:")
+                    error_stringed=str(BulkError)[start_point:]
+                    new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
+                    new_string=new_string.replace('None', '"None"')
+                    error_dicted=json.loads(new_string)
+                    for error in error_dicted["writeErrors"]:
+                        variants_errors.append(error['op'])
+            for error in variants_errors:
+                if args.verbosity == True:
+                    print("following duplicated variant found was skipped: {}".format(error))
+                skipped_counts+=1
+        else:
+            for variantdict in total_dict:
+                try:
+                    append_to_json(args.output+'genomicVariations.json', variantdict)
+                except Exception:
+                    with open(args.output+'genomicVariations.json', 'w') as outfile:
+                        json.dump([variantdict], outfile)
 
 
 
     pbar.close()
     return i, skipped_counts
 
-total_i, skipped_variants=generate(dict_properties)
+
+parser = argparse.ArgumentParser(
+                    prog='genomicVariationsVCFtoJSON',
+                    description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
+
+parser.add_argument('-o', '--output', default=conf.output_docs_folder)
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+parser.add_argument('-r', '--refGen', default=conf.reference_genome)
+parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
+parser.add_argument('-n', '--numRows', default=conf.num_rows)
+parser.add_argument('-v', '--verbosity', default=conf.verbosity)
+parser.add_argument('-j', '--json', default=False, action=argparse.BooleanOptionalAction)
+
+args = parser.parse_args()
+
+total_i, skipped_variants=generate(dict_properties, args)
 
 
 if total_i-skipped_variants > 0:
