@@ -128,6 +128,7 @@ parser.add_argument('-r', '--recordType', default=conf.record_type)
 parser.add_argument('-c', '--collection', default=conf.collection_name)
 ```
 
+Note 1: json parameter, if present, will convert the vcf variants into BFF json directly (not to mongoDB). This can generate a very big file, so, if you don't have a lot of space in your disk, consider to not use it.
 Note: All the input and output arguments expect a directory path, and file expect a file path.
 
 ### Populating a beacon instance from VCF
