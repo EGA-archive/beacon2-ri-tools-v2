@@ -751,11 +751,18 @@ def generate(dict_properties, args):
                     else:
                         HGVSId = HGVSId + '_' + str(start+1+len(ref)-len(alt[0])) + 'del' 
                 elif varianttype == 'INDEL':
-                    HGVSId = HGVSId + '_' + str(start+1+len(ref)-len(alt[0])) + 'delins' + alt[0]
+                    if ref[-1] == alt[0]:
+                        HGVSId = HGVSId + '_' + str(start+1+len(ref)-len(alt[0])-1) + 'del'
+                        varianttype = 'DEL'
+                    else:
+                        HGVSId = HGVSId + '_' + str(start+1+len(ref)-len(alt[0])) + 'delins' + alt[0]
                 else:
                     HGVSId = HGVSId + 'del' 
             elif len(ref) < len(alt[0]):
-                if varianttype == 'INS':
+                if ref[0] == alt[0][0]:
+                    varianttype = 'INS'
+                    HGVSId = HGVSId + '_' + str(start+1) + 'ins' + alt[0]
+                elif varianttype == 'INS':
                     HGVSId = HGVSId + '_' + str(start+1) + 'ins' + alt[0]
                 elif varianttype == 'INDEL' and len(alt[0])-len(ref)==1:
                     HGVSId = HGVSId + 'delins' + alt[0]
