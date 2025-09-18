@@ -692,10 +692,13 @@ def generate(dict_properties, args):
                 dict_to_xls['variation|variantType'] = varianttype
                 if varianttype is None:
                     if len(alt[0]) == len(ref):
+                        varianttype='SNP'
                         dict_to_xls['variation|variantType']='SNP'
                     else:
+                        varianttype='INDEL'
                         dict_to_xls['variation|variantType']='INDEL'
             except Exception:
+                varianttype = 'UNKNOWN'
                 dict_to_xls['variation|variantType']='UNKNOWN'
 
 
@@ -712,66 +715,64 @@ def generate(dict_properties, args):
             
             if args.refGen == 'GRCh37':
                 if chromos in ['14', '21']:
-                    HGVSId=rootHGVS+str(chromos) + '.8' + ':' + 'g.' + str(start+1)
+                    HGVSId=rootHGVS+str(chromos) + '.8' + ':' + 'g.'
                 elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
-                    HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.' + str(start+1) 
+                    HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.' 
                 elif chromos in ['1', '8', '10', '13', '17', '20', '22', '23']:
-                    HGVSId=rootHGVS+str(chromos) + '.10' + ':' + 'g.' + str(start+1) 
+                    HGVSId=rootHGVS+str(chromos) + '.10' + ':' + 'g.' 
                 elif chromos in ['2', '3', '4', '6', '9', '12']:
-                    HGVSId=rootHGVS+str(chromos) + '.11' + ':' + 'g.' + str(start+1)
+                    HGVSId=rootHGVS+str(chromos) + '.11' + ':' + 'g.'
                 elif chromos == '7':
-                    HGVSId=rootHGVS+str(chromos) + '.13' + ':' + 'g.' + str(start+1) 
+                    HGVSId=rootHGVS+str(chromos) + '.13' + ':' + 'g.' 
             elif args.refGen == 'GRCh38':
                 if chromos in ['14', '21']:
-                    HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.' + str(start+1)
+                    HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.'
                 elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
-                    HGVSId=rootHGVS+str(chromos) + '.10' + ':' + 'g.' + str(start+1) 
+                    HGVSId=rootHGVS+str(chromos) + '.10' + ':' + 'g.' 
                 elif chromos in ['1', '8', '10', '13', '17', '20', '22', '23']:
-                    HGVSId=rootHGVS+str(chromos) + '.11' + ':' + 'g.' + str(start+1) 
+                    HGVSId=rootHGVS+str(chromos) + '.11' + ':' + 'g.' 
                 elif chromos in ['2', '3', '4', '6', '9', '12']:
-                    HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.' + str(start+1)
+                    HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.'
                 elif chromos == '7':
-                    HGVSId=rootHGVS+str(chromos) + '.14' + ':' + 'g.' + str(start+1) 
+                    HGVSId=rootHGVS+str(chromos) + '.14' + ':' + 'g.' 
             elif args.refGen == 'NCBI36':
                 if chromos in ['14', '21']:
-                    HGVSId=rootHGVS+str(chromos) + '.7' + ':' + 'g.' + str(start+1)
+                    HGVSId=rootHGVS+str(chromos) + '.7' + ':' + 'g.'
                 elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
-                    HGVSId=rootHGVS+str(chromos) + '.8' + ':' + 'g.' + str(start+1) 
+                    HGVSId=rootHGVS+str(chromos) + '.8' + ':' + 'g.' 
                 elif chromos in ['1', '8', '10', '13', '17', '20', '22', '23']:
-                    HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.' + str(start+1) 
+                    HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.' 
                 elif chromos in ['2', '3', '4', '6', '9', '12']:
-                    HGVSId=rootHGVS+str(chromos) + '.10' + ':' + 'g.' + str(start+1)
+                    HGVSId=rootHGVS+str(chromos) + '.10' + ':' + 'g.'
                 elif chromos == '7':
-                    HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.' + str(start+1)
+                    HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.'
 
             if len(ref) > len(alt[0]):
                 if varianttype == 'DEL':
                     if len(ref)-len(alt[0])==1:
-                        HGVSId = HGVSId + 'del' 
+                        HGVSId = HGVSId + str(start+2) + 'del' 
                     else:
-                        HGVSId = HGVSId + '_' + str(start+1+len(ref)-len(alt[0])) + 'del' 
+                        HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)) + 'del' 
                 elif varianttype == 'INDEL':
                     if ref[-1] == alt[0]:
-                        HGVSId = HGVSId + '_' + str(start+1+len(ref)-len(alt[0])-1) + 'del'
+                        HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)) + 'del'
                         varianttype = 'DEL'
                     else:
-                        HGVSId = HGVSId + '_' + str(start+1+len(ref)-len(alt[0])) + 'delins' + alt[0]
+                        HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)) + 'delins' + alt[0]
                 else:
-                    HGVSId = HGVSId + 'del' 
+                    HGVSId = HGVSId + str(start+2) + 'del' 
             elif len(ref) < len(alt[0]):
                 if ref[0] == alt[0][0]:
                     varianttype = 'INS'
-                    HGVSId = HGVSId + '_' + str(start+1) + 'ins' + alt[0]
+                    HGVSId = HGVSId + str(start+1) + '_' + str(start+2) + 'ins' + alt[0][1:]
                 elif varianttype == 'INS':
-                    HGVSId = HGVSId + '_' + str(start+1) + 'ins' + alt[0]
-                elif varianttype == 'INDEL' and len(alt[0])-len(ref)==1:
-                    HGVSId = HGVSId + 'delins' + alt[0]
+                    HGVSId = HGVSId + str(start+1) + '_' + str(start+2) + 'ins' + alt[0]
                 elif varianttype == 'INDEL':
-                    HGVSId = HGVSId + '_' + str(start+len(alt[0])+1) + 'delins' + alt[0]
+                    HGVSId = HGVSId + str(start+1) + 'delins' + alt[0]
                 else:
-                    HGVSId = HGVSId + '_' + str(start+1) + 'ins' + alt[0]
+                    HGVSId = HGVSId + str(start+1) + '_' + str(start+2) + 'ins' + alt[0]
             else:
-                HGVSId = HGVSId + ref + '>' + alt[0]
+                HGVSId = HGVSId + str(start+1) + ref + '>' + alt[0]
 
             dict_to_xls['identifiers|genomicHGVSId'] = HGVSId
 
