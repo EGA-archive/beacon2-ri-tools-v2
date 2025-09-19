@@ -7,6 +7,7 @@ import sys
 from validators.runs import Runs
 import hashlib
 import argparse
+import os
 
 with open("files/headers/runs.txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -17,16 +18,19 @@ def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 def generate(dict_properties,list_of_headers, args):
-    #args.input+'runs.csv' = conf.args.input+'runs.csv'
+    #filename = conf.filename
     total_dict =[]
-
-    with open(args.input+'runs.csv', 'r' ) as theFile:
+    if args.input.endswith('.csv'):
+        filename = args.input
+    else:
+        filename = os.path.join(args.input, 'runs.csv')
+    with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
 
     k=0
     pbar = tqdm(total = num_rows)
-    with open(args.input+'runs.csv', 'r' ) as theFile:
+    with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:

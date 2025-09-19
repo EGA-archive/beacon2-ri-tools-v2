@@ -209,8 +209,12 @@ def commas(prova):
     return(array_of_newdicts)
 
 def generate(dict_properties, list_of_headers, args):
-    #os.path.join(args.input, 'individuals.csv') = conf.os.path.join(args.input, 'individuals.csv')
-    with open(os.path.join(args.input, 'individuals.csv'), 'r' ) as theFile:
+    #filename = conf.filename
+    if args.input.endswith('.csv'):
+        filename = args.input
+    else:
+        filename = os.path.join(args.input, 'individuals.csv')
+    with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
     
@@ -218,7 +222,7 @@ def generate(dict_properties, list_of_headers, args):
 
     k=0
     pbar = tqdm(total = num_rows)
-    with open(os.path.join(args.input, 'individuals.csv'), 'r' ) as theFile:
+    with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:

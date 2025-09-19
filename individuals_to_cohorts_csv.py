@@ -14,7 +14,12 @@ def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 def generate(list_of_headers, args):
-    with open(os.path.join(args.input, 'individuals.csv'), 'r' ) as theFile:
+
+    if args.input.endswith('.csv'):
+        filename = args.input
+    else:
+        filename = os.path.join(args.input, 'individuals.csv')
+    with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
     
@@ -22,7 +27,7 @@ def generate(list_of_headers, args):
 
     k=0
     pbar = tqdm(total = num_rows)
-    with open(os.path.join(args.input, 'individuals.csv'), 'r' ) as theFile:
+    with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         definitivedict={}

@@ -130,7 +130,7 @@ parser.add_argument('-c', '--collection', default=conf.collection_name)
 ```
 
 Note 1: json parameter, if present, will convert the vcf variants into BFF json directly (not to mongoDB). This can generate a very big file, so, if you don't have a lot of space in your disk, consider to not use it.
-Note: All the input and output arguments expect a directory path, and file expect a file path except for the input path of genomicVariations_vcf script, that the path has to be to a file terminated in .vcf.gz. You can use a wildcard (*) for specifying that you want to parse all the vcfs of the folder, e.g. "path/to/your/folder/*.vcf.gz". Note that if the folder is not volumed and the vcf is a large file, it can make docker run out of space when building.
+Note: All the output arguments expect a directory path, and file expect a file path. Input arguments expect either directory or filepath except for the input path of genomicVariations_vcf script, that the path has to be to a file terminated in .vcf.gz. You can use a wildcard (*) for specifying that you want to parse all the vcfs of the folder, e.g. "path/to/your/folder/*.vcf.gz". Note that if the folder is not volumed and the vcf is a large file, it can make docker run out of space when building. For the rest of the scripts, if you input a filepath it has to terminate in .csv. If this is not terminated in .csv or a folder is specified, a default name for a .csv will be completed to find the file (e.g. analyses_csv -> analyses.csv).
 
 ### Populating a beacon instance from VCF
 

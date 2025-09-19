@@ -19,14 +19,18 @@ def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 def generate(dict_properties, list_of_headers, args):
-    #os.path.join(args.input, 'analyses.csv') = conf.os.path.join(args.input, 'analyses.csv')
+    #filename = conf.filename
     total_dict =[]
-    with open(os.path.join(args.input, 'analyses.csv'), 'r' ) as theFile:
+    if args.input.endswith('.csv'):
+        filename = args.input
+    else:
+        filename = os.path.join(args.input, 'analyses.csv')
+    with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
     k=0
     pbar = tqdm(total = num_rows)
-    with open(os.path.join(args.input, 'analyses.csv'), 'r' ) as theFile:
+    with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
         for line in reader:

@@ -29,7 +29,11 @@ client = MongoClient(
 
 
 def generate(dict_properties,list_of_headers, args):
-    csv_filename = os.path.join(args.input, 'genomicVariations.csv')
+
+    if args.input.endswith('.csv'):
+        csv_filename = args.input
+    else:
+        csv_filename = os.path.join(args.input, 'genomicVariations.csv')
 
     #csv_filename = conf.csv_filename
 
