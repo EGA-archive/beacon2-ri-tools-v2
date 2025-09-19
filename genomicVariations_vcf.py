@@ -129,7 +129,7 @@ def generate(dict_properties, args):
         except Exception:
             pass
     
-    for vcf_filename in glob.glob("files/vcf/files_to_read/*.vcf.gz"):
+    for vcf_filename in glob.glob(args.input):
         print(vcf_filename)
         vcf = VCF(vcf_filename, strict_gt=True)
         formatted=False
@@ -748,29 +748,20 @@ def generate(dict_properties, args):
                     HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.'
 
             if len(ref) > len(alt[0]):
-                if varianttype == 'DEL':
-                    if len(ref)-len(alt[0])==1:
-                        HGVSId = HGVSId + str(start+2) + 'del' 
-                    else:
-                        HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)) + 'del' 
-                elif varianttype == 'INDEL':
-                    if ref[-1] == alt[0]:
+                if ref[-1] == alt[0]:
                         HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)-1) + 'del'
-                        varianttype = 'DEL'
-                    else:
-                        HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)) + 'delins' + alt[0]
+                elif len(ref)-len(alt[0])>1:
+                    HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)) + 'delins' + alt[0]
                 else:
                     HGVSId = HGVSId + str(start+2) + 'del' 
             elif len(ref) < len(alt[0]):
-                if ref[0] == alt[0][0]:
+                if len(ref) > 1:
+                    HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)) + 'delins' + alt[0]
+                elif ref[0] == alt[0][0]:
                     varianttype = 'INS'
                     HGVSId = HGVSId + str(start+1) + '_' + str(start+2) + 'ins' + alt[0][1:]
-                elif varianttype == 'INS':
-                    HGVSId = HGVSId + str(start+1) + '_' + str(start+2) + 'ins' + alt[0]
-                elif varianttype == 'INDEL':
-                    HGVSId = HGVSId + str(start+1) + 'delins' + alt[0]
                 else:
-                    HGVSId = HGVSId + str(start+1) + '_' + str(start+2) + 'ins' + alt[0]
+                    HGVSId = HGVSId + str(start+1) + 'delins' + alt[0]
             else:
                 HGVSId = HGVSId + str(start+1) + ref + '>' + alt[0]
 
@@ -1305,6 +1296,7 @@ parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, actio
 parser.add_argument('-n', '--numRows', default=conf.num_rows)
 parser.add_argument('-v', '--verbosity', default=conf.verbosity)
 parser.add_argument('-j', '--json', default=False, action=argparse.BooleanOptionalAction)
+parser.add_argument('-i', '--input', default="files/vcf/files_to_read/*.vcf.gz")
 
 args = parser.parse_args()
 
