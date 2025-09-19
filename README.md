@@ -104,6 +104,7 @@ parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, actio
 parser.add_argument('-n', '--numRows', default=conf.num_rows)
 parser.add_argument('-v', '--verbosity', default=conf.verbosity)
 parser.add_argument('-j', '--json', default=False, action=argparse.BooleanOptionalAction)
+parser.add_argument('-i', '--input', default="files/vcf/files_to_read/*.vcf.gz")
 ```
 
 **individuals_to_cohorts_csv.py**
@@ -129,7 +130,7 @@ parser.add_argument('-c', '--collection', default=conf.collection_name)
 ```
 
 Note 1: json parameter, if present, will convert the vcf variants into BFF json directly (not to mongoDB). This can generate a very big file, so, if you don't have a lot of space in your disk, consider to not use it.
-Note: All the input and output arguments expect a directory path, and file expect a file path.
+Note: All the input and output arguments expect a directory path, and file expect a file path except for the genomicVariations_vcf script, that the path has to be to a file terminated in .vcf.gz. You can use a wildcard (*) for specifying that you want to parse all the vcfs of the folder, e.g. "path/to/your/folder/*.vcf.gz". Note that if the folder is not volumed and the vcf is a large file, it can make docker run out of space when building.
 
 ### Populating a beacon instance from VCF
 
