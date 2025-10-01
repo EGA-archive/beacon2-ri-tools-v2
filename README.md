@@ -56,7 +56,7 @@ verbosity=False
 record_type='genomicVariation' # One between analysis, biosample, cohort, dataset, genomicVariation, individual or run
 collection_name='genomicVariations'
 ```
-
+Note: For *reference_genome* conf setting, you can only choose between NCBI36, GRCh37 and GRCh38 for genomic DNA. For mitochondrial DNA, the only options are GRCh37 or GRCh38, which will use the GenBank build (https://www.ncbi.nlm.nih.gov/nucleotide/NC_012920.1).
 Please, remember to make the datasetId match the id for your datasets.csv file.
 
 #### Generic config parameters

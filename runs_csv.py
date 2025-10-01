@@ -367,7 +367,7 @@ args = parser.parse_args()
 dict_generado, total_i=generate(dict_properties,list_of_headers, args)
 
 
-output = args.output + 'runs.json'
+output = os.path.join(args.output, 'runs.json')
 
 if total_i-1 > 0:
 

@@ -747,6 +747,9 @@ def generate(dict_properties, args):
                 elif chromos == '7':
                     HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.'
 
+            if chromos == 'MT':
+                HGVSId="NC_012920.1:m."
+            
             if len(ref) > len(alt[0]):
                 if ref[-1] == alt[0]:
                         HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)-1) + 'del'
