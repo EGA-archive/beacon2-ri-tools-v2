@@ -478,7 +478,7 @@ class LegacyVariation(BaseModel, extra='forbid'):
         if re.match("^([ACGTUNRYSWKMBDHV\\-\\.]*)$", v):
             pass
         else:
-            raise ValueError('alternateBases must be a valid base from ACGTUNRYSWKMBDHV')
+            raise ValueError('alternateBases must be a valid combination of bases from ACGTUNRYSWKMBDHV')
         return v
     @field_validator('referenceBases')
     @classmethod
@@ -486,7 +486,7 @@ class LegacyVariation(BaseModel, extra='forbid'):
         if re.match("^([ACGTUNRYSWKMBDHV\\-\\.]*)$", v):
             pass
         else:
-            raise ValueError('referenceBases must be a valid base from ACGTUNRYSWKMBDHV')
+            raise ValueError('referenceBases must be a valid combination of bases from ACGTUNRYSWKMBDHV')
         return v
     
 class SoftwareTool(BaseModel, extra='forbid'):
