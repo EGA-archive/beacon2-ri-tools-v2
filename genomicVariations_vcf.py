@@ -459,6 +459,7 @@ def generate(dict_properties, args):
                 
             variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=frequency_in_population, molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
             definitivedict = variant.model_dump(exclude_none=True)
+            GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=args.datasetId
             definitivedict["length"]=int(end)-int(start)
             definitivedict["_id"]=_id
