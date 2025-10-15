@@ -12,3 +12,4 @@ pydantic==2.6.4
 pydantic_core==2.16.3
 typing==3.7.4.3
 typing_extensions==4.11.0
+coverage==7.6.0

@@ -592,35 +592,32 @@ class MolecularAttributes(BaseModel, extra='forbid'):
     aminoacidChanges: Optional[list]=None
     geneIds: Optional[list]=None
     genomicFeatures: Optional[list]=None
-    molecularEffects: Optional[list]=None
+    molecularEffects: Optional[list[OntologyTerm]]=None
     @field_validator('aminoacidChanges')
     @classmethod
     def check_aminoacidChanges(cls, v: list) -> list:
-        for aminoacidChange in v:
-            if isinstance(aminoacidChange, str):
-                pass
-            else:
-                raise ValueError('aminoacidChanges must be an array of strings')
-        return aminoacidChange.title()
+        if v is not None:
+            for aminoacidChange in v:
+                if isinstance(aminoacidChange, str):
+                    pass
+                else:
+                    raise ValueError('aminoacidChanges must be an array of strings')
+            return v
     @field_validator('geneIds')
     @classmethod
     def check_geneIds(cls, v: list) -> list:
-        for geneId in v:
-            if isinstance(geneId, str):
-                pass
-            else:
-                raise ValueError('geneIds must be an array of strings')
-        return geneId.title()
+        if v is not None:
+            for geneId in v:
+                if isinstance(geneId, str):
+                    pass
+                else:
+                    raise ValueError('geneIds must be an array of strings')
+            return v
     @field_validator('genomicFeatures')
     @classmethod
     def check_genomicFeatures(cls, v: list) -> list:
         for genomicFeature in v:
             GenomicFeature(**genomicFeature)
-    @field_validator('molecularEffects')
-    @classmethod
-    def check_molecularEffects(cls, v: list) -> list:
-        for molecularEffect in v:
-            OntologyTerm(**molecularEffect)
 
 class VariantLevelData(BaseModel, extra='forbid'):
     clinicalInterpretations: Optional[list]=None
@@ -660,5 +657,6 @@ class GenomicVariations(BaseModel, extra='forbid'):
     @field_validator('frequencyInPopulations')
     @classmethod
     def check_frequencyInPopulations(cls, v: list) -> list:
-        for fp in v:
-            FrequencyInPopulation(**fp)
+        if v is not None:
+            for fp in v:
+                FrequencyInPopulation(**fp)
