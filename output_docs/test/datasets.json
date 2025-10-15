@@ -1,1 +1,31 @@
-[{"createDateTime": "2021-12-29T20:33:40Z", "dataUseConditions": {"duoDataUse": [{"description": "publication required,publication required", "id": "DUO:0000019,DUO:00000020", "label": "publication required,publication required", "modifiers": [{"id": "EFO:0001645", "label": "coronary artery disease"}], "version": "7-1-19,7-1-19"}]}, "description": "Bear in mind that both genomic and metadata information is synthetic ", "externalUrl": "https://ega-archive.org/datasets/EGAD00001006673/", "id": "synthetic_usecases_4beacon_testingV3", "info": {"info": "Bothmetadataandgenomicvariationsinformationaresynthetic."}, "name": "Dataset with synthetic data for beacon testing", "updateDateTime": "2021-12-29T20:33:40Z", "version": "v1.0", "_id": "fd89553fe6537cb638999a1ee06be56a6e5b33567aabccc9d03daa0489fdc342"}]
+[
+    {
+        "createDateTime": "2021-12-29T20:33:40Z",
+        "dataUseConditions": {
+            "duoDataUse": [
+                {
+                    "description": "publication required,publication required",
+                    "id": "DUO:0000019,DUO:00000020",
+                    "label": "publication required,publication required",
+                    "modifiers": [
+                        {
+                            "id": "EFO:0001645",
+                            "label": "coronary artery disease"
+                        }
+                    ],
+                    "version": "7-1-19,7-1-19"
+                }
+            ]
+        },
+        "description": "Bear in mind that both genomic and metadata information is synthetic ",
+        "externalUrl": "https://ega-archive.org/datasets/EGAD00001006673/",
+        "id": "synthetic_usecases_4beacon_testingV3",
+        "info": {
+            "info": "Bothmetadataandgenomicvariationsinformationaresynthetic."
+        },
+        "name": "Dataset with synthetic data for beacon testing",
+        "updateDateTime": "2021-12-29T20:33:40Z",
+        "version": "v1.0",
+        "_id": "fd89553fe6537cb638999a1ee06be56a6e5b33567aabccc9d03daa0489fdc342"
+    }
+]
