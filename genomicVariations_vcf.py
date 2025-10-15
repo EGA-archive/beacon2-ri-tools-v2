@@ -61,6 +61,7 @@ def process_alleles(allele_property):
     else:
         allele_property = float(allele_property)
         allele_property = float(allele_property)
+    return allele_property
 
 def generate_molecular_attributes(moleculareffectt):
     list_of_molecular_effects=[]
@@ -169,6 +170,7 @@ def generate(dict_properties, args):
 
         for v in vcf:
             molecular_attributes = None
+            frequency_in_population = None
             if template != None:
                 varianttype=v.INFO.get(template["variantType"])
                 gene=v.INFO.get(template["geneId"])
@@ -313,8 +315,7 @@ def generate(dict_properties, args):
                     if dict_per_population != {} and allele_frequency !=None:
                         frequencies.append(dict_per_population)
                         num_of_populations=1
-                else:
-                    frequency_in_population = None
+                    
             except Exception as e:
                 pass
 
