@@ -589,9 +589,9 @@ def generate(dict_properties, args):
 
     try:
         pbar.close()
+        return i, skipped_counts
     except Exception:
-        print('No vcf.gz file could be found.')
-    return i, skipped_counts
+        raise Exception('No vcf.gz file could be found.')
 
 
 parser = argparse.ArgumentParser(
