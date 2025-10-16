@@ -13,6 +13,7 @@ from pymongo.errors import BulkWriteError
 import hashlib
 import argparse
 from pydantic import ValidationError
+import os
 
 client = MongoClient(
         #"mongodb://127.0.0.1:27017/"
@@ -610,7 +611,7 @@ parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 parser.add_argument('-r', '--refGen', default=conf.reference_genome)
 parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
 parser.add_argument('-n', '--numRows', default=conf.num_rows)
-parser.add_argument('-v', '--verbosity', default=conf.verbosity)
+parser.add_argument('-v', '--verbosity', default=conf.verbosity, action=argparse.BooleanOptionalAction)
 parser.add_argument('-j', '--json', default=False, action=argparse.BooleanOptionalAction)
 parser.add_argument('-i', '--input', default="files/vcf/files_to_read/*.vcf.gz")
 
