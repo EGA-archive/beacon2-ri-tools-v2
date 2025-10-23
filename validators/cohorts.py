@@ -263,7 +263,7 @@ class PhenotypicFeatures(BaseModel, extra='forbid'):
                 raise ValueError('resolution, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
 
 class CohortCriteria(BaseModel, extra='forbid'):
-    ageRange: AgeRange
+    ageRange: Optional[AgeRange]=None
     diseaseConditions: Optional[list]=None
     ethnicities: Optional[list]=None
     genders: Optional[list]=None
