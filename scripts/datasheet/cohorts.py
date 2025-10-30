@@ -914,9 +914,15 @@ def generate(dict_properties):
                         for kd1, vd1 in vd[0].items():
                             if isinstance(vd1, dict):
                                 for kd2, vd2 in vd1.items():
-                                    new_item = ""
-                                    new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
-                                    list_of_excel_items.append(new_item)
+                                    if isinstance(vd2, dict):
+                                        for kd3, vd3 in vd2.items():
+                                            new_item = ""
+                                            new_item = key + "|" + kd + "|" + kd1 + "|" + kd2 + "|" + kd3
+                                            list_of_excel_items.append(new_item)
+                                    else:
+                                        new_item = ""
+                                        new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
+                                        list_of_excel_items.append(new_item)
                             else:
                                 new_item = ""
                                 new_item = key + "|" + kd + "|" + kd1
