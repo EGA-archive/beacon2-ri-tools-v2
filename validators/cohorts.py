@@ -168,10 +168,6 @@ class PhenotypicFeatures(BaseModel, extra='forbid'):
     onset: Optional[Union[str,dict]]=None
     resolution: Optional[Union[str,dict]]=None
     severity: Optional[OntologyTerm]=None
-    @field_validator('evidence')
-    @classmethod
-    def check_evidence(cls, v: dict) -> dict:
-        Evidence(**v)
     @field_validator('modifiers')
     @classmethod
     def check_modifiers(cls, v: list) -> list:
@@ -283,7 +279,7 @@ class CohortCriteria(BaseModel, extra='forbid'):
     @classmethod
     def check_genders(cls, v: list) -> list:
         for gender in v:
-            Ethnicity(**gender)
+            Sex(**gender)
     @field_validator('locations')
     @classmethod
     def check_locations(cls, v: list) -> list:

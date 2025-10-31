@@ -107,7 +107,7 @@ def generate(dict_properties, args):
             client.beacon.create_collection(name="caseLevelData")
         except Exception:
             pass
-    
+    skipped_counts=0
     for vcf_filename in glob.glob(args.input):
         print(vcf_filename)
         vcf = VCF(vcf_filename, strict_gt=True)
@@ -160,12 +160,10 @@ def generate(dict_properties, args):
                     target_to_update=client.beacon.targets.find_one({"_id": caught_error["_id"]})
                     if target_to_update != {} and target_to_update != None:
                         biosampleIds_to_update=target_to_update["biosampleIds"]
-                        target_to_update["biosampleIds"] = list(set(biosampleIds_to_update + caught_error["biosampleIds"]))  
+                        target_to_update["biosampleIds"] = biosampleIds_to_update + caught_error["biosampleIds"]  
                         set_dict={}
                         set_dict["$set"]=target_to_update
                         client.beacon.targets.update_one({"_id": caught_error["_id"]},set_dict)
-
-        skipped_counts=0
 
         pbar = tqdm(total = args.numRows)
 
@@ -442,9 +440,12 @@ def generate(dict_properties, args):
                 interval = SequenceInterval(type="SequenceInterval", start=start_range, end=end_range)
                 location = SequenceLocation(interval=interval, type="SequenceLocation", sequence_id=sequence_id)
                 variation = LegacyVariation(alternateBases=alt[0], referenceBases=ref, variantType=varianttype, location=location)
-                
+                ##
                 if args.caseLevelData == True:
-                    j=0
+                    try:
+                        j = len(biosampleIds_to_update)
+                    except Exception:
+                        j=0
                     dict_trues={"_id": _id,"id": HGVSId, "datasetId": args.datasetId}
                     for zygo in v.genotypes:
                         if zygo[0] == 1 and zygo[1]== 1:

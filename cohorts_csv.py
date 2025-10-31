@@ -243,7 +243,7 @@ def generate(dict_properties, list_of_headers, args):
                     for kd, vd in value.items():
                         if isinstance(vd, list):
                             vd_list=[]
-                            
+
                             
                             if isinstance(vd[0], dict):
                                 value_dict[kd]={}
@@ -255,25 +255,55 @@ def generate(dict_properties, list_of_headers, args):
                                 for kd1, vd1 in vd[0].items():
                                     if isinstance(vd1, dict):
                                         for kd2, vd2 in vd1.items():
-                                            new_item = ""
-                                            new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
-                                            for propk, propv in dict_of_properties.items():
-                                                if propk == new_item:
-                                                    #print(propk)
-                                                    try:
-                                                        value_dict[kd][0][kd1][kd2]=propv
-                                                    except Exception:
+                                            if isinstance(vd2, dict):
+                                                for kd3, vd3 in vd2.items():
+                                                    new_item = ""
+                                                    new_item = key + "|" + kd + "|" + kd1 + "|" + kd2 + "|" + kd3
+                                                    for propk, propv in dict_of_properties.items():
+                                                        if propk == new_item:
+                                                            try:
+                                                                value_dict[kd][0][kd1][kd2][kd3]=propv
+                                                            except Exception:
+                                                                try:
+                                                                    value_dict[kd][0][kd1][kd2]={}
+                                                                    value_dict[kd][0][kd1][kd2][kd3]=propv
+                                                                except Exception:
+                                                                    try:
+                                                                        value_dict[kd][0][kd1]={}
+                                                                        value_dict[kd][0][kd1][kd2]={}
+                                                                        value_dict[kd][0][kd1][kd2][kd3]=propv
+                                                                    except Exception:
+                                                                        value_dict[kd][kd1]={}
+                                                                        value_dict[kd][kd1][kd2]={}
+                                                                        value_dict[kd][kd1][kd2][kd3]=propv
+                                                            try:
+                                                                vdictitem=value_dict[kd][0]
+                                                                value_dict[kd]=[vdictitem]
+                                                            except Exception:
+                                                                vdictitem=value_dict[kd]
+                                                                value_dict[kd]=[vdictitem]
+                                            else:
+                                                new_item = ""
+                                                new_item = key + "|" + kd + "|" + kd1 + "|" + kd2
+                                                for propk, propv in dict_of_properties.items():
+                                                    if propk == new_item:
+                                                        #print(propk)
+                                                        #print(value_dict)
                                                         try:
-                                                            value_dict[kd][0][kd1]={}
                                                             value_dict[kd][0][kd1][kd2]=propv
                                                         except Exception:
-                                                            value_dict[kd][kd1]={}
-                                                            value_dict[kd][kd1][kd2]=propv
-                                                    try:
-                                                        vdictitem=value_dict[kd][0]
-                                                        value_dict[kd]=[vdictitem]
-                                                    except Exception:
-                                                        pass
+                                                            try:
+                                                                value_dict[kd][0][kd1]={}
+                                                                value_dict[kd][0][kd1][kd2]=propv
+                                                            except Exception:
+                                                                value_dict[kd][kd1]={}
+                                                                value_dict[kd][kd1][kd2]=propv
+                                                        try:
+                                                            vdictitem=value_dict[kd][0]
+                                                            value_dict[kd]=[vdictitem]
+                                                        except Exception:
+                                                            vdictitem=value_dict[kd]
+                                                            value_dict[kd]=[vdictitem]
                                     elif isinstance(vd1, list):
                                         arrayofkdvs=[]
                                         new_item = ""
@@ -312,15 +342,24 @@ def generate(dict_properties, list_of_headers, args):
                                                             dicty[kd1]=jsonedpropv
                                                         else:
                                                             dicty[kd1]=[jsonedpropv]
-                                                        if dicty not in arrayofkdvs:
-                                                            arrayofkdvs.append(dicty)
-                                                        value_dict[kd]=arrayofkdvs
+                                                        if dicty not in value_dict[kd]:
+                                                            try:
+                                                                value_dict[kd].append(dicty)
+                                                            except Exception:
+                                                                value_dict[kd]=[]
+                                                                value_dict[kd].append(dicty)
                                                     except Exception:
-                                                        jsonedpropv=propv
+                                                        if kd1 == 'ageOfOnset':
+                                                            jsonedpropv=json.loads(propv)
+                                                        else:
+                                                            jsonedpropv=propv
                                                         dicty[kd1]=jsonedpropv
                                                         if dicty not in arrayofkdvs:
-                                                            arrayofkdvs.append(dicty)
-                                                        value_dict[kd]=arrayofkdvs
+                                                            try:
+                                                                value_dict[kd].append(dicty)
+                                                            except Exception:
+                                                                value_dict[kd]=[]
+                                                                value_dict[kd].append(dicty)
 
                                     else:
                                         new_item = ""
@@ -374,7 +413,6 @@ def generate(dict_properties, list_of_headers, args):
                                                                     value_dict[kd].append(dicty)
                                                         else:
                                                             value_dict[kd]=dicty
-
                                     
                                     if value_dict != {}:
                                         if value_dict not in vd_list:
@@ -441,8 +479,8 @@ def generate(dict_properties, list_of_headers, args):
                                 propvalue={}
                                 propvalue_splitted = propv.split(':')
                                 propvalue[propvalue_splitted[0]]=propvalue_splitted[1]
-                                print(key)
-                                print(value)
+                                #print(key)
+                                #print(value)
                                 definitivedict[key]=propvalue
                 else:
                     new_item = ""

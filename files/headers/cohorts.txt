@@ -50,8 +50,11 @@ exclusionCriteria|genders|id
 exclusionCriteria|genders|label
 exclusionCriteria|locations|id
 exclusionCriteria|locations|label
-exclusionCriteria|phenotypicConditions|evidence|evidenceCode
-exclusionCriteria|phenotypicConditions|evidence|reference
+exclusionCriteria|phenotypicConditions|evidence|evidenceCode|id
+exclusionCriteria|phenotypicConditions|evidence|evidenceCode|label
+exclusionCriteria|phenotypicConditions|evidence|reference|id
+exclusionCriteria|phenotypicConditions|evidence|reference|notes
+exclusionCriteria|phenotypicConditions|evidence|reference|reference
 exclusionCriteria|phenotypicConditions|excluded
 exclusionCriteria|phenotypicConditions|featureType|id
 exclusionCriteria|phenotypicConditions|featureType|label
@@ -80,8 +83,11 @@ inclusionCriteria|genders|id
 inclusionCriteria|genders|label
 inclusionCriteria|locations|id
 inclusionCriteria|locations|label
-inclusionCriteria|phenotypicConditions|evidence|evidenceCode
-inclusionCriteria|phenotypicConditions|evidence|reference
+inclusionCriteria|phenotypicConditions|evidence|evidenceCode|id
+inclusionCriteria|phenotypicConditions|evidence|evidenceCode|label
+inclusionCriteria|phenotypicConditions|evidence|reference|id
+inclusionCriteria|phenotypicConditions|evidence|reference|notes
+inclusionCriteria|phenotypicConditions|evidence|reference|reference
 inclusionCriteria|phenotypicConditions|excluded
 inclusionCriteria|phenotypicConditions|featureType|id
 inclusionCriteria|phenotypicConditions|featureType|label
