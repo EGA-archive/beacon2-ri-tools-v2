@@ -160,10 +160,27 @@ def generate(dict_properties, args):
                     target_to_update=client.beacon.targets.find_one({"_id": caught_error["_id"]})
                     if target_to_update != {} and target_to_update != None:
                         biosampleIds_to_update=target_to_update["biosampleIds"]
-                        target_to_update["biosampleIds"] = biosampleIds_to_update + caught_error["biosampleIds"]  
+                        duplicated_ids = []
+                        for element in biosampleIds_to_update:
+                            if element in caught_error["biosampleIds"]:
+                                duplicated_ids.append(element)
+                        new_positions = []
+                        t = len(biosampleIds_to_update)
+                        for bioId in caught_error["biosampleIds"]:
+                            if bioId in biosampleIds_to_update:
+                                new_positions.append(biosampleIds_to_update.index(bioId))
+                            else:
+                                new_positions.append(t)
+                                t+=1
+                        for duplicated_id in duplicated_ids:
+                            caught_error["biosampleIds"].remove(duplicated_id)
+                        
+                        
+                        target_to_update["biosampleIds"] = biosampleIds_to_update + caught_error["biosampleIds"]
                         set_dict={}
                         set_dict["$set"]=target_to_update
-                        client.beacon.targets.update_one({"_id": caught_error["_id"]},set_dict)
+                        if caught_error["biosampleIds"] != []:
+                            client.beacon.targets.update_one({"_id": caught_error["_id"]},set_dict)
 
         pbar = tqdm(total = args.numRows)
 
@@ -442,12 +459,15 @@ def generate(dict_properties, args):
                 variation = LegacyVariation(alternateBases=alt[0], referenceBases=ref, variantType=varianttype, location=location)
                 ##
                 if args.caseLevelData == True:
-                    try:
-                        j = len(biosampleIds_to_update)
-                    except Exception:
-                        j=0
+                    j=0
+                    p=0
                     dict_trues={"_id": _id,"id": HGVSId, "datasetId": args.datasetId}
                     for zygo in v.genotypes:
+                        try:
+                            j = new_positions[p]
+                            p+=1
+                        except Exception:
+                            pass
                         if zygo[0] == 1 and zygo[1]== 1:
                             dict_trues[str(j)]="11"
                             j+=1
