@@ -342,12 +342,10 @@ def generate(dict_properties, list_of_headers, args):
                                                             dicty[kd1]=jsonedpropv
                                                         else:
                                                             dicty[kd1]=[jsonedpropv]
+                                                        #print(dicty)
+                                                        #print(value_dict)
                                                         if dicty not in value_dict[kd]:
-                                                            try:
-                                                                value_dict[kd].append(dicty)
-                                                            except Exception:
-                                                                value_dict[kd]=[]
-                                                                value_dict[kd].append(dicty)
+                                                            value_dict[kd][0].update(dicty)
                                                     except Exception:
                                                         if kd1 == 'ageOfOnset':
                                                             jsonedpropv=json.loads(propv)
@@ -355,11 +353,12 @@ def generate(dict_properties, list_of_headers, args):
                                                             jsonedpropv=propv
                                                         dicty[kd1]=jsonedpropv
                                                         if dicty not in arrayofkdvs:
+                                                            #print(dicty)
+                                                            #print(value_dict[kd])
                                                             try:
-                                                                value_dict[kd].append(dicty)
+                                                                value_dict[kd][0].update(dicty)
                                                             except Exception:
-                                                                value_dict[kd]=[]
-                                                                value_dict[kd].append(dicty)
+                                                                value_dict[kd]=[dicty]
 
                                     else:
                                         new_item = ""
@@ -401,16 +400,17 @@ def generate(dict_properties, list_of_headers, args):
                                                     try:
                                                         if dicty not in value_dict[kd]:
                                                             if dicty != {}:
-                                                                value_dict[kd].append(dicty)
+                                                                try:
+                                                                    value_dict[kd][0].update(dicty)
+                                                                except Exception:
+                                                                    value_dict[kd]=[dicty]
                                                     except Exception:
                                                         if key == 'inclusionCriteria' or key == 'exclusionCriteria':
-                                                            try:
-                                                                if dicty != {}:
-                                                                    value_dict[kd].append(dicty)
-                                                            except Exception:
-                                                                if dicty != {}:
-                                                                    value_dict[kd]=[]
-                                                                    value_dict[kd].append(dicty)
+                                                            if dicty != {}:
+                                                                try:
+                                                                    value_dict[kd][0].update(dicty)
+                                                                except Exception:
+                                                                    value_dict[kd]=[dicty]
                                                         else:
                                                             value_dict[kd]=dicty
                                     
