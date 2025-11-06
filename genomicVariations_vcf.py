@@ -431,21 +431,50 @@ def generate(dict_properties, args):
                 if chromos == 'MT':
                     HGVSId="NC_012920.1:m."
                 
-                if len(ref) > len(alt[0]):
+                if reversed(ref) == alt[0]:
+                    HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)-1) + 'inv'
+                    varianttype = 'INV'
+                elif len(ref) > len(alt[0]):
                     if ref[-1] == alt[0]:
-                            HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)-1) + 'del'
+                        HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)-1) + 'del'
+                        varianttype = 'DEL'
                     elif len(ref)-len(alt[0])>1:
                         HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)) + 'delins' + alt[0]
+                        varianttype = 'INDEL'
                     else:
                         HGVSId = HGVSId + str(start+2) + 'del' 
+                        varianttype = 'DEL'
                 elif len(ref) < len(alt[0]):
-                    if len(ref) > 1:
-                        HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)) + 'delins' + alt[0]
-                    elif ref[0] == alt[0][0]:
-                        varianttype = 'INS'
-                        HGVSId = HGVSId + str(start+1) + '_' + str(start+2) + 'ins' + alt[0][1:]
-                    else:
-                        HGVSId = HGVSId + str(start+1) + 'delins' + alt[0]
+                    if len(ref) < len(alt[0]) and len(alt[0])>len(ref)+3:
+                        if alt[0][len(ref):len(ref)+2] == alt[0][len(ref)+2:len(ref)+4]:
+                            num_of_duplications = len(alt[0])-len(ref)
+                            num_of_duplications = num_of_duplications//2
+                            for i in range(num_of_duplications):
+                                if alt[0][len(ref):len(ref)+2] == alt[0][len(ref)*2*i:len(ref)+2*2*i]:
+                                    continue
+                                else:
+                                    num_of_duplications == 'not a duplication'
+                            if num_of_duplications == 'not a duplication':
+                                pass
+                            elif num_of_duplications == 1:
+                                HGVSId = HGVSId + str(start+1)+ 'dup'
+                                varianttype = 'DUP'
+                            else:
+                                HGVSId = HGVSId + str(start+1) + '_' + str(start+1+len(alt[0])-num_of_duplications*2) + 'dup'
+                                varianttype = 'DUP'
+                    if varianttype != 'DUP':
+                        if len(ref) > 1:
+                            HGVSId = HGVSId + str(start+1) + '_' + str(start+len(ref)) + 'delins' + alt[0]
+                            varianttype = 'INDEL'
+                        elif ref[0] == alt[0][0]:
+                            varianttype = 'INS'
+                            HGVSId = HGVSId + str(start+1) + '_' + str(start+2) + 'ins' + alt[0][1:]
+                        else:
+                            HGVSId = HGVSId + str(start+1) + 'delins' + alt[0]
+                            varianttype = 'INDEL'
+                elif len(alt[0])==1 and len(ref)==1:
+                    HGVSId = HGVSId + str(start+1) + ref + '>' + alt[0]
+                    varianttype = 'SNP'
                 else:
                     HGVSId = HGVSId + str(start+1) + ref + '>' + alt[0]
 
