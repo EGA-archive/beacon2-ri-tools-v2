@@ -338,13 +338,14 @@ def generate(dict_properties, args):
                         
                 except Exception as e:
                     pass
-                if frequency_in_population == None:
+                if frequency_in_population == None and num_of_populations != 0:
                     ref=v.REF
                     chrom=v.CHROM
                     start=v.start
                     print('variant in chr: {} with start position: {} and reference base: {} skipped because none of the populations had allele frequency greater than 0'.format(chrom, start, ref))
                     i+=1
                     pbar.update(1)
+                    skipped_counts+=1
                     continue
 
                 if frequencies == []:
@@ -519,8 +520,11 @@ def generate(dict_properties, args):
                             j+=1
                         else:
                             j+=1
-                
-                variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=frequency_in_population.model_dump(exclude_none=True), molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
+                if num_of_populations != 0:
+                    variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=frequency_in_population.model_dump(exclude_none=True), molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
+                else:
+                    variant = GenomicVariations(variation=variation, variantInternalId=_id, molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
+
                 definitivedict = variant.model_dump(exclude_none=True)
                 definitivedict["datasetId"]=args.datasetId
                 definitivedict["length"]=int(end)-int(start)
