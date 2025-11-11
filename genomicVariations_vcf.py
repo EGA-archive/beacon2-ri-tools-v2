@@ -339,6 +339,9 @@ def generate(dict_properties, args):
                 except Exception as e:
                     pass
                 if frequency_in_population == None:
+                    ref=v.REF
+                    chrom=v.CHROM
+                    start=v.start
                     print('variant in chr: {} with start position: {} and reference base: {} skipped because none of the populations had allele frequency greater than 0'.format(chrom, start, ref))
                     i+=1
                     pbar.update(1)
