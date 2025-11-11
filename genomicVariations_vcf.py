@@ -415,7 +415,7 @@ def generate(dict_properties, args):
                                 if alt[0][len(ref):len(ref)+2] == alt[0][len(ref)*2*i:len(ref)+2*2*i]:
                                     continue
                                 else:
-                                    num_of_duplications == 'not a duplication'
+                                    num_of_duplications = 'not a duplication'
                             if num_of_duplications == 'not a duplication':
                                 pass
                             elif num_of_duplications == 1:
@@ -479,6 +479,7 @@ def generate(dict_properties, args):
                 definitivedict["datasetId"]=args.datasetId
                 definitivedict["length"]=int(end)-int(start)
                 definitivedict["_id"]=_id
+
                 try:
                     if num_of_populations != 0:
                         if frequencies!=[]:
@@ -491,7 +492,6 @@ def generate(dict_properties, args):
                 except Exception:
                     pass
                 total_dict.append(definitivedict)
-
 
                 pbar.update(1)
                 number_variants+=1
