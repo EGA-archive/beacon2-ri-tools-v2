@@ -8,7 +8,7 @@ reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
 datasetId='test'
 case_level_data=False
 num_rows=15000000
-verbosity=True # This variable, if True, will make the program run slower but give logs about all the skipped variants and the reason why.
+verbosity=False # This variable, if True, will make the program run slower but give logs about all the skipped variants and the reason why.
 
 ### Update record ###
 record_type='genomicVariation' # One between analysis, biosample, cohort, dataset, genomicVariation, individual or run
