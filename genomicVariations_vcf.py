@@ -96,7 +96,7 @@ def append_to_json(file, data):
 
 def generate(dict_properties, args):
     total_dict =[]
-    i=1
+    number_variants=1
     if args.caseLevelData == True:
         try:
             client.beacon.create_collection(name="targets")
@@ -232,7 +232,7 @@ def generate(dict_properties, args):
                         varianttype='UNKNOWN'
                 try:
                     if varianttype == 'SV': 
-                        i+=1
+                        number_variants+=1
                         pbar.update(1)
                         if args.verbosity==True:
                             ref=v.REF
@@ -243,138 +243,87 @@ def generate(dict_properties, args):
                         continue
                 except Exception:
                     pass
-                try:
-                    num_of_populations=0
-                    frequencies=[]
-                    allele_frequency=0
-                    if pipeline is not None:
-                        num_of_populations=pipeline["numberOfPopulations"]     
-                        source=pipeline["source"]
-                        source_reference=pipeline["sourceReference"]
-                        populations=pipeline["populations"]
-                        if num_of_populations != 0:
-                            for population in populations:
-                                dict_per_population={}
-                                allele_frequency=v.INFO.get(population["alleleFrequency"])
-                                allele_count=v.INFO.get(population["alleleCount"])
-                                allele_number=v.INFO.get(population["alleleNumber"])
-                                if population["genotypeHomozygous"] != "":
-                                    ac_hom=v.INFO.get(population["genotypeHomozygous"])
-                                    ac_hom = process_alleles(ac_hom)
-                                else:
-                                    ac_hom=None
-                                if population["genotypeHeterozygous"] != "":
-                                    ac_het=v.INFO.get(population["genotypeHeterozygous"])
-                                    ac_het = process_alleles(ac_het)
-                                else:
-                                    ac_het=None
-                                if population["genotypeHemizygous"] != "":
-                                    ac_hemi=v.INFO.get(population["genotypeHemizygous"])
-                                    ac_hemi = process_alleles(ac_hemi)
-                                else:
-                                    ac_hemi=None
-                                allele_frequency = process_alleles(allele_frequency)
-                                allele_number = process_alleles(allele_number)
-                                allele_count = process_alleles(allele_count)
-                                
-                                if allele_frequency == 0.0 or allele_count == 0.0:
-                                    continue
-                                popu=population["population"]
-                                if allele_frequency != 0 or allele_frequency != None:
-                                    dict_per_population["alleleFrequency"]=allele_frequency
-                                    if allele_count != None and allele_count != 0:
-                                        dict_per_population["alleleCount"]=allele_count
-                                        dict_per_population["genotypeHomozygous"]=ac_hom
-                                        dict_per_population["genotypeHeterozygous"]=ac_het
-                                        dict_per_population["genotypeHemizygous"]=ac_hemi
-                                    if allele_number != None and allele_number != 0:
-                                        dict_per_population["alleleNumber"]=allele_number
-                                    dict_per_population["population"]=popu
-                                if dict_per_population != {} and allele_frequency !=None:
-                                    frequencies.append(dict_per_population)
-                    if pipeline is None or num_of_populations == 0:
-                        allele_frequency=v.INFO.get('AF')
-                        allele_number=v.INFO.get('AN')
-                        allele_count=v.INFO.get('AC')
-                        ac_hom=v.INFO.get('AC_Hom')
-                        ac_het=v.INFO.get('AC_Het')
-                        ac_hemi=v.INFO.get('AC_Hemi')
-                        allele_frequency = process_alleles(allele_frequency)
-                        allele_number = process_alleles(allele_number)
-                        allele_count = process_alleles(allele_count)
-                        ac_hom = process_alleles(ac_hom)
-                        ac_het = process_alleles(ac_het)
-                        ac_hemi = process_alleles(ac_hemi)
-                        if allele_frequency == 0.0 or allele_count == 0.0:
-                            i+=1
-                            pbar.update(1)
-                            if args.verbosity==True:
-                                ref=v.REF
-                                chrom=v.CHROM
-                                start=v.start
-                                print('variant in chr: {} with start position: {} and reference base: {} skipped because its allele frequency is 0'.format(chrom, start, ref))
-                            skipped_counts+=1
-                            continue
 
-                    if allele_frequency is not None:
-                        population_frequency = [PopulationFrequency(population="Total",alleleFrequency=allele_frequency).model_dump(exclude_none=True)]
-                        frequency_in_population = FrequencyInPopulation(sourceReference=pipeline["sourceReference"],source=pipeline["source"],frequencies=population_frequency)
-                        if allele_frequency != 0 or allele_frequency != None:
-                            dict_per_population["alleleFrequency"]=allele_frequency
-                            if allele_count != None and allele_count != 0:
-                                dict_per_population["alleleCount"]=allele_count
-                                if ac_hom != None:
-                                    dict_per_population["genotypeHomozygous"]=ac_hom
-                                if ac_het != None:
-                                    dict_per_population["genotypeHeterozygous"]=ac_het
-                                if ac_hemi != None:
-                                    dict_per_population["genotypeHemizygous"]=ac_hemi
-                            if allele_number != None and allele_number != 0:
-                                dict_per_population["alleleNumber"]=allele_number
-                            dict_per_population["population"]=popu
-                        if dict_per_population != {} and allele_frequency !=None:
-                            frequencies.append(dict_per_population)
-                            num_of_populations=1
-                        
-                except Exception as e:
-                    pass
-                if frequency_in_population == None and num_of_populations != 0:
-                    if args.verbosity==True:
-                        ref=v.REF
-                        chrom=v.CHROM
-                        start=v.start
-                        print('variant in chr: {} with start position: {} and reference base: {} skipped because none of the populations had allele frequency greater than 0'.format(chrom, start, ref))
-                    i+=1
-                    pbar.update(1)
-                    skipped_counts+=1
-                    continue
-
-                if frequencies == []:
+                num_of_populations=0
+                frequencies=[]
+                allele_frequency=0
+                ref=v.REF
+                chrom=v.CHROM
+                start=v.start
+                if pipeline is not None:
+                    num_of_populations=pipeline["numberOfPopulations"]     
+                    source=pipeline["source"]
+                    source_reference=pipeline["sourceReference"]
+                    populations=pipeline["populations"]
                     if num_of_populations != 0:
-                        i+=1
+                        for population in populations:
+                            dict_per_population={}
+                            allele_frequency=v.INFO.get(population["alleleFrequency"])
+                            allele_count=v.INFO.get(population["alleleCount"])
+                            allele_number=v.INFO.get(population["alleleNumber"])
+                            if population["genotypeHomozygous"] != "":
+                                ac_hom=v.INFO.get(population["genotypeHomozygous"])
+                                ac_hom = process_alleles(ac_hom)
+                            else:
+                                ac_hom=None
+                            if population["genotypeHeterozygous"] != "":
+                                ac_het=v.INFO.get(population["genotypeHeterozygous"])
+                                ac_het = process_alleles(ac_het)
+                            else:
+                                ac_het=None
+                            if population["genotypeHemizygous"] != "":
+                                ac_hemi=v.INFO.get(population["genotypeHemizygous"])
+                                ac_hemi = process_alleles(ac_hemi)
+                            else:
+                                ac_hemi=None
+                            allele_frequency = process_alleles(allele_frequency)
+                            allele_number = process_alleles(allele_number)
+                            allele_count = process_alleles(allele_count)
+                            
+                            if allele_frequency == 0.0 or allele_count == 0.0:
+                                continue
+                            popu=population["population"]
+                            if allele_frequency != 0 or allele_frequency != None:
+                                dict_per_population["alleleFrequency"]=allele_frequency
+                                if allele_count != None and allele_count != 0:
+                                    dict_per_population["alleleCount"]=allele_count
+                                    if ac_hom != None:
+                                        dict_per_population["genotypeHomozygous"]=ac_hom
+                                    if ac_het != None:
+                                        dict_per_population["genotypeHeterozygous"]=ac_het
+                                    if ac_hemi != None:
+                                        dict_per_population["genotypeHemizygous"]=ac_hemi
+                                if allele_number != None and allele_number != 0:
+                                    dict_per_population["alleleNumber"]=allele_number
+                                dict_per_population["population"]=popu
+                            if dict_per_population != {} and allele_frequency !=None:
+                                frequencies.append(dict_per_population)
+                                num_of_populations=1
+
+                if frequencies != []:
+                    population_frequencies=[]
+                    for frequency in frequencies:
+                        population_frequency = PopulationFrequency(population=frequency["population"],alleleFrequency=frequency["alleleFrequency"]).model_dump(exclude_none=True)
+                        population_frequencies.append(population_frequency)
+                    frequency_in_population = FrequencyInPopulation(sourceReference=pipeline["sourceReference"],source=pipeline["source"],frequencies=population_frequencies)
+                    population_frequencies=[]
+                else:
+                    if num_of_populations != 0:
+                        number_variants+=1
                         pbar.update(1)
                         if args.verbosity==True:
-                            ref=v.REF
-                            chrom=v.CHROM
-                            start=v.start
                             print('variant in chr: {} with start position: {} and reference base: {} skipped because none of the populations had allele frequency greater than 0'.format(chrom, start, ref))
                         skipped_counts+=1
                         continue
 
                 try:
-                    ref=v.REF
-                    chrom=v.CHROM
-                    start=v.start
                     end=v.end
                     alt=v.ALT
                 except Exception:
-                    chrom=v.CHROM
-                    start=v.start
-                    ref=v.REF
                     end=v.INFO.get('END')
                     alt=v.ALT
                 if alt != [] and '<' and '>' in alt[0]:
-                    i+=1
+                    number_variants+=1
                     pbar.update(1)
                     if args.verbosity==True:
                         ref=v.REF
@@ -545,7 +494,7 @@ def generate(dict_properties, args):
 
 
                 pbar.update(1)
-                i+=1
+                number_variants+=1
                 if args.caseLevelData == True and args.json == False:
                     catch_errors=[]
                     try:
@@ -583,7 +532,7 @@ def generate(dict_properties, args):
                 if total_dict != []:
                     if args.json == False:
                         variants_errors=[]
-                        if i == args.numRows:
+                        if number_variants == args.numRows:
                             try:
                                 client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
                             except BulkWriteError as BulkError:
@@ -594,26 +543,24 @@ def generate(dict_properties, args):
                                 error_dicted=json.loads(new_string)
                                 for error in error_dicted["writeErrors"]:
                                     variants_errors.append(error['op'])
-                            #pbar.update(1)
                             break
-                        elif (i/10000).is_integer():
+                        elif (number_variants/10000).is_integer():
                             try:
                                 client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
                             except BulkWriteError as BulkError:
                                 start_point=len("batch op errors occurred, full error:")
+                                #print(BulkError.details)
                                 error_stringed=str(BulkError)[start_point:]
                                 new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
                                 new_string=new_string.replace('None', '"None"')
                                 error_dicted=json.loads(new_string)
                                 for error in error_dicted["writeErrors"]:
                                     variants_errors.append(error['op'])
-
 
                             del definitivedict
                             del total_dict
                             gc.collect()
                             total_dict=[]
-                            #pbar.update(1)  
                         for error in variants_errors:
                             if args.verbosity == True:
                                 print("following duplicated variant found was skipped: {}".format(error))
@@ -637,7 +584,7 @@ def generate(dict_properties, args):
     if total_dict != []:
         if args.json == False:
             variants_errors=[]
-            if i != args.numRows:
+            if number_variants != args.numRows:
                 try:
                     client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
                 except BulkWriteError as BulkError:
@@ -663,7 +610,7 @@ def generate(dict_properties, args):
 
     try:
         pbar.close()
-        return i, skipped_counts
+        return number_variants, skipped_counts
     except Exception:
         raise Exception('No vcf.gz file could be found.')
 
