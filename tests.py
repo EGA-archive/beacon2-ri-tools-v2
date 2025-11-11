@@ -1,5 +1,5 @@
 import unittest
-from genomicVariations_vcf import generate
+from genomicVariations_vcf import generate, client
 import argparse
 from conf import conf
 
@@ -18,16 +18,27 @@ parser.add_argument('-i', '--input', default="files/vcf/files_to_read/*.vcf.gz")
 
 args = parser.parse_args()
 
-class TestGenomicVariationsVCF(unittest.TestCase):
+class TestGenomicVariationsWithPopulations(unittest.TestCase):
     def test_main_check_VCF_to_BFF(self):
         total_i, skipped_variants=generate({}, args)
+        variants = client.beacon.genomicVariations.find({})
+        assert len(list(variants)) == 40
+        for variant in variants:
+            assert variant["frequencyInPopulations"] in variant
+            for population in variant["frequencyInPopulations"]:
+                assert population["frequencies"] in population
+                for frequency in population["frequencies"]:
+                    assert frequency["alleleFrequency"] in frequency
+                    assert frequency["population"] in frequency
+                    assert frequency["alleleFrequency"] > 0
+                    assert isinstance(frequency["population"],str) == True
 
 def suite():
     """
         Gather all the tests from this module in a test suite.
     """
     test_suite = unittest.TestSuite()
-    test_suite.addTest(unittest.makeSuite(TestGenomicVariationsVCF))
+    test_suite.addTest(unittest.makeSuite(TestGenomicVariationsWithPopulations))
     #test_suite.addTest(unittest.makeSuite(TestBudget2))
     return test_suite
 
