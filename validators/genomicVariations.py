@@ -545,6 +545,7 @@ class FrequencyInPopulation(BaseModel, extra='forbid'):
     def check_frequencies(cls, v: list) -> list:
         for frequency in v:
             PopulationFrequency(**frequency)
+        return v
 
 class Identifiers(BaseModel, extra='forbid'):
     clinvarVariantId: Optional[str]=None
@@ -643,7 +644,7 @@ class GenomicVariations(BaseModel, extra='forbid'):
         super().__init__(**data)
     _id: Optional[str] = PrivateAttr()
     caseLevelData: Optional[list] = None
-    frequencyInPopulations: Optional[list] = None
+    frequencyInPopulations: Optional[FrequencyInPopulation] = None
     identifiers: Optional[Identifiers] = None
     molecularAttributes: Optional[MolecularAttributes] = None
     variantInternalId: str
@@ -654,9 +655,3 @@ class GenomicVariations(BaseModel, extra='forbid'):
     def check_caseLevelData(cls, v: list) -> list:
         for case in v:
             CaseLevelVariant(**case)
-    @field_validator('frequencyInPopulations')
-    @classmethod
-    def check_frequencyInPopulations(cls, v: list) -> list:
-        if v is not None:
-            for fp in v:
-                FrequencyInPopulation(**fp)
