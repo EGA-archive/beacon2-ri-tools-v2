@@ -56,11 +56,10 @@ def get_hash(string:str):
 def process_alleles(allele_property):
     if allele_property == None:
         pass
-    if isinstance(allele_property, tuple):
+    elif isinstance(allele_property, tuple):
         allele_property=list(allele_property)
         allele_property=allele_property[0]
     else:
-        allele_property = float(allele_property)
         allele_property = float(allele_property)
     return allele_property
 
@@ -261,22 +260,23 @@ def generate(dict_properties, args):
                                 allele_number=v.INFO.get(population["alleleNumber"])
                                 if population["genotypeHomozygous"] != "":
                                     ac_hom=v.INFO.get(population["genotypeHomozygous"])
+                                    ac_hom = process_alleles(ac_hom)
                                 else:
                                     ac_hom=None
                                 if population["genotypeHeterozygous"] != "":
                                     ac_het=v.INFO.get(population["genotypeHeterozygous"])
+                                    ac_het = process_alleles(ac_het)
                                 else:
                                     ac_het=None
                                 if population["genotypeHemizygous"] != "":
                                     ac_hemi=v.INFO.get(population["genotypeHemizygous"])
+                                    ac_hemi = process_alleles(ac_hemi)
                                 else:
                                     ac_hemi=None
                                 allele_frequency = process_alleles(allele_frequency)
                                 allele_number = process_alleles(allele_number)
                                 allele_count = process_alleles(allele_count)
-                                ac_hom = process_alleles(ac_hom)
-                                ac_het = process_alleles(ac_het)
-                                ac_hemi = process_alleles(ac_hemi)
+                                
                                 if allele_frequency == 0.0 or allele_count == 0.0:
                                     continue
                                 popu=population["population"]
@@ -317,15 +317,18 @@ def generate(dict_properties, args):
                             continue
 
                     if allele_frequency is not None:
-                        population_frequency = [PopulationFrequency(population="Total",alleleFrequency=allele_frequency)]
-                        frequency_in_population = FrequencyInPopulation(sourceReference=pipeline["frequencyInPopulations|sourceReference"],source=pipeline["frequencyInPopulations|source"],frequencies=population_frequency)
+                        population_frequency = [PopulationFrequency(population="Total",alleleFrequency=allele_frequency).model_dump(exclude_none=True)]
+                        frequency_in_population = FrequencyInPopulation(sourceReference=pipeline["sourceReference"],source=pipeline["source"],frequencies=population_frequency)
                         if allele_frequency != 0 or allele_frequency != None:
                             dict_per_population["alleleFrequency"]=allele_frequency
                             if allele_count != None and allele_count != 0:
                                 dict_per_population["alleleCount"]=allele_count
-                                dict_per_population["genotypeHomozygous"]=ac_hom
-                                dict_per_population["genotypeHeterozygous"]=ac_het
-                                dict_per_population["genotypeHemizygous"]=ac_hemi
+                                if ac_hom != None:
+                                    dict_per_population["genotypeHomozygous"]=ac_hom
+                                if ac_het != None:
+                                    dict_per_population["genotypeHeterozygous"]=ac_het
+                                if ac_hemi != None:
+                                    dict_per_population["genotypeHemizygous"]=ac_hemi
                             if allele_number != None and allele_number != 0:
                                 dict_per_population["alleleNumber"]=allele_number
                             dict_per_population["population"]=popu
@@ -335,6 +338,11 @@ def generate(dict_properties, args):
                         
                 except Exception as e:
                     pass
+                if frequency_in_population == None:
+                    print('variant in chr: {} with start position: {} and reference base: {} skipped because none of the populations had allele frequency greater than 0'.format(chrom, start, ref))
+                    i+=1
+                    pbar.update(1)
+                    continue
 
                 if frequencies == []:
                     if num_of_populations != 0:
@@ -508,8 +516,8 @@ def generate(dict_properties, args):
                             j+=1
                         else:
                             j+=1
-                    
-                variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=frequency_in_population, molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
+                
+                variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=frequency_in_population.model_dump(exclude_none=True), molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
                 definitivedict = variant.model_dump(exclude_none=True)
                 definitivedict["datasetId"]=args.datasetId
                 definitivedict["length"]=int(end)-int(start)
