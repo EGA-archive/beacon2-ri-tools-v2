@@ -229,6 +229,8 @@ By properly configuring the populations.json file, you ensure that Beacon can ac
 💡 Note: Double-check that the annotation keys (e.g., AF_male, AC_female, etc.) correspond exactly to the field names in the INFO column of your VCF.
 
 💡 Note2: For all the information to be correctly read, before processing the VCF split the multiallelic variants. 
+
+💡 Note3: If your VCF does not include a specific allele count field, leave the corresponding entry empty. Example: `"alleleCountHeterozygous": "",`
       
 
 #### Converting data from .vcf.gz file
@@ -244,6 +246,28 @@ After that, if needed, export your documents from mongoDB to a .json file using 
 docker exec ri-tools-mongo mongoexport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations > genomicVariations.json
 ```
 This will generate the final .json file which is in Beacon Friendly Format (BFF). Bear in mind that this time, the file will be saved in the directory you are located, so if you want to save it in the output_docs folder, add it in the path of the mongoexport.
+
+#### Data Persistence in MongoDB
+
+All parsed variants are inserted into the same MongoDB database (the beacon database by default).
+This means:
+
+- The data is persistent: once inserted, it remains stored until explicitly deleted.
+
+- If you re-run the conversion command weeks or months later, new variants will be added alongside existing ones in the same collection (genomicVariations).
+
+- When exporting with mongoexport, the resulting JSON will include all variants present in the collection, regardless of when they were inserted.
+
+If you wish to export only newly processed variants, you can delete the collection before inserting new variants. You can empty the mongoDB by: 
+
+```
+docker exec -it ri-tools-mongo mongosh
+use admin
+db.auth("root","example")
+use beacon
+db.genomicVariations.deleteMany({}) # delete ALL variants
+db.genomicVariations.find({}) # print variants in mongo
+```
 
 ###  Populating a beacon instance from CSV files
 
