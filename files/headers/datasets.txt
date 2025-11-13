@@ -1,5 +1,4 @@
 createDateTime
-dataUseConditions|duoDataUse|description
 dataUseConditions|duoDataUse|id
 dataUseConditions|duoDataUse|label
 dataUseConditions|duoDataUse|modifiers
