@@ -51,6 +51,9 @@ class TypedQuantity(BaseModel, extra='forbid'):
     quantity: Quantity
     quantityType: OntologyTerm
 
+class TypedQuantities(BaseModel):
+    typedQuantities: TypedQuantity
+
 class Members(BaseModel, extra='forbid'):
     affected: bool
     memberId: str
@@ -245,19 +248,10 @@ class InterventionsOrProcedures(BaseModel, extra='forbid'):
 class Measurement(BaseModel, extra='forbid'):
     assayCode: OntologyTerm
     date: Optional[str] = None
-    measurementValue: Union[Quantity, OntologyTerm, list]
+    measurementValue: Union[Quantity, OntologyTerm, TypedQuantities]
     notes: Optional[str]=None
     observationMoment: Optional[Union[str,dict]]=None
     procedure: Optional[dict] = None
-    @field_validator('measurementValue')
-    @classmethod
-    def check_measurementValue(cls, v: Union[Quantity, OntologyTerm, list]= Field(union_mode='left_to_right')) -> Union[Quantity, OntologyTerm, list]:
-        if isinstance(v, list):
-            for measurement in v:
-                try:
-                    Quantity(**measurement)
-                except Exception:
-                    TypedQuantity(**measurement)
     @field_validator('observationMoment')
     @classmethod
     def check_observationMoment(cls, v: Union[str,dict]= Field(union_mode='left_to_right')) -> Union[str,dict]:

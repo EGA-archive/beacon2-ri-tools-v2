@@ -731,7 +731,6 @@ for key, value in dict_types.items():
                         finaldict[key]=''
                     elif 'dataUseConditions' in v:
                         dict_conditions={}
-                        dict_conditions['description']=''
                         dict_conditions['id']=''
                         dict_conditions['label']=''
                         dict_conditions['modifiers']=[{'id':'','label': ''}]
@@ -978,18 +977,6 @@ def generate(dict_properties):
 
     with open("files/headers/datasets.txt", "w") as txt_file:
         for line in list_of_excel_items:
-            txt_file.write("".join(line) + "\n")
-
-    with open("files/required/definitions/datasets.txt", "w") as txt_file:
-        for line in list_of_definitions_required:
-            txt_file.write("".join(line) + "\n")
-
-    with open("files/required/header_definitions/datasets.txt", "w") as txt_file:
-        for line in list_of_headers_definitions_required:
-            txt_file.write("".join(line) + "\n")
-
-    with open("files/required/properties/datasets.txt", "w") as txt_file:
-        for line in list_of_properties_required:
             txt_file.write("".join(line) + "\n")
 
     with open('files/deref_schemas/datasets.json', 'w') as f:
