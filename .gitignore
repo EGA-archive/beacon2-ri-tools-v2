@@ -12,3 +12,4 @@ scripts/datasheet/conf/__pycache__/*
 *.vcf.gz.tbi
 *.vcf.bgz.tbi
 vcf_BelCovid_2
+output_docs/data/db/*

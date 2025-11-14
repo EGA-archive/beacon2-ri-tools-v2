@@ -35,6 +35,9 @@ services:
       MONGO_INITDB_DATABASE: beacon
     volumes:
       - ./mongo-init/:/docker-entrypoint-initdb.d/:ro
+      - ./output_docs/data/:/data
+      - ./output_docs/data/db:/data/db
+      - ./output_docs/data/configdb:/data/configdb
     networks:
       - my-app-network
 
