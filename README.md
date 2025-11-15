@@ -186,8 +186,9 @@ For VCF files containing aggregated data (e.g., total population only), your pop
       "population": "Total",
       "alleleFrequency": "AF",
       "alleleCount": "AC",
-      "alleleCountHomozygous": "AC_hom",
-      "alleleCountHeterozygous": "AC_het",
+      "genotypeHomozygous": "AC_hom",
+      "genotypeHeterozygous": "AC_het",
+      "genotypeHemizygous": "AC_hemi",
       "alleleNumber": "AN"
     }
   ]
@@ -208,16 +209,18 @@ For VCFs containing population-stratified annotations:
       "population": "Males",
       "alleleFrequency": "AF_male",
       "alleleCount": "AC_male",
-      "alleleCountHomozygous": "AC_hom_male",
-      "alleleCountHeterozygous": "AC_het_male",
+      "genotypetHomozygous": "AC_hom_male",
+      "genotypeHeterozygous": "AC_het_male",
+      "genotypeHemizygous": "AC_hemi_male",
       "alleleNumber": "AN_male"
     },
     {
       "population": "Females",
       "alleleFrequency": "AF_female",
       "alleleCount": "AC_female",
-      "alleleCountHomozygous": "AC_hom_female",
-      "alleleCountHeterozygous": "AC_het_female",
+      "genotypeHomozygous": "AC_hom_female",
+      "genotypeHeterozygous": "AC_het_female",
+      "genotypeHemizygous": "AC_hemi_female",
       "alleleNumber": "AN_female"
     }
   ]
@@ -240,11 +243,15 @@ To convert data from .vcf.gz to .json you will need to copy all the .vcf.gz file
 ```bash
 docker exec -it ri-tools python genomicVariations_vcf.py
 ```
+:warning: Before running this script and exporting the documents to .json later on, bear in mind that mongoDB for RI Tools has persistence, meaning that once you generate new records, this will be added to the already existing documents and when trying to export, everything will be exported. If you wish to export records to json just for the VCF you just parsed, remember to clean first the collections that you want to export from.
+
 After that, if needed, export your documents from mongoDB to a .json file using the next command:
 
 ```bash
 docker exec ri-tools-mongo mongoexport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection genomicVariations > genomicVariations.json
 ```
+
+
 This will generate the final .json file which is in Beacon Friendly Format (BFF). Bear in mind that this time, the file will be saved in the directory you are located, so if you want to save it in the output_docs folder, add it in the path of the mongoexport.
 
 #### Data Persistence in MongoDB
