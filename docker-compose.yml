@@ -25,7 +25,6 @@ services:
   db:
     container_name: ri-tools-mongo
     image: mongo:5
-    command: --wiredTigerCacheSizeGB 4
     hostname: mongo
     ports:
       - 27018:27017
@@ -35,9 +34,9 @@ services:
       MONGO_INITDB_DATABASE: beacon
     volumes:
       - ./mongo-init/:/docker-entrypoint-initdb.d/:ro
-      - ./output_docs/data/:/data
       - ./output_docs/data/db:/data/db
       - ./output_docs/data/configdb:/data/configdb
+    command: ["--config", "/etc/mongod.conf"]
     networks:
       - my-app-network
 
