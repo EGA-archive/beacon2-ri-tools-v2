@@ -23,9 +23,11 @@ services:
       - my-app-network
 
   db:
+    image: mongo:7
+    #command: --wiredTigerCacheSizeGB 4
+    #command: --wiredTigerCacheSizeGB 4 --sslMode requireSSL --tlsCertificateKeyFile test-server1.pem --tlsCAFile test-ca.pem
+    #hostname: mongo
     container_name: ri-tools-mongo
-    image: mongo:5
-    hostname: mongo
     ports:
       - 27030:27017
     environment:
@@ -33,13 +35,13 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
       MONGO_INITDB_DATABASE: beacon
     volumes:
-      - ./mongo-init/:/docker-entrypoint-initdb.d/:ro
-      - ./output_docs/data/db:/data/db
+      - ./output_docs/mongo-init/:/docker-entrypoint-initdb.d/:ro
+      - ./output_docs/data/:/data
+      - ./output_docs/mongod.conf:/etc/mongod.conf:ro
       - ./output_docs/data/configdb:/data/configdb
-      - ./mongo-init/mongod.conf:/etc/mongod.conf:ro
-    command: ["--config", "/etc/mongod.conf"]
     networks:
       - my-app-network
+    command: ["--config", "/etc/mongod.conf"]
 
   mongo-express:
     image: mongo-express
