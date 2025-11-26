@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EUCAIM Minimum Imaging Metadata",
+  "type": "object",
+  "properties": {
+      "imageId": {
+      "type": "string",
+      "description": "Unique identifier for the image. This field was not in the original EUCAIM Federated Query metadata.",
+      "example": "X123456-IMG01"
+    },
+    "patientId": {
+      "type": "string",
+      "description": "Unique identifier for the patient (DICOM tag 0010,0020)",
+      "example": "X123456"
+    },
+    "diseaseId": {
+      "type": "string",
+      "description": "Unique identifier for the diagnostic/disease. This field was not in the original EUCAIM Federated Query metadata.",
+      "example": "X123456-D01"
+    },
+    "imageModality": {
+      "description": "Modality of the imaging study (DICOM tag 0008,0060), controlled vocabulary",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [
+        {
+          "id": "EUCAIM:IMG1000026",
+          "label": "Computed tomography"
+        },
+        {
+          "id": "EUCAIM:IMG1000030",
+          "label": "Mammography"
+        }
+      ]
+    },
+    "imageBodyPart": {
+      "description": "Anatomical area imaged (DICOM tag 0018,0015), controlled vocabulary",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [
+        {
+          "id": "EUCAIM:BP1000067",
+          "label": "Chest"
+        },
+        {
+          "id": "EUCAIM:BP1000220",
+          "label": "Arm"
+        }
+      ]
+    },
+    "imageManufacturer": {
+      "description": "Device manufacturer (DICOM tag 0008,0070), controlled vocabulary",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [
+        {
+          "id": "EUCAIM:IMG1000047",
+          "label": "General Electric"
+        },
+        {
+          "id": "EUCAIM:IMG1000044",
+          "label": "Siemens"
+        }
+      ]
+    },
+    "dateOfImageAcquisition": {
+      "type": "string",
+      "format": "date",
+      "description": "Acquisition date of the image (DICOM tag 0008,0022), format YYYY-MM-DD",
+      "example": "2000-01-01",
+      "$comment": "Mandatory if available."
+    }
+  },
+  "required": [
+    "imageId",
+    "patientId",
+    "imageModality",
+    "imageBodyPart",
+    "imageManufacturer",
+    "dateOfImageAcquisition"
+  ]
+}
+
+
+
