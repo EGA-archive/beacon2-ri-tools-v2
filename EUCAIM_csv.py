@@ -44,8 +44,6 @@ def generate(dict_properties, list_of_headers, args):
                 property_value = kline
                 property_value=property_value.replace('\ufeff', '')
                 if property_value not in list_of_headers:
-                    print(list_of_headers)
-                    print(property_value)
                     raise Exception(('the header {} is not allowed. Please, take a look at files/headers/analyses.txt to check the headers allowed.').format(property_value))
 
                 
@@ -72,6 +70,9 @@ def generate(dict_properties, list_of_headers, args):
                     for item in value:
                         if isinstance(item, dict):
                             item_dict={}
+                            dicty2={}
+                            propv_splitted_id2=[]
+                            propv_splitted_label2=[]
                             for ki, vi in item.items():
                                 if isinstance(vi, list):
                                     vi_list=[]
@@ -156,11 +157,32 @@ def generate(dict_properties, list_of_headers, args):
                                                     vi_dict[ki1]=propv 
                                                     item_dict[ki]=vi_dict
                                 else:
+
+                                    arrayofkdvs2=[]
                                     new_item = ""
                                     new_item = key + "|" + ki
                                     for propk, propv in dict_of_properties.items():
                                         if propk == new_item:
-                                            item_dict[ki]=propv
+                                            if '|' in propv:
+                                                if propv_splitted_id2 != []:
+                                                    propv_splitted_label2 = propv.split('|')
+                                                else:
+                                                    
+                                                    propv_splitted_id2 = propv.split('|')
+                                                if propv_splitted_label2 != [] and propv_splitted_id2 != []:
+                                                    n=0
+                                                    while n < len(propv_splitted_id2):
+                                                        dicty2={}
+                                                        dicty2['id']=propv_splitted_id2[n]
+                                                        dicty2['label']=propv_splitted_label2[n]
+                                                        try:
+                                                            definitivedict[key].append(dicty2)
+                                                        except Exception:
+                                                            definitivedict[key]=[]
+                                                            definitivedict[key].append(dicty2)
+                                                        n+=1
+                                            else:
+                                                item_dict[ki]=propv
                                 if item_dict != {} and item_dict != [{}]:
                                     if item_dict not in value_list:
                                         value_list.append(item_dict)
@@ -368,7 +390,6 @@ def generate(dict_properties, list_of_headers, args):
                 Imaging(**definitivedict)
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["imageId"])
             definitivedict["datasetId"]=args.datasetId
-            
             total_dict.append(definitivedict)
 
             
