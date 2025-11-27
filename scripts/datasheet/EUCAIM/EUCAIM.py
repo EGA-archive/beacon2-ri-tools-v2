@@ -2,7 +2,9 @@ import json
 import openpyxl
 import csv
 
-file_to_open='ref_schemas/EUCAIM-Schema-main/DiseaseMetadata.json'
+schema_name = 'TumorMetadata'
+
+file_to_open='ref_schemas/EUCAIM-Schema-main/'+schema_name+'.json'
 # Opening JSON file 
 f = open(file_to_open,) 
    
@@ -936,16 +938,16 @@ def generate(dict_properties):
 
 
 
-    with open('csv/templates/diagnostic.csv', 'w', newline='') as csvfile:
+    with open('csv/templates/EUCAIM/'+schema_name+'.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(list_of_excel_items)
         csvfile.close()
 
-    with open("files/headers/diagnostic.txt", "w") as txt_file:
+    with open("files/headers/EUCAIM/"+schema_name+".txt", "w") as txt_file:
         for line in list_of_excel_items:
             txt_file.write("".join(line) + "\n")
 
-    with open('files/deref_schemas/diagnostic.json', 'w') as f:
+    with open('files/deref_schemas/EUCAIM/'+schema_name+'.json', 'w') as f:
         json.dump(dict_properties, f)
 
 

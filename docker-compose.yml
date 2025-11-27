@@ -13,8 +13,8 @@ services:
     volumes:
       - ./output_docs:/usr/src/app/output_docs
       - ./conf:/usr/src/app/conf
-      - ./files/headers:/files/headers
-      - ./files/deref_schemas:/files/deref_schemas
+      - ./files/headers:/usr/src/app/files/headers
+      - ./files/deref_schemas:/usr/src/app/files/deref_schemas
       - ./scripts/datasheet/conf:/usr/src/app/scripts/datasheet/conf
       - ./files/vcf/files_to_read:/usr/src/app/files/vcf/files_to_read
       - ./csv:/usr/src/app/csv

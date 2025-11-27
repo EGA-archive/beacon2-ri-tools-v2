@@ -1,0 +1,34 @@
+{
+    "tumorId": "",
+    "patientId": "",
+    "diseaseId": "",
+    "imageId": "",
+    "tumorMarkerTestResult": {
+        "id": "",
+        "label": ""
+    },
+    "cancerStageCMCategory": {
+        "id": "",
+        "label": ""
+    },
+    "cancerStagePMCategory": {
+        "id": "",
+        "label": ""
+    },
+    "histologicGraceGleasonScore": {
+        "id": "",
+        "label": ""
+    },
+    "histologicGradeISUP": {
+        "id": "",
+        "label": ""
+    },
+    "tumorBIRADSAssesment": {
+        "id": "",
+        "label": ""
+    },
+    "tumorPIRADSAssesment": {
+        "id": "",
+        "label": ""
+    }
+}

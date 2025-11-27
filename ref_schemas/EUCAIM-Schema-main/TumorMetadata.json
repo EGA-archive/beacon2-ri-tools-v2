@@ -127,7 +127,7 @@
           }
         ]
     },
-    "tumorBI-RADSAssesment":{
+    "tumorBIRADSAssesment":{
         "type": "object",
         "description": "Breast Imaging-Reporting and Data System (BI-RADS) assessment categories for breast tumors",
         "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
@@ -150,7 +150,7 @@
           }
         ]
     },
-    "tumorPI-RADSAssesment":{
+    "tumorPIRADSAssesment":{
         "type": "object",
         "description": "Prostate Imaging-Reporting and Data System (PI-RADS) assessment categories for prostate tumors",
         "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",

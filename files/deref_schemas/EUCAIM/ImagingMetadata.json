@@ -1,0 +1,18 @@
+{
+    "imageId": "",
+    "patientId": "",
+    "diseaseId": "",
+    "imageModality": {
+        "id": "",
+        "label": ""
+    },
+    "imageBodyPart": {
+        "id": "",
+        "label": ""
+    },
+    "imageManufacturer": {
+        "id": "",
+        "label": ""
+    },
+    "dateOfImageAcquisition": ""
+}
