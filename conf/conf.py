@@ -1,11 +1,11 @@
 #### Input and Output files config parameters ####
 csv_folder = './csv/examples/CINECA_synthetic_cohort_EUROPE_UK1/'
 output_docs_folder='./output_docs/CINECA_synthetic_cohort_EUROPE_UK1/'
+datasetId='test'
 
 #### VCF Conversion config parameters ####
 allele_counts=False # Variable still in test, leave it as False for now.
 reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
-datasetId='test'
 case_level_data=False
 num_rows=15000000
 verbosity=False # This variable, if True, will make the program run slower but give logs about all the skipped variants and the reason why.
@@ -13,6 +13,9 @@ verbosity=False # This variable, if True, will make the program run slower but g
 ### Update record ###
 record_type='genomicVariation' # One between analysis, biosample, cohort, dataset, genomicVariation, individual or run
 collection_name='genomicVariations'
+
+### EUCAIM specifics ###
+schema_to_convert='DiseaseMetadata'
 
 ### MongoDB parameters ###
 database_host = 'mongo'

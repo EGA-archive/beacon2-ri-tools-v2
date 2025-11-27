@@ -10,9 +10,9 @@ import hashlib
 import argparse
 import os
 
-with open("files/headers/diagnostic.txt", "r") as txt_file:
+with open("files/headers/EUCAIM/"+conf.schema_to_convert+".txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
-with open('files/deref_schemas/diagnostic.json') as json_file:
+with open('files/deref_schemas/EUCAIM/'+conf.schema_to_convert+'.json') as json_file:
     dict_properties = json.load(json_file)
 
 def get_hash(string:str):
@@ -24,7 +24,7 @@ def generate(dict_properties, list_of_headers, args):
     if args.input.endswith('.csv'):
         filename = args.input
     else:
-        filename = os.path.join(args.input, 'diagnostic.csv')
+        filename = os.path.join(args.input, conf.schema_to_convert+'.csv')
     with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
@@ -378,7 +378,7 @@ args = parser.parse_args()
 
 dict_generado, total_i=generate(dict_properties, list_of_headers, args)
 
-output = os.path.join(args.output, 'diagnostic.json')
+output = os.path.join(args.output, conf.schema_to_convert+'.json')
 
 if total_i-1 > 0:
 
