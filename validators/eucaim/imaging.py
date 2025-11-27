@@ -30,11 +30,11 @@ class Imaging(BaseModel, extra='forbid'):
 
         super().__init__(**data)
     _id: Optional[str] = PrivateAttr()
-    imagingId: str
+    imageId: str
     patientId: str
     diseaseId: Optional[str]=None
     imageModality: OntologyTerm
-    imageBodypart: OntologyTerm
+    imageBodyPart: OntologyTerm
     imageManufacturer: OntologyTerm
     dateOfImageAcquisition: str
     @field_validator('dateOfImageAcquisition')
