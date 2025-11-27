@@ -32,7 +32,7 @@ class Tumor(BaseModel, extra="forbid"):
     diseaseId: str
 
     # optional
-    imageId: Optional[str] = PrivateAttr()
+    imageId: Optional[str] = None
     tumorMarkerTestResult: Optional[OntologyTerm] = None
     cancerStageCMCategory: Optional[OntologyTerm] = None
     cancerStagePMCategory: Optional[OntologyTerm] = None

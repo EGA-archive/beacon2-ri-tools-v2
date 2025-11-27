@@ -1,6 +1,6 @@
 #### Input and Output files config parameters ####
-csv_folder = './csv/examples/CINECA_synthetic_cohort_EUROPE_UK1/'
-output_docs_folder='./output_docs/CINECA_synthetic_cohort_EUROPE_UK1/'
+csv_folder = './csv/examples/'
+output_docs_folder='./output_docs/'
 datasetId='test'
 
 #### VCF Conversion config parameters ####
