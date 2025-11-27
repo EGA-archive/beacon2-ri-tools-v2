@@ -357,14 +357,18 @@ def generate(dict_properties, list_of_headers, args):
                             definitivedict[key]=propv
             if conf.schema_to_convert == 'DiseaseMetadata':
                 Disease(**definitivedict)
+                definitivedict["_id"]=get_hash(args.datasetId+definitivedict["diseaseId"])
             elif conf.schema_to_convert == 'TumorMetadata':
                 Tumor(**definitivedict)
+                definitivedict["_id"]=get_hash(args.datasetId+definitivedict["tumorId"])
             elif conf.schema_to_convert == 'PatientMetadata':
                 Patient(**definitivedict)
+                definitivedict["_id"]=get_hash(args.datasetId+definitivedict["patientId"])
             elif conf.schema_to_convert == 'ImagingMetadata':
                 Imaging(**definitivedict)
+                definitivedict["_id"]=get_hash(args.datasetId+definitivedict["imageId"])
             definitivedict["datasetId"]=args.datasetId
-            definitivedict["_id"]=get_hash(args.datasetId+definitivedict["id"])
+            
             total_dict.append(definitivedict)
 
             
