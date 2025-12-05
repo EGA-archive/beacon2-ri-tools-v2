@@ -5,7 +5,7 @@ disease|diseaseId
 disease|ageAtDiagnosis
 disease|dateOfFirstTreatment
 disease|diagnosis|id
-disease|diagnosis|id
+disease|diagnosis|label
 disease|imagingProcedureProtocol|id
 disease|imagingProcedureProtocol|label
 disease|pathologyConfirmation|id
