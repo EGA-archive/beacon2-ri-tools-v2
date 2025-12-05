@@ -47,7 +47,6 @@ def generate(dict_properties, list_of_headers, args):
 
                 
                 valor = vline
-
                 if i > 0:
                     
                     if valor != '':
@@ -61,14 +60,14 @@ def generate(dict_properties, list_of_headers, args):
                     elif valor == 0:
                         dict_of_properties[property_value]=valor
 
-                    
             definitivedict={}
             for key, value in dict_properties.items():
                 if isinstance(value, list):
                     value_list=[]
+                    item_dict={}
                     for item in value:
                         if isinstance(item, dict):
-                            item_dict={}
+                            
                             dicty2={}
                             propv_splitted_id2=[]
                             propv_splitted_label2=[]
@@ -147,14 +146,17 @@ def generate(dict_properties, list_of_headers, args):
                                                                 vivilist.append(vivi)
                                                         for vivitem in vivilist:
                                                             if vivitem != {}:
-                                                                item_dict[ki]=vi_dict    
+                                                                item_dict[ki][ki1]=vi_dict[ki1]   
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + ki1
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
-                                                    vi_dict[ki1]=propv 
-                                                    item_dict[ki]=vi_dict
+                                                    try: 
+                                                        item_dict[ki][ki1]=propv
+                                                    except Exception:
+                                                        item_dict[ki]={}
+                                                        item_dict[ki][ki1]=propv
                                 else:
 
                                     arrayofkdvs2=[]
@@ -261,7 +263,19 @@ def generate(dict_properties, list_of_headers, args):
                                             definitivedict[key].append(itemldf)
                                 else:
                                     for itemvl in value_list:
-                                        definitivedict[key].append(itemvl)       
+                                        definitivedict[key].append(itemvl)   
+                        else:
+                            new_item = ""
+                            new_item = key
+                            for propk, propv in dict_of_properties.items():
+                                if propk == new_item:
+                                    definitivedict[key]=[]
+                                    if "|" in propv:
+                                        item_splitted=propv.split("|")
+                                        for itemsplit in item_splitted:
+                                            definitivedict[key].append(itemsplit)
+                                    else:
+                                        definitivedict[key].append(propv)
                 elif isinstance(value, dict):
                     value_dict={}
                     for kd, vd in value.items():
@@ -360,7 +374,10 @@ def generate(dict_properties, list_of_headers, args):
                             new_item = key + "|" + kd
                             for propk, propv in dict_of_properties.items():
                                 if propk == new_item:
-                                    value_dict[kd]=propv
+                                    try:
+                                        value_dict[kd]=float(propv)
+                                    except Exception:
+                                        value_dict[kd]=propv
                                     definitivedict[key]=value_dict
                     if value == {}:
                         new_item = ""
@@ -375,7 +392,10 @@ def generate(dict_properties, list_of_headers, args):
                     new_item = key
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
-                            definitivedict[key]=propv
+                            try:
+                                definitivedict[key]=int(propv)
+                            except Exception:
+                                definitivedict[key]=propv
             if conf.schema_to_convert == 'CollectionsMetadata':
                 Collections(**definitivedict)
                 definitivedict["datasetId"]=definitivedict["id"]

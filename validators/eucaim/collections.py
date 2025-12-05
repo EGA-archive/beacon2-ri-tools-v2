@@ -26,3 +26,5 @@ class Collections(BaseModel, extra='forbid'):
     modalities: List[str]
     bodyParts: List[str]
     gender: List[str]
+    subjectsCount: int
+    studiesCount: int

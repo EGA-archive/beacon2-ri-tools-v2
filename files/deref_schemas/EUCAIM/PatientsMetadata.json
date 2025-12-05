@@ -67,6 +67,7 @@
        {
     "imageStudyId": "",
     "disease": {
+        "ageAtDiagnosis": 0,
         "dateOfFirstTreatment": "",
         "diagnosis": {
             "id": "",

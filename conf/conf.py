@@ -15,7 +15,7 @@ record_type='genomicVariation' # One between analysis, biosample, cohort, datas
 collection_name='genomicVariations'
 
 ### EUCAIM specifics ###
-schema_to_convert='DiseaseMetadata'
+schema_to_convert='PatientsMetadata'
 
 ### MongoDB parameters ###
 database_host = 'mongo'
