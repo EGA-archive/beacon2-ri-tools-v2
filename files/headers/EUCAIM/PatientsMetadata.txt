@@ -26,7 +26,13 @@ disease|tumorMetadata|histologicGradeISUP|label
 disease|tumorMetadata|tumorBIRADSAssesment|id
 disease|tumorMetadata|tumorBIRADSAssesment|label
 disease|tumorMetadata|tumorId
-disease|tumorMetadata|tumorMarkerTestResult|id
-disease|tumorMetadata|tumorMarkerTestResult|label
+disease|tumorMetadata|ER|id
+disease|tumorMetadata|ER|label
+disease|tumorMetadata|PR|id
+disease|tumorMetadata|PR|label
+disease|tumorMetadata|PSA
+disease|tumorMetadata|HER2|id
+disease|tumorMetadata|HER2|label
+disease|tumorMetadata|KI67
 disease|tumorMetadata|tumorPIRADSAssesment|id
 disease|tumorMetadata|tumorPIRADSAssesment|label

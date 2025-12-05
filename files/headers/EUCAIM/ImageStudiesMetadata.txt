@@ -30,7 +30,13 @@ tumorMetadata|histologicGradeISUP|label
 tumorMetadata|tumorBIRADSAssesment|id
 tumorMetadata|tumorBIRADSAssesment|label
 tumorMetadata|tumorId
-tumorMetadata|tumorMarkerTestResult|id
-tumorMetadata|tumorMarkerTestResult|label
+tumorMetadata|ER|id
+tumorMetadata|ER|label
+tumorMetadata|PR|id
+tumorMetadata|PR|label
+tumorMetadata|PSA
+tumorMetadata|HER2|id
+tumorMetadata|HER2|label
+tumorMetadata|KI67
 tumorMetadata|tumorPIRADSAssesment|id
 tumorMetadata|tumorPIRADSAssesment|label

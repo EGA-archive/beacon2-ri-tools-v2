@@ -7,8 +7,8 @@
       "type": "string",
       "description": "A unique identifier for the Tumor. This field was not in the original EUCAIM Federated Query metadata.",
       "example": "X123456-T01"
-    },"tumorMarkerTestResult": {
-      "description": "Result of the Tumor Marker Test, positive or negative.",
+    },"ER": {
+      "description": "Estrogen receptor Ag [Presence] in Breast cancer specimen by Immune stain",
       "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
       "examples": [
         {
@@ -20,6 +20,53 @@
           "label": "Negative"
         }
       ]
+    },
+    "PR": {
+      "description": "Progesterone receptor Ag [Presence] in Breast cancer specimen by Immune stain",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [
+        {
+          "id": "EUCAIM:COM1001310",
+          "label": "Positive"
+        },
+        {
+          "id": "EUCAIM:COM1001332",
+          "label": "Negative"
+        }
+      ]
+    },
+    "PSA": {
+      "description": "Prostate specific Ag [Mass/Volume] in Serum or Plasma",
+      "type": "number",
+      "example": 4.5
+    },
+    "HER2":{
+        "type": "object",
+        "description": "HER2 [Presence] in Breast cancer specimen by Immune stain",
+        "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+        "examples": [
+          {
+            "id": "EUCAIM:COM1002257",
+            "label": "0"
+          },
+          {
+            "id": "EUCAIM:COM1001877",
+            "label": "1+"
+          },
+          {
+            "id": "EUCAIM:COM1001879",
+            "label": "2+"
+          },
+          {
+            "id": "EUCAIM:COM1001882",
+            "label": "3+"
+          }
+        ]
+    },
+    "KI67":{
+        "description": "Cells.Ki-67 nuclear Ag/100 cells in Breast cancer specimen by Immune stain",
+        "type": "number",
+        "example": 2.4
     },
     "cancerStageCMCategory": {
       "description": "The cancer stage according to the cM category system.",
