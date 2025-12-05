@@ -41,7 +41,7 @@ imageStudy|disease|diseaseId
 imageStudy|disease|ageAtDiagnosis
 imageStudy|disease|dateOfFirstTreatment
 imageStudy|disease|diagnosis|id
-imageStudy|disease|diagnosis|id
+imageStudy|disease|diagnosis|label
 imageStudy|disease|imagingProcedureProtocol|id
 imageStudy|disease|imagingProcedureProtocol|label
 imageStudy|disease|pathologyConfirmation|id
