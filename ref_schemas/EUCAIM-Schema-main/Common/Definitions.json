@@ -1,0 +1,56 @@
+{
+    "Age":{
+      "type": "number",
+      "description": "Age of the patient at the time of data collection.",
+      "example": 46.5},
+    "BodyPart":{
+      "description": "Anatomical area imaged (DICOM tag 0018,0015), controlled vocabulary",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [
+        {
+          "id": "EUCAIM:BP1000067",
+          "label": "Chest"
+        },
+        {
+          "id": "EUCAIM:BP1000220",
+          "label": "Arm"
+        }
+      ]
+    },
+    "ImageModality":{
+      "description": "Modality of the imaging study (DICOM tag 0008,0060), controlled vocabulary",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [
+        {
+          "id": "EUCAIM:IMG1000026",
+          "label": "Computed tomography"
+        },
+        {
+          "id": "EUCAIM:IMG1000030",
+          "label": "Mammography"
+        }
+      ]
+    },
+    "Sex":{
+      "description": "Biological sex at birth.",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [
+        {
+          "id": "EUCAIM:COM1001370",
+          "label": "Female"
+        },
+        {
+          "id": "EUCAIM:COM1001366",
+          "label": "Male"
+        },
+        {
+          "id": "EUCAIM:COM1001288",
+          "label": "Unspecified"
+        },
+        {
+          "id": "EUCAIM:COM1002760",
+          "label": "Unknown"
+        }
+      ]
+    }
+}

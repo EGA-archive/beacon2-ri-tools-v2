@@ -1,0 +1,80 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "CollectionMetadata",
+	"type": "object",
+	"properties": {
+		"name": {
+			"description": "Name of the dataset",
+			"examples": [
+				"Dataset with synthetic data"
+			],
+			"type": "string"
+		},
+		"id": {
+			"description": "Unique identifier of the dataset",
+			"examples": [
+				"ds01010101"
+			],
+			"type": "string"
+		},
+		"description": {
+			"description": "Description of the dataset",
+			"examples": [
+				"This dataset provides examples of the actual data in this Beacon instance."
+			],
+			"type": "string"
+		},
+		"subjectsCount": {
+			"type": "integer",
+			"minimum": 0
+		},
+		"studiesCount": {
+			"type": "integer",
+			"minimum": 0
+		},
+		"ageRange": {
+			"type": "object",
+			"properties": {
+				"min": {
+					"$ref": "./Common/Definitions.json#/$defs/Age"
+				},
+				"max": {
+					"$ref": "./Common/Definitions.json#/$defs/Age"
+				}
+			},
+			"required": [
+				"min",
+				"max"
+			]
+		},
+		"modalities": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"bodyParts": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"gender": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		}
+	},
+	"required": [
+		"name",
+		"id",
+		"description",
+		"subjectsCount",
+		"studiesCount",
+		"ageRange",
+		"modalities",
+		"bodyParts",
+		"gender"
+	]
+}

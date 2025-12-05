@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Tumor optional attributes",
+  "type": "object",
+  "properties": {
+    "tumorId": {
+      "type": "string",
+      "description": "A unique identifier for the Tumor. This field was not in the original EUCAIM Federated Query metadata.",
+      "example": "X123456-T01"
+    },"tumorMarkerTestResult": {
+      "description": "Result of the Tumor Marker Test, positive or negative.",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [
+        {
+          "id": "EUCAIM:COM1001310",
+          "label": "Positive"
+        },
+        {
+          "id": "EUCAIM:COM1001332",
+          "label": "Negative"
+        }
+      ]
+    },
+    "cancerStageCMCategory": {
+      "description": "The cancer stage according to the cM category system.",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [
+        {
+          "id": "EUCAIM:COM1001860",
+          "label": "cM0"
+        },
+        {
+          "id": "EUCAIM:COM1000246",
+          "label": "cM1"
+        },
+        {
+          "id": "EUCAIM:COM1000258",
+          "label": "cM1a"
+        },
+        {
+          "id": "EUCAIM:COM1000271",
+          "label": "cM1b"
+        },
+        {
+          "id": "EUCAIM:COM1001876",
+          "label": "cM1c"
+        }
+      ]
+    },
+    "cancerStagePMCategory": {
+      "description": "The cancer stage according to the pM category system.",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [
+        {
+          "id": "EUCAIM:COM1001845",
+          "label": "pM0"
+        },
+        {
+          "id": "EUCAIM:COM1000531",
+          "label": "pM1"
+        },
+        {
+          "id": "EUCAIM:COM1000558",
+          "label": "pM1a"
+        },
+        {
+          "id": "EUCAIM:COM1000586",
+          "label": "pM1b"
+        },
+        {
+          "id": "EUCAIM:COM1000615",
+          "label": "pM1c"
+        }
+      ]
+    },
+    "histologicGraceGleasonScore":{
+        "type": "object",
+        "description": "The Gleason scoring system for malignant neoplasm of prostate",
+        "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+        "examples": [
+          {
+            "id": "EUCAIM:CLIN1025818",
+            "label": "Gleason grade score 2 out of 10"
+          },
+          {
+            "id": "EUCAIM:CLIN1025912",
+            "label": "Gleason score 3 out of 10"
+          },
+          {
+            "id": "EUCAIM:CLIN1026007",
+            "label": "Gleason score 4 out of 10"
+          }
+        ]
+    },
+    "histologicGradeISUP":{
+        "type": "object",
+        "description": "The International Society of Urological Pathology (ISUP) grading system for malignant neoplasm of prostate",
+        "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+        "examples": [
+          {
+            "id": "EUCAIM:COM1001362",
+            "label": "International Society of Pathology histologic group 1"
+          },
+          {
+            "id": "EUCAIM:COM1001365",
+            "label": "International Society of Pathology histologic group 2"
+          },
+          {
+            "id": "EUCAIM:COM1001367",
+            "label": "International Society of Pathology histologic group 3"
+          }
+        ]
+    },
+    "tumorBIRADSAssesment":{
+        "type": "object",
+        "description": "Breast Imaging-Reporting and Data System (BI-RADS) assessment categories for breast tumors",
+        "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+        "examples": [
+          {
+            "id": "EUCAIM:IMG1005470",
+            "label": "BI-RADS 0"
+          },
+          {
+            "id": "EUCAIM:IMG1005469",
+            "label": "BI-RADS 1"
+          },
+          {
+            "id": "EUCAIM:IMG1005468",
+            "label": "BI-RADS 2"
+          },
+          {
+            "id": "EUCAIM:IMG1005466",
+            "label": "BI-RADS 3"
+          }
+        ]
+    },
+    "tumorPIRADSAssesment":{
+        "type": "object",
+        "description": "Prostate Imaging-Reporting and Data System (PI-RADS) assessment categories for prostate tumors",
+        "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+        "examples": [
+          {
+            "id": "EUCAIM:IMG1005487",
+            "label": "PI-RADS 1"
+          },
+          {
+            "id": "EUCAIM:IMG1005486",
+            "label": "PI-RADS 2"
+          },
+          {
+            "id": "EUCAIM:IMG1005485",
+            "label": "PI-RADS 3"
+          },
+          {
+            "id": "EUCAIM:IMG1005484",
+            "label": "PI-RADS 4"
+          }
+        ]
+    }
+  },
+  "required": [
+    "tumorId"
+  ]
+}

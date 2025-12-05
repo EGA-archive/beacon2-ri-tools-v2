@@ -9,10 +9,9 @@ from validators.analyses import Analyses
 import hashlib
 import argparse
 import os
-from validators.eucaim.disease import Disease
-from validators.eucaim.tumor import Tumor
-from validators.eucaim.imaging import Imaging
-from validators.eucaim.patient import Patient
+from validators.eucaim.collections import Collections
+from validators.eucaim.imageStudies import ImageStudies
+from validators.eucaim.patients import Patients
 
 with open("files/headers/EUCAIM/"+conf.schema_to_convert+".txt", "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
@@ -377,18 +376,16 @@ def generate(dict_properties, list_of_headers, args):
                     for propk, propv in dict_of_properties.items():
                         if propk == new_item:
                             definitivedict[key]=propv
-            if conf.schema_to_convert == 'DiseaseMetadata':
-                Disease(**definitivedict)
-                definitivedict["_id"]=get_hash(args.datasetId+definitivedict["diseaseId"])
-            elif conf.schema_to_convert == 'TumorMetadata':
-                Tumor(**definitivedict)
-                definitivedict["_id"]=get_hash(args.datasetId+definitivedict["tumorId"])
-            elif conf.schema_to_convert == 'PatientMetadata':
-                Patient(**definitivedict)
+            if conf.schema_to_convert == 'CollectionsMetadata':
+                Collections(**definitivedict)
+                definitivedict["datasetId"]=definitivedict["id"]
+                definitivedict["_id"]=get_hash(args.datasetId+definitivedict["id"])
+            elif conf.schema_to_convert == 'ImageStudiesMetadata':
+                ImageStudies(**definitivedict)
+                definitivedict["_id"]=get_hash(args.datasetId+definitivedict["imageStudyId"])
+            elif conf.schema_to_convert == 'PatientsMetadata':
+                Patients(**definitivedict)
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["patientId"])
-            elif conf.schema_to_convert == 'ImagingMetadata':
-                Imaging(**definitivedict)
-                definitivedict["_id"]=get_hash(args.datasetId+definitivedict["imageId"])
             definitivedict["datasetId"]=args.datasetId
             total_dict.append(definitivedict)
 

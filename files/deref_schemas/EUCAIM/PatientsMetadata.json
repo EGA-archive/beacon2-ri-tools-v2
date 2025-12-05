@@ -1,0 +1,156 @@
+{
+    "patientId": "",
+    "disease": [
+        {
+    "diseaseId": "",
+    "ageAtDiagnosis": 0,
+    "diagnosis": {
+        "id": "",
+        "label": ""
+    },
+    "yearOfDiagnosis": 0,
+    "dateOfFirstTreatment": "",
+    "pathologyConfirmation": {
+        "id": "",
+        "label": ""
+    },
+    "pathology": [
+        {
+            "id": "",
+            "label": ""
+        }
+    ],
+    "imagingProcedureProtocol": {
+        "id": "",
+        "label": ""
+    },
+    "treatment": [
+        {
+            "id": "",
+            "label": ""
+        }
+    ],
+    "tumorMetadata": {
+    "tumorId": "",
+    "tumorMarkerTestResult": {
+        "id": "",
+        "label": ""
+    },
+    "cancerStageCMCategory": {
+        "id": "",
+        "label": ""
+    },
+    "cancerStagePMCategory": {
+        "id": "",
+        "label": ""
+    },
+    "histologicGraceGleasonScore": {
+        "id": "",
+        "label": ""
+    },
+    "histologicGradeISUP": {
+        "id": "",
+        "label": ""
+    },
+    "tumorBIRADSAssesment": {
+        "id": "",
+        "label": ""
+    },
+    "tumorPIRADSAssesment": {
+        "id": "",
+        "label": ""
+    }
+}
+}
+    ],
+    "imageStudy": [
+       {
+    "imageStudyId": "",
+    "disease": {
+        "dateOfFirstTreatment": "",
+        "diagnosis": {
+            "id": "",
+            "label": ""
+        },
+        "diseaseId": "",
+        "imagingProcedureProtocol": {
+            "id": "",
+            "label": ""
+        },
+        "pathology": [
+            {
+                "id": "",
+                "label": ""
+            },
+            {
+                "id": "",
+                "label": ""
+            }
+        ],
+        "pathologyConfirmation": {
+            "id": "",
+            "label": ""
+        },
+        "treatment": [
+            {
+                "id": "",
+                "label": ""
+            },
+            {
+                "id": "",
+                "label": ""
+            }
+        ],
+        "tumorMetadata":{
+    "tumorId": "",
+    "tumorMarkerTestResult": {
+        "id": "",
+        "label": ""
+    },
+    "cancerStageCMCategory": {
+        "id": "",
+        "label": ""
+    },
+    "cancerStagePMCategory": {
+        "id": "",
+        "label": ""
+    },
+    "histologicGraceGleasonScore": {
+        "id": "",
+        "label": ""
+    },
+    "histologicGradeISUP": {
+        "id": "",
+        "label": ""
+    },
+    "tumorBIRADSAssesment": {
+        "id": "",
+        "label": ""
+    },
+    "tumorPIRADSAssesment": {
+        "id": "",
+        "label": ""
+    }
+},
+        "yearOfDiagnosis": 0
+    },
+    "imageModality": {
+        "id": "",
+        "label": ""
+    },
+    "imageBodyPart": {
+        "id": "",
+        "label": ""
+    },
+    "imageManufacturer": {
+        "id": "",
+        "label": ""
+    },
+    "dateOfImageAcquisition": ""
+}
+    ],
+    "sex": {
+    "id": "",
+    "label": ""
+}
+}

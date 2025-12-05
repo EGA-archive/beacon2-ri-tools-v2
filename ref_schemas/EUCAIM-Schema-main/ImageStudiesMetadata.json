@@ -3,24 +3,18 @@
   "title": "EUCAIM Minimum Imaging Metadata",
   "type": "object",
   "properties": {
-      "imageId": {
+    "imageStudyId": {
       "type": "string",
       "description": "Unique identifier for the image. This field was not in the original EUCAIM Federated Query metadata.",
       "example": "X123456-IMG01"
     },
-    "patientId": {
-      "type": "string",
-      "description": "Unique identifier for the patient (DICOM tag 0010,0020)",
-      "example": "X123456"
-    },
-    "diseaseId": {
-      "type": "string",
-      "description": "Unique identifier for the diagnostic/disease. This field was not in the original EUCAIM Federated Query metadata.",
-      "example": "X123456-D01"
+    "disease": {
+      "description": "Disease information associated with the image.",
+      "$ref": "./Common/Matrixes/DiseasesMetadata.json"
     },
     "imageModality": {
       "description": "Modality of the imaging study (DICOM tag 0008,0060), controlled vocabulary",
-      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "$ref": "./Common/Definitions.json#/$defs/ImageModality",
       "examples": [
         {
           "id": "EUCAIM:IMG1000026",
@@ -34,7 +28,7 @@
     },
     "imageBodyPart": {
       "description": "Anatomical area imaged (DICOM tag 0018,0015), controlled vocabulary",
-      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "$ref": "./Common/Definitions.json#/$defs/BodyPart",
       "examples": [
         {
           "id": "EUCAIM:BP1000067",
@@ -61,22 +55,24 @@
       ]
     },
     "dateOfImageAcquisition": {
-      "type": "string",
-      "format": "date",
-      "description": "Acquisition date of the image (DICOM tag 0008,0022), format YYYY-MM-DD",
-      "example": "2000-01-01",
-      "$comment": "Mandatory if available."
-    }
+    "type": "string",
+    "format": "date-time",
+    "description": "Acquisition date of the image (DICOM tag 0008,0022), in ISO 8601 date-time format (e.g. YYYY-MM-DDThh:mm:ssZ).",
+    "example": "2000-01-01T00:00:00Z",
+    "$comment": "Mandatory if available."
+}
+
   },
   "required": [
-    "imageId",
-    "patientId",
+    "imageStudyId",
+    "disease",
     "imageModality",
     "imageBodyPart",
     "imageManufacturer",
     "dateOfImageAcquisition"
   ]
 }
+
 
 
 

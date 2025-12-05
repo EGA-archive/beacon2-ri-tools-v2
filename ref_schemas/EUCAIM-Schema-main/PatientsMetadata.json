@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Minimum patient attributes",
+  "type": "object",
+  "properties": {
+    "patientId": {
+      "type": "string",
+      "description": "A unique identifier for the patient. Should match the Patient ID DICOM tag (0010,0020) and anonymization processes.",
+      "example": "X123456"
+    },
+    "sex": {
+      "description": "Biological sex at birth.",
+      "$ref": "./Common/Definitions.json#/$defs/Sex",
+      "examples": [
+        {
+          "id": "EUCAIM:COM1001370",
+          "label": "Female"
+        },
+        {
+          "id": "EUCAIM:COM1001366",
+          "label": "Male"
+        },
+        {
+          "id": "EUCAIM:COM1001288",
+          "label": "Unspecified"
+        }
+      ]
+    },
+    "disease": {
+      "description": "Disease information associated with the patient.",
+      "type":"array",
+      "items": {
+        "$ref": "./Common/Matrixes/DiseasesMetadata.json"
+      }
+    },
+    "imageStudy": {
+      "description": "Imaging study information associated with the patient.",
+      "type":"array",
+      "items": {
+      "$ref": "./ImageStudiesMetadata.json"
+      }
+    }
+  },
+  "required": [
+    "patientId",
+    "sex",
+    "disease",
+    "imageStudy"
+  ]
+}

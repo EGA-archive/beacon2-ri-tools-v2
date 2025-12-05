@@ -2,7 +2,7 @@ import json
 import openpyxl
 import csv
 
-schema_name = 'TumorMetadata'
+schema_name = 'CollectionsMetadata'
 
 file_to_open='ref_schemas/EUCAIM-Schema-main/'+schema_name+'.json'
 # Opening JSON file 
@@ -14,9 +14,10 @@ data = json.load(f)
    
 commonDefinitions = open('ref_schemas/EUCAIM-Schema-main/Common/OntologyTerm.json')
 commonDefinitions = json.load(commonDefinitions)
-commonComponents = open('ref_schemas/beaconcommoncomponents.json')
-commonComponents = json.load(commonComponents)
-
+diseaseComponents = open('ref_schemas/EUCAIM-Schema-main/Common/Matrixes/DiseasesMetadata.json')
+diseaseComponents = json.load(diseaseComponents)
+tumorComponents = open('ref_schemas/EUCAIM-Schema-main/Common/Matrixes/TumorsMetadata.json')
+tumorComponents = json.load(tumorComponents)
 
 
 def data_types(data):
@@ -37,15 +38,57 @@ def data_types(data):
                         dict_types[key]['type']={}
                         if 'OntologyTerm' in v:
                             dict_types[key]['type']='OntologyTerm.json'
-                        elif 'beaconCommonComponents' in v:
-                            v_splitted = v.split('/')
-                            for kcd, vcd in commonComponents.items():
-                                if kcd == v_splitted[-1]:
-                                    for kcd1, vcd1 in vcd.items():
-                                        if 'OntologyTerm' in vcd1:
-                                            dict_types[key]['type']='OntologyTerm.json'
-                                        elif kcd1 == 'type':
-                                            dict_types[key]['type']=vcd1
+                        elif 'BodyPart' in v:
+                            dict_types[key]['type']='OntologyTerm.json'
+                        elif 'DiseasesMetadata' in v:
+                            for kx,vx in diseaseComponents.items():
+                                if kx == 'properties':
+                                    print(key)
+                                    print('yesss')
+                                    for kx1, vx1 in vx.items():
+                                        for kx2, vx2 in vx1.items():
+                                            if kx2 == "type":
+                                                try:
+                                                    dict_types[key][kx1]['type']=vx2
+                                                except Exception:
+                                                    dict_types[key][kx1]={}
+                                                    dict_types[key][kx1]['type']=vx2
+                                            elif kx2 == '$ref':
+                                                if 'OntologyTerm' in vx2:
+                                                    try:
+                                                        dict_types[key][kx1]['type']='OntologyTerm.json'
+                                                    except Exception:
+                                                        dict_types[key][kx1]={}
+                                                        dict_types[key][kx1]['type']='OntologyTerm.json'
+                                                elif 'TumorsMetadata' in vx2:
+                                                    print('uooooou')
+                                                    for k2x,v2x in tumorComponents.items():
+                                                        if k2x == 'properties':
+                                                            for kx3, vx3 in v2x.items():
+                                                                for kx4, vx4 in vx3.items():
+                                                                    if kx4 == "type":
+                                                                        try:
+                                                                            dict_types[key][kx1][kx3]['type']=vx4
+                                                                        except Exception:
+                                                                            try:
+                                                                                dict_types[key][kx1][kx3]={}
+                                                                                dict_types[key][kx1][kx3]['type']=vx4
+                                                                            except Exception:
+                                                                                dict_types[key][kx1]={}
+                                                                                dict_types[key][kx1][kx3]={}
+                                                                                dict_types[key][kx1][kx3]['type']=vx4
+                                                                    elif kx4 == '$ref':
+                                                                        if 'OntologyTerm' in v:
+                                                                            try:
+                                                                                dict_types[key][kx1][kx3]['type']='OntologyTerm.json'
+                                                                            except Exception:
+                                                                                try:
+                                                                                    dict_types[key][kx1][kx3]={}
+                                                                                    dict_types[key][kx1][kx3]['type']='OntologyTerm.json'
+                                                                                except Exception:
+                                                                                    dict_types[key][kx1]={}
+                                                                                    dict_types[key][kx1][kx3]={}
+                                                                                    dict_types[key][kx1][kx3]['type']='OntologyTerm.json'
                         elif '.json' in v:
                             splitted_v=v.split('/')
                             dict_types[key]['type']=splitted_v[-1]
@@ -117,7 +160,7 @@ def data_types(data):
                                 else:
                                     vcd_splitted = vcd.split('/')
                                     dict_types[key]['items']=vcd_splitted[-1]
-                                    openfile='ref_schemas/EUCAIM-Schema-main/Common/'+vcd_splitted[-1]
+                                    openfile='ref_schemas/EUCAIM-Schema-main'+vcd.replace('./','/')
                                     vcd_file = open(openfile)
                                     data_vcd = json.load(vcd_file) 
                                 for keyv, itemv in data_vcd.items():
@@ -161,8 +204,11 @@ def data_types(data):
         dictio_return['list']=list_of_definition_keys
     return dictio_return
 
+
 returned = data_types(data)
+print(returned)
 dict_types=returned['dict_types']
+
 
 list_of_definition_keys=returned['list']
 
@@ -669,12 +715,14 @@ for key, value in dict_types.items():
 
 finaldict={}
 
-
+print(dict_types)
 for key, value in dict_types.items():
     if key not in list_of_definition_keys:
         items_dict={}
         list_of_items=[]
         if isinstance(value, dict):
+
+            print(key)
             for k,v in sorted(value.items()):              
                 if k == 'items':
                     if 'disease' in v:
@@ -696,6 +744,7 @@ for key, value in dict_types.items():
                     elif 'treatment' in v:
                         items_dict = treatment()
                 elif k == 'type':
+                    print(key)
                     if v == 'array':
                         list_of_items.append(items_dict)
                         finaldict[key]=list_of_items
@@ -710,8 +759,39 @@ for key, value in dict_types.items():
                     elif 'number' in v:
                         finaldict[key]=0
                     elif 'integer' in v:
+                        print(key)
                         finaldict[key]=0
+                elif isinstance(v, dict):
+                    print(k)
+                    for k2, v2 in v.items():
+                        if k2 == 'type':
+                            if v2 == 'array':
+                                list_of_items.append(items_dict)
+                                finaldict[key][k]=list_of_items
+                            elif 'OntologyTerm' in v2:
+                                items_dict=OntologyTerm()
+                                finaldict[key][k]=items_dict
+                            elif 'object' in v2:
+                                items_dict={}
+                                finaldict[key][k]=items_dict
+                            elif 'string' in v2:
+                                try:
+                                    finaldict[key][k]=''
+                                except Exception:
+                                    finaldict[key]={}
+                                    finaldict[key][k]=''
+                            elif 'number' in v2:
+                                finaldict[key][k]=0
+                            elif 'integer' in v2:
+                                print(key)
+                                try:
+                                    finaldict[key][k]=0
+                                except Exception:
+                                    finaldict[key]={}
+                                    finaldict[key][k]=0
     elif key in list_of_definition_keys:
+        print('whaaat')
+        print(key)
         finaldict[key]={}
         items_dict={}
         if isinstance(value, dict):
@@ -833,7 +913,7 @@ for key, value in dict_types.items():
 
 
 
-
+print(finaldict)
 
 def generate(dict_properties):
     list_of_excel_items=[]

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Disease patient attributes",
+  "type": "object",
+  "properties": {
+    "diseaseId": {
+      "type": "string",
+      "description": "Unique identifier for the diagnostic/disease. This field was not in the original EUCAIM Federated Query metadata.",
+      "example": "X123456-D01"
+    },
+    "ageAtDiagnosis": {
+      "description": "Age of the patient at the time the tumor or lesion was confirmed.",
+      "$ref": "../Definitions.json#/$defs/Age",
+      "example": 45.6
+  },
+    "diagnosis":{
+      "description": "Diagnosis of the disease.",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [{
+                    "id": "EUCAIM:CLIN1000075",
+                    "label": "Malignant neoplasm of prostate"
+                   },
+                   {
+                    "id": "EUCAIM:CLIN1000060",
+                    "label": "Malignant neoplasm of breast"
+                   },
+                   {
+                    "id": "EUCAIM:CLIN1000057",
+                    "label": "Malignant neoplasm of colon"
+                   },
+                   {
+                    "id": "EUCAIM:CLIN1000185",
+                    "label": "Malignant neoplasm of rectum"
+                   }
+    ]
+  },
+    "yearOfDiagnosis": {
+      "type": "integer",
+      "description": "Date when the tumor was histologically confirmed or confirmed by imaging.",
+      "example": "2022"
+    },
+    "dateOfFirstTreatment": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time when the first treatment occurred, in ISO 8601 date-time format.",
+      "example": "2024-03-01T10:30:00Z",
+      "$comment": "Use ISO 8601 / RFC 3339 date-time values."
+    },
+    "pathologyConfirmation": {
+      "description": "Method used to confirm pathology (e.g., histological biopsy or imaging for specific cases).",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "examples": [{
+                    "id": "EUCAIM:CLIN1001712",
+                    "label": "Biopsy"
+                   },
+                   {
+                    "id": "EUCAIM:CLIN1004598",
+                    "label": "Excision"
+                   }]
+    },
+    "pathology": {
+      "description": "Histology and histological subtype of the lesion (ICD-O-3 if available).",
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json"
+               },
+      "example": [{
+                    "id": "EUCAIM:CLIN1047138",
+                    "label": "Adenocarcinoma"
+                  },
+                  {
+                    "id": "EUCAIM:CLIN1063544",
+                    "label": "Papillary carcinoma"
+                  }]
+    },
+    "imagingProcedureProtocol": {
+      "description": "Specific protocol applied to obtain the radiology diagnostic image.",
+      "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json",
+      "example": [{
+                    "id": "EUCAIM:IMG1000076",
+                    "label": "CT of thorax with contrast"
+                  },
+                  {
+                    "id": "EUCAIM:IMG1000078",
+                    "label": "CT of breast"
+                  }]
+    },
+    "treatment": {
+      "description": "Type of treatment received by the patient.",
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/EGA-archive/EUCAIM-Schema/refs/heads/main/Common/OntologyTerm.json"
+               },
+      "example": [
+        {
+                    "id": "EUCAIM:CLIN1024528",
+                    "label": "Chemotherapy"
+                },
+                {
+                    "id": "EUCAIM:COM1001099",
+                    "label": "Surgery"
+        }]
+    },
+    "tumorMetadata": {
+      "description": "Additional metadata related to the tumor or lesion.",
+      "$ref": "./TumorsMetadata.json"
+    }
+},
+  "required": [
+    "diseaseId",
+    "ageAtDiagnosis",
+    "diagnosis"
+  ]
+}
