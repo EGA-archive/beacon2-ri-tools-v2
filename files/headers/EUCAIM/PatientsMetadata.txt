@@ -72,3 +72,10 @@ imageStudy|disease|tumorMetadata|HER2|label
 imageStudy|disease|tumorMetadata|KI67
 imageStudy|disease|tumorMetadata|tumorPIRADSAssesment|id
 imageStudy|disease|tumorMetadata|tumorPIRADSAssesment|label
+imageStudy|imageModality|id
+imageStudy|imageModality|label
+imageStudy|imageBodyPart|id
+imageStudy|imageBodyPart|label
+imageStudy|imageManufacturer|id
+imageStudy|imageManufacturer|label
+imageStudy|dateOfImageAcquisition
