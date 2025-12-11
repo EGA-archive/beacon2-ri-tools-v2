@@ -1,7 +1,7 @@
 #### Input and Output files config parameters ####
 csv_folder = './csv/examples/'
 output_docs_folder='./output_docs/'
-datasetId='test'
+datasetId='DemoDatasetBreast'
 
 #### VCF Conversion config parameters ####
 allele_counts=False # Variable still in test, leave it as False for now.

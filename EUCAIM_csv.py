@@ -134,24 +134,44 @@ def generate(dict_properties, list_of_headers, args):
                                                         item_dict[ki][ki1]=respropv 
                                             else:  
                                                 for ki2, vi2 in vi1.items():
-                                                    new_item = ""
-                                                    new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
-                                                    for propk, propv in dict_of_properties.items():
-                                                        if propk == new_item:
-                                                            vi_dict[ki1][ki2]=propv
-                                                    if vi_dict != {}:
-                                                        vivilist=[]
-                                                        for kivi, vivi in vi_dict.items():
-                                                            if vivi != {}:
-                                                                vivilist.append(vivi)
-                                                        for vivitem in vivilist:
-                                                            if vivitem != {}:
-                                                                item_dict[ki][ki1]=vi_dict[ki1]   
+                                                    if isinstance(vi2, dict):
+                                                        for ki3, vi3 in vi2.items():
+                                                            new_item = ""
+                                                            new_item = key + "|" + ki + "|" + ki1 + "|" + ki2 + "|" + ki3
+
+                                                            for propk, propv in dict_of_properties.items():
+                                                                if propk == new_item:
+                                                                    try:
+                                                                        vi_dict[ki1][ki2][ki3]=propv 
+                                                                    except Exception:
+                                                                        vi_dict[ki1][ki2]={}
+                                                                        vi_dict[ki1][ki2][ki3]=propv
+                                                    else:
+                                                        new_item = ""
+                                                        new_item = key + "|" + ki + "|" + ki1 + "|" + ki2
+                                                        for propk, propv in dict_of_properties.items():
+                                                            if propk == new_item:
+                                                                try:
+                                                                    vi_dict[ki1][ki2]=float(propv)
+                                                                except Exception:
+                                                                    vi_dict[ki1][ki2]=propv
+                                                        if vi_dict != {}:
+                                                            vivilist=[]
+                                                            for kivi, vivi in vi_dict.items():
+                                                                if vivi != {}:
+                                                                    vivilist.append(vivi)
+                                                            for vivitem in vivilist:
+                                                                if vivitem != {}:
+                                                                    item_dict[ki][ki1]=vi_dict[ki1]   
                                         else:
                                             new_item = ""
                                             new_item = key + "|" + ki + "|" + ki1
                                             for propk, propv in dict_of_properties.items():
                                                 if propk == new_item:
+                                                    try:
+                                                        propv = float(propv)
+                                                    except Exception:
+                                                        pass
                                                     try: 
                                                         item_dict[ki][ki1]=propv
                                                     except Exception:
