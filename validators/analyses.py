@@ -1,11 +1,10 @@
-import json
-import argparse
+from dateutil.parser import parse
 from pydantic import (
     BaseModel,
-    ValidationError,
-    PrivateAttr
+    PrivateAttr,
+    field_validator
 )
-from typing import Optional, Union
+from typing import Optional
 
 class Analyses(BaseModel, extra='forbid'):
     def __init__(self, **data) -> None:
@@ -27,4 +26,14 @@ class Analyses(BaseModel, extra='forbid'):
     pipelineRef: Optional[str]=None
     runId: Optional[str]=None
     variantCaller: Optional[str]=None
-    
+
+    @field_validator('analysisDate')
+    @classmethod
+    def validate_analysis_date(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        try:
+            parse(v)
+        except Exception as e:
+            raise ValueError(f'analysisDate must be a valid timestamp, error: {e}')
+        return v

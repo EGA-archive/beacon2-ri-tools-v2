@@ -9,22 +9,12 @@ from pydantic import (
 )
 
 from typing import Optional, Union
+from .ontology_term import OntologyTerm
 
 #parser = argparse.ArgumentParser()
 #parser.add_argument("-url", "--url")
 #args = parser.parse_args()
 
-class OntologyTerm(BaseModel, extra='forbid'):
-    id: str
-    label: Optional[str]=None
-    @field_validator('id')
-    @classmethod
-    def id_must_be_CURIE(cls, v: str) -> str:
-        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-            pass
-        else:
-            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v
 
 class Runs(BaseModel, extra='forbid'):
     def __init__(self, **data) -> None:

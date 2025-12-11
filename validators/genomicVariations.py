@@ -1,26 +1,13 @@
 import re
-import argparse
 from pydantic import (
     BaseModel,
-    ValidationError,
     field_validator,
     Field,
     PrivateAttr
 )
 
 from typing import Optional, Union
-
-class OntologyTerm(BaseModel, extra='forbid'):
-    id: str
-    label: Optional[str]=None
-    @field_validator('id')
-    @classmethod
-    def id_must_be_CURIE(cls, v: str) -> str:
-        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-            pass
-        else:
-            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v
+from .ontology_term import OntologyTerm
 
 class Members(BaseModel, extra='forbid'):
     affected: bool
@@ -56,7 +43,7 @@ class DefiniteRange(BaseModel, extra='forbid'):
         else:
             raise ValueError('type can only contain the word DefiniteRange')
         return v
-    
+
 class IndefiniteRange(BaseModel, extra='forbid'):
     type: str
     value: Union[int, float]
@@ -119,7 +106,7 @@ class SimpleInterval(BaseModel, extra='forbid'):
         else:
             raise ValueError('type can only contain the word SimpleInterval')
         return v
-    
+
 class SequenceInterval(BaseModel, extra='forbid'):
     type: str
     start: Union[DefiniteRange, IndefiniteRange, Number]
@@ -172,7 +159,7 @@ class ChromosomeLocation(BaseModel, extra='forbid'):
         else:
             raise ValueError('chr must be a valid chromosome, e.g. 1..22, X, Y')
         return v
-    
+
 class SequenceLocation(BaseModel, extra='forbid'):
     id: Optional[str]=Field(default=None, alias='_id')
     type: str
@@ -202,7 +189,7 @@ class SequenceLocation(BaseModel, extra='forbid'):
         else:
             raise ValueError('sequence_id must be CURIE, e.g. NCIT:C42331')
         return v
-    
+
 class DerivedSequenceExpression(BaseModel, extra='forbid'):
     type: str
     location: SequenceLocation
@@ -215,7 +202,7 @@ class DerivedSequenceExpression(BaseModel, extra='forbid'):
         else:
             raise ValueError('type can only contain the word DerivedSequenceExpression')
         return v
-    
+
 class LiteralSequenceExpression(BaseModel, extra='forbid'):
     type: str
     sequence: str
@@ -235,7 +222,7 @@ class LiteralSequenceExpression(BaseModel, extra='forbid'):
         else:
             raise ValueError('sequence must be a character string of Residues that represents a biological sequence using the conventional sequence order (5’-to-3’ for nucleic acid sequences, and amino-to-carboxyl for amino acid sequences). IUPAC ambiguity codes are permitted in Sequences.')
         return v
-    
+
 class RepeatedSequenceExpression(BaseModel, extra='forbid'):
     type: str
     seq_expr: Union[DerivedSequenceExpression, LiteralSequenceExpression]
@@ -248,7 +235,7 @@ class RepeatedSequenceExpression(BaseModel, extra='forbid'):
         else:
             raise ValueError('type can only contain the word RepeatedSequenceExpression')
         return v
-    
+
 class ComposedSequenceExpression(BaseModel, extra='forbid'):
     type: Optional[str] = None
     components: list
@@ -264,26 +251,16 @@ class ComposedSequenceExpression(BaseModel, extra='forbid'):
     @classmethod
     def check_components(cls, v: list) -> list:
         for component in v:
-            fits_in_class=False
-            try:
-                DerivedSequenceExpression(**component)
-                fits_in_class=True
-            except Exception:
-                fits_in_class=False
-            if fits_in_class == False:
+            for model in (DerivedSequenceExpression, LiteralSequenceExpression, RepeatedSequenceExpression):
                 try:
-                    LiteralSequenceExpression(**component)
+                    model(**component)
+                    break  # this component is valid as that model
                 except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    RepeatedSequenceExpression(**component)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
+                    continue
+            else:
+                # no break => no model matched
                 raise ValueError('components must be an array containing any format possible between DerivedSequenceExpression, LiteralSequenceExpression or RepeatedSequenceExpression. It is mandatory to at least be one of DerivedSequenceExpression or RepeatedSequenceExpression')
-
+        return v
 class Allele(BaseModel, extra='forbid'):
     id: Optional[str] = Field(default=None, alias='_id')
     type: str
@@ -309,12 +286,10 @@ class Allele(BaseModel, extra='forbid'):
     @classmethod
     def location_must_be_CURIE(cls, v: str) -> str:
         if isinstance(v, str):
-            if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-                pass
-            else:
+            if not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
                 raise ValueError('location, if string, must be CURIE, e.g. NCIT:C42331')
-            return v
-        
+        return v
+
 class Haplotype(BaseModel, extra='forbid'):
     id: Optional[str]=Field(default=None, alias='_id')
     type: str
@@ -340,7 +315,7 @@ class Haplotype(BaseModel, extra='forbid'):
     def check_members(cls, v: list) -> list:
         for member in v:
             if isinstance(member, str):
-                if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
+                if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", member):
                     pass
                 else:
                     raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
@@ -404,7 +379,7 @@ class CopyNumberChange(BaseModel, extra='forbid'):
         else:
             raise ValueError('copy_change "MUST be one of \"efo:0030069\" (complete genomic loss), \"efo:0020073\" (high-level loss),  \"efo:0030068\" (low-level loss), \"efo:0030067\" (loss), \"efo:0030064\" (regional base ploidy),  \"efo:0030070\" (gain), \"efo:0030071\" (low-level gain), \"efo:0030072\" (high-level gain).')
         return v
-    
+
 class CopyNumberCount(BaseModel, extra='forbid'):
     id: Optional[str]=Field(default=None, alias='_id')
     type: str
@@ -426,7 +401,7 @@ class CopyNumberCount(BaseModel, extra='forbid'):
         else:
             raise ValueError('type can only contain the word CopyNumberCount')
         return v
-    
+
 class GenotypeMember(BaseModel, extra='forbid'):
     type: str
     count: Union[DefiniteRange, IndefiniteRange, Number]
@@ -439,7 +414,7 @@ class GenotypeMember(BaseModel, extra='forbid'):
         else:
             raise ValueError('type can only contain the word GenotypeMember')
         return v
-    
+
 class Genotype(BaseModel, extra='forbid'):
     id: Optional[str]=Field(default=None, alias='_id')
     type: str
@@ -466,6 +441,7 @@ class Genotype(BaseModel, extra='forbid'):
     def check_exposures(cls, v: list) -> list:
         for member in v:
             GenotypeMember(**member)
+        return v
 
 class LegacyVariation(BaseModel, extra='forbid'):
     alternateBases: str
@@ -488,12 +464,12 @@ class LegacyVariation(BaseModel, extra='forbid'):
         else:
             raise ValueError('referenceBases must be a valid combination of bases from ACGTUNRYSWKMBDHV')
         return v
-    
+
 class SoftwareTool(BaseModel, extra='forbid'):
     toolName: str
     toolReferences: dict
     version: str
-    
+
 class PhenoClinicEffect(BaseModel, extra='forbid'):
     annotatedWith: Optional[SoftwareTool]=None
     category: Optional[OntologyTerm]=None
@@ -508,8 +484,8 @@ class PhenoClinicEffect(BaseModel, extra='forbid'):
             pass
         else:
             raise ValueError('clinicalRelevance must be a valid string from ["benign","likely benign","uncertain significance","likely pathogenic","pathogenic"]')
-        return v    
-    
+        return v
+
 class CaseLevelVariant(BaseModel, extra='forbid'):
     alleleOrigin: Optional[OntologyTerm] =None
     analysisId: Optional[str]=None
@@ -525,11 +501,14 @@ class CaseLevelVariant(BaseModel, extra='forbid'):
     def check_clinicalInterpretations(cls, v: list) -> list:
         for interpretation in v:
             PhenoClinicEffect(**interpretation)
+        return v
+
     @field_validator('phenotypicEffects')
     @classmethod
     def check_phenotypicEffects(cls, v: list) -> list:
         for phenotypicEffect in v:
             PhenoClinicEffect(**phenotypicEffect)
+        return v
 
 class PopulationFrequency(BaseModel, extra='forbid'):
     alleleFrequency: Union[float, int]
@@ -553,6 +532,7 @@ class Identifiers(BaseModel, extra='forbid'):
     proteinHGVSIds: Optional[list]=None
     transcriptHGVSIds: Optional[list]=None
     variantAlternativeIds: Optional[list]=None
+
     @field_validator('clinvarVariantId')
     @classmethod
     def check_clinvarVariantId(cls, v: str) -> str:
@@ -561,6 +541,7 @@ class Identifiers(BaseModel, extra='forbid'):
         else:
             raise ValueError('clinvarVariantId must be a valid clinvar string')
         return v
+
     @field_validator('proteinHGVSIds')
     @classmethod
     def check_proteinHGVSIds(cls, v: list) -> list:
@@ -570,6 +551,7 @@ class Identifiers(BaseModel, extra='forbid'):
             else:
                 raise ValueError('proteinHGVSIds must be an array of strings')
         return v
+
     @field_validator('transcriptHGVSIds')
     @classmethod
     def check_transcriptHGVSIds(cls, v: list) -> list:
@@ -579,11 +561,13 @@ class Identifiers(BaseModel, extra='forbid'):
             else:
                 raise ValueError('transcriptHGVSIds must be an array of strings')
         return v
+
     @field_validator('variantAlternativeIds')
     @classmethod
     def check_variantAlternativeIds(cls, v: list) -> list:
         for alternative in v:
             Reference(**alternative)
+        return v
 
 class GenomicFeature(BaseModel, extra='forbid'):
     featureClass: OntologyTerm
@@ -594,6 +578,7 @@ class MolecularAttributes(BaseModel, extra='forbid'):
     geneIds: Optional[list]=None
     genomicFeatures: Optional[list]=None
     molecularEffects: Optional[list[OntologyTerm]]=None
+
     @field_validator('aminoacidChanges')
     @classmethod
     def check_aminoacidChanges(cls, v: list) -> list:
@@ -604,6 +589,7 @@ class MolecularAttributes(BaseModel, extra='forbid'):
                 else:
                     raise ValueError('aminoacidChanges must be an array of strings')
             return v
+
     @field_validator('geneIds')
     @classmethod
     def check_geneIds(cls, v: list) -> list:
@@ -614,25 +600,31 @@ class MolecularAttributes(BaseModel, extra='forbid'):
                 else:
                     raise ValueError('geneIds must be an array of strings')
             return v
+
     @field_validator('genomicFeatures')
     @classmethod
     def check_genomicFeatures(cls, v: list) -> list:
         for genomicFeature in v:
             GenomicFeature(**genomicFeature)
+        return v
 
 class VariantLevelData(BaseModel, extra='forbid'):
     clinicalInterpretations: Optional[list]=None
     phenotypicEffects: Optional[list]=None
+
     @field_validator('clinicalInterpretations')
     @classmethod
     def check_clinicalInterpretations(cls, v: list) -> list:
         for interpretation in v:
             PhenoClinicEffect(**interpretation)
+        return v
+
     @field_validator('phenotypicEffects')
     @classmethod
     def check_phenotypicEffects(cls, v: list) -> list:
         for phenotypicEffect in v:
             PhenoClinicEffect(**phenotypicEffect)
+        return v
 
 class GenomicVariations(BaseModel, extra='forbid'):
     def __init__(self, **data) -> None:
@@ -655,3 +647,4 @@ class GenomicVariations(BaseModel, extra='forbid'):
     def check_caseLevelData(cls, v: list) -> list:
         for case in v:
             CaseLevelVariant(**case)
+        return v

@@ -1,0 +1,11 @@
+{
+    "id": "idSubject1g2ww0546589078",
+    "sex": {
+        "id": "NCIT:C20197",
+        "label": "Male"
+    },
+    "geographicOrigin": {
+        "id": "ISO3166:AO",
+        "label": "Angola"
+    }
+}
