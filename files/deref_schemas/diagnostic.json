@@ -1,0 +1,31 @@
+{
+    "diseaseId": "",
+    "patientId": "",
+    "ageAtDiagnosis": "",
+    "diagnosis": {
+        "id": "",
+        "label": ""
+    },
+    "yearOfDiagnosis": 2022,
+    "dateOfFirstTreatment": "2024-03-01",
+    "pathologyConfirmation": {
+        "id": "",
+        "label": ""
+    },
+    "pathology": [
+        {
+            "id": "",
+            "label": ""
+        }
+    ],
+    "imagingProcedureProtocol": {
+        "id": "",
+        "label": ""
+    },
+    "treatment": [
+        {
+            "id": "",
+            "label": ""
+        }
+    ]
+}
