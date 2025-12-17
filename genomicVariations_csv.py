@@ -254,8 +254,10 @@ def generate(dict_properties,list_of_headers, args):
                                         if subitem_dict != {}:
                                             if subitem_dict not in vi_list and subitem_dict != {}:
                                                 vi_list.append(subitem_dict)
-                                            
-                                            item_dict[ki]=vi_list[0]
+                                            if ki == 'frequencies':
+                                                item_dict[ki]=vi_list
+                                            else:
+                                                item_dict[ki]=vi_list[0]
                                 elif isinstance(vi, dict):
                                     vi_dict={}
                                     for ki1, vi1 in vi.items():
@@ -440,7 +442,7 @@ def generate(dict_properties,list_of_headers, args):
                                             for itemvl in value_list:
                                                 definitivedict[key].append(itemvl) 
                                 else:
-                                    if key == 'caseLevelData':
+                                    if key == 'caseLevelData' or key == 'frequencyInPopulations':
                                         definitivedict[key]=[]
                                         definitivedict[key].append(item_dict)
                                     else:
@@ -586,7 +588,6 @@ def generate(dict_properties,list_of_headers, args):
                 definitivedict['caseLevelData']['phenotypicEffects']=new_case_level_data
             except Exception:
                 pass
-            #print(definitivedict)
             GenomicVariations(**definitivedict)
             definitivedict["datasetId"]=args.datasetId
             definitivedict["_id"]=get_hash(args.datasetId+definitivedict["identifiers"]["genomicHGVSId"])
