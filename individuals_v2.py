@@ -28,14 +28,30 @@ def check_new_item_and_append_it(current_dict, keys, value):
             current_dict[key] = {}
         check_new_item_and_append_it(current_dict[key], keys[1:], value)
 
-def process_dictionary(item, new_item, subitem_dict, dict_of_properties, num_process):
+def process_dictionary(item, new_item, subitem_dict, dict_of_properties, num_process, list_of_provs):
     for key, value in item.items():
         current_item = new_item + "|" + key
         if isinstance(value, dict):
             if current_item not in subitem_dict:
-                subitem_dict, num_process = process_dictionary(value, current_item, subitem_dict, dict_of_properties, num_process)
+                subitem_dict, num_process = process_dictionary(value, current_item, subitem_dict, dict_of_properties, num_process, list_of_provs)
         elif isinstance(value, list):
-            processed_list, num_process = process_list(value, current_item, [], dict_of_properties, num_process)
+            if num_process >=0:
+                list_of_processes=[]
+                list_of_processes.append(str(num_process))
+                processed_list=[]
+                while num_process >=0:
+                    sublist, num_proces, list_of_provs = process_list(value, current_item, [], dict_of_properties, num_process, list_of_provs)
+                    if sublist == []:
+                        num_process = -1
+                    else:
+                        processed_list.append(sublist[0])
+                        num_process-=1
+                        if num_process == -1:
+                            list_of_provs.append(item)
+                if processed_list == []:
+                    num_process = int(list_of_processes[0])
+            else:
+                processed_list, num_process, list_of_provs = process_list(value, current_item, [], dict_of_properties, num_process, list_of_provs)
             if processed_list:
                 check_new_item_and_append_it(subitem_dict, current_item.split("|"), processed_list)
         else:
@@ -50,10 +66,10 @@ def process_dictionary(item, new_item, subitem_dict, dict_of_properties, num_pro
 
     return subitem_dict, num_process
 
-def process_list(item, new_item, processed_list, dict_of_properties, num_process):
+def process_list(item, new_item, processed_list, dict_of_properties, num_process, list_of_provs):
     for list_item in item:
         if isinstance(list_item, dict):
-            sublist_dict, num_process = process_dictionary(list_item, new_item, {}, dict_of_properties, num_process)
+            sublist_dict, num_process = process_dictionary(list_item, new_item, {}, dict_of_properties, num_process, list_of_provs)
             if sublist_dict !={}:
                 splitted_list=new_item.split('|')
                 if len(splitted_list)>1 and 'modifiers' not in new_item and 'members' not in new_item:
@@ -62,7 +78,7 @@ def process_list(item, new_item, processed_list, dict_of_properties, num_process
                     processed_list.append(sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]])
                 else:
                     processed_list.append(sublist_dict[new_item.split('|')[0]])
-    return processed_list, num_process
+    return processed_list, num_process, list_of_provs
 
 def process_string(new_item, dict_of_properties):
     if new_item in dict_of_properties:
@@ -71,25 +87,26 @@ def process_string(new_item, dict_of_properties):
 
 def create_record(dict_properties, dict_of_properties):
     definitivedict = {}
-
+    list_of_provs=[]
     for key, value in dict_properties.items():
         if isinstance(value, list):
-            value_list, num_of_processes = process_list(value, key, [], dict_of_properties, -1)
-            if num_of_processes >=0:
+            value_list, num_of_processes, list_of_provs = process_list(value, key, [], dict_of_properties, -1, list_of_provs)
+            if num_of_processes >=0 and key not in list_of_provs:
                 total_list=[]
                 while num_of_processes>=0:
-                    value_list, remainder = process_list(value, key, [], dict_of_properties, num_of_processes)
+                    value_list, remainder, list_of_provs = process_list(value, key, [], dict_of_properties, num_of_processes, list_of_provs)
                     try:
                         total_list.append(value_list[0])
                     except Exception:
                         total_list = value_list
                     num_of_processes-=1
                 if total_list:
-                    definitivedict[key] = total_list   
+                    definitivedict[key] = total_list
+                    list_of_provs.append(key)
             elif value_list:
                 definitivedict[key] = value_list
         elif isinstance(value, dict):
-            subitem_dict, num_of_processes = process_dictionary(value, key, {}, dict_of_properties, -1)
+            subitem_dict, num_of_processes = process_dictionary(value, key, {}, dict_of_properties, -1, list_of_provs)
             if subitem_dict != {}:
                 definitivedict[key] = subitem_dict[key]
         else:
