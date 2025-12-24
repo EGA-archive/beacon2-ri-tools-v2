@@ -54,9 +54,12 @@ measures|measurementValue|referenceRange|high
 measures|measurementValue|referenceRange|low
 measures|measurementValue|referenceRange|unit|id
 measures|measurementValue|referenceRange|unit|label
+measures|measurementValue|typedQuantities|quantityType|id
+measures|measurementValue|typedQuantities|quantityType|label
 measures|measurementValue|typedQuantities|quantity|referenceRange|high
 measures|measurementValue|typedQuantities|quantity|referenceRange|low
-measures|measurementValue|typedQuantities|quantity|referenceRange|unit
+measures|measurementValue|typedQuantities|quantity|referenceRange|unit|id
+measures|measurementValue|typedQuantities|quantity|referenceRange|unit|label
 measures|measurementValue|typedQuantities|quantity|unit|id
 measures|measurementValue|typedQuantities|quantity|unit|label
 measures|measurementValue|typedQuantities|quantity|value

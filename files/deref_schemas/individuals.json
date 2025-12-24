@@ -153,6 +153,10 @@
                                 "label": ""
                             },
                             "value": 0
+                        },
+                        "quantityType": {
+                            "id": "",
+                            "label": ""
                         }
                     }
                 }
@@ -268,14 +272,14 @@
                 }
             },
             "id": "",
-            "members": {
+            "members": [{
                 "affected": true,
                 "memberId": "",
                 "role": {
                     "id": "",
                     "label": ""
                 }
-            }
+            }]
         }
     ],
     "phenotypicFeatures": [
@@ -372,10 +376,13 @@
             },
             "cumulativeDose": {
                 "referenceRange": {
-                    "id": "",
-                    "label": ""
-                },
-                "unit": {}
+                    "high": "number",
+                    "low": "number",
+                    "unit": {
+                        "id": "",
+                        "label": ""
+                    }
+                }
             },
             "doseIntervals": [
                 {

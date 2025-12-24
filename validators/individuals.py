@@ -54,7 +54,7 @@ class TypedQuantity(BaseModel, extra='forbid'):
 class TypedQuantities(BaseModel):
     typedQuantities: TypedQuantity
 
-class Members(BaseModel, extra='forbid'):
+class Members(BaseModel, extra='forbid', strict=True):
     affected: bool
     memberId: str
     role: OntologyTerm
@@ -115,7 +115,7 @@ class DoseIntervals(BaseModel, extra='forbid'):
             if fits_in_class == False:
                 raise ValueError('interval, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
 
-class Diseases(BaseModel, extra='forbid'):
+class Diseases(BaseModel, extra='forbid', strict=True):
     ageOfOnset: Optional[Union[str,dict]]=None
     diseaseCode: OntologyTerm
     familyHistory: Optional[bool]=None
@@ -302,15 +302,10 @@ class Measurement(BaseModel, extra='forbid'):
 class Pedigrees(BaseModel, extra='forbid'):
     disease: Diseases
     id: str
-    members: list
+    members: list[Members]
     numSubjects: Optional[int] = None
-    @field_validator('members')
-    @classmethod
-    def check_members(cls, v: list) -> list:
-        for member in v:
-            Members(**member)
 
-class PhenotypicFeatures(BaseModel, extra='forbid'):
+class PhenotypicFeatures(BaseModel, extra='forbid', strict=True):
     evidence: Optional[dict]=None
     id: Optional[str] = None
     excluded: Optional[bool]=None

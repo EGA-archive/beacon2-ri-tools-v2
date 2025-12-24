@@ -16,69 +16,12 @@ with open('files/deref_schemas/individuals.json') as json_file:
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
-def commas(prova):
-    length_iter=0
-    array_of_newdicts=[]
-    for key, value in prova.items():
-        if isinstance(value, str):
-            valuesplitted = value.split('|')
-            length_iter=len(valuesplitted)
-        elif isinstance(value, dict):
-            for kval, vval in value.items():
-                if isinstance(vval, str):
-                    valsplitted = vval.split('|')
-                    length_iter=len(valsplitted)
-    if length_iter > 0:
-        i=0
-        while i < length_iter:
-            newdict={}
-            for key, value in prova.items():
-                if isinstance(value, str):
-                    valuesplitted = value.split('|')
-                    if valuesplitted[i]!='' or valuesplitted[i]!={}:
-                        newdict[key]=valuesplitted[i]
-                elif isinstance(value, int):
-                    valuesplitted = value.split('|')
-                    if valuesplitted[i]!='' or valuesplitted[i]!={}:
-                        newdict[key]=valuesplitted[i]
-                elif isinstance(value, dict):
-                    newdict[key]={}
-                    for k, v in value.items():
-                        if isinstance(v, str):
-                            vsplitted = v.split('|')
-                            try:
-                                if vsplitted[i]!='' or vsplitted[i]!={}:
-                                    newdict[key][k]=float(vsplitted[i])
-                            except Exception:
-                                #print(vsplitted)
-                                #print(i)
-                                if vsplitted[i]!='' or vsplitted[i]!={}:
-                                    newdict[key][k]=vsplitted[i]
-                        elif isinstance(v, int):
-                            newdict[key][k]=v
-                        elif isinstance(v, dict):
-                            newdict[key][k]={}
-                            for k1, v1 in v.items():
-                                if isinstance(v1, str):
-                                    v1splitted = v1.split('|')
-                                    try:
-                                        if v1splitted[i]!='' or v1splitted[i]!={} and len(v1splitted[i])!=0:
-                                            newdict[key][k][k1]=v1splitted[i]
-                                    except Exception:
-                                        pass
-
-                    if newdict[key][k]=={} or newdict[key][k]=="":
-                        del newdict[key]
-            array_of_newdicts.append(newdict)
-            i+=1
-    else:
-        array_of_newdicts.append(prova)
-    return(array_of_newdicts)
-
 def check_new_item_and_append_it(current_dict, keys, value):
     key = keys[0]
-    
     if len(keys) == 1:
+        if isinstance(value, str):
+            if value.lower() == 'true' or value.lower() == 'false':
+                value = bool(value)
         current_dict[key] = value
     else:
         if key not in current_dict:
@@ -113,8 +56,10 @@ def process_list(item, new_item, processed_list, dict_of_properties, num_process
             sublist_dict, num_process = process_dictionary(list_item, new_item, {}, dict_of_properties, num_process)
             if sublist_dict !={}:
                 splitted_list=new_item.split('|')
-                if len(splitted_list)>1:
+                if len(splitted_list)>1 and 'modifiers' not in new_item and 'members' not in new_item:
                     processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]]
+                elif 'modifiers' in new_item or 'members' in new_item:
+                    processed_list.append(sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]])
                 else:
                     processed_list.append(sublist_dict[new_item.split('|')[0]])
     return processed_list, num_process
@@ -176,6 +121,8 @@ def generate(dict_properties, list_of_headers, args):
             list_of_filled_items=[]
             for kline, vline in line.items():
                 property_value = kline
+                if property_value == None:
+                    continue
                 property_value=property_value.replace('\ufeff', '')
                 if property_value not in list_of_headers:
                     raise Exception(('the header {} is not allowed. Please, take a look at csv templates to check the headers allowed.').format(property_value))
@@ -183,6 +130,7 @@ def generate(dict_properties, list_of_headers, args):
 
                 
                 valor = vline
+
 
                 if i > 0:
                     
