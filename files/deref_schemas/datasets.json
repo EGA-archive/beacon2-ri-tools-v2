@@ -1,7 +1,8 @@
 {
     "createDateTime": "",
     "dataUseConditions": {
-        "duoDataUse": {
+        "duoDataUse": [
+            {
             "id": "",
             "label": "",
             "modifiers": [
@@ -12,6 +13,7 @@
             ],
             "version": ""
         }
+    ]
     },
     "description": "",
     "externalUrl": "",

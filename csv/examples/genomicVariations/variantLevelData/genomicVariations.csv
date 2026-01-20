@@ -1,4 +1,4 @@
 variantInternalId,variantLevelData|phenotypicEffects|conditionId,variantLevelData|phenotypicEffects|effect|id,variantLevelData|phenotypicEffects|effect|label,variation|alternateBases,variation|location|_id,variation|location|interval|end|type,variation|location|interval|end|value,variation|location|interval|start|type,variation|location|interval|start|value,variation|location|interval|type,variation|location|sequence_id,variation|location|type,variation|referenceBases,variation|variantType
-chr17_7673802_C_T,Li-Fraumeni syndrome|||||,DOID:3012|||||,Li-Fraumeni syndrome|||||,T,Var:00001,Number,7673802,Number,7673802,SequenceInterval,NC_000017.11:g.7673802C>T,SequenceLocation,C,SNP
-chr7_140753336_T_A,Melanoma|,DOID:1909|,melanoma|,T,Var:00002,Number,140753336,Number,140753336,SequenceInterval,NC_000007.14:g.140753336A>T,SequenceLocation,A,SNP
-chr12_25245350_C_T,pancreatic cancer|,DOID:1793|,pancreatic cancer|,T,Var:00003,Number,25245350,Number,25245350,SequenceInterval,NC_000012.12:g.25245350C>T,SequenceLocation,C,SNP
+chr17_7673802_C_T,Li-Fraumeni syndrome,DOID:3012,Li-Fraumeni syndrome,T,Var:00001,Number,7673802,Number,7673802,SequenceInterval,HGVSid:g.7673802C>T,SequenceLocation,C,SNP
+chr7_140753336_T_A,Melanoma,DOID:1909,melanoma,T,Var:00002,Number,140753336,Number,140753336,SequenceInterval,HGVSid:g.140753336A>T,SequenceLocation,A,SNP
+chr12_25245350_C_T,pancreatic cancer,DOID:1793,pancreatic cancer,T,Var:00003,Number,25245350,Number,25245350,SequenceInterval,HGVSid:g.25245350C>T,SequenceLocation,C,SNP

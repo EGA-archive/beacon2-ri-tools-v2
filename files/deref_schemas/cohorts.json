@@ -1,8 +1,8 @@
 {
-    "cohortDataTypes": {
+    "cohortDataTypes": [{
         "id": "",
-        "label": ""
-    },
+        "label": ""}
+    ],
     "cohortDesign": {
         "id": "",
         "label": ""

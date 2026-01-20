@@ -1,6 +1,7 @@
 #### Input and Output files config parameters ####
 csv_folder = './csv/examples/test/'
 output_docs_folder='./output_docs/test/'
+entry_type='all'
 
 #### VCF Conversion config parameters ####
 allele_counts=False # Variable still in test, leave it as False for now.
