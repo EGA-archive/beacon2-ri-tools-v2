@@ -471,7 +471,7 @@ def generate(dict_properties, args):
                         else:
                             j+=1
                 if num_of_populations != 0:
-                    variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=frequency_in_population.model_dump(exclude_none=True), molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
+                    variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=[frequency_in_population.model_dump(exclude_none=True)], molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
                 else:
                     variant = GenomicVariations(variation=variation, variantInternalId=_id, molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
 

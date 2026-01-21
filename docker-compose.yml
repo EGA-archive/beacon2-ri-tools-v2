@@ -19,6 +19,7 @@ services:
       - ./files/vcf/files_to_read:/usr/src/app/files/vcf/files_to_read
       - ./csv:/usr/src/app/csv
       - ./files/updated_json:/usr/src/app/files/updated_json
+      - ./pipelines/default/templates:/usr/src/app/pipelines/default/templates
     networks:
       - my-app-network
 
