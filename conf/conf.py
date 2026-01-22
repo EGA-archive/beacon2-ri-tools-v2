@@ -1,9 +1,10 @@
 #### Input and Output files config parameters ####
-csv_folder = './csv/examples/CINECA_synthetic_cohort_EUROPE_UK1/'
-output_docs_folder='./output_docs/CINECA_synthetic_cohort_EUROPE_UK1/'
+csv_folder = './csv/examples/test/'
+output_docs_folder='./output_docs/test/'
+entry_type='all'
 
 #### VCF Conversion config parameters ####
-allele_counts=False # Variable still in test, leave it as False for now.
+allele_counts=True # Variable to choose if allele frequencies are to be read by single allele or by the whole genotype of the individual, if True the populations.json fields of Homozygous, Heterozygous and Hemizygous counts will be alleleCount, if False, genotype.
 reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
 datasetId='test'
 case_level_data=False

@@ -352,6 +352,7 @@ def oneof_function(oneof_array):
         typed_dict={}
         for k, v in item.items():
             if k == 'typedQuantities':
+                print(v)
                 typed_dict[k]={}
                 for key, value in v.items():
                     if key == 'quantity':
@@ -372,6 +373,8 @@ def oneof_function(oneof_array):
                                 pass
                             else:
                                 typed_dict[k][key][clau]=valor
+                    elif key == 'quantityType':
+                        typed_dict[k][key]=value
         
             else:
                 new_listing.append(item)
@@ -393,6 +396,7 @@ def oneof_function(oneof_array):
                             for clau, valor in value.items():
                                 typed_dict2[k][key][clau]={}
                                 if isinstance(valor, dict):
+                                    print(valor)
                                     for ki, vi in valor.items():
                                         if 'ontologyTerm' in vi:
                                             typed_dict2[k][key][clau][ki]={}
@@ -411,6 +415,8 @@ def oneof_function(oneof_array):
                                             typed_dict2[k][key][clau][ki]=vi
                                 elif clau == 'value':
                                         typed_dict2[k][key][clau]=0
+                    elif key == 'quantityType':
+                        typed_dict2[k][key]=value
             else:
                 if item not in llisteta:
                     llisteta.append(item)
@@ -605,9 +611,13 @@ def disease():
 
 def measure():          
     element=subtypes('measurement.json')
+    print(element)
     element=overtypes(element)
+    print(element)
     element=overtypes(element)
+    print(element)
     element=dict_overtypes(element)
+    print(element)
     element=super_overtypes(element)
     return element
 
@@ -690,7 +700,7 @@ for key, value in dict_types.items():
 
 
 
-
+#print(dict_types)
 
 finaldict={}
 
@@ -851,7 +861,7 @@ for key, value in dict_types.items():
 
  
 
-print(finaldict)
+#print(finaldict)
 
 
 
@@ -875,10 +885,17 @@ def generate(dict_properties):
                                                     for k2, v2 in v1.items():
                                                         if isinstance(v2, dict):
                                                             for k3, v3 in v2.items():
-                                                                new_item = ""
-                                                                new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2 + "|" + k3
-                                                                #print(new_item)
-                                                                list_of_excel_items.append(new_item)            
+                                                                if isinstance(v3, dict):
+                                                                    for k4, v4 in v3.items():
+                                                                        new_item = ""
+                                                                        new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2 + "|" + k3 + "|" + k4
+                                                                        #print(new_item)
+                                                                        list_of_excel_items.append(new_item)   
+                                                                else:
+                                                                    new_item = ""
+                                                                    new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2 + "|" + k3
+                                                                    #print(new_item)
+                                                                    list_of_excel_items.append(new_item)            
                                                         else:
                                                             new_item = ""
                                                             new_item = key + "|" + ki + "|" + k + "|" + k1 + "|" + k2

@@ -14,6 +14,7 @@ import hashlib
 import argparse
 from pydantic import ValidationError
 import os
+from validators.templates.populations import AllelePopulations, GenotypePopulations
 
 client = MongoClient(
         #"mongodb://127.0.0.1:27017/"
@@ -35,6 +36,28 @@ try:
         pipeline = json.load(pipeline_file)
 except Exception:
     pipeline = None
+
+if conf.allele_counts == True and pipeline is not None:
+    AllelePopulations(**pipeline)
+elif pipeline is not None:
+    GenotypePopulations(**pipeline)
+
+if pipeline is not None:
+    list_of_population_headers=[]
+    for population_item in pipeline["populations"]:
+        list_of_population_headers.append(population_item["alleleFrequency"])
+        list_of_population_headers.append(population_item["alleleCount"])
+        list_of_population_headers.append(population_item["alleleNumber"])
+        if conf.allele_counts == False:
+            list_of_population_headers.append(population_item["genotypeHomozygous"])
+            list_of_population_headers.append(population_item["genotypeHeterozygous"])
+            list_of_population_headers.append(population_item["genotypeHemizygous"])
+        else:
+            list_of_population_headers.append(population_item["alleleCountHomozygous"])
+            list_of_population_headers.append(population_item["alleleCountHeterozygous"])
+            list_of_population_headers.append(population_item["alleleCountHemizygous"])
+    list_of_population_headers=list(set(list_of_population_headers))
+    list_of_existing_headers=[]
 
 try:
     with open('pipelines/default/templates/template.json') as template_file:
@@ -131,6 +154,16 @@ def generate(dict_properties, args):
                         w+=1
             except Exception:
                 continue
+            if pipeline is not None:
+                for population_header in list_of_population_headers:
+                    if d['ID'] == population_header:
+                        list_of_existing_headers.append(population_header)
+        if pipeline is not None:
+            non_existing_headers = list(set(list_of_population_headers) - set(list_of_existing_headers))
+            if len(non_existing_headers)>0:
+                print("There are headers in the populations.json file that don't exist in the VCF. The headers are: {}".format(non_existing_headers))
+                #raise Exception("There are headers in the populations.json file that don't exist in the VCF. The headers are: {}".format(non_existing_headers))
+            
         if args.caseLevelData == False:
             vcf.set_samples([])
         else:
@@ -251,6 +284,7 @@ def generate(dict_properties, args):
                 chrom=v.CHROM
                 start=v.start
                 if pipeline is not None:
+                    #Validate pipeline.json
                     num_of_populations=pipeline["numberOfPopulations"]     
                     source=pipeline["source"]
                     source_reference=pipeline["sourceReference"]
@@ -471,7 +505,7 @@ def generate(dict_properties, args):
                         else:
                             j+=1
                 if num_of_populations != 0:
-                    variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=frequency_in_population.model_dump(exclude_none=True), molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
+                    variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=[frequency_in_population.model_dump(exclude_none=True)], molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
                 else:
                     variant = GenomicVariations(variation=variation, variantInternalId=_id, molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
 
