@@ -10,22 +10,13 @@ from pydantic import (
 
 from typing import Optional, Union, List
 
-class OntologyTerm(BaseModel, extra='forbid'):
-    id: str
-    label: Optional[str]=None
-    @field_validator('id')
-    @classmethod
-    def id_must_be_CURIE(cls, v: str) -> str:
-        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-            pass
-        else:
-            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v
+from typing import Optional, List
+from common import OntologyTerm, timestamp_regex
             
 class DUODataUse(BaseModel, extra='forbid'):
     id: str
     label: Optional[str]=None
-    modifiers: Optional[list] = None
+    modifiers: Optional[List[OntologyTerm]] = None
     version: str
     @field_validator('id')
     @classmethod
@@ -65,19 +56,21 @@ class Datasets(BaseModel, extra='forbid'):
     version: Optional[str] = None
     @field_validator('createDateTime')
     @classmethod
-    def check_createDateTime(cls, v: str) -> str:
-        if isinstance(v, str):
-            try:
-                parse(v)
-            except Exception as e:
-                raise ValueError('createDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
+    def check_createDateTime(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
             return v
+        try:
+            timestamp_regex.match(v)
+        except Exception as e:
+            raise ValueError('createDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
+        return v
     @field_validator('updateDateTime')
     @classmethod
-    def check_updateDateTime(cls, v: str) -> str:
-        if isinstance(v, str):
-            try:
-                parse(v)
-            except Exception as e:
-                raise ValueError('updateDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
+    def check_updateDateTime(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
             return v
+        try:
+            timestamp_regex.match(v)
+        except Exception as e:
+            raise ValueError('updateDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
+        return v

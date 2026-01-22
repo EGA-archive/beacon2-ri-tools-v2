@@ -10,17 +10,7 @@ from pydantic import (
 
 from typing import Optional, Union
 
-class OntologyTerm(BaseModel, extra='forbid'):
-    id: str
-    label: Optional[str]=None
-    @field_validator('id')
-    @classmethod
-    def id_must_be_CURIE(cls, v: str) -> str:
-        if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-            pass
-        else:
-            raise ValueError('id must be CURIE, e.g. NCIT:C42331')
-        return v
+from common import OntologyTerm
 
 class Members(BaseModel, extra='forbid'):
     affected: bool
@@ -264,25 +254,16 @@ class ComposedSequenceExpression(BaseModel, extra='forbid'):
     @classmethod
     def check_components(cls, v: list) -> list:
         for component in v:
-            fits_in_class=False
-            try:
-                DerivedSequenceExpression(**component)
-                fits_in_class=True
-            except Exception:
-                fits_in_class=False
-            if fits_in_class == False:
+            for model in (DerivedSequenceExpression, LiteralSequenceExpression, RepeatedSequenceExpression):
                 try:
-                    LiteralSequenceExpression(**component)
+                    model(**component)
+                    break  # this component is valid as that model
                 except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
-                try:
-                    RepeatedSequenceExpression(**component)
-                    fits_in_class=True
-                except Exception:
-                    fits_in_class=False
-            if fits_in_class == False:
+                    continue
+            else:
+                # no break => no model matched
                 raise ValueError('components must be an array containing any format possible between DerivedSequenceExpression, LiteralSequenceExpression or RepeatedSequenceExpression. It is mandatory to at least be one of DerivedSequenceExpression or RepeatedSequenceExpression')
+        return v
 
 class Allele(BaseModel, extra='forbid'):
     id: Optional[str] = Field(default=None, alias='_id')
@@ -309,11 +290,9 @@ class Allele(BaseModel, extra='forbid'):
     @classmethod
     def location_must_be_CURIE(cls, v: str) -> str:
         if isinstance(v, str):
-            if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
-                pass
-            else:
+            if not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
                 raise ValueError('location, if string, must be CURIE, e.g. NCIT:C42331')
-            return v
+        return v
         
 class Haplotype(BaseModel, extra='forbid'):
     id: Optional[str]=Field(default=None, alias='_id')
@@ -340,7 +319,7 @@ class Haplotype(BaseModel, extra='forbid'):
     def check_members(cls, v: list) -> list:
         for member in v:
             if isinstance(member, str):
-                if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
+                if re.match("[A-Za-z0-9]+:[A-Za-z0-9]", member):
                     pass
                 else:
                     raise ValueError('_id must be CURIE, e.g. NCIT:C42331')
@@ -466,6 +445,7 @@ class Genotype(BaseModel, extra='forbid'):
     def check_exposures(cls, v: list) -> list:
         for member in v:
             GenotypeMember(**member)
+        return v
 
 class LegacyVariation(BaseModel, extra='forbid'):
     alternateBases: str
@@ -525,11 +505,13 @@ class CaseLevelVariant(BaseModel, extra='forbid'):
     def check_clinicalInterpretations(cls, v: list) -> list:
         for interpretation in v:
             PhenoClinicEffect(**interpretation)
+        return v
     @field_validator('phenotypicEffects')
     @classmethod
     def check_phenotypicEffects(cls, v: list) -> list:
         for phenotypicEffect in v:
             PhenoClinicEffect(**phenotypicEffect)
+        return v
 
 class PopulationFrequency(BaseModel, extra='forbid'):
     alleleFrequency: Union[float, int]
@@ -584,6 +566,7 @@ class Identifiers(BaseModel, extra='forbid'):
     def check_variantAlternativeIds(cls, v: list) -> list:
         for alternative in v:
             Reference(**alternative)
+        return v
 
 class GenomicFeature(BaseModel, extra='forbid'):
     featureClass: OntologyTerm
@@ -619,6 +602,7 @@ class MolecularAttributes(BaseModel, extra='forbid'):
     def check_genomicFeatures(cls, v: list) -> list:
         for genomicFeature in v:
             GenomicFeature(**genomicFeature)
+        return v
 
 class VariantLevelData(BaseModel, extra='forbid'):
     clinicalInterpretations: Optional[list]=None
@@ -628,11 +612,13 @@ class VariantLevelData(BaseModel, extra='forbid'):
     def check_clinicalInterpretations(cls, v: list) -> list:
         for interpretation in v:
             PhenoClinicEffect(**interpretation)
+        return v
     @field_validator('phenotypicEffects')
     @classmethod
     def check_phenotypicEffects(cls, v: list) -> list:
         for phenotypicEffect in v:
             PhenoClinicEffect(**phenotypicEffect)
+        return v
 
 class GenomicVariations(BaseModel, extra='forbid'):
     def __init__(self, **data) -> None:
@@ -655,3 +641,4 @@ class GenomicVariations(BaseModel, extra='forbid'):
     def check_caseLevelData(cls, v: list) -> list:
         for case in v:
             CaseLevelVariant(**case)
+        return v
