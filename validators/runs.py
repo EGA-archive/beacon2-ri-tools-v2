@@ -10,7 +10,7 @@ from pydantic import (
 
 from typing import Optional, Union
 
-from common import OntologyTerm, timestamp_regex
+from .common import OntologyTerm, timestamp_regex
 
 #parser = argparse.ArgumentParser()
 #parser.add_argument("-url", "--url")

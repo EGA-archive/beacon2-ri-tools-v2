@@ -11,7 +11,7 @@ from pydantic import (
 
 from typing import Optional, Union, List
 
-from common import OntologyTerm, timestamp_regex
+from .common import OntologyTerm, timestamp_regex
 
 class Age(BaseModel, extra='forbid'):
     iso8601duration: str

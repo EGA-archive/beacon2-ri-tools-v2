@@ -42,9 +42,10 @@ To start using beacon ri tools v2, you have to edit the configuration file [conf
 #### Input and Output files config parameters ####
 csv_folder = './csv/examples/'
 output_docs_folder='./output_docs/'
+entry_type='all'
 
 #### VCF Conversion config parameters ####
-allele_counts=False
+allele_counts=True
 reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
 datasetId='COVID_pop11_fin_2'
 case_level_data=False
@@ -64,6 +65,7 @@ The **csv_folder** variable sets the path of a folder containing all the CSVs th
 
 The **output_docs_folder** variable sets the folder where your final .json files (BFF format) will be saved once execution of beacon tools finishes. This folder should always be located within the folder 'output_docs', but subdirectories can be created inside it. e.g output_docs_folder='./output_docs/test1'
 
+The **entry_type** variable sets the entry type you want to convert the csv file for. The values can be all for all the entry types, or you can specify one of: individuals, biosamples, runs, analyses, genomicVariations, datasets, cohorts.
 
 #### VCF conversion config parameters
 * The **reference_genome** is the reference genome the tool will use to map the position of the chromosomes. Make sure to select the same version as the one used to generate your data. 
@@ -72,7 +74,7 @@ The **output_docs_folder** variable sets the folder where your final .json files
 * The **exact_heterozygosity** is a boolean parameter (True or False) that, in case case_level_data is True, then, it will classify the biosamples as being heterozygous for either the reference or the alternate allele.
 * The **num_rows** are the approximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow to calculate the total number of variants in the VCF.
 * The **verbosity** will give streaming logs with the reason why a variant has been skipped to be inserted. Recommendation is to leave this as False.
-* The **allele_counts** now is not implemented yet, just leave it as False.
+* The **allele_counts** is a variable that, in case populations.json file is active, will read the allele frequencies per allele (if True) or per Genotype (if False).
 
 #### Update records parameters
 * The **record_type** is to let the RI Tools what type of entry type you are updating, can be one of analysis, biosample, cohort, dataset, genomicVariation, individual or run.
@@ -82,11 +84,12 @@ The **output_docs_folder** variable sets the folder where your final .json files
 
 All the config parameters can be parsed through command line for each script. Here is the relationship of scripts and their command line arguments:
 
-**convert_csvTObff.py**
+**csv_to_bff.py**
 ```bash
-parser.add_argument('-o', '--output', default=output_docs_folder)
-parser.add_argument('-d', '--datasetId', default=datasetId)
-parser.add_argument('-i', '--input', default=csv_folder)
+parser.add_argument('-o', '--output', default=conf.output_docs_folder)
+parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+parser.add_argument('-i', '--input', default=conf.csv_folder)
+parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all'])
 ```
 
 **genomicVariations_postprocessing.py**
@@ -172,7 +175,7 @@ Set the numberOfPopulations field according to your VCF:
 
 The population names and annotation keys must exactly match the field names in your VCF’s INFO column.
 
-**Example 1: Single Population**
+**Example 1: Single Population with Genotype reads**
 
 For VCF files containing aggregated data (e.g., total population only), your populations.json should look like:
 
@@ -195,7 +198,31 @@ For VCF files containing aggregated data (e.g., total population only), your pop
 }
 ```
 
-**Example 2: Multiple Populations (e.g., by sex)**
+
+**Example 2: Single Population with allele reads**
+
+For VCF files containing aggregated data (e.g., total population only), your populations.json should look like:
+
+```
+{
+  "numberOfPopulations": 1,
+  "source": "The Genome Aggregation Database (gnomAD)",
+  "sourceReference": "https://gnomad.broadinstitute.org/",
+  "populations": [
+    {
+      "population": "Total",
+      "alleleFrequency": "AF",
+      "alleleCount": "AC",
+      "alleleCountHomozygous": "AC_hom",
+      "alleleCountHeterozygous": "AC_het",
+      "alleleCountHemizygous": "AC_hemi",
+      "alleleNumber": "AN"
+    }
+  ]
+}
+```
+
+**Example 3: Multiple Populations (e.g., by sex) with genotype reads**
 
 For VCFs containing population-stratified annotations:
 
@@ -335,7 +362,7 @@ Before the conversion, please make sure your [conf.py](https://github.com/EGA-ar
 Execute the next bash script from the root folder in your terminal. All .csv files contained in the specified csv_folder will be transformed into .json:
 
 ```bash
-docker exec -it ri-tools python convert_csvTObff.py
+docker exec -it ri-tools python csv_to_bff.py
 ```
 
 The Beacon Friendly Format JSONs will be generated in the output_docs folder, with the name of the collection followed by .json extension, e.g. genomicVariations.json. 

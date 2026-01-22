@@ -11,7 +11,7 @@ from pydantic import (
 from typing import Optional, Union, List
 
 from typing import Optional, List
-from common import OntologyTerm, timestamp_regex
+from .common import OntologyTerm, timestamp_regex
             
 class DUODataUse(BaseModel, extra='forbid'):
     id: str

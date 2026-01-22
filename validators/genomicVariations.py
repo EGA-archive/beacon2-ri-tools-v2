@@ -10,7 +10,7 @@ from pydantic import (
 
 from typing import Optional, Union
 
-from common import OntologyTerm
+from .common import OntologyTerm
 
 class Members(BaseModel, extra='forbid'):
     affected: bool
