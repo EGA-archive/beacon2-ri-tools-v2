@@ -31,11 +31,17 @@ client = MongoClient(
 with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
-try:
-    with open('pipelines/default/templates/populations.json') as pipeline_file:
-        pipeline = json.load(pipeline_file)
-except Exception:
-    pipeline = None
+with open('pipelines/default/templates/populations.json') as pipeline_file:
+    pipeline = json.load(pipeline_file)
+    if pipeline["numberOfPopulations"]==0:
+        pipeline=None
+    else:
+        num_of_populations=pipeline["numberOfPopulations"]
+
+if pipeline is not None:
+    print("VCF being processed with {} population/s!".format(num_of_populations))
+elif pipeline is None:
+    print("VCF being processed without allele frequencies!")
 
 if conf.allele_counts == True and pipeline is not None:
     AllelePopulations(**pipeline)
@@ -161,8 +167,7 @@ def generate(dict_properties, args):
         if pipeline is not None:
             non_existing_headers = list(set(list_of_population_headers) - set(list_of_existing_headers))
             if len(non_existing_headers)>0:
-                print("There are headers in the populations.json file that don't exist in the VCF. The headers are: {}".format(non_existing_headers))
-                #raise Exception("There are headers in the populations.json file that don't exist in the VCF. The headers are: {}".format(non_existing_headers))
+                raise Exception("There are properties in the populations.json that don't match the header INFO fields. The problematic INFO fields are: {}".format(non_existing_headers))
             
         if args.caseLevelData == False:
             vcf.set_samples([])
