@@ -254,7 +254,8 @@ def generate(dict_properties, list_of_headers, args):
                 Analyses(**definitivedict)
             elif args.entry_type == 'runs':
                 Runs(**definitivedict)
-            definitivedict["datasetId"]=args.datasetId
+            if args.entry_type != 'datasets':
+                definitivedict["datasetId"]=args.datasetId
             if args.entry_type == 'genomicVariations':
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["variantInternalId"])
             else:
