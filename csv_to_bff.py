@@ -80,6 +80,11 @@ def process_dictionary(item, new_item, subitem_dict, dict_of_properties, num_pro
                     num_process = int(list_of_processes[0])
             else:
                 processed_list, num_process, list_of_provs = process_list(value, current_item, [], dict_of_properties, num_process, list_of_provs)
+                if num_process >=0:
+                    processed_list, num_process, list_of_processes = process_piped_list(num_process, value, current_item, dict_of_properties, item, list_of_provs)
+                    # Keep the num process alive for later inner keys that do need to process pipe splitted values..
+                    if processed_list == []:
+                        num_process = int(list_of_processes[0])
             if processed_list and num_process<0 or processed_list and 'measurementValue' in current_item or processed_list:
                 check_new_item_and_append_it(subitem_dict, current_item.split("|"), processed_list)
             elif 'measurementValue' not in current_item:
