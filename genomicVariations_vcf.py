@@ -371,6 +371,8 @@ def generate(dict_properties, args):
                         population_frequencies.append(population_frequency)
                     frequency_in_population = FrequencyInPopulation(sourceReference=pipeline["sourceReference"],source=pipeline["source"],frequencies=population_frequencies)
                     population_frequencies=[]
+                elif allele_frequency == None:
+                    pass
                 else:
                     if num_of_populations != 0:
                         number_variants+=1
@@ -534,7 +536,7 @@ def generate(dict_properties, args):
                             j+=1
                         else:
                             j+=1
-                if num_of_populations != 0:
+                if num_of_populations != 0 and allele_frequency != None:
                     variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=[frequency_in_population.model_dump(exclude_none=True)], molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
                 else:
                     variant = GenomicVariations(variation=variation, variantInternalId=_id, molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
