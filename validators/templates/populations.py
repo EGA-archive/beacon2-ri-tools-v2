@@ -10,20 +10,20 @@ from typing import Optional, Union
 class AllelePopulation(BaseModel, extra='forbid'): 
     population: str
     alleleFrequency: str
-    alleleCount: Optional[str]
-    alleleCountHomozygous: Optional[str]
-    alleleCountHeterozygous: Optional[str]
-    alleleCountHemizygous: Optional[str]
-    alleleNumber: Optional[str]
+    alleleCount: Optional[str] = ""
+    alleleCountHomozygous: Optional[str] = ""
+    alleleCountHeterozygous: Optional[str] = ""
+    alleleCountHemizygous: Optional[str] = ""
+    alleleNumber: Optional[str] = ""
 
 class GenotypePopulation(BaseModel, extra='forbid'): 
     population: str
     alleleFrequency: str
-    alleleCount: Optional[str]
-    genotypeHomozygous: Optional[str]
-    genotypeHeterozygous: Optional[str]
-    genotypeHemizygous: Optional[str]
-    alleleNumber: Optional[str]
+    alleleCount: Optional[str] = ""
+    genotypeHomozygous: Optional[str] = ""
+    genotypeHeterozygous: Optional[str] = ""
+    genotypeHemizygous: Optional[str] = ""
+    alleleNumber: Optional[str] = ""
 
 class GenotypePopulations(BaseModel, extra='forbid'): 
     source: str
