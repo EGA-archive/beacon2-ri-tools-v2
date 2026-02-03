@@ -31,30 +31,28 @@ client = MongoClient(
 with open('files/deref_schemas/genomicVariations.json') as json_file:
     dict_properties = json.load(json_file)
 
-with open('pipelines/default/templates/populations.json') as pipeline_file:
-    pipeline = json.load(pipeline_file)
-    if pipeline["numberOfPopulations"]==0:
-        pipeline=None
-    else:
-        num_of_populations=pipeline["numberOfPopulations"]
+try:
+    with open('pipelines/default/templates/populations.json') as pipeline_file:
+        pipeline = json.load(pipeline_file)
+except Exception:
+    pipeline = None
+    print('pipelines/default/templates/populations.json not found, VCF is being processed without AF reads')
 
-if pipeline is not None:
-    print("VCF being processed with {} population/s!".format(num_of_populations))
-elif pipeline is None:
-    print("VCF being processed without allele frequencies!")
+if pipeline is not None and conf.only_process_reads_with_allele_frequency == True:
+    print("VCF being processed with AF for populations!")
 
-if conf.allele_counts == True and pipeline is not None:
+if conf.populations_by_allele_counts == True and pipeline is not None:
     AllelePopulations(**pipeline)
 elif pipeline is not None:
     GenotypePopulations(**pipeline)
 
-if pipeline is not None:
+if pipeline is not None and conf.only_process_reads_with_allele_frequency == True:
     list_of_population_headers=[]
     for population_item in pipeline["populations"]:
         list_of_population_headers.append(population_item["alleleFrequency"])
         list_of_population_headers.append(population_item["alleleCount"])
         list_of_population_headers.append(population_item["alleleNumber"])
-        if conf.allele_counts == False:
+        if conf.populations_by_allele_counts == False:
             list_of_population_headers.append(population_item["genotypeHomozygous"])
             list_of_population_headers.append(population_item["genotypeHeterozygous"])
             list_of_population_headers.append(population_item["genotypeHemizygous"])
@@ -160,11 +158,11 @@ def generate(dict_properties, args):
                         w+=1
             except Exception:
                 continue
-            if pipeline is not None:
+            if pipeline is not None and conf.only_process_reads_with_allele_frequency == True:
                 for population_header in list_of_population_headers:
                     if d['ID'] == population_header:
                         list_of_existing_headers.append(population_header)
-        if pipeline is not None:
+        if pipeline is not None and conf.only_process_reads_with_allele_frequency == True:
             non_existing_headers = list(set(list_of_population_headers) - set(list_of_existing_headers))
             if len(non_existing_headers)>0:
                 raise Exception("There are properties in the populations.json that don't match the header INFO fields. The problematic INFO fields are: {}".format(non_existing_headers))
@@ -282,87 +280,81 @@ def generate(dict_properties, args):
                 except Exception:
                     pass
 
-                num_of_populations=0
                 frequencies=[]
-                allele_frequency=0
+                allele_frequency=None
                 ref=v.REF
                 chrom=v.CHROM
                 start=v.start
                 if pipeline is not None:
                     #Validate pipeline.json
-                    num_of_populations=pipeline["numberOfPopulations"]     
                     source=pipeline["source"]
                     source_reference=pipeline["sourceReference"]
                     populations=pipeline["populations"]
-                    if num_of_populations != 0:
-                        for population in populations:
-                            dict_per_population={}
-                            allele_frequency=v.INFO.get(population["alleleFrequency"])
-                            allele_count=v.INFO.get(population["alleleCount"])
-                            allele_number=v.INFO.get(population["alleleNumber"])
-                            if conf.allele_counts==False:
-                                if population["genotypeHomozygous"] != "":
-                                    ac_hom=v.INFO.get(population["genotypeHomozygous"])
-                                    ac_hom = process_alleles(ac_hom)
-                                else:
-                                    ac_hom=None
-                                if population["genotypeHeterozygous"] != "":
-                                    ac_het=v.INFO.get(population["genotypeHeterozygous"])
-                                    ac_het = process_alleles(ac_het)
-                                else:
-                                    ac_het=None
-                                if population["genotypeHemizygous"] != "":
-                                    ac_hemi=v.INFO.get(population["genotypeHemizygous"])
-                                    ac_hemi = process_alleles(ac_hemi)
-                                else:
-                                    ac_hemi=None
+                    for population in populations:
+                        dict_per_population={}
+                        allele_frequency=v.INFO.get(population["alleleFrequency"])
+                        allele_count=v.INFO.get(population["alleleCount"])
+                        allele_number=v.INFO.get(population["alleleNumber"])
+                        if conf.populations_by_allele_counts==False:
+                            if population["genotypeHomozygous"] != "":
+                                ac_hom=v.INFO.get(population["genotypeHomozygous"])
+                                ac_hom = process_alleles(ac_hom)
                             else:
-                                if population["alleleCountHomozygous"] != "":
-                                    ac_hom=v.INFO.get(population["alleleCountHomozygous"])
-                                    ac_hom = process_alleles(ac_hom)
+                                ac_hom=None
+                            if population["genotypeHeterozygous"] != "":
+                                ac_het=v.INFO.get(population["genotypeHeterozygous"])
+                                ac_het = process_alleles(ac_het)
+                            else:
+                                ac_het=None
+                            if population["genotypeHemizygous"] != "":
+                                ac_hemi=v.INFO.get(population["genotypeHemizygous"])
+                                ac_hemi = process_alleles(ac_hemi)
+                            else:
+                                ac_hemi=None
+                        else:
+                            if population["alleleCountHomozygous"] != "":
+                                ac_hom=v.INFO.get(population["alleleCountHomozygous"])
+                                ac_hom = process_alleles(ac_hom)
+                            else:
+                                ac_hom=None
+                            if population["alleleCountHeterozygous"] != "":
+                                ac_het=v.INFO.get(population["alleleCountHeterozygous"])
+                                ac_het = process_alleles(ac_het)
+                            else:
+                                ac_het=None
+                            if population["alleleCountHemizygous"] != "":
+                                ac_hemi=v.INFO.get(population["alleleCountHemizygous"])
+                                ac_hemi = process_alleles(ac_hemi)
+                            else:
+                                ac_hemi=None
+                        allele_frequency = process_alleles(allele_frequency)
+                        allele_number = process_alleles(allele_number)
+                        allele_count = process_alleles(allele_count)
+                        
+                        popu=population["population"]
+                        if allele_frequency != None:
+                            dict_per_population["alleleFrequency"]=allele_frequency
+                            if allele_count != None:
+                                dict_per_population["alleleCount"]=allele_count
+                                if conf.populations_by_allele_counts==False:
+                                    if ac_hom != None:
+                                        dict_per_population["genotypeHomozygous"]=ac_hom
+                                    if ac_het != None:
+                                        dict_per_population["genotypeHeterozygous"]=ac_het
+                                    if ac_hemi != None:
+                                        dict_per_population["genotypeHemizygous"]=ac_hemi
                                 else:
-                                    ac_hom=None
-                                if population["alleleCountHeterozygous"] != "":
-                                    ac_het=v.INFO.get(population["alleleCountHeterozygous"])
-                                    ac_het = process_alleles(ac_het)
-                                else:
-                                    ac_het=None
-                                if population["alleleCountHemizygous"] != "":
-                                    ac_hemi=v.INFO.get(population["alleleCountHemizygous"])
-                                    ac_hemi = process_alleles(ac_hemi)
-                                else:
-                                    ac_hemi=None
-                            allele_frequency = process_alleles(allele_frequency)
-                            allele_number = process_alleles(allele_number)
-                            allele_count = process_alleles(allele_count)
-                            
-                            if allele_frequency == 0.0 or allele_count == 0.0:
-                                continue
-                            popu=population["population"]
-                            if allele_frequency != 0 or allele_frequency != None:
-                                dict_per_population["alleleFrequency"]=allele_frequency
-                                if allele_count != None and allele_count != 0:
-                                    dict_per_population["alleleCount"]=allele_count
-                                    if conf.allele_counts==False:
-                                        if ac_hom != None:
-                                            dict_per_population["genotypeHomozygous"]=ac_hom
-                                        if ac_het != None:
-                                            dict_per_population["genotypeHeterozygous"]=ac_het
-                                        if ac_hemi != None:
-                                            dict_per_population["genotypeHemizygous"]=ac_hemi
-                                    else:
-                                        if ac_hom != None:
-                                            dict_per_population["alleleCountHomozygous"]=ac_hom
-                                        if ac_het != None:
-                                            dict_per_population["alleleCountHeterozygous"]=ac_het
-                                        if ac_hemi != None:
-                                            dict_per_population["alleleCountHemizygous"]=ac_hemi                                        
-                                if allele_number != None and allele_number != 0:
-                                    dict_per_population["alleleNumber"]=allele_number
-                                dict_per_population["population"]=popu
-                            if dict_per_population != {} and allele_frequency !=None:
-                                frequencies.append(dict_per_population)
-                                num_of_populations=1
+                                    if ac_hom != None:
+                                        dict_per_population["alleleCountHomozygous"]=ac_hom
+                                    if ac_het != None:
+                                        dict_per_population["alleleCountHeterozygous"]=ac_het
+                                    if ac_hemi != None:
+                                        dict_per_population["alleleCountHemizygous"]=ac_hemi                                        
+                            if allele_number != None:
+                                dict_per_population["alleleNumber"]=allele_number
+                            dict_per_population["population"]=popu
+                        if dict_per_population != {} and allele_frequency !=None:
+                            frequencies.append(dict_per_population)
 
                 if frequencies != []:
                     population_frequencies=[]
@@ -371,14 +363,13 @@ def generate(dict_properties, args):
                         population_frequencies.append(population_frequency)
                     frequency_in_population = FrequencyInPopulation(sourceReference=pipeline["sourceReference"],source=pipeline["source"],frequencies=population_frequencies)
                     population_frequencies=[]
-                else:
-                    if num_of_populations != 0:
-                        number_variants+=1
-                        pbar.update(1)
-                        if args.verbosity==True:
-                            print('variant in chr: {} with start position: {} and reference base: {} skipped because none of the populations had allele frequency greater than 0'.format(chrom, start, ref))
-                        skipped_counts+=1
-                        continue
+                elif allele_frequency == None and conf.only_process_reads_with_allele_frequency == True:
+                    number_variants+=1
+                    pbar.update(1)
+                    if args.verbosity==True:
+                        print('variant in chr: {} with start position: {} and reference base: {} skipped because allele frequency could not be found for this variant'.format(chrom, start, ref))
+                    skipped_counts+=1
+                    continue
 
                 try:
                     end=v.end
@@ -534,7 +525,7 @@ def generate(dict_properties, args):
                             j+=1
                         else:
                             j+=1
-                if num_of_populations != 0:
+                if allele_frequency != None:
                     variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=[frequency_in_population.model_dump(exclude_none=True)], molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
                 else:
                     variant = GenomicVariations(variation=variation, variantInternalId=_id, molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
@@ -545,7 +536,7 @@ def generate(dict_properties, args):
                 definitivedict["_id"]=_id
 
                 try:
-                    if num_of_populations != 0:
+                    if pipeline is not None:
                         if frequencies!=[]:
                             definitivedict["frequencyInPopulations"]=[]
                             dictfrequency={}

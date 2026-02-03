@@ -26,13 +26,11 @@ class GenotypePopulation(BaseModel, extra='forbid'):
     alleleNumber: Optional[str]
 
 class GenotypePopulations(BaseModel, extra='forbid'): 
-    numberOfPopulations: int
     source: str
     sourceReference: str
     populations: list[GenotypePopulation]
 
 class AllelePopulations(BaseModel, extra='forbid'): 
-    numberOfPopulations: int
     source: str
     sourceReference: str
     populations: list[AllelePopulation]
