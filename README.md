@@ -45,7 +45,8 @@ output_docs_folder='./output_docs/'
 entry_type='all'
 
 #### VCF Conversion config parameters ####
-allele_counts=True
+only_process_reads_with_allele_frequency=True
+populations_by_allele_counts=True
 reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
 datasetId='COVID_pop11_fin_2'
 case_level_data=False
@@ -68,13 +69,14 @@ The **output_docs_folder** variable sets the folder where your final .json files
 The **entry_type** variable sets the entry type you want to convert the csv file for. The values can be all for all the entry types, or you can specify one of: individuals, biosamples, runs, analyses, genomicVariations, datasets, cohorts.
 
 #### VCF conversion config parameters
+* The **only_process_reads_with_allele_frequency** will only insert variants in case there is a population file with AF tags that are found in the variants, so all the variants inserted will always have at least 1 population with an allele frequency value.
 * The **reference_genome** is the reference genome the tool will use to map the position of the chromosomes. Make sure to select the same version as the one used to generate your data. 
 * The **datasetId** needs to match the id of your datasets.csv or datasets.json file. This will add a datasetId field in every record to match the record with the dataset it belongs to.
 * The **case_level_data** is a boolean parameter (True or False) which will relate your variants to the samples they belong to. In case you set this to true, please, read as well the case level data paragraph below.
 * The **exact_heterozygosity** is a boolean parameter (True or False) that, in case case_level_data is True, then, it will classify the biosamples as being heterozygous for either the reference or the alternate allele.
 * The **num_rows** are the approximate calculation you expect for the total of variants in each vcf there are. Make sure this is greater than the total variants expected. It was automatically calculated before but it was very slow to calculate the total number of variants in the VCF.
 * The **verbosity** will give streaming logs with the reason why a variant has been skipped to be inserted. Recommendation is to leave this as False.
-* The **allele_counts** is a variable that, in case populations.json file is active, will read the allele frequencies per allele (if True) or per Genotype (if False).
+* The **populations_by_allele_counts** is a variable that, in case populations.json file is active, will read the allele frequencies per allele (if True) or per Genotype (if False).
 
 #### Update records parameters
 * The **record_type** is to let the RI Tools what type of entry type you are updating, can be one of analysis, biosample, cohort, dataset, genomicVariation, individual or run.
