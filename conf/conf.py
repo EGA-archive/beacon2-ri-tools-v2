@@ -14,7 +14,7 @@ verbosity=False # This variable, if True, will make the program run slower but g
 
 ### Update record ###
 record_type='genomicVariation' # One between analysis, biosample, cohort, dataset, genomicVariation, individual or run
-collection_name='individuals'
+collection_name='genomicVariations'
 
 ### MongoDB parameters ###
 database_host = 'mongo'
