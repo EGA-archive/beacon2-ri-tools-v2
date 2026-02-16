@@ -706,12 +706,14 @@ parser.add_argument('-af', '--alleleFrequency', default=conf.only_process_reads_
 
 args = parser.parse_args()
 
-total_i, skipped_variants=generate(dict_properties, args)
+
+if __name__ == '__main__':
+    total_i, skipped_variants=generate(dict_properties, args)
 
 
-if total_i-skipped_variants > 0:
-    print('Successfully inserted {} records into beacon'.format(total_i-skipped_variants-1))
-    print('A total of {} variants were processed'.format(total_i-1))
-    print('A total of {} variants were skipped'.format(skipped_variants))
-else:
-    print('No registries found.')
+    if total_i-skipped_variants > 0:
+        print('Successfully inserted {} records into beacon'.format(total_i-skipped_variants-1))
+        print('A total of {} variants were processed'.format(total_i-1))
+        print('A total of {} variants were skipped'.format(skipped_variants))
+    else:
+        print('No registries found.')

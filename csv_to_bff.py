@@ -189,7 +189,7 @@ def create_record(dict_properties, dict_of_properties):
 
     return definitivedict
 
-def generate(dict_properties, list_of_headers, args):
+def csv_to_bff(dict_properties, list_of_headers, args):
     #filename = conf.filename
     if args.input.endswith('.csv'):
         filename = args.input
@@ -289,18 +289,38 @@ parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['ana
 
 args = parser.parse_args()
 
-if args.entry_type == 'all':
-    choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs']
-    for entrytype in choices:
-        args.entry_type = entrytype
+if __name__ == '__main__':
+    if args.entry_type == 'all':
+        choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs']
+        for entrytype in choices:
+            args.entry_type = entrytype
+            with open("files/headers/"+args.entry_type+'.txt', "r") as txt_file:
+                list_of_headers=txt_file.read().splitlines() 
+            with open('files/deref_schemas/'+args.entry_type+'.json') as json_file:
+                dict_properties = json.load(json_file)
+            try:
+                dict_generado, total_i=csv_to_bff(dict_properties, list_of_headers, args)
+            except FileNotFoundError:
+                continue
+
+            output = os.path.join(args.output, args.entry_type+'.json')
+
+            if total_i-1 > 0:
+
+                print('Successfully converted {} registries into {}'.format(total_i-1, output))
+
+            else:
+                print('No registries found.')
+
+            with open(output, 'w') as f:
+                json.dump(dict_generado, f)
+    else:
         with open("files/headers/"+args.entry_type+'.txt', "r") as txt_file:
             list_of_headers=txt_file.read().splitlines() 
         with open('files/deref_schemas/'+args.entry_type+'.json') as json_file:
             dict_properties = json.load(json_file)
-        try:
-            dict_generado, total_i=generate(dict_properties, list_of_headers, args)
-        except FileNotFoundError:
-            continue
+
+        dict_generado, total_i=csv_to_bff(dict_properties, list_of_headers, args)
 
         output = os.path.join(args.output, args.entry_type+'.json')
 
@@ -313,23 +333,4 @@ if args.entry_type == 'all':
 
         with open(output, 'w') as f:
             json.dump(dict_generado, f)
-else:
-    with open("files/headers/"+args.entry_type+'.txt', "r") as txt_file:
-        list_of_headers=txt_file.read().splitlines() 
-    with open('files/deref_schemas/'+args.entry_type+'.json') as json_file:
-        dict_properties = json.load(json_file)
-
-    dict_generado, total_i=generate(dict_properties, list_of_headers, args)
-
-    output = os.path.join(args.output, args.entry_type+'.json')
-
-    if total_i-1 > 0:
-
-        print('Successfully converted {} registries into {}'.format(total_i-1, output))
-
-    else:
-        print('No registries found.')
-
-    with open(output, 'w') as f:
-        json.dump(dict_generado, f)
 
