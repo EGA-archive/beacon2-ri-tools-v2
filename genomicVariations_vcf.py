@@ -38,39 +38,6 @@ except Exception:
     pipeline = None
     print('pipelines/default/templates/populations.json not found, VCF is being processed without AF reads')
 
-if pipeline is not None and conf.only_process_reads_with_allele_frequency == True:
-    print("VCF being processed with AF for populations!")
-
-if conf.populations_by_allele_counts == True and pipeline is not None:
-    AllelePopulations(**pipeline)
-elif pipeline is not None:
-    GenotypePopulations(**pipeline)
-
-if pipeline is not None and conf.only_process_reads_with_allele_frequency == True:
-    list_of_population_headers=[]
-    for population_item in pipeline["populations"]:
-        list_of_population_headers.append(population_item["alleleFrequency"])
-        if "alleleCount" in population_item:
-            list_of_population_headers.append(population_item["alleleCount"])
-        if "alleleNumber" in population_item:
-            list_of_population_headers.append(population_item["alleleNumber"])
-        if conf.populations_by_allele_counts == False:
-            if "genotypeHomozygous" in population_item:
-                list_of_population_headers.append(population_item["genotypeHomozygous"])
-            if "genotypeHeterozygous" in population_item:
-                list_of_population_headers.append(population_item["genotypeHeterozygous"])
-            if "genotypeHemizygous" in population_item:
-                list_of_population_headers.append(population_item["genotypeHemizygous"])
-        else:
-            if "alleleCountHomozygous" in population_item:
-                list_of_population_headers.append(population_item["alleleCountHomozygous"])
-            if "alleleCountHeterozygous" in population_item:
-                list_of_population_headers.append(population_item["alleleCountHeterozygous"])
-            if "alleleCountHemizygous" in population_item:
-                list_of_population_headers.append(population_item["alleleCountHemizygous"])
-    list_of_population_headers=list(set(list_of_population_headers))
-    list_of_existing_headers=[]
-
 try:
     with open('pipelines/default/templates/template.json') as template_file:
         template = json.load(template_file)
@@ -130,6 +97,37 @@ def append_to_json(file, data):
         f.write(chunk)  
 
 def generate(dict_properties, args):
+    if pipeline is not None and args.alleleFrequency == True:
+        print("VCFs being processed with AF for populations!")
+    if args.alleleCounts == True and pipeline is not None:
+        AllelePopulations(**pipeline)
+    elif pipeline is not None:
+        GenotypePopulations(**pipeline)
+
+    if pipeline is not None and args.alleleFrequency == True:
+        list_of_population_headers=[]
+        for population_item in pipeline["populations"]:
+            list_of_population_headers.append(population_item["alleleFrequency"])
+            if "alleleCount" in population_item:
+                list_of_population_headers.append(population_item["alleleCount"])
+            if "alleleNumber" in population_item:
+                list_of_population_headers.append(population_item["alleleNumber"])
+            if args.alleleCounts == False:
+                if "genotypeHomozygous" in population_item:
+                    list_of_population_headers.append(population_item["genotypeHomozygous"])
+                if "genotypeHeterozygous" in population_item:
+                    list_of_population_headers.append(population_item["genotypeHeterozygous"])
+                if "genotypeHemizygous" in population_item:
+                    list_of_population_headers.append(population_item["genotypeHemizygous"])
+            else:
+                if "alleleCountHomozygous" in population_item:
+                    list_of_population_headers.append(population_item["alleleCountHomozygous"])
+                if "alleleCountHeterozygous" in population_item:
+                    list_of_population_headers.append(population_item["alleleCountHeterozygous"])
+                if "alleleCountHemizygous" in population_item:
+                    list_of_population_headers.append(population_item["alleleCountHemizygous"])
+        list_of_population_headers=list(set(list_of_population_headers))
+        list_of_existing_headers=[]
     total_dict =[]
     number_variants=1
     if args.caseLevelData == True:
@@ -166,11 +164,11 @@ def generate(dict_properties, args):
                         w+=1
             except Exception:
                 continue
-            if pipeline is not None and conf.only_process_reads_with_allele_frequency == True:
+            if pipeline is not None and args.alleleFrequency == True:
                 for population_header in list_of_population_headers:
                     if d['ID'] == population_header:
                         list_of_existing_headers.append(population_header)
-        if pipeline is not None and conf.only_process_reads_with_allele_frequency == True:
+        if pipeline is not None and args.alleleFrequency == True:
             non_existing_headers = list(set(list_of_population_headers) - set(list_of_existing_headers))
             if len(non_existing_headers)>0:
                 raise Exception("There are properties in the populations.json that don't match the header INFO fields. The problematic INFO fields are: {}".format(non_existing_headers))
@@ -310,7 +308,7 @@ def generate(dict_properties, args):
                             allele_count=v.INFO.get(population["alleleCount"])
                         if population["alleleNumber"] != "":
                             allele_number=v.INFO.get(population["alleleNumber"])
-                        if conf.populations_by_allele_counts==False:
+                        if args.alleleCounts==False:
                             if "genotypeHomozygous" in population:
                                 if population["genotypeHomozygous"] != "":
                                     ac_hom=v.INFO.get(population["genotypeHomozygous"])
@@ -357,7 +355,7 @@ def generate(dict_properties, args):
                             dict_per_population["alleleFrequency"]=allele_frequency
                             if allele_count != None:
                                 dict_per_population["alleleCount"]=int(allele_count)
-                                if conf.populations_by_allele_counts==False:
+                                if args.alleleCounts==False:
                                     if ac_hom != None:
                                         dict_per_population["genotypeHomozygous"]=int(ac_hom)
                                     if ac_het != None:
@@ -384,7 +382,7 @@ def generate(dict_properties, args):
                         population_frequencies.append(population_frequency)
                     frequency_in_population = FrequencyInPopulation(sourceReference=pipeline["sourceReference"],source=pipeline["source"],frequencies=population_frequencies)
                     population_frequencies=[]
-                elif allele_frequency == None and conf.only_process_reads_with_allele_frequency == True:
+                elif allele_frequency == None and args.alleleFrequency == True:
                     number_variants+=1
                     pbar.update(1)
                     if args.verbosity==True:
@@ -703,6 +701,8 @@ parser.add_argument('-n', '--numRows', default=conf.num_rows)
 parser.add_argument('-v', '--verbosity', default=conf.verbosity, action=argparse.BooleanOptionalAction)
 parser.add_argument('-j', '--json', default=False, action=argparse.BooleanOptionalAction)
 parser.add_argument('-i', '--input', default="files/vcf/files_to_read/*.vcf.gz")
+parser.add_argument('-ac', '--alleleCounts', default=conf.populations_by_allele_counts, action=argparse.BooleanOptionalAction)
+parser.add_argument('-af', '--alleleFrequency', default=conf.only_process_reads_with_allele_frequency, action=argparse.BooleanOptionalAction)
 
 args = parser.parse_args()
 
