@@ -10,6 +10,9 @@ from validators.analyses import Analyses
 from validators.runs import Runs
 from validators.genomicVariations import GenomicVariations, SequenceInterval, LegacyVariation
 from validators.datasets import Datasets
+from validators.EUCAIM.collections import Collections
+from validators.EUCAIM.patients import Patients
+from validators.EUCAIM.imageStudies import ImageStudies
 import hashlib
 import argparse
 import os
@@ -113,7 +116,7 @@ def process_list(item, new_item, processed_list, dict_of_properties, num_process
                 splitted_list=new_item.split('|')
                 # In case the returning object is a list that is not meant to be a list (e.g. measurementValue and not modifiers or members), we process it as a dictionary.
                 # TODO: Try a non hardcoded alternative.
-                if len(splitted_list)>1 and 'modifiers' not in new_item and 'members' not in new_item and 'dataUseConditions' not in new_item and 'Criteria' not in new_item and 'molecularEffects' not in new_item and 'interval' not in new_item and 'phenotypicEffects' not in new_item and 'clinicalInterpretations' not in new_item:
+                if len(splitted_list)>1 and 'modifiers' not in new_item and 'members' not in new_item and 'dataUseConditions' not in new_item and 'Criteria' not in new_item and 'molecularEffects' not in new_item and 'interval' not in new_item and 'phenotypicEffects' not in new_item and 'clinicalInterpretations' not in new_item and 'imageStudy|disease|pathology' not in new_item and 'imageStudy|disease|treatment' not in new_item:                 
                     processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]]
                 elif 'start' in new_item or 'end' in new_item and 'interval' in new_item:
                     processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]][new_item.split('|')[3]]
@@ -123,8 +126,10 @@ def process_list(item, new_item, processed_list, dict_of_properties, num_process
                         processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]]
                     except Exception:
                         pass
-                elif 'modifiers' in new_item or 'members' in new_item or 'dataUseConditions' in new_item or 'Criteria' in new_item or 'molecularEffects' in new_item or 'phenotypicEffects' in new_item or 'clinicalInterpretations' in new_item:
+                elif 'modifiers' in new_item or 'members' in new_item or 'dataUseConditions' in new_item or 'Criteria' in new_item or 'molecularEffects' in new_item or 'phenotypicEffects' in new_item or 'clinicalInterpretations' in new_item:              
                     processed_list.append(sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]])
+                elif 'imageStudy|disease|pathology' in new_item or 'imageStudy|disease|treatment' in new_item:
+                    processed_list.append(sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]])
                 elif 'variation' in new_item:
                     try:
                         LegacyVariation(**sublist_dict[new_item.split('|')[0]])
@@ -244,7 +249,7 @@ def csv_to_bff(dict_properties, list_of_headers, args):
             #print(dict_of_properties)
 
             definitivedict = create_record(dict_properties, dict_of_properties)
-            #print(definitivedict)
+            print(definitivedict)
             if args.entry_type == 'individuals':
                 Individuals(**definitivedict)
             elif args.entry_type == 'biosamples':
@@ -259,10 +264,18 @@ def csv_to_bff(dict_properties, list_of_headers, args):
                 Analyses(**definitivedict)
             elif args.entry_type == 'runs':
                 Runs(**definitivedict)
+            elif args.entry_type == 'EUCAIM/patients':
+                Patients(**definitivedict)
+            elif args.entry_type == 'EUCAIM/collections':
+                Collections(**definitivedict)
+            elif args.entry_type == 'EUCAIM/imageStudies':
+                ImageStudies(**definitivedict)
             if args.entry_type != 'datasets':
                 definitivedict["datasetId"]=args.datasetId
             if args.entry_type == 'genomicVariations':
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["variantInternalId"])
+            elif args.entry_type == 'EUCAIM/patients':
+                definitivedict["_id"]=get_hash(args.datasetId+definitivedict["patientId"])
             else:
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["id"])
             total_dict.append(definitivedict)
@@ -285,7 +298,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-o', '--output', default=conf.output_docs_folder)
 parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 parser.add_argument('-i', '--input', default=conf.csv_folder)
-parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all'])
+parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all', 'EUCAIM/collections', 'EUCAIM/imageStudies', 'EUCAIM/patients'])
 
 args = parser.parse_args()
 
