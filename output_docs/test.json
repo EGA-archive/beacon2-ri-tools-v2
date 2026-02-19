@@ -1,0 +1,46 @@
+[{
+    "_id": "3dd4b36613a574231c2b5a69ad3ab847d2187b22ce90ad832c2a03fbf6c8d613",
+    "frequencyInPopulations": [
+        {
+            "source": "The Genome Aggregation Database (gnomAD)",
+            "sourceReference": "gnomad.broadinstitute.org/",
+            "frequencies": [
+                {
+                    "alleleFrequency": 1,
+                    "alleleCount": 293,
+                    "alleleCountHomozygous": 0,
+                    "alleleCountHeterozygous": 293,
+                    "alleleCountHemizygous": 0,
+                    "alleleNumber": 72856,
+                    "population": "Total"
+                }
+            ]
+        }
+    ],
+    "identifiers": {
+        "genomicHGVSId": "NC_000021.8:g.9411384C>T"
+    },
+    "variantInternalId": "3dd4b36613a574231c2b5a69ad3ab847d2187b22ce90ad832c2a03fbf6c8d613",
+    "variation": {
+        "alternateBases": "T",
+        "location": {
+            "type": "SequenceLocation",
+            "sequence_id": "HGVSid:21:g.9411383C>T",
+            "interval": {
+                "type": "SequenceInterval",
+                "start": {
+                    "type": "Number",
+                    "value": 9411383
+                },
+                "end": {
+                    "type": "Number",
+                    "value": 9411384
+                }
+            }
+        },
+        "referenceBases": "C",
+        "variantType": "SNP"
+    },
+    "datasetId": "test_2",
+    "length": 1
+}]

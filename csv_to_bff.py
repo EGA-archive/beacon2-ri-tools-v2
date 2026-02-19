@@ -249,7 +249,7 @@ def csv_to_bff(dict_properties, list_of_headers, args):
             #print(dict_of_properties)
 
             definitivedict = create_record(dict_properties, dict_of_properties)
-            print(definitivedict)
+            #print(definitivedict)
             if args.entry_type == 'individuals':
                 Individuals(**definitivedict)
             elif args.entry_type == 'biosamples':

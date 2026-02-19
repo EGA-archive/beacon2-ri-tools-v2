@@ -13,7 +13,7 @@ with open("files/headers/individuals.txt", "r") as txt_file:
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
-def generate(list_of_headers, args):
+def individuals_to_cohorts(list_of_headers, args):
 
     if args.input.endswith('.csv'):
         filename = args.input
@@ -61,7 +61,6 @@ def generate(list_of_headers, args):
 
                     if valors and vline != '':
                         if 'age' in kline.lower():
-                            print(valors)
                             try:
                                 event["eventAgeRange"]["availabilityCount"]+=1
                                 for valor in valors:
@@ -182,30 +181,30 @@ def generate(list_of_headers, args):
     pbar.close()
     return total_dict, i
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+                        prog='IndividualsToCohorts',
+                        description='This script translates a csv of individuals to a beaconized json of cohorts')
 
-parser = argparse.ArgumentParser(
-                    prog='IndividualsToCohorts',
-                    description='This script translates a csv of individuals to a beaconized json of cohorts')
+    parser.add_argument('-i', '--input', default=conf.csv_folder)
+    parser.add_argument('-o', '--output', default=conf.output_docs_folder)
+    parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+    parser.add_argument('-c', '--cohortId', default='cohortId')
+    parser.add_argument('-n', '--cohortName', default='cohortName')
+    parser.add_argument('-t', '--cohortType', default='user-defined')
+    args = parser.parse_args()
 
-parser.add_argument('-i', '--input', default=conf.csv_folder)
-parser.add_argument('-o', '--output', default=conf.output_docs_folder)
-parser.add_argument('-d', '--datasetId', default=conf.datasetId)
-parser.add_argument('-c', '--cohortId', default='cohortId')
-parser.add_argument('-n', '--cohortName', default='cohortName')
-parser.add_argument('-t', '--cohortType', default='user-defined')
-args = parser.parse_args()
+    dict_generado, total_i=individuals_to_cohorts(list_of_headers, args)
 
-dict_generado, total_i=generate(list_of_headers, args)
+    output = os.path.join(args.output, 'cohorts.json')
 
-output = os.path.join(args.output, 'cohorts.json')
+    if total_i-1 > 0:
 
-if total_i-1 > 0:
+        print('Successfully transformed {} individual registries into a cohort file in {}'.format(total_i-1, output))
 
-    print('Successfully transformed {} individual registries into a cohort file in {}'.format(total_i-1, output))
+    else:
+        print('No registries found.')
 
-else:
-    print('No registries found.')
-
-with open(output, 'w') as f:
-    json.dump(dict_generado, f)
+    with open(output, 'w') as f:
+        json.dump(dict_generado, f)
 
