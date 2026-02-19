@@ -28,7 +28,7 @@ client = MongoClient(
 
 
 
-def generate(dict_properties,list_of_headers, args):
+def postprocess_variant(dict_properties,list_of_headers, args):
 
     if args.input.endswith('.csv'):
         csv_filename = args.input
@@ -606,7 +606,8 @@ def generate(dict_properties,list_of_headers, args):
                 if key not in list_of_required_keys:
                     set_dict[key]=value
             set_dict.pop("variantInternalId")
-            client.beacon.genomicVariations.update_one({"variation.location.sequence_id": definitivedict["variation"]["location"]["sequence_id"], "variation.location.interval.start.value": definitivedict["variation"]["location"]["interval"]["start"]["value"], "variation.location.interval.end.value": definitivedict["variation"]["location"]["interval"]["end"]["value"]},{'$set': set_dict}, upsert=False)
+            dict_to_find={"variation.location.sequence_id": definitivedict["variation"]["location"]["sequence_id"], "variation.location.interval.start.value": definitivedict["variation"]["location"]["interval"]["start"]["value"], "variation.location.interval.end.value": definitivedict["variation"]["location"]["interval"]["end"]["value"]}
+            client.beacon.genomicVariations.update_one(dict_to_find,{'$set': set_dict}, upsert=False)
             
             pbar.update(1)
             if i > num_rows:
@@ -615,17 +616,17 @@ def generate(dict_properties,list_of_headers, args):
     pbar.close()
     return total_dict, i
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+                        prog='genomicVariations_CaseLevelData_VariantLevelData_postprocessing',
+                        description='This script adds caseLevelData or variantLevelData to an existing variant in your database')
 
-parser = argparse.ArgumentParser(
-                    prog='genomicVariationsVCFtoJSON',
-                    description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
+    parser.add_argument('-i', '--input', default=conf.csv_folder)
+    parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+    args = parser.parse_args()
 
-parser.add_argument('-i', '--input', default=conf.csv_folder)
-parser.add_argument('-d', '--datasetId', default=conf.datasetId)
-args = parser.parse_args()
+    dict_generado, total_i=postprocess_variant(dict_properties,list_of_headers, args)
 
-dict_generado, total_i=generate(dict_properties,list_of_headers, args)
-
-print("Successfuly updated {} records for genomicVariations".format(total_i-1))
+    print("Successfully updated {} records for genomicVariations".format(total_i-1))
 
 

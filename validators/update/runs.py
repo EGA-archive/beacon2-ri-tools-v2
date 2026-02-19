@@ -16,7 +16,7 @@ from .common import OntologyTerm, timestamp_regex
 #parser.add_argument("-url", "--url")
 #args = parser.parse_args()
 
-class Runs(BaseModel, extra='allow'):
+class Runs(BaseModel, extra='forbid'):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():
             try:
