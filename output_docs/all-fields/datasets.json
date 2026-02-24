@@ -1,1 +1,20 @@
-[{"createDateTime": "2021-12-29T20:33:40Z", "dataUseConditions": {"duoDataUse": [{"id": "DUO:0000019,DUO:00000020", "label": "publication required,publication required", "version": "7-1-19,7-1-19"}]}, "description": "Bear in mind that both genomic and metadata information is synthetic ", "externalUrl": "https://ega-archive.org/datasets/EGAD00001006673/", "id": "synthetic_usecases_4beacon_testingV4", "name": "Dataset with synthetic data for beacon testing", "updateDateTime": "2021-12-29T20:33:40Z", "version": "v1.0", "datasetId": "all-fields", "_id": "2e70d37409a0c13cb988ee4b736868b82e0b7d97a40fc9052ecc33a9e6c0fe18"}]
+[
+    {
+        "createDateTime": "2021-12-29T20:33:40Z",
+        "dataUseConditions": {
+            "duoDataUse": [
+                {
+                    "id": "DUO:00000020",
+                    "label": "publication required",
+                    "version": "7-1-19"
+                }
+            ]
+        },
+        "description": "Bear in mind that both genomic and metadata information is synthetic ",
+        "externalUrl": "synthetic_usecases_4beacon_testingV4",
+        "id": "{\"info\": \"Both metadata and genomic variations information are synthetic.\"}",
+        "name": "2021-12-29T20:33:40Z",
+        "updateDateTime": "v1.0",
+        "_id": "96d43c8f78755c0fc84283aecbb67317e7a306fc9e379f0b212559d634c7b9f5"
+    }
+]
