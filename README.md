@@ -262,7 +262,7 @@ By properly configuring the populations.json file, you ensure that Beacon can ac
 
 💡 Note2: For all the information to be correctly read, before processing the VCF split the multiallelic variants. 
 
-💡 Note3: If your VCF does not include a specific allele count field, leave the corresponding entry empty. Example: `"alleleCountHeterozygous": "",`
+💡 Note3: If your VCF does not include a specific allele count field, delete the corresponding entry.
       
 
 #### Converting data from .vcf.gz file
