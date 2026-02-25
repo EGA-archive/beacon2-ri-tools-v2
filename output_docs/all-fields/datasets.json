@@ -11,8 +11,8 @@
             ]
         },
         "description": "Bear in mind that both genomic and metadata information is synthetic ",
-        "externalUrl": "synthetic_usecases_4beacon_testingV4",
-        "id": "{\"info\": \"Both metadata and genomic variations information are synthetic.\"}",
+        "externalUrl": "http://synthetic_usecases_4beacon_testingV4.com",
+        "id": "synthetic_usecases_4beacon_testingV4",
         "name": "2021-12-29T20:33:40Z",
         "updateDateTime": "v1.0",
         "_id": "96d43c8f78755c0fc84283aecbb67317e7a306fc9e379f0b212559d634c7b9f5"
