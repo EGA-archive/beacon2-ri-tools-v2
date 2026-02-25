@@ -9,10 +9,20 @@ from pydantic import (
 )
 
 from typing import Optional, Union
-from .common import OntologyTerm, timestamp_regex
+from .common import OntologyTerm, timestamp_regex, iso8601regex
 
 class Age(BaseModel, extra='forbid'):
     iso8601duration: str
+    @field_validator('iso8601duration')
+    @classmethod
+    def check_isoduration(cls, v: str) -> str:
+        try:
+            isocheck=iso8601regex.match(v)
+            if isocheck == None:
+                raise ValueError('iso8601duration needs to be iso8601 formatted, getting this value: {}'.format(v))
+        except Exception as e:
+            raise ValueError('iso8601duration needs to be iso8601 formatted, getting this error: {}'.format(e))
+        return v
 
 class AgeRange(BaseModel, extra='forbid'):
     end: Age
