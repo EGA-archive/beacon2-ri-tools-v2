@@ -1,6 +1,6 @@
 #### Input and Output files config parameters ####
-csv_folder = './csv/examples/test/'
-output_docs_folder='./output_docs/test/'
+csv_folder = './csv/examples/'
+output_docs_folder='./output_docs/'
 entry_type='all'
 
 #### VCF Conversion config parameters ####

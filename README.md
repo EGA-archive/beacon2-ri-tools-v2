@@ -91,8 +91,9 @@ All the config parameters can be parsed through command line for each script. He
 parser.add_argument('-o', '--output', default=conf.output_docs_folder)
 parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 parser.add_argument('-i', '--input', default=conf.csv_folder)
-parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all'])
+parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all', 'EUCAIM/collections', 'EUCAIM/imageStudies', 'EUCAIM/patients'])
 ```
+Note: all is only for genomic data. For EUCAIM, the data can only be processed individually by now.
 
 **genomicVariations_postprocessing.py**
 ```bash

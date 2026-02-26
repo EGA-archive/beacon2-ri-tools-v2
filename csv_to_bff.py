@@ -138,6 +138,14 @@ def process_list(item, new_item, processed_list, dict_of_properties, num_process
                         pass
                 else:
                     processed_list.append(sublist_dict[new_item.split('|')[0]])
+        elif isinstance(list_item, str):
+            propv = process_string(new_item, dict_of_properties)
+            if '|' in propv:
+                propv=propv.split('|')
+                for propv_splitted in propv:
+                    processed_list.append(propv_splitted)
+            else:
+                processed_list.append(propv)
     return processed_list, num_process, list_of_provs
 
 def process_string(new_item, dict_of_properties):
@@ -267,6 +275,7 @@ def csv_to_bff(dict_properties, list_of_headers, args):
             elif args.entry_type == 'EUCAIM/patients':
                 Patients(**definitivedict)
             elif args.entry_type == 'EUCAIM/collections':
+                print(definitivedict)
                 Collections(**definitivedict)
             elif args.entry_type == 'EUCAIM/imageStudies':
                 ImageStudies(**definitivedict)
