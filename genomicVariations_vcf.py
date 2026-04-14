@@ -15,6 +15,10 @@ import argparse
 from pydantic import ValidationError
 import os
 from validators.templates.populations import AllelePopulations, GenotypePopulations
+from ga4gh.vrs.dataproxy import create_dataproxy
+
+seqrepo_rest_service_url = "seqrepo+https://services.genomicmedlab.org/seqrepo"
+seqrepo_dataproxy = create_dataproxy(uri=seqrepo_rest_service_url)
 
 client = MongoClient(
         #"mongodb://127.0.0.1:27017/"
@@ -97,6 +101,83 @@ def append_to_json(file, data):
         f.write(chunk)  
 
 def generate(dict_properties, args):
+    if args.refGen == 'GRCh37':
+        seqid1=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:1", "ga4gh")
+        seqid2=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:2", "ga4gh")
+        seqid3=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:3", "ga4gh")
+        seqid4=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:4", "ga4gh")
+        seqid5=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:5", "ga4gh")
+        seqid6=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:6", "ga4gh")
+        seqid7=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:7", "ga4gh")
+        seqid8=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:8", "ga4gh")
+        seqid9=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:9", "ga4gh")
+        seqid10=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:10", "ga4gh")
+        seqid11=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:11", "ga4gh")
+        seqid12=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:12", "ga4gh")
+        seqid13=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:13", "ga4gh")
+        seqid14=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:14", "ga4gh")
+        seqid15=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:15", "ga4gh")
+        seqid16=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:16", "ga4gh")
+        seqid17=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:17", "ga4gh")
+        seqid18=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:18", "ga4gh")
+        seqid19=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:19", "ga4gh")
+        seqid20=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:20", "ga4gh")
+        seqid21=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:21", "ga4gh")
+        seqid22=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:22", "ga4gh")
+        seqid23=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:X", "ga4gh")
+        seqid24=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:Y", "ga4gh")
+    elif args.refGen == 'GRCh38':
+        seqid1=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:1", "ga4gh")
+        seqid2=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:2", "ga4gh")
+        seqid3=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:3", "ga4gh")
+        seqid4=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:4", "ga4gh")
+        seqid5=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:5", "ga4gh")
+        seqid6=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:6", "ga4gh")
+        seqid7=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:7", "ga4gh")
+        seqid8=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:8", "ga4gh")
+        seqid9=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:9", "ga4gh")
+        seqid10=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:10", "ga4gh")
+        seqid11=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:11", "ga4gh")
+        seqid12=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:12", "ga4gh")
+        seqid13=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:13", "ga4gh")
+        seqid14=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:14", "ga4gh")
+        seqid15=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:15", "ga4gh")
+        seqid16=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:16", "ga4gh")
+        seqid17=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:17", "ga4gh")
+        seqid18=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:18", "ga4gh")
+        seqid19=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:19", "ga4gh")
+        seqid20=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:20", "ga4gh")
+        seqid21=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:21", "ga4gh")
+        seqid22=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:22", "ga4gh")
+        seqid23=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:X", "ga4gh")
+        seqid24=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:Y", "ga4gh")
+    elif args.refGen == 'NCBI36':
+        seqid1=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:1", "ga4gh")
+        seqid2=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:2", "ga4gh")
+        seqid3=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:3", "ga4gh")
+        seqid4=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:4", "ga4gh")
+        seqid5=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:5", "ga4gh")
+        seqid6=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:6", "ga4gh")
+        seqid7=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:7", "ga4gh")
+        seqid8=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:8", "ga4gh")
+        seqid9=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:9", "ga4gh")
+        seqid10=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:10", "ga4gh")
+        seqid11=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:11", "ga4gh")
+        seqid12=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:12", "ga4gh")
+        seqid13=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:13", "ga4gh")
+        seqid14=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:14", "ga4gh")
+        seqid15=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:15", "ga4gh")
+        seqid16=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:16", "ga4gh")
+        seqid17=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:17", "ga4gh")
+        seqid18=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:18", "ga4gh")
+        seqid19=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:19", "ga4gh")
+        seqid20=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:20", "ga4gh")
+        seqid21=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:21", "ga4gh")
+        seqid22=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:22", "ga4gh")
+        seqid23=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:X", "ga4gh")
+        seqid24=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:Y", "ga4gh")
+
+
     if pipeline is not None and args.alleleFrequency == True:
         print("VCFs being processed with AF for populations!")
     if args.alleleCounts == True and pipeline is not None:
@@ -515,12 +596,58 @@ def generate(dict_properties, args):
                     HGVSId = HGVSId + str(start+1) + ref + '>' + alt[0]
 
                 _id=get_hash(args.datasetId+HGVSId)
-
-                sequence_id="HGVSid:" + str(chrom) + ":g." + str(start) + ref + ">" + alt[0]
+                if chromos == '1':
+                    sequence_id=seqid1
+                elif chromos == '2':
+                    sequence_id=seqid2
+                elif chromos == '3':
+                    sequence_id=seqid3
+                elif chromos == '4':
+                    sequence_id=seqid4
+                elif chromos == '5':
+                    sequence_id=seqid5
+                elif chromos == '6':
+                    sequence_id=seqid6
+                elif chromos == '7':
+                    sequence_id=seqid7
+                elif chromos == '8':
+                    sequence_id=seqid8
+                elif chromos == '9':
+                    sequence_id=seqid9
+                elif chromos == '10':
+                    sequence_id=seqid10
+                elif chromos == '11':
+                    sequence_id=seqid11
+                elif chromos == '12':
+                    sequence_id=seqid12
+                elif chromos == '13':
+                    sequence_id=seqid13
+                elif chromos == '14':
+                    sequence_id=seqid14
+                elif chromos == '15':
+                    sequence_id=seqid15
+                elif chromos == '16':
+                    sequence_id=seqid16
+                elif chromos == '17':
+                    sequence_id=seqid17
+                elif chromos == '18':
+                    sequence_id=seqid18
+                elif chromos == '19':
+                    sequence_id=seqid19
+                elif chromos == '20':
+                    sequence_id=seqid20
+                elif chromos == '21':
+                    sequence_id=seqid21
+                elif chromos == '22':
+                    sequence_id=seqid22
+                elif chromos == '23' or chromos == 'X':
+                    sequence_id=seqid23
+                elif chromos == '24' or chromos == 'Y':
+                    sequence_id=seqid24
                 end_range = Number(type="Number",value=int(end))
                 start_range = Number(type="Number",value=int(start))
                 interval = SequenceInterval(type="SequenceInterval", start=start_range, end=end_range)
-                location = SequenceLocation(interval=interval, type="SequenceLocation", sequence_id=sequence_id)
+                location = SequenceLocation(interval=interval, type="SequenceLocation", sequence_id=sequence_id[0])
                 variation = LegacyVariation(alternateBases=alt[0], referenceBases=ref, variantType=varianttype, location=location)
                 ##
                 if args.caseLevelData == True:

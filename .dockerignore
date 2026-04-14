@@ -3,3 +3,4 @@ files/vcf/files_to_read/*
 *.vcf.gz
 *.vcf.bgz
 output_docs/data/db/*
+refgenDetector/pkls
