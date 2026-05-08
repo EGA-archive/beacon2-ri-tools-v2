@@ -13,4 +13,4 @@ scripts/datasheet/conf/__pycache__/*
 *.vcf.bgz.tbi
 vcf_BelCovid_2
 output_docs/data/db/*
-refgenDetector/pkls
+refgen-data
