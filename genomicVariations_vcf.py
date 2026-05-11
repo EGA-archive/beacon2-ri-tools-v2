@@ -6,7 +6,6 @@ import re
 import conf.conf as conf
 import json
 import gc
-import gzip
 from pymongo.mongo_client import MongoClient
 from validators.genomicVariations import GenomicVariations, LegacyVariation, SequenceLocation, SequenceInterval, Number, OntologyTerm, MolecularAttributes, FrequencyInPopulation, PopulationFrequency, Identifiers
 from pymongo.errors import BulkWriteError
@@ -16,6 +15,8 @@ from pydantic import ValidationError
 import os
 from validators.templates.populations import AllelePopulations, GenotypePopulations
 from ga4gh.vrs.dataproxy import create_dataproxy
+import subprocess
+import yaml
 
 seqrepo_rest_service_url = "seqrepo+https://services.genomicmedlab.org/seqrepo"
 seqrepo_dataproxy = create_dataproxy(uri=seqrepo_rest_service_url)
@@ -69,13 +70,13 @@ def process_alleles(allele_property):
         allele_property = float(allele_property)
     return allele_property
 
-def generate_molecular_attributes(moleculareffectt):
+def generate_molecular_attributes(moleculareffect_input):
     list_of_molecular_effects=[]
-    if moleculareffectt is not None:
-        if  "&" in moleculareffectt:
-            moleculareffects=moleculareffectt.split("&")
+    if moleculareffect_input is not None:
+        if  "&" in moleculareffect_input:
+            moleculareffects=moleculareffect_input.split("&")
         else:
-            moleculareffects=[moleculareffectt]
+            moleculareffects=[moleculareffect_input]
         if moleculareffects_ontologies != []:
             for moleculareffect in moleculareffects:
                 for ontology in moleculareffects_ontologies:
@@ -101,83 +102,6 @@ def append_to_json(file, data):
         f.write(chunk)  
 
 def generate(dict_properties, args):
-    if args.refGen == 'GRCh37':
-        seqid1=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:1", "ga4gh")
-        seqid2=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:2", "ga4gh")
-        seqid3=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:3", "ga4gh")
-        seqid4=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:4", "ga4gh")
-        seqid5=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:5", "ga4gh")
-        seqid6=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:6", "ga4gh")
-        seqid7=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:7", "ga4gh")
-        seqid8=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:8", "ga4gh")
-        seqid9=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:9", "ga4gh")
-        seqid10=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:10", "ga4gh")
-        seqid11=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:11", "ga4gh")
-        seqid12=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:12", "ga4gh")
-        seqid13=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:13", "ga4gh")
-        seqid14=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:14", "ga4gh")
-        seqid15=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:15", "ga4gh")
-        seqid16=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:16", "ga4gh")
-        seqid17=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:17", "ga4gh")
-        seqid18=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:18", "ga4gh")
-        seqid19=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:19", "ga4gh")
-        seqid20=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:20", "ga4gh")
-        seqid21=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:21", "ga4gh")
-        seqid22=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:22", "ga4gh")
-        seqid23=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:X", "ga4gh")
-        seqid24=seqrepo_dataproxy.translate_sequence_identifier("GRCh37:Y", "ga4gh")
-    elif args.refGen == 'GRCh38':
-        seqid1=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:1", "ga4gh")
-        seqid2=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:2", "ga4gh")
-        seqid3=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:3", "ga4gh")
-        seqid4=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:4", "ga4gh")
-        seqid5=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:5", "ga4gh")
-        seqid6=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:6", "ga4gh")
-        seqid7=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:7", "ga4gh")
-        seqid8=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:8", "ga4gh")
-        seqid9=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:9", "ga4gh")
-        seqid10=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:10", "ga4gh")
-        seqid11=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:11", "ga4gh")
-        seqid12=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:12", "ga4gh")
-        seqid13=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:13", "ga4gh")
-        seqid14=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:14", "ga4gh")
-        seqid15=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:15", "ga4gh")
-        seqid16=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:16", "ga4gh")
-        seqid17=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:17", "ga4gh")
-        seqid18=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:18", "ga4gh")
-        seqid19=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:19", "ga4gh")
-        seqid20=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:20", "ga4gh")
-        seqid21=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:21", "ga4gh")
-        seqid22=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:22", "ga4gh")
-        seqid23=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:X", "ga4gh")
-        seqid24=seqrepo_dataproxy.translate_sequence_identifier("GRCh38:Y", "ga4gh")
-    elif args.refGen == 'NCBI36':
-        seqid1=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:1", "ga4gh")
-        seqid2=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:2", "ga4gh")
-        seqid3=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:3", "ga4gh")
-        seqid4=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:4", "ga4gh")
-        seqid5=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:5", "ga4gh")
-        seqid6=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:6", "ga4gh")
-        seqid7=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:7", "ga4gh")
-        seqid8=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:8", "ga4gh")
-        seqid9=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:9", "ga4gh")
-        seqid10=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:10", "ga4gh")
-        seqid11=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:11", "ga4gh")
-        seqid12=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:12", "ga4gh")
-        seqid13=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:13", "ga4gh")
-        seqid14=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:14", "ga4gh")
-        seqid15=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:15", "ga4gh")
-        seqid16=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:16", "ga4gh")
-        seqid17=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:17", "ga4gh")
-        seqid18=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:18", "ga4gh")
-        seqid19=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:19", "ga4gh")
-        seqid20=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:20", "ga4gh")
-        seqid21=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:21", "ga4gh")
-        seqid22=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:22", "ga4gh")
-        seqid23=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:X", "ga4gh")
-        seqid24=seqrepo_dataproxy.translate_sequence_identifier("NCBI36:Y", "ga4gh")
-
-
     if pipeline is not None and args.alleleFrequency == True:
         print("VCFs being processed with AF for populations!")
     if args.alleleCounts == True and pipeline is not None:
@@ -223,6 +147,93 @@ def generate(dict_properties, args):
     skipped_counts=0
     for vcf_filename in glob.glob(args.input):
         print(vcf_filename)
+
+        print('Executing refgenDetector, wait a few moments until the reference genome is inferred...')
+        execution = [
+        "refgenDetector -f {} -t VCF".format(vcf_filename)
+        ]
+        try:
+            execute_refgenDetector = subprocess.check_output(
+                execution,
+                stderr=subprocess.STDOUT,
+                shell=True
+            )
+        except Exception:
+            print("Could not determine reference genome for file {}, this VCF will not get processed".format(vcf_filename))
+            continue
+
+        execute_refgenDetector=execute_refgenDetector.decode("utf-8")
+        if args.verbosity==True:
+            print(execute_refgenDetector)
+
+        refGen_complete = re.search(r"Inferred Reference genome:\s*(\S+)", execute_refgenDetector)
+
+        if refGen_complete:
+            refGen = refGen_complete.group(1)
+            print("Found a valid reference genome: {} for file: {}".format(refGen, vcf_filename))
+            try:
+                seqid1=seqrepo_dataproxy.translate_sequence_identifier("{}:1".format(refGen), "ga4gh")
+                seqid2=seqrepo_dataproxy.translate_sequence_identifier("{}:2".format(refGen), "ga4gh")
+                seqid3=seqrepo_dataproxy.translate_sequence_identifier("{}:3".format(refGen), "ga4gh")
+                seqid4=seqrepo_dataproxy.translate_sequence_identifier("{}:4".format(refGen), "ga4gh")
+                seqid5=seqrepo_dataproxy.translate_sequence_identifier("{}:5".format(refGen), "ga4gh")
+                seqid6=seqrepo_dataproxy.translate_sequence_identifier("{}:6".format(refGen), "ga4gh")
+                seqid7=seqrepo_dataproxy.translate_sequence_identifier("{}:7".format(refGen), "ga4gh")
+                seqid8=seqrepo_dataproxy.translate_sequence_identifier("{}:8".format(refGen), "ga4gh")
+                seqid9=seqrepo_dataproxy.translate_sequence_identifier("{}:9".format(refGen), "ga4gh")
+                seqid10=seqrepo_dataproxy.translate_sequence_identifier("{}:10".format(refGen), "ga4gh")
+                seqid11=seqrepo_dataproxy.translate_sequence_identifier("{}:11".format(refGen), "ga4gh")
+                seqid12=seqrepo_dataproxy.translate_sequence_identifier("{}:12".format(refGen), "ga4gh")
+                seqid13=seqrepo_dataproxy.translate_sequence_identifier("{}:13".format(refGen), "ga4gh")
+                seqid14=seqrepo_dataproxy.translate_sequence_identifier("{}:14".format(refGen), "ga4gh")
+                seqid15=seqrepo_dataproxy.translate_sequence_identifier("{}:15".format(refGen), "ga4gh")
+                seqid16=seqrepo_dataproxy.translate_sequence_identifier("{}:16".format(refGen), "ga4gh")
+                seqid17=seqrepo_dataproxy.translate_sequence_identifier("{}:17".format(refGen), "ga4gh")
+                seqid18=seqrepo_dataproxy.translate_sequence_identifier("{}:18".format(refGen), "ga4gh")
+                seqid19=seqrepo_dataproxy.translate_sequence_identifier("{}:19".format(refGen), "ga4gh")
+                seqid20=seqrepo_dataproxy.translate_sequence_identifier("{}:20".format(refGen), "ga4gh")
+                seqid21=seqrepo_dataproxy.translate_sequence_identifier("{}:21".format(refGen), "ga4gh")
+                seqid22=seqrepo_dataproxy.translate_sequence_identifier("{}:22".format(refGen), "ga4gh")
+                seqid23=seqrepo_dataproxy.translate_sequence_identifier("{}:X".format(refGen), "ga4gh")
+                seqid24=seqrepo_dataproxy.translate_sequence_identifier("{}:Y".format(refGen), "ga4gh")
+                seqMT='ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct'
+            except Exception:
+                if refGen == 'GRCh38':
+                    with open('vrs/sequence_id/GRCh38.yml', 'r') as outfile:
+                        sequence_ids=yaml.load(outfile, Loader=yaml.SafeLoader)
+                elif refGen == 'GRCh37':
+                    with open('vrs/sequence_id/GRCh37.yml', 'r') as outfile:
+                        sequence_ids=yaml.load(outfile, Loader=yaml.SafeLoader)
+                else:
+                    print("Could not determine GA4GH vrs sequence_id for ref genome {}, this VCF will not get processed".format(refGen))
+                seqid1=sequence_ids['chr1']
+                seqid2=sequence_ids['chr2']
+                seqid3=sequence_ids['chr3']
+                seqid4=sequence_ids['chr4']
+                seqid5=sequence_ids['chr5']
+                seqid6=sequence_ids['chr6']
+                seqid7=sequence_ids['chr7']
+                seqid8=sequence_ids['chr8']
+                seqid9=sequence_ids['chr9']
+                seqid10=sequence_ids['chr10']
+                seqid11=sequence_ids['chr11']
+                seqid12=sequence_ids['chr12']
+                seqid13=sequence_ids['chr13']
+                seqid14=sequence_ids['chr14']
+                seqid15=sequence_ids['chr15']
+                seqid16=sequence_ids['chr16']
+                seqid17=sequence_ids['chr17']
+                seqid18=sequence_ids['chr18']
+                seqid19=sequence_ids['chr19']
+                seqid20=sequence_ids['chr20']
+                seqid21=sequence_ids['chr21']
+                seqid22=sequence_ids['chr22']
+                seqid23=sequence_ids['chrX']
+                seqid24=sequence_ids['chrY']
+                seqMT='ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct'
+        else:
+            print("Could not determine reference genome for file {}, this VCF will not get processed".format(vcf_filename))
+            continue
         vcf = VCF(vcf_filename, strict_gt=True)
         formatted=False
         for rec in vcf.header_iter():
@@ -314,8 +325,8 @@ def generate(dict_properties, args):
                     varianttype=v.INFO.get(template["variantType"])
                     gene=v.INFO.get(template["geneId"])
                     aminoacidchange=v.INFO.get(template["aminoacidChange"])
-                    moleculareffectt=v.INFO.get(template["molecularEffects"])
-                    list_of_molecular_effects = generate_molecular_attributes(moleculareffectt)
+                    moleculareffects_from_template=v.INFO.get(template["molecularEffects"])
+                    list_of_molecular_effects = generate_molecular_attributes(moleculareffects_from_template)
                     if list_of_molecular_effects != []:
                         molecular_attributes = MolecularAttributes(molecularEffects=list_of_molecular_effects,geneIds=[gene] if gene != '' else None,aminoacidChanges=aminoacidchange if aminoacidchange != '' else None)
                     else:
@@ -340,8 +351,8 @@ def generate(dict_properties, args):
                         if protein != '':
                             protein=protein.split('p.')
                             aminoacidchange=protein[1]
-                        moleculareffectt=annotation_list[moleculareffect_num]
-                        list_of_molecular_effects = generate_molecular_attributes(moleculareffectt)
+                        moleculareffect_from_annotation_list=annotation_list[moleculareffect_num]
+                        list_of_molecular_effects = generate_molecular_attributes(moleculareffect_from_annotation_list)
                         if list_of_molecular_effects != []:
                             molecular_attributes = MolecularAttributes(molecularEffects=list_of_molecular_effects,geneIds=[gene] if gene != '' else None,aminoacidChanges=[aminoacidchange] if protein != '' else None)
                         else:
@@ -511,7 +522,7 @@ def generate(dict_properties, args):
                 else:
                     rootHGVS='NC_00000'
                 
-                if args.refGen == 'GRCh37':
+                if refGen == 'GRCh37':
                     if chromos in ['14', '21']:
                         HGVSId=rootHGVS+str(chromos) + '.8' + ':' + 'g.'
                     elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
@@ -522,7 +533,7 @@ def generate(dict_properties, args):
                         HGVSId=rootHGVS+str(chromos) + '.11' + ':' + 'g.'
                     elif chromos == '7':
                         HGVSId=rootHGVS+str(chromos) + '.13' + ':' + 'g.' 
-                elif args.refGen == 'GRCh38':
+                elif refGen == 'GRCh38':
                     if chromos in ['14', '21']:
                         HGVSId=rootHGVS+str(chromos) + '.9' + ':' + 'g.'
                     elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
@@ -533,7 +544,7 @@ def generate(dict_properties, args):
                         HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.'
                     elif chromos == '7':
                         HGVSId=rootHGVS+str(chromos) + '.14' + ':' + 'g.' 
-                elif args.refGen == 'NCBI36':
+                elif refGen == 'NCBI36':
                     if chromos in ['14', '21']:
                         HGVSId=rootHGVS+str(chromos) + '.7' + ':' + 'g.'
                     elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
@@ -644,6 +655,8 @@ def generate(dict_properties, args):
                     sequence_id=seqid23
                 elif chromos == '24' or chromos == 'Y':
                     sequence_id=seqid24
+                elif chromos == 'MT':
+                    sequence_id=seqMT
                 end_range = Number(type="Number",value=int(end))
                 start_range = Number(type="Number",value=int(start))
                 interval = SequenceInterval(type="SequenceInterval", start=start_range, end=end_range)
@@ -776,8 +789,6 @@ def generate(dict_properties, args):
             except ValidationError:
                 print("Validation error for variant in chr: {} with start position: {} and reference base: {}".format(chrom, start, ref))
                 raise
-            except Exception:
-                raise
 
 
 
@@ -813,7 +824,8 @@ def generate(dict_properties, args):
         pbar.close()
         return number_variants, skipped_counts
     except Exception:
-        raise Exception('No vcf.gz file could be found.')
+        print('No vcf.gz file could be found or processed.')
+        return 0,0
 
 
 parser = argparse.ArgumentParser(
@@ -822,7 +834,6 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('-o', '--output', default=conf.output_docs_folder)
 parser.add_argument('-d', '--datasetId', default=conf.datasetId)
-parser.add_argument('-r', '--refGen', default=conf.reference_genome)
 parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
 parser.add_argument('-n', '--numRows', default=conf.num_rows)
 parser.add_argument('-v', '--verbosity', default=conf.verbosity, action=argparse.BooleanOptionalAction)
@@ -842,5 +853,3 @@ if __name__ == '__main__':
         print('Successfully inserted {} records into beacon'.format(total_i-skipped_variants-1))
         print('A total of {} variants were processed'.format(total_i-1))
         print('A total of {} variants were skipped'.format(skipped_variants))
-    else:
-        print('No registries found.')

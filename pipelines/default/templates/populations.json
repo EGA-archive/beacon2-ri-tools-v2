@@ -1,15 +1,270 @@
 {
-    "source": "The Genome Aggregation Database (gnomAD)",
+    "source": "The Genome Aggregation Database (gnomAD) v4.1.0",
     "sourceReference": "gnomad.broadinstitute.org/",
     "populations": [
         {
             "population": "Total",
-            "alleleFrequency": "AF",
-            "alleleCount": "AC",
-            "alleleCountHomozygous": "AC_Hom",
-            "alleleCountHeterozygous": "AC_Het",
-            "alleleCountHemizygous": "AC_Hemi",
-            "alleleNumber": "AN"
+            "alleleFrequency": "AF_joint",
+            "alleleCount": "AC_joint",
+            "genotypeHomozygous": "nhomalt_joint",
+            "genotypeHeterozygous": "nhet_joint",
+            "alleleNumber": "AN_joint"
+        },
+        {
+            "population": "XX",
+            "alleleFrequency": "AF_joint_XX",
+            "alleleCount": "AC_joint_XX",
+            "genotypeHomozygous": "nhomalt_joint_XX",
+            "genotypeHeterozygous": "nhet_joint_XX",
+            "alleleNumber": "AN_joint_XX"
+        },
+        {
+            "population": "XY",
+            "alleleFrequency": "AF_joint_XY",
+            "alleleCount": "AC_joint_XY",
+            "genotypeHomozygous": "nhomalt_joint_XY",
+            "genotypeHeterozygous": "nhet_joint_XY",
+            "alleleNumber": "AN_joint_XY"
+        },
+        {
+            "population": "African/African American",
+            "alleleFrequency": "AF_joint_afr",
+            "alleleCount": "AC_joint_afr",
+            "genotypeHomozygous": "nhomalt_joint_afr",
+            "genotypeHeterozygous": "nhet_joint_afr",
+            "alleleNumber": "AN_joint_afr"
+        },
+        {
+            "population": "African/African American XX",
+            "alleleFrequency": "AF_joint_afr_XX",
+            "alleleCount": "AC_joint_afr_XX",
+            "genotypeHomozygous": "nhomalt_joint_afr_XX",
+            "genotypeHeterozygous": "nhet_joint_afr_XX",
+            "alleleNumber": "AN_joint_afr_XX"
+        },
+        {
+            "population": "African/African American XY",
+            "alleleFrequency": "AF_joint_afr_XY",
+            "alleleCount": "AC_joint_afr_XY",
+            "genotypeHomozygous": "nhomalt_joint_afr_XY",
+            "genotypeHeterozygous": "nhet_joint_afr_XY",
+            "alleleNumber": "AN_joint_afr_XY"
+        },
+        {
+            "population": "Amish",
+            "alleleFrequency": "AF_joint_ami",
+            "alleleCount": "AC_joint_ami",
+            "genotypeHomozygous": "nhomalt_joint_ami",
+            "genotypeHeterozygous": "nhet_joint_ami",
+            "alleleNumber": "AN_joint_ami"
+        },
+        {
+            "population": "Amish XX",
+            "alleleFrequency": "AF_joint_ami_XX",
+            "alleleCount": "AC_joint_ami_XX",
+            "genotypeHomozygous": "nhomalt_joint_ami_XX",
+            "genotypeHeterozygous": "nhet_joint_ami_XX",
+            "alleleNumber": "AN_joint_ami_XX"
+        },
+        {
+            "population": "Amish XY",
+            "alleleFrequency": "AF_joint_ami_XY",
+            "alleleCount": "AC_joint_ami_XY",
+            "genotypeHomozygous": "nhomalt_joint_ami_XY",
+            "genotypeHeterozygous": "nhet_joint_ami_XY",
+            "alleleNumber": "AN_joint_ami_XY"
+        },
+        {
+            "population": "Admixed American",
+            "alleleFrequency": "AF_joint_amr",
+            "alleleCount": "AC_joint_amr",
+            "genotypeHomozygous": "nhomalt_joint_amr",
+            "genotypeHeterozygous": "nhet_joint_amr",
+            "alleleNumber": "AN_joint_amr"
+        },
+        {
+            "population": "Admixed American XX",
+            "alleleFrequency": "AF_joint_amr_XX",
+            "alleleCount": "AC_joint_amr_XX",
+            "genotypeHomozygous": "nhomalt_joint_amr_XX",
+            "genotypeHeterozygous": "nhet_joint_amr_XX",
+            "alleleNumber": "AN_joint_amr_XX"
+        },
+        {
+            "population": "Admixed American XY",
+            "alleleFrequency": "AF_joint_amr_XY",
+            "alleleCount": "AC_joint_amr_XY",
+            "genotypeHomozygous": "nhomalt_joint_amr_XY",
+            "genotypeHeterozygous": "nhet_joint_amr_XY",
+            "alleleNumber": "AN_joint_amr_XY"
+        },
+        {
+            "population": "Ashkenazi Jewish",
+            "alleleFrequency": "AF_joint_asj",
+            "alleleCount": "AC_joint_asj",
+            "genotypeHomozygous": "nhomalt_joint_asj",
+            "genotypeHeterozygous": "nhet_joint_asj",
+            "alleleNumber": "AN_joint_asj"
+        },
+        {
+            "population": "Ashkenazi Jewish XX",
+            "alleleFrequency": "AF_joint_asj_XX",
+            "alleleCount": "AC_joint_asj_XX",
+            "genotypeHomozygous": "nhomalt_joint_asj_XX",
+            "genotypeHeterozygous": "nhet_joint_asj_XX",
+            "alleleNumber": "AN_joint_asj_XX"
+        },
+        {
+            "population": "Ashkenazi Jewish XY",
+            "alleleFrequency": "AF_joint_asj_XY",
+            "alleleCount": "AC_joint_asj_XY",
+            "genotypeHomozygous": "nhomalt_joint_asj_XY",
+            "genotypeHeterozygous": "nhet_joint_asj_XY",
+            "alleleNumber": "AN_joint_asj_XY"
+        },
+        {
+            "population": "East Asian",
+            "alleleFrequency": "AF_joint_eas",
+            "alleleCount": "AC_joint_eas",
+            "genotypeHomozygous": "nhomalt_joint_eas",
+            "genotypeHeterozygous": "nhet_joint_eas",
+            "alleleNumber": "AN_joint_eas"
+        },
+        {
+            "population": "East Asian XX",
+            "alleleFrequency": "AF_joint_eas_XX",
+            "alleleCount": "AC_joint_eas_XX",
+            "genotypeHomozygous": "nhomalt_joint_eas_XX",
+            "genotypeHeterozygous": "nhet_joint_eas_XX",
+            "alleleNumber": "AN_joint_eas_XX"
+        },
+        {
+            "population": "East Asian XY",
+            "alleleFrequency": "AF_joint_eas_XY",
+            "alleleCount": "AC_joint_eas_XY",
+            "genotypeHomozygous": "nhomalt_joint_eas_XY",
+            "genotypeHeterozygous": "nhet_joint_eas_XY",
+            "alleleNumber": "AN_joint_eas_XY"
+        },
+        {
+            "population": "Finnish",
+            "alleleFrequency": "AF_joint_fin",
+            "alleleCount": "AC_joint_fin",
+            "genotypeHomozygous": "nhomalt_joint_fin",
+            "genotypeHeterozygous": "nhet_joint_fin",
+            "alleleNumber": "AN_joint_fin"
+        },
+        {
+            "population": "Finnish XX",
+            "alleleFrequency": "AF_joint_fin_XX",
+            "alleleCount": "AC_joint_fin_XX",
+            "genotypeHomozygous": "nhomalt_joint_fin_XX",
+            "genotypeHeterozygous": "nhet_joint_fin_XX",
+            "alleleNumber": "AN_joint_fin_XX"
+        },
+        {
+            "population": "Finnish XY",
+            "alleleFrequency": "AF_joint_fin_XY",
+            "alleleCount": "AC_joint_fin_XY",
+            "genotypeHomozygous": "nhomalt_joint_fin_XY",
+            "genotypeHeterozygous": "nhet_joint_fin_XY",
+            "alleleNumber": "AN_joint_fin_XY"
+        },
+        {
+            "population": "Middle Eastern",
+            "alleleFrequency": "AF_joint_mid",
+            "alleleCount": "AC_joint_mid",
+            "genotypeHomozygous": "nhomalt_joint_mid",
+            "genotypeHeterozygous": "nhet_joint_mid",
+            "alleleNumber": "AN_joint_mid"
+        },
+        {
+            "population": "Middle Eastern XX",
+            "alleleFrequency": "AF_joint_mid_XX",
+            "alleleCount": "AC_joint_mid_XX",
+            "genotypeHomozygous": "nhomalt_joint_mid_XX",
+            "genotypeHeterozygous": "nhet_joint_mid_XX",
+            "alleleNumber": "AN_joint_mid_XX"
+        },
+        {
+            "population": "Middle Eastern XY",
+            "alleleFrequency": "AF_joint_mid_XY",
+            "alleleCount": "AC_joint_mid_XY",
+            "genotypeHomozygous": "nhomalt_joint_mid_XY",
+            "genotypeHeterozygous": "nhet_joint_mid_XY",
+            "alleleNumber": "AN_joint_mid_XY"
+        },
+        {
+            "population": "Non-Finnish European",
+            "alleleFrequency": "AF_joint_nfe",
+            "alleleCount": "AC_joint_nfe",
+            "genotypeHomozygous": "nhomalt_joint_nfe",
+            "genotypeHeterozygous": "nhet_joint_nfe",
+            "alleleNumber": "AN_joint_nfe"
+        },
+        {
+            "population": "Non-Finnish European XX",
+            "alleleFrequency": "AF_joint_nfe_XX",
+            "alleleCount": "AC_joint_nfe_XX",
+            "genotypeHomozygous": "nhomalt_joint_nfe_XX",
+            "genotypeHeterozygous": "nhet_joint_nfe_XX",
+            "alleleNumber": "AN_joint_nfe_XX"
+        },
+        {
+            "population": "Non-Finnish European XY",
+            "alleleFrequency": "AF_joint_nfe_XY",
+            "alleleCount": "AC_joint_nfe_XY",
+            "genotypeHomozygous": "nhomalt_joint_nfe_XY",
+            "genotypeHeterozygous": "nhet_joint_nfe_XY",
+            "alleleNumber": "AN_joint_nfe_XY"
+        },
+        {
+            "population": "Remaining",
+            "alleleFrequency": "AF_joint_remaining",
+            "alleleCount": "AC_joint_remaining",
+            "genotypeHomozygous": "nhomalt_joint_remaining",
+            "genotypeHeterozygous": "nhet_joint_remaining",
+            "alleleNumber": "AN_joint_remaining"
+        },
+        {
+            "population": "Remaining XX",
+            "alleleFrequency": "AF_joint_remaining_XX",
+            "alleleCount": "AC_joint_remaining_XX",
+            "genotypeHomozygous": "nhomalt_joint_remaining_XX",
+            "genotypeHeterozygous": "nhet_joint_remaining_XX",
+            "alleleNumber": "AN_joint_remaining_XX"
+        },
+        {
+            "population": "Remaining XY",
+            "alleleFrequency": "AF_joint_remaining_XY",
+            "alleleCount": "AC_joint_remaining_XY",
+            "genotypeHomozygous": "nhomalt_joint_remaining_XY",
+            "genotypeHeterozygous": "nhet_joint_remaining_XY",
+            "alleleNumber": "AN_joint_remaining_XY"
+        },
+        {
+            "population": "South Asian",
+            "alleleFrequency": "AF_joint_sas",
+            "alleleCount": "AC_joint_sas",
+            "genotypeHomozygous": "nhomalt_joint_sas",
+            "genotypeHeterozygous": "nhet_joint_sas",
+            "alleleNumber": "AN_joint_sas"
+        },
+        {
+            "population": "South Asian XX",
+            "alleleFrequency": "AF_joint_sas_XX",
+            "alleleCount": "AC_joint_sas_XX",
+            "genotypeHomozygous": "nhomalt_joint_sas_XX",
+            "genotypeHeterozygous": "nhet_joint_sas_XX",
+            "alleleNumber": "AN_joint_sas_XX"
+        },
+        {
+            "population": "South Asian XY",
+            "alleleFrequency": "AF_joint_sas_XY",
+            "alleleCount": "AC_joint_sas_XY",
+            "genotypeHomozygous": "nhomalt_joint_sas_XY",
+            "genotypeHeterozygous": "nhet_joint_sas_XY", 
+            "alleleNumber": "AN_joint_sas_XY"
         }
     ]
 }
