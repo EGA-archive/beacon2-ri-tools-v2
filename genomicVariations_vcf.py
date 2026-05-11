@@ -544,7 +544,7 @@ def generate(dict_properties, args):
                         HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.'
                     elif chromos == '7':
                         HGVSId=rootHGVS+str(chromos) + '.14' + ':' + 'g.' 
-                elif refGen == 'NCBI36':
+                elif refGen == 'NCBI36' or refGen == 'Hg18':
                     if chromos in ['14', '21']:
                         HGVSId=rootHGVS+str(chromos) + '.7' + ':' + 'g.'
                     elif chromos in ['5', '11', '15', '16', '18', '19', '24']:
