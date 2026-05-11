@@ -31,6 +31,8 @@ To light up the container with beacon data tools, execute the next command insid
 docker compose up -d --build
 ```
 
+At the first build, the files needed for refgenDetector will be downloaded in a volume located at a new refgen-data folder. Beware you will need some disk space at your local system (approximately 100 files of around 100 MB per file).
+
 Once the container is up and running you can start using beacon ri tools v2, congratulations!
 
 ## Instruction manual
