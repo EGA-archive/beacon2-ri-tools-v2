@@ -187,7 +187,7 @@ class SequenceLocation(BaseModel, extra='allow'):
     @field_validator('sequence_id')
     @classmethod
     def sequence_id_must_be_CURIE(cls, v: str) -> str:
-        if re.match("[A-Za-z_0-9]+:[A-Za-z0-9]", v):
+        if re.match(r"^[A-Za-z0-9_]+:[A-Za-z0-9._-]+$", v):
             pass
         else:
             raise ValueError('sequence_id must be CURIE, e.g. NCIT:C42331')

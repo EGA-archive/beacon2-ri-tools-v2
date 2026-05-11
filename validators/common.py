@@ -10,6 +10,8 @@ from typing import Optional
 
 timestamp_regex = re.compile(r"^.+(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2})")
 
+iso8601regex=re.compile(r"P(?=\d+[YMWD])(\d+Y)?(\d+M)?(\d+W)?(\d+D)?")
+
 class OntologyTerm(BaseModel, extra='forbid'):
     id: str
     label: Optional[str]=None
