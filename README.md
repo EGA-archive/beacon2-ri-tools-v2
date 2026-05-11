@@ -47,7 +47,6 @@ entry_type='all'
 #### VCF Conversion config parameters ####
 only_process_reads_with_allele_frequency=True
 populations_by_allele_counts=True
-reference_genome='GRCh37' # Choose one between NCBI36, GRCh37, GRCh38
 datasetId='COVID_pop11_fin_2'
 case_level_data=False
 exact_heterozygosity=False
@@ -58,7 +57,7 @@ verbosity=False
 record_type='genomicVariation' # One between analysis, biosample, cohort, dataset, genomicVariation, individual or run
 collection_name='genomicVariations'
 ```
-Note: For *reference_genome* conf setting, you can only choose between NCBI36, GRCh37 and GRCh38 for genomic DNA. For mitochondrial DNA, the only options are GRCh37 or GRCh38, which will use the GenBank build (https://www.ncbi.nlm.nih.gov/nucleotide/NC_012920.1).
+
 Please, remember to make the datasetId match the id for your datasets.csv file.
 
 #### Generic config parameters
@@ -70,7 +69,6 @@ The **entry_type** variable sets the entry type you want to convert the csv file
 
 #### VCF conversion config parameters
 * The **only_process_reads_with_allele_frequency** will only insert variants in case there is a population file with AF tags that are found in the variants, so all the variants inserted will always have at least 1 population with an allele frequency value.
-* The **reference_genome** is the reference genome the tool will use to map the position of the chromosomes. Make sure to select the same version as the one used to generate your data. 
 * The **datasetId** needs to match the id of your datasets.csv or datasets.json file. This will add a datasetId field in every record to match the record with the dataset it belongs to.
 * The **case_level_data** is a boolean parameter (True or False) which will relate your variants to the samples they belong to. In case you set this to true, please, read as well the case level data paragraph below.
 * The **exact_heterozygosity** is a boolean parameter (True or False) that, in case case_level_data is True, then, it will classify the biosamples as being heterozygous for either the reference or the alternate allele.
@@ -105,7 +103,6 @@ parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 ```bash
 parser.add_argument('-o', '--output', default=conf.output_docs_folder)
 parser.add_argument('-d', '--datasetId', default=conf.datasetId)
-parser.add_argument('-r', '--refGen', default=conf.reference_genome)
 parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
 parser.add_argument('-n', '--numRows', default=conf.num_rows)
 parser.add_argument('-v', '--verbosity', default=conf.verbosity)
@@ -155,6 +152,10 @@ By default, it expects headers annotated by VEP. The parameters that are read fr
 However, if your VCF has been annotated with a different tool and you want to keep this information you’ll need to modify /pipelines/default/templates/template.json. Update the key names so they match the ones in your VCF and activate the template to true. (Note that using template.json TRUE will deactivate reading the VEP headers.) 
 This way, once your beacon instance is running, you’ll be able to query it using these fields.
 
+#### VCFs need to match an assembly
+
+Now, RI Tools comes with refgenDetector integration, meaning that any VCF that is read will be analyzed by this tool and an assembly will be inferred. If the VCF has been modified (e.g. a swapped variant) the refgenDetector won't be able to infer the assembly and the VCF won't be processed.
+Note that thanks to that, you don't need to manually point and set in conf which is the reference_genome anymore.
 
 #### VCF pipelines for allele frequencies
 
