@@ -7,7 +7,15 @@ import hashlib
 import argparse
 import os
 
-with open("files/headers/individuals.txt", "r") as txt_file:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+INDIVIDUALS_HEADERS = os.path.join(
+    BASE_DIR,
+    "files",
+    "headers",
+    "individuals.txt")
+
+with open(INDIVIDUALS_HEADERS, "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
 
 def get_hash(string:str):
