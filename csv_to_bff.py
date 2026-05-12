@@ -17,6 +17,8 @@ import hashlib
 import argparse
 import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
@@ -318,9 +320,21 @@ if __name__ == '__main__':
         choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs']
         for entrytype in choices:
             args.entry_type = entrytype
-            with open("files/headers/"+args.entry_type+'.txt', "r") as txt_file:
+            header_path = os.path.join(
+                BASE_DIR,
+                "files",
+                "headers",
+                args.entry_type + ".txt"
+            )
+            json_path = os.path.join(
+                BASE_DIR,
+                "files",
+                "deref_schemas",
+                args.entry_type + ".json"
+            )
+            with open(header_path, "r") as txt_file:
                 list_of_headers=txt_file.read().splitlines() 
-            with open('files/deref_schemas/'+args.entry_type+'.json') as json_file:
+            with open(json_path) as json_file:
                 dict_properties = json.load(json_file)
             try:
                 dict_generado, total_i=csv_to_bff(dict_properties, list_of_headers, args)
@@ -339,9 +353,21 @@ if __name__ == '__main__':
             with open(output, 'w') as f:
                 json.dump(dict_generado, f)
     else:
-        with open("files/headers/"+args.entry_type+'.txt', "r") as txt_file:
+        header_path = os.path.join(
+            BASE_DIR,
+            "files",
+            "headers",
+            args.entry_type + ".txt"
+        )
+        json_path = os.path.join(
+            BASE_DIR,
+            "files",
+            "deref_schemas",
+            args.entry_type + ".json"
+        )
+        with open(header_path, "r") as txt_file:
             list_of_headers=txt_file.read().splitlines() 
-        with open('files/deref_schemas/'+args.entry_type+'.json') as json_file:
+        with open(json_path) as json_file:
             dict_properties = json.load(json_file)
 
         dict_generado, total_i=csv_to_bff(dict_properties, list_of_headers, args)
