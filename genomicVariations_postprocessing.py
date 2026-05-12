@@ -20,8 +20,8 @@ GENOMICVARIATIONS_HEADERS = os.path.join(
 GENOMICVARIATIONS_DEREF_SCHEMA = os.path.join(
     BASE_DIR,
     "files",
-    "headers",
-    "genomicVariations.txt")
+    "deref_schemas",
+    "genomicVariations.json")
 
 with open(GENOMICVARIATIONS_HEADERS, "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
