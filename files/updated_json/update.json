@@ -1,111 +1,40 @@
-    [{
-        "_id": "6ecd5817fe3cfb6b892e841fb80b64ed0de9cc365e0728f6fd9a43c544ecbdce",
-        "identifiers": {
-            "genomicHGVSId": "NC_000001.10:g.1234567CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT>T"
-        },
-        "molecularAttributes": {
-            "geneIds": [
-                "UPDATEDGENE8"
-            ],
-            "molecularEffects": [
-                {
-                    "id": "SO:0001631",
-                    "label": "upstream_gene_variant"
-                }
-            ]
-        },
-        "variantInternalId": "c3ef2890-5bcd-11f0-8afe-0242ac120003:CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT:T",
-        "variation": {
-            "location": {
-                "type": "SequenceLocation",
-                "sequence_id": "HGVSid:1:g.1234566CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT>T",
-                "interval": {
-                    "type": "SequenceInterval",
-                    "start": {
-                        "type": "Number",
-                        "value": 1234566
-                    },
-                    "end": {
-                        "type": "Number",
-                        "value": 1234867
-                    }
-                }
-            },
-            "alternateBases": "T",
-            "referenceBases": "CGTGTGTGCACAGTTTGTTCTTGGACGAGGACTCGTGAGGATCGAGGGCTGGGGACCCCGGTGTGAGCAGGATGGGGCCCTGCCCTCCCGTGGGAGTTGTGGACTCGAGCCCAGGGGCTGCCCGTCACAGCGGTGTCCCAGGTCCCTGCCATCCGATTTTACCTGGGATGTCTTCTCTGGAGTTTGGAATTGCTTGAGGAACCCTGCGTGTGCTTGGAGAGGCCAGAGGGCTTGCTGAGAACCCCATGGACAGTGGAGAGCGGGATTCGAACCAAGGGCTGGACTCCCACACCTCTGGCCT",
-            "variantType": "INDEL"
-        },
-        "datasetId": "test",
-        "frequencyInPopulations": [
-            {
-                "source": "The Genome Aggregation Database (gnomAD)",
-                "sourceReference": "gnomad.broadinstitute.org/",
-                "frequencies": [
-                    {
-                        "alleleFrequency": 0.550000011920929,
-                        "alleleCount": 22,
-                        "alleleCountHomozygous": 5,
-                        "alleleCountHeterozygous": 12,
-                        "alleleNumber": 40,
-                        "population": "Total"
-                    }
-                ]
-            }
-        ]
-    },
+{
+    "_id": "e4099e2aab49581017751a6c310775818d4146845e13f12811643684041ab801",
+    "caseLevelData": [
         {
-        "_id": "d1cda763bc12e078a2b5e1a9b2e9020b915d6cbdbf17709ae51e5248f7da5c9c",
-        "identifiers": {
-            "genomicHGVSId": "NC_000017.10:g.43045704G>A"
-        },
-        "molecularAttributes": {
-            "geneIds": [
-                "UPDATEDGENE8"
-            ],
-            "molecularEffects": [
+            "biosampleId": "SAMPLE17",
+            "phenotypicEffects": [
                 {
-                    "id": "SO:0001631",
-                    "label": "upstream_gene_variant"
+                    "conditionId": "Melanoma",
+                    "effect": {
+                        "id": "DOID:1909",
+                        "label": "melanoma"
+                    }
                 }
             ]
-        },
-        "variantInternalId": "c3ef6f4e-5bcd-11f0-8afe-0242ac120003:C:T",
-        "variation": {
-            "location": {
-                "type": "SequenceLocation",
-                "sequence_id": "HGVSid:1:g.169549810C>T",
-                "interval": {
-                    "type": "SequenceInterval",
-                    "start": {
-                        "type": "Number",
-                        "value": 169549810
-                    },
-                    "end": {
-                        "type": "Number",
-                        "value": 169549811
-                    }
+        }
+    ],
+    "variantInternalId": "4dbae68746e521da4d8fe4da3b61f56e579e001400b4410f9b5f1316fdb24bbb",
+    "variation": {
+        "alternateBases": "T",
+        "location": {
+            "_id:": "Var:00002",
+            "type": "SequenceLocation",
+            "sequence_id": "ga4gh:SQ.-BOZ8Esn8J88qDwNiSEwUr5425UXdiGX",
+            "interval": {
+                "type": "SequenceInterval",
+                "start": {
+                    "type": "Number",
+                    "value": 7232463
+                },
+                "end": {
+                    "type": "Number",
+                    "value": 7232464
                 }
-            },
-            "alternateBases": "T",
-            "referenceBases": "C",
-            "variantType": "SNP"
-        },
-        "datasetId": "test",
-        "frequencyInPopulations": [
-            {
-                "source": "The Genome Aggregation Database (gnomAD)",
-                "sourceReference": "gnomad.broadinstitute.org/",
-                "frequencies": [
-                    {
-                        "alleleFrequency": 0.05000000074505806,
-                        "alleleCount": 2,
-                        "alleleCountHomozygous": 0,
-                        "alleleCountHeterozygous": 2,
-                        "alleleNumber": 40,
-                        "population": "Total"
-                    }
-                ]
             }
-        ]
-    }
-]
+        },
+        "referenceBases": "A",
+        "variantType": "SNP "
+    },
+    "datasetId": "test"
+}
