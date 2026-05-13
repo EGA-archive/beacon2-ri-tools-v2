@@ -277,17 +277,17 @@ def csv_to_bff(dict_properties, list_of_headers, args):
                 Analyses(**definitivedict)
             elif args.entry_type == 'runs':
                 Runs(**definitivedict)
-            elif args.entry_type == 'EUCAIM/patients':
+            elif args.entry_type == 'patients':
                 Patients(**definitivedict)
-            elif args.entry_type == 'EUCAIM/collections':
+            elif args.entry_type == 'collections':
                 Collections(**definitivedict)
-            elif args.entry_type == 'EUCAIM/imageStudies':
+            elif args.entry_type == 'imageStudies':
                 ImageStudies(**definitivedict)
             if args.entry_type != 'datasets':
                 definitivedict["datasetId"]=args.datasetId
             if args.entry_type == 'genomicVariations':
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["variantInternalId"])
-            elif args.entry_type == 'EUCAIM/patients':
+            elif args.entry_type == 'patients':
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["patientId"])
             else:
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["id"])
@@ -311,13 +311,13 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-o', '--output', default=conf.output_docs_folder)
 parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 parser.add_argument('-i', '--input', default=conf.csv_folder)
-parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all', 'EUCAIM/collections', 'EUCAIM/imageStudies', 'EUCAIM/patients'])
+parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all', 'collections', 'imageStudies', 'patients'])
 
 args = parser.parse_args()
 
 if __name__ == '__main__':
+    choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs']
     if args.entry_type == 'all':
-        choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs']
         for entrytype in choices:
             args.entry_type = entrytype
             header_path = os.path.join(
@@ -353,17 +353,20 @@ if __name__ == '__main__':
             with open(output, 'w') as f:
                 json.dump(dict_generado, f)
     else:
+        path = args.entry_type
+        if args.entry_type not in choices:
+            path = 'EUCAIM/' + args.entry_type
         header_path = os.path.join(
             BASE_DIR,
             "files",
             "headers",
-            args.entry_type + ".txt"
+            path + ".txt"
         )
         json_path = os.path.join(
             BASE_DIR,
             "files",
             "deref_schemas",
-            args.entry_type + ".json"
+            path + ".json"
         )
         with open(header_path, "r") as txt_file:
             list_of_headers=txt_file.read().splitlines() 
