@@ -9,9 +9,23 @@ from pymongo.mongo_client import MongoClient
 import argparse
 import os
 
-with open("files/headers/genomicVariations.txt", "r") as txt_file:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+GENOMICVARIATIONS_HEADERS = os.path.join(
+    BASE_DIR,
+    "files",
+    "headers",
+    "genomicVariations.txt")
+
+GENOMICVARIATIONS_DEREF_SCHEMA = os.path.join(
+    BASE_DIR,
+    "files",
+    "deref_schemas",
+    "genomicVariations.json")
+
+with open(GENOMICVARIATIONS_HEADERS, "r") as txt_file:
     list_of_headers=txt_file.read().splitlines() 
-with open('files/deref_schemas/genomicVariations.json') as json_file:
+with open(GENOMICVARIATIONS_DEREF_SCHEMA) as json_file:
     dict_properties = json.load(json_file)
 
 client = MongoClient(

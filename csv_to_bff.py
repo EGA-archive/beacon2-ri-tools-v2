@@ -17,6 +17,8 @@ import hashlib
 import argparse
 import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
@@ -140,12 +142,15 @@ def process_list(item, new_item, processed_list, dict_of_properties, num_process
                     processed_list.append(sublist_dict[new_item.split('|')[0]])
         elif isinstance(list_item, str):
             propv = process_string(new_item, dict_of_properties)
-            if '|' in propv:
-                propv=propv.split('|')
-                for propv_splitted in propv:
-                    processed_list.append(propv_splitted)
-            else:
-                processed_list.append(propv)
+            if propv is not None:
+                if '|' in propv:
+                    propv=propv.split('|')
+                    for propv_splitted in propv:
+                        processed_list.append(propv_splitted)
+                elif new_item == 'modalities':
+                    processed_list=[propv]
+                else:
+                    processed_list=propv
     return processed_list, num_process, list_of_provs
 
 def process_string(new_item, dict_of_properties):
@@ -272,18 +277,17 @@ def csv_to_bff(dict_properties, list_of_headers, args):
                 Analyses(**definitivedict)
             elif args.entry_type == 'runs':
                 Runs(**definitivedict)
-            elif args.entry_type == 'EUCAIM/patients':
+            elif args.entry_type == 'patients':
                 Patients(**definitivedict)
-            elif args.entry_type == 'EUCAIM/collections':
-                print(definitivedict)
+            elif args.entry_type == 'collections':
                 Collections(**definitivedict)
-            elif args.entry_type == 'EUCAIM/imageStudies':
+            elif args.entry_type == 'imageStudies':
                 ImageStudies(**definitivedict)
             if args.entry_type != 'datasets':
                 definitivedict["datasetId"]=args.datasetId
             if args.entry_type == 'genomicVariations':
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["variantInternalId"])
-            elif args.entry_type == 'EUCAIM/patients':
+            elif args.entry_type == 'patients':
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["patientId"])
             else:
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["id"])
@@ -307,18 +311,30 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-o', '--output', default=conf.output_docs_folder)
 parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 parser.add_argument('-i', '--input', default=conf.csv_folder)
-parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all', 'EUCAIM/collections', 'EUCAIM/imageStudies', 'EUCAIM/patients'])
+parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all', 'collections', 'imageStudies', 'patients'])
 
 args = parser.parse_args()
 
 if __name__ == '__main__':
+    choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs']
     if args.entry_type == 'all':
-        choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs']
         for entrytype in choices:
             args.entry_type = entrytype
-            with open("files/headers/"+args.entry_type+'.txt', "r") as txt_file:
+            header_path = os.path.join(
+                BASE_DIR,
+                "files",
+                "headers",
+                args.entry_type + ".txt"
+            )
+            json_path = os.path.join(
+                BASE_DIR,
+                "files",
+                "deref_schemas",
+                args.entry_type + ".json"
+            )
+            with open(header_path, "r") as txt_file:
                 list_of_headers=txt_file.read().splitlines() 
-            with open('files/deref_schemas/'+args.entry_type+'.json') as json_file:
+            with open(json_path) as json_file:
                 dict_properties = json.load(json_file)
             try:
                 dict_generado, total_i=csv_to_bff(dict_properties, list_of_headers, args)
@@ -337,9 +353,24 @@ if __name__ == '__main__':
             with open(output, 'w') as f:
                 json.dump(dict_generado, f)
     else:
-        with open("files/headers/"+args.entry_type+'.txt', "r") as txt_file:
+        path = args.entry_type
+        if args.entry_type not in choices:
+            path = 'EUCAIM/' + args.entry_type
+        header_path = os.path.join(
+            BASE_DIR,
+            "files",
+            "headers",
+            path + ".txt"
+        )
+        json_path = os.path.join(
+            BASE_DIR,
+            "files",
+            "deref_schemas",
+            path + ".json"
+        )
+        with open(header_path, "r") as txt_file:
             list_of_headers=txt_file.read().splitlines() 
-        with open('files/deref_schemas/'+args.entry_type+'.json') as json_file:
+        with open(json_path) as json_file:
             dict_properties = json.load(json_file)
 
         dict_generado, total_i=csv_to_bff(dict_properties, list_of_headers, args)

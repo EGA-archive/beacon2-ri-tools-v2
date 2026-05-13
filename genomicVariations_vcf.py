@@ -18,6 +18,53 @@ from ga4gh.vrs.dataproxy import create_dataproxy
 import subprocess
 import yaml
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+GENOMIC_VARIATIONS_SCHEMA = os.path.join(
+    BASE_DIR,
+    "files",
+    "deref_schemas",
+    "genomicVariations.json"
+)
+
+POPULATIONS_FILE = os.path.join(
+    BASE_DIR,
+    "pipelines",
+    "default",
+    "templates",
+    "populations.json"
+)
+
+TEMPLATE_FILE = os.path.join(
+    BASE_DIR,
+    "pipelines",
+    "default",
+    "templates",
+    "template.json"
+)
+
+MOLECULAREFFECTS_FILE = os.path.join(
+    BASE_DIR,
+    "pipelines",
+    "default",
+    "templates",
+    "moleculareffects.json"
+)
+
+GRCH38_FILE = os.path.join(
+    BASE_DIR,
+    "vrs",
+    "sequence_id",
+    "GRCh38.yml"
+)
+
+GRCH37_FILE = os.path.join(
+    BASE_DIR,
+    "vrs",
+    "sequence_id",
+    "GRCh37.yml"
+)
+
 seqrepo_rest_service_url = "seqrepo+https://services.genomicmedlab.org/seqrepo"
 seqrepo_dataproxy = create_dataproxy(uri=seqrepo_rest_service_url)
 
@@ -33,18 +80,18 @@ client = MongoClient(
         )
     )
 
-with open('files/deref_schemas/genomicVariations.json') as json_file:
+with open(GENOMIC_VARIATIONS_SCHEMA) as json_file:
     dict_properties = json.load(json_file)
 
 try:
-    with open('pipelines/default/templates/populations.json') as pipeline_file:
+    with open(POPULATIONS_FILE) as pipeline_file:
         pipeline = json.load(pipeline_file)
 except Exception:
     pipeline = None
     print('pipelines/default/templates/populations.json not found, VCF is being processed without AF reads')
 
 try:
-    with open('pipelines/default/templates/template.json') as template_file:
+    with open(TEMPLATE_FILE) as template_file:
         template = json.load(template_file)
         if template["template"]==False:
             template=None
@@ -52,7 +99,7 @@ except Exception:
     template = None
 
 try:
-    with open('pipelines/default/templates/molecularEffects.json') as molecularEffects_file:
+    with open(MOLECULAREFFECTS_FILE) as molecularEffects_file:
         moleculareffects_ontologies = json.load(molecularEffects_file)
 except Exception:
     moleculareffects_ontologies = []
@@ -199,10 +246,10 @@ def generate(dict_properties, args):
                 seqMT='ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct'
             except Exception:
                 if refGen == 'GRCh38':
-                    with open('vrs/sequence_id/GRCh38.yml', 'r') as outfile:
+                    with open(GRCH38_FILE, 'r') as outfile:
                         sequence_ids=yaml.load(outfile, Loader=yaml.SafeLoader)
                 elif refGen == 'GRCh37':
-                    with open('vrs/sequence_id/GRCh37.yml', 'r') as outfile:
+                    with open(GRCH37_FILE, 'r') as outfile:
                         sequence_ids=yaml.load(outfile, Loader=yaml.SafeLoader)
                 else:
                     print("Could not determine GA4GH vrs sequence_id for ref genome {}, this VCF will not get processed".format(refGen))
@@ -278,7 +325,8 @@ def generate(dict_properties, args):
                 if args.json == False:
                     client.beacon.targets.insert_many([dict_target],ordered=False)
                 else:
-                    with open(args.output+'targets.json', 'w') as outfile:
+                    output_file = os.path.join(args.output, "targets.json")
+                    with open(output_file, 'w') as outfile:
                         json.dump([dict_target], outfile)
             except BulkWriteError as BulkError:
                 start_point=len("batch op errors occurred, full error:")
@@ -734,9 +782,11 @@ def generate(dict_properties, args):
                                 client.beacon.caseLevelData.update_one({"_id": caught_error["_id"]},set_dict)
                 elif args.caseLevelData == True:
                     try:
-                        append_to_json(args.output+'caseLevelData.json', dict_trues)
+                        output_file = os.path.join(args.output, "caseLevelData.json")
+                        append_to_json(output_file, dict_trues)
                     except Exception:
-                        with open(args.output+'caseLevelData.json', 'w') as outfile:
+                        output_file = os.path.join(args.output, "caseLevelData.json")
+                        with open(output_file, 'w') as outfile:
                             json.dump([dict_trues], outfile)
                     
 
