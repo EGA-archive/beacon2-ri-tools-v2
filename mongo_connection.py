@@ -15,12 +15,6 @@ def _get_config_value(name, default=''):
     return getattr(conf, name, default)
 
 
-def _as_bool(value):
-    if isinstance(value, bool):
-        return value
-    return str(value).strip().lower() in ('1', 'true', 'yes', 'on')
-
-
 def build_mongo_uri():
     uri = _get_config_value('database_uri')
     if uri:
@@ -61,19 +55,4 @@ def build_mongo_uri():
 
 
 def build_mongo_client():
-    uri = build_mongo_uri()
-    tls_options = {}
-
-    database_certificate = _get_config_value('database_certificate', '')
-    database_cafile = _get_config_value('database_cafile', '')
-    database_tls = _get_config_value('database_tls', '')
-
-    if database_certificate:
-        tls_options['tlsCertificateKeyFile'] = database_certificate
-    if database_cafile:
-        tls_options['tlsCAFile'] = database_cafile
-
-    if uri.startswith('mongodb+srv://') or tls_options or _as_bool(database_tls):
-        tls_options['tls'] = True
-
-    return MongoClient(uri, **tls_options)
+    return MongoClient(build_mongo_uri())

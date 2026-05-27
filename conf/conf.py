@@ -26,7 +26,3 @@ database_user = 'root'
 database_password = 'example'
 database_name = 'beacon'
 database_auth_source = 'admin'
-# Optional TLS settings for secured MongoDB deployments.
-database_tls = False
-database_certificate = ''
-database_cafile = ''
