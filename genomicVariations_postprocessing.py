@@ -5,9 +5,9 @@ import conf.conf as conf
 import csv
 import sys
 from validators.genomicVariations import GenomicVariations
-from pymongo.mongo_client import MongoClient
 import argparse
 import os
+from mongo_connection import build_mongo_client
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -28,17 +28,7 @@ with open(GENOMICVARIATIONS_HEADERS, "r") as txt_file:
 with open(GENOMICVARIATIONS_DEREF_SCHEMA) as json_file:
     dict_properties = json.load(json_file)
 
-client = MongoClient(
-        #"mongodb://127.0.0.1:27017/"
-        "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-            conf.database_user,
-            conf.database_password,
-            conf.database_host,
-            conf.database_port,
-            conf.database_name,
-            conf.database_auth_source,
-        )
-    )
+client = build_mongo_client()
 
 
 
@@ -642,5 +632,4 @@ if __name__ == '__main__':
     dict_generado, total_i=postprocess_variant(dict_properties,list_of_headers, args)
 
     print("Successfully updated {} records for genomicVariations".format(total_i-1))
-
 

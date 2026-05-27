@@ -1,4 +1,3 @@
-from pymongo.mongo_client import MongoClient
 from conf import conf
 import json
 from validators.update.genomicVariations import GenomicVariations
@@ -10,18 +9,9 @@ from validators.update.individuals import Individuals
 from validators.update.runs import Runs
 import argparse
 import os
+from mongo_connection import build_mongo_client
 
-client = MongoClient(
-        #"mongodb://127.0.0.1:27017/"
-        "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-            conf.database_user,
-            conf.database_password,
-            conf.database_host,
-            conf.database_port,
-            conf.database_name,
-            conf.database_auth_source,
-        )
-    )
+client = build_mongo_client()
 
 def validate_record(json_record, args):
     if args.recordType == 'genomicVariation':

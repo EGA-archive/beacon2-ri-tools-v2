@@ -17,6 +17,7 @@ from validators.templates.populations import AllelePopulations, GenotypePopulati
 from ga4gh.vrs.dataproxy import create_dataproxy
 import subprocess
 import yaml
+from mongo_connection import build_mongo_client
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -68,17 +69,7 @@ GRCH37_FILE = os.path.join(
 seqrepo_rest_service_url = "seqrepo+https://services.genomicmedlab.org/seqrepo"
 seqrepo_dataproxy = create_dataproxy(uri=seqrepo_rest_service_url)
 
-client = MongoClient(
-        #"mongodb://127.0.0.1:27017/"
-        "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-            conf.database_user,
-            conf.database_password,
-            conf.database_host,
-            conf.database_port,
-            conf.database_name,
-            conf.database_auth_source,
-        )
-    )
+client = build_mongo_client()
 
 with open(GENOMIC_VARIATIONS_SCHEMA) as json_file:
     dict_properties = json.load(json_file)

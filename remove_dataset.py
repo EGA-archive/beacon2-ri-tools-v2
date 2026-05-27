@@ -1,18 +1,8 @@
-from pymongo.mongo_client import MongoClient
 from conf import conf
 import argparse
+from mongo_connection import build_mongo_client
 
-client = MongoClient(
-        #"mongodb://127.0.0.1:27017/"
-        "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-            conf.database_user,
-            conf.database_password,
-            conf.database_host,
-            conf.database_port,
-            conf.database_name,
-            conf.database_auth_source,
-        )
-    )
+client = build_mongo_client()
 
 def remove_dataset(args):
     client.beacon.analyses.delete_many({"datasetId": args.datasetId})

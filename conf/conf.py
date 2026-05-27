@@ -16,9 +16,17 @@ record_type='genomicVariation' # One between analysis, biosample, cohort, datas
 collection_name='genomicVariations'
 
 ### MongoDB parameters ###
+# Use `database_uri` for a full MongoDB connection string, including
+# `mongodb+srv://...` cluster URIs. Leave it empty to keep the legacy
+# host/port/user/password fields below.
+database_uri = ''
 database_host = 'mongo'
 database_port = 27017
 database_user = 'root'
 database_password = 'example'
 database_name = 'beacon'
 database_auth_source = 'admin'
+# Optional TLS settings for secured MongoDB deployments.
+database_tls = False
+database_certificate = ''
+database_cafile = ''

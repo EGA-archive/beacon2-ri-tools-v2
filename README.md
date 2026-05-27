@@ -58,6 +58,18 @@ verbosity=False
 ### Update record ###
 record_type='genomicVariation' # One between analysis, biosample, cohort, dataset, genomicVariation, individual or run
 collection_name='genomicVariations'
+
+### MongoDB parameters ###
+database_uri=''
+database_host = 'mongo'
+database_port = 27017
+database_user = 'root'
+database_password = 'example'
+database_name = 'beacon'
+database_auth_source = 'admin'
+database_tls = False
+database_certificate = ''
+database_cafile = ''
 ```
 
 Please, remember to make the datasetId match the id for your datasets.csv file.
@@ -81,6 +93,11 @@ The **entry_type** variable sets the entry type you want to convert the csv file
 #### Update records parameters
 * The **record_type** is to let the RI Tools what type of entry type you are updating, can be one of analysis, biosample, cohort, dataset, genomicVariation, individual or run.
 * The **collection_name** parameter is to let the RI Tools know what is the name of the collection in MongoDB the record you want to be updated is located at.
+
+#### MongoDB connection settings
+The tools can connect to a standalone MongoDB instance using the legacy host/port fields above, or to a MongoDB cluster by setting `database_uri` to a full connection string such as `mongodb+srv://...`.
+
+If your MongoDB deployment uses TLS client certificates, set `database_certificate` to the combined PEM file containing the private key and certificate, and set `database_cafile` if you need to trust a private CA. These settings are passed to every script that opens a MongoDB client.
 
 #### Parsing config parameters from the command line as arguments
 
