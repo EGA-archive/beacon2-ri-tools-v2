@@ -24,5 +24,5 @@ database_host = 'mongo'
 database_port = 27017
 database_user = 'root'
 database_password = 'example'
-database_name = 'beacon_subject_test'
+database_name = 'beacon'
 database_auth_source = 'admin'
