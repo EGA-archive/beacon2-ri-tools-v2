@@ -56,3 +56,8 @@ def build_mongo_uri():
 
 def build_mongo_client():
     return MongoClient(build_mongo_uri())
+
+
+def build_mongo_database():
+    database_name = _get_config_value('database_name', 'beacon')
+    return build_mongo_client()[database_name]

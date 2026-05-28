@@ -7,7 +7,7 @@ import sys
 from validators.genomicVariations import GenomicVariations
 import argparse
 import os
-from mongo_connection import build_mongo_client
+from mongo_connection import build_mongo_database
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -28,7 +28,7 @@ with open(GENOMICVARIATIONS_HEADERS, "r") as txt_file:
 with open(GENOMICVARIATIONS_DEREF_SCHEMA) as json_file:
     dict_properties = json.load(json_file)
 
-client = build_mongo_client()
+db = build_mongo_database()
 
 
 
@@ -611,7 +611,7 @@ def postprocess_variant(dict_properties,list_of_headers, args):
                     set_dict[key]=value
             set_dict.pop("variantInternalId")
             dict_to_find={"variation.location.sequence_id": definitivedict["variation"]["location"]["sequence_id"], "variation.location.interval.start.value": definitivedict["variation"]["location"]["interval"]["start"]["value"], "variation.location.interval.end.value": definitivedict["variation"]["location"]["interval"]["end"]["value"]}
-            client.beacon.genomicVariations.update_one(dict_to_find,{'$set': set_dict}, upsert=False)
+            db.genomicVariations.update_one(dict_to_find,{'$set': set_dict}, upsert=False)
             
             pbar.update(1)
             if i > num_rows:
@@ -632,4 +632,3 @@ if __name__ == '__main__':
     dict_generado, total_i=postprocess_variant(dict_properties,list_of_headers, args)
 
     print("Successfully updated {} records for genomicVariations".format(total_i-1))
-

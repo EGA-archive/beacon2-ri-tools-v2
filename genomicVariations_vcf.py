@@ -4,9 +4,7 @@ from tqdm import tqdm
 import glob
 import re
 import conf.conf as conf
-import json
 import gc
-from pymongo.mongo_client import MongoClient
 from validators.genomicVariations import GenomicVariations, LegacyVariation, SequenceLocation, SequenceInterval, Number, OntologyTerm, MolecularAttributes, FrequencyInPopulation, PopulationFrequency, Identifiers
 from pymongo.errors import BulkWriteError
 import hashlib
@@ -17,7 +15,7 @@ from validators.templates.populations import AllelePopulations, GenotypePopulati
 from ga4gh.vrs.dataproxy import create_dataproxy
 import subprocess
 import yaml
-from mongo_connection import build_mongo_client
+from mongo_connection import build_mongo_database
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -69,7 +67,7 @@ GRCH37_FILE = os.path.join(
 seqrepo_rest_service_url = "seqrepo+https://services.genomicmedlab.org/seqrepo"
 seqrepo_dataproxy = create_dataproxy(uri=seqrepo_rest_service_url)
 
-client = build_mongo_client()
+db = build_mongo_database()
 
 with open(GENOMIC_VARIATIONS_SCHEMA) as json_file:
     dict_properties = json.load(json_file)
@@ -97,6 +95,21 @@ except Exception:
 
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
+
+def bulk_write_ops(bulk_error):
+    details = getattr(bulk_error, "details", None)
+    if not isinstance(details, dict):
+        return []
+
+    write_errors = details.get("writeErrors", [])
+    if not isinstance(write_errors, list):
+        return []
+
+    operations = []
+    for entry in write_errors:
+        if isinstance(entry, dict) and entry.get("op") is not None:
+            operations.append(entry["op"])
+    return operations
 
 def process_alleles(allele_property):
     if allele_property == None:
@@ -175,11 +188,11 @@ def generate(dict_properties, args):
     number_variants=1
     if args.caseLevelData == True:
         try:
-            client.beacon.create_collection(name="targets")
+            db.create_collection(name="targets")
         except Exception:
             pass
         try:
-            client.beacon.create_collection(name="caseLevelData")
+            db.create_collection(name="caseLevelData")
         except Exception:
             pass
     skipped_counts=0
@@ -314,22 +327,17 @@ def generate(dict_properties, args):
                 dict_target["datasetId"]=args.datasetId
                 dict_target["biosampleIds"]=my_target_list
                 if args.json == False:
-                    client.beacon.targets.insert_many([dict_target],ordered=False)
+                    db.targets.insert_many([dict_target],ordered=False)
                 else:
                     output_file = os.path.join(args.output, "targets.json")
                     with open(output_file, 'w') as outfile:
                         json.dump([dict_target], outfile)
             except BulkWriteError as BulkError:
-                start_point=len("batch op errors occurred, full error:")
-                error_stringed=str(BulkError)[start_point:]
-                new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
-                new_string=new_string.replace('None', '"None"')
-                error_dicted=json.loads(new_string)
-                target_errors.append(error_dicted["writeErrors"][0]['op'])
+                target_errors.extend(bulk_write_ops(BulkError))
                 pass
             if target_errors != []:
                 for caught_error in target_errors:
-                    target_to_update=client.beacon.targets.find_one({"_id": caught_error["_id"]})
+                    target_to_update=db.targets.find_one({"_id": caught_error["_id"]})
                     if target_to_update != {} and target_to_update != None:
                         biosampleIds_to_update=target_to_update["biosampleIds"]
                         duplicated_ids = []
@@ -352,7 +360,7 @@ def generate(dict_properties, args):
                         set_dict={}
                         set_dict["$set"]=target_to_update
                         if caught_error["biosampleIds"] != []:
-                            client.beacon.targets.update_one({"_id": caught_error["_id"]},set_dict)
+                            db.targets.update_one({"_id": caught_error["_id"]},set_dict)
 
         pbar = tqdm(total = args.numRows)
 
@@ -751,26 +759,21 @@ def generate(dict_properties, args):
                 if args.caseLevelData == True and args.json == False:
                     catch_errors=[]
                     try:
-                        client.beacon.caseLevelData.insert_many([dict_trues],ordered=False)
+                        db.caseLevelData.insert_many([dict_trues],ordered=False)
                     except BulkWriteError as BulkError:
-                        start_point=len("batch op errors occurred, full error:")
-                        error_stringed=str(BulkError)[start_point:]
-                        new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
-                        new_string=new_string.replace('None', '"None"')
-                        error_dicted=json.loads(new_string)
-                        catch_errors.append(error_dicted["writeErrors"][0]['op'])
+                        catch_errors.extend(bulk_write_ops(BulkError))
                         pass
                     if catch_errors != []:
                         final_dict={}
                         for caught_error in catch_errors:
                             final_dict=caught_error
-                            caseLevelData_to_update=client.beacon.caseLevelData.find_one({"_id": caught_error["_id"]})
+                            caseLevelData_to_update=db.caseLevelData.find_one({"_id": caught_error["_id"]})
                             if caseLevelData_to_update != {} and caseLevelData_to_update != None:
                                 for k, v in caseLevelData_to_update.items():
                                     final_dict[k]=v
                                 set_dict={}
                                 set_dict["$set"]=final_dict
-                                client.beacon.caseLevelData.update_one({"_id": caught_error["_id"]},set_dict)
+                                db.caseLevelData.update_one({"_id": caught_error["_id"]},set_dict)
                 elif args.caseLevelData == True:
                     try:
                         output_file = os.path.join(args.output, "caseLevelData.json")
@@ -789,28 +792,15 @@ def generate(dict_properties, args):
                         variants_errors=[]
                         if number_variants == args.numRows:
                             try:
-                                client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
+                                db.genomicVariations.insert_many(total_dict, ordered=False)
                             except BulkWriteError as BulkError:
-                                start_point=len("batch op errors occurred, full error:")
-                                error_stringed=str(BulkError)[start_point:]
-                                new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
-                                new_string=new_string.replace('None', '"None"')
-                                error_dicted=json.loads(new_string)
-                                for error in error_dicted["writeErrors"]:
-                                    variants_errors.append(error['op'])
+                                variants_errors.extend(bulk_write_ops(BulkError))
                             break
                         elif (number_variants/10000).is_integer():
                             try:
-                                client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
+                                db.genomicVariations.insert_many(total_dict, ordered=False)
                             except BulkWriteError as BulkError:
-                                start_point=len("batch op errors occurred, full error:")
-                                #print(BulkError.details)
-                                error_stringed=str(BulkError)[start_point:]
-                                new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
-                                new_string=new_string.replace('None', '"None"')
-                                error_dicted=json.loads(new_string)
-                                for error in error_dicted["writeErrors"]:
-                                    variants_errors.append(error['op'])
+                                variants_errors.extend(bulk_write_ops(BulkError))
 
                             del definitivedict
                             del total_dict
@@ -839,15 +829,9 @@ def generate(dict_properties, args):
             variants_errors=[]
             if number_variants != args.numRows:
                 try:
-                    client.beacon.genomicVariations.insert_many(total_dict, ordered=False)
+                    db.genomicVariations.insert_many(total_dict, ordered=False)
                 except BulkWriteError as BulkError:
-                    start_point=len("batch op errors occurred, full error:")
-                    error_stringed=str(BulkError)[start_point:]
-                    new_string = ''.join("'" if charac == '"' else '"' if charac == "'" else charac for charac in error_stringed)
-                    new_string=new_string.replace('None', '"None"')
-                    error_dicted=json.loads(new_string)
-                    for error in error_dicted["writeErrors"]:
-                        variants_errors.append(error['op'])
+                    variants_errors.extend(bulk_write_ops(BulkError))
             for error in variants_errors:
                 if args.verbosity == True:
                     print("following duplicated variant found was skipped: {}".format(error))

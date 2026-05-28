@@ -1,14 +1,11 @@
 {
-    "source": "The Genome Aggregation Database (gnomAD)",
-    "sourceReference": "gnomad.broadinstitute.org/",
+    "source": "1MG Mosaic Genomes",
+    "sourceReference": "",
     "populations": [
         {
-            "population": "Total",
+            "population": "ALL",
             "alleleFrequency": "AF",
             "alleleCount": "AC",
-            "alleleCountHomozygous": "AC_Hom",
-            "alleleCountHeterozygous": "AC_Het",
-            "alleleCountHemizygous": "AC_Hemi",
             "alleleNumber": "AN"
         }
     ]
