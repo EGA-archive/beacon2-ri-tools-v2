@@ -50,7 +50,8 @@ def convert_record(json_record, args):
         print('record {} for dataset: {} updated successfully'.format(json_record["_id"],json_record["datasetId"]))
     else:
         search_dict={}
-        search_dict["datasetId"]=json_record["datasetId"]
+        if args.recordType != 'dataset':
+            search_dict["datasetId"]=json_record["datasetId"]
         search_dict["id"]=json_record["id"]
         update_dict["$set"]=json_record
         initial_record=db[args.collection].find(search_dict)
@@ -58,7 +59,10 @@ def convert_record(json_record, args):
         updated_record=db[args.collection].find(search_dict)
         try:
             validate_record(updated_record[0], args)
-            print('record {} for dataset: {} updated successfully'.format(json_record["id"],json_record["datasetId"]))
+            if args.recordType != 'dataset':
+                print('record {} for dataset: {} updated successfully'.format(json_record["id"],json_record["datasetId"]))
+            else:
+                print('record {} for dataset: {} updated successfully'.format(json_record["id"],json_record["id"]))
         except Exception:
             db[args.collection].delete_one(search_dict)
             db[args.collection].insert_one(initial_record[0])
