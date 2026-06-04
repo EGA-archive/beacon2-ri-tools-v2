@@ -1,5 +1,5 @@
 import unittest
-from genomicVariations_vcf import generate, client
+from genomicVariations_vcf import generate, db
 from remove_dataset import remove_dataset
 from csv_to_bff import csv_to_bff
 from update_record import update_record
@@ -17,7 +17,6 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='COVID_FI_subpop_chr21_subset')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)
@@ -27,7 +26,7 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
         parser.add_argument('-af', '--alleleFrequency', default=True, action=argparse.BooleanOptionalAction)
         args = parser.parse_args()
         total_i, skipped_variants=generate({}, args)
-        variants = client.beacon.genomicVariations.find({"datasetId": "COVID_FI_subpop_chr21_subset"})
+        variants = db.genomicVariations.find({"datasetId": "COVID_FI_subpop_chr21_subset"})
         assert len(list(variants)) == 531
         for variant in variants:
             assert variant["frequencyInPopulations"] in variant
@@ -45,7 +44,7 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
         parser.add_argument('-d', '--datasetId', default="COVID_FI_subpop_chr21_subset")
         args = parser.parse_args()
         remove_dataset(args)
-        variants = client.beacon.genomicVariations.find({"datasetId": "COVID_FI_subpop_chr21_subset"})
+        variants = db.genomicVariations.find({"datasetId": "COVID_FI_subpop_chr21_subset"})
         assert len(list(variants)) == 0
     def test_main_check_AF_reads_is_working(self):
         parser = argparse.ArgumentParser(
@@ -53,7 +52,6 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='COVID_FI_subpop_chr21_subset')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)
@@ -63,7 +61,7 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
         parser.add_argument('-af', '--alleleFrequency', default=False, action=argparse.BooleanOptionalAction)
         args = parser.parse_args()
         total_i, skipped_variants=generate({}, args)
-        variants = client.beacon.genomicVariations.find({"datasetId": "COVID_FI_subpop_chr21_subset"})
+        variants = db.genomicVariations.find({"datasetId": "COVID_FI_subpop_chr21_subset"})
         assert len(list(variants)) == 531
         for variant in variants:
             assert variant["frequencyInPopulations"] in variant
@@ -80,7 +78,6 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='COVID_FI_subpop_chr21_subset')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)
@@ -90,7 +87,7 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
         parser.add_argument('-af', '--alleleFrequency', default=conf.only_process_reads_with_allele_frequency, action=argparse.BooleanOptionalAction)
         args = parser.parse_args()
         total_i, skipped_variants=generate({}, args)
-        variants = client.beacon.genomicVariations.find({"datasetId": "COVID_FI_subpop_chr21_subset"})
+        variants = db.genomicVariations.find({"datasetId": "COVID_FI_subpop_chr21_subset"})
         assert len(list(variants)) == 531
         for variant in variants:
             assert variant["frequencyInPopulations"] in variant
@@ -221,14 +218,13 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
         dict_generado, total_i=csv_to_bff(dict_properties, list_of_headers, args)
         assert total_i-1 == 1
     def test_main_check_no_AF_reads_is_working(self):
-        with open('pipelines/default/templates/populations.json', 'w') as f:
-            json.dump({}, f)
+        #with open('pipelines/default/templates/populations.json', 'w') as f:
+            #json.dump({}, f)
         parser = argparse.ArgumentParser(
                             prog='genomicVariationsVCFtoJSON',
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='test_2')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)
@@ -238,7 +234,7 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
         parser.add_argument('-af', '--alleleFrequency', default=False, action=argparse.BooleanOptionalAction)
         args = parser.parse_args()
         total_i, skipped_variants=generate({}, args)
-        variants = client.beacon.genomicVariations.find({"datasetId": "test_2"})
+        variants = db.genomicVariations.find({"datasetId": "test_2"})
         assert len(list(variants)) == 531
         for variant in variants:
             assert variant["frequencyInPopulations"] not in variant
@@ -251,7 +247,7 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
         parser.add_argument('-c', '--collection', default=conf.collection_name)
         args = parser.parse_args()
         update_record(args)
-        variants = client.beacon.genomicVariations.find({"datasetId": "test_2", "variantInternalId": "3dd4b36613a574231c2b5a69ad3ab847d2187b22ce90ad832c2a03fbf6c8d613"})
+        variants = db.genomicVariations.find({"datasetId": "test_2", "variantInternalId": "3dd4b36613a574231c2b5a69ad3ab847d2187b22ce90ad832c2a03fbf6c8d613"})
         for variant in variants:
             for population in variant["frequencyInPopulations"]:
                 for frequency in population["frequencies"]:
@@ -265,7 +261,7 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
         parser.add_argument('-c', '--collection', default=conf.collection_name)
         args = parser.parse_args()
         update_record(args)
-        variants = client.beacon.genomicVariations.find({"datasetId": "test_2", "variantInternalId": "3dd4b36613a574231c2b5a69ad3ab847d2187b22ce90ad832c2a03fbf6c8d613"})
+        variants = db.genomicVariations.find({"datasetId": "test_2", "variantInternalId": "3dd4b36613a574231c2b5a69ad3ab847d2187b22ce90ad832c2a03fbf6c8d613"})
         for variant in variants:
             for population in variant["frequencyInPopulations"]:
                 for frequency in population["frequencies"]:
@@ -297,7 +293,6 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='test')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)
@@ -327,7 +322,6 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='test')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)

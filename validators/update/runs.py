@@ -37,3 +37,4 @@ class Runs(BaseModel, extra='forbid'):
     platform: Optional[str] = None
     platformModel: Optional[OntologyTerm] = None
     runDate: Optional[str] = None
+    datasetId: Optional[str] = None

@@ -58,6 +58,15 @@ verbosity=False
 ### Update record ###
 record_type='genomicVariation' # One between analysis, biosample, cohort, dataset, genomicVariation, individual or run
 collection_name='genomicVariations'
+
+### MongoDB parameters ###
+database_uri=''
+database_host = 'mongo'
+database_port = 27017
+database_user = 'root'
+database_password = 'example'
+database_name = 'beacon_subject_test'
+database_auth_source = 'admin'
 ```
 
 Please, remember to make the datasetId match the id for your datasets.csv file.
@@ -81,6 +90,9 @@ The **entry_type** variable sets the entry type you want to convert the csv file
 #### Update records parameters
 * The **record_type** is to let the RI Tools what type of entry type you are updating, can be one of analysis, biosample, cohort, dataset, genomicVariation, individual or run.
 * The **collection_name** parameter is to let the RI Tools know what is the name of the collection in MongoDB the record you want to be updated is located at.
+
+#### MongoDB connection settings
+The tools can connect to a standalone MongoDB instance using the legacy host/port fields above, or to a MongoDB cluster by setting `database_uri` to a full connection string such as `mongodb+srv://...`. The `database_name` setting selects the database used for reads and writes.
 
 #### Parsing config parameters from the command line as arguments
 

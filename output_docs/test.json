@@ -25,7 +25,7 @@
         "alternateBases": "T",
         "location": {
             "type": "SequenceLocation",
-            "sequence_id": "HGVSid:21:g.9411383C>T",
+            "sequence_id": "HGVSID:N",
             "interval": {
                 "type": "SequenceInterval",
                 "start": {

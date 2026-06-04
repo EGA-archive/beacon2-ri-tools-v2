@@ -1,37 +1,27 @@
-from pymongo.mongo_client import MongoClient
 from conf import conf
 import argparse
+from mongo_connection import build_mongo_database
 
-client = MongoClient(
-        #"mongodb://127.0.0.1:27017/"
-        "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-            conf.database_user,
-            conf.database_password,
-            conf.database_host,
-            conf.database_port,
-            conf.database_name,
-            conf.database_auth_source,
-        )
-    )
+db = build_mongo_database()
 
 def remove_dataset(args):
-    client.beacon.analyses.delete_many({"datasetId": args.datasetId})
+    db.analyses.delete_many({"datasetId": args.datasetId})
     print('analyses for dataset: {} removed successfully'.format(args.datasetId))
-    client.beacon.biosamples.delete_many({"datasetId": args.datasetId})
+    db.biosamples.delete_many({"datasetId": args.datasetId})
     print('biosamples for dataset: {} removed successfully'.format(args.datasetId))
-    client.beacon.caseLevelData.delete_many({"datasetId": args.datasetId})
+    db.caseLevelData.delete_many({"datasetId": args.datasetId})
     print('caseLevelData for dataset: {} removed successfully'.format(args.datasetId))
-    client.beacon.cohorts.delete_many({"datasetId": args.datasetId})
+    db.cohorts.delete_many({"datasetId": args.datasetId})
     print('cohorts for dataset: {} removed successfully'.format(args.datasetId))
-    client.beacon.datasets.delete_many({"id": args.datasetId})
+    db.datasets.delete_many({"id": args.datasetId})
     print('datasets for dataset: {} removed successfully'.format(args.datasetId))
-    client.beacon.genomicVariations.delete_many({"datasetId": args.datasetId})
+    db.genomicVariations.delete_many({"datasetId": args.datasetId})
     print('genomicVariations for dataset: {} removed successfully'.format(args.datasetId))
-    client.beacon.individuals.delete_many({"datasetId": args.datasetId})
+    db.individuals.delete_many({"datasetId": args.datasetId})
     print('individuals for dataset: {} removed successfully'.format(args.datasetId))
-    client.beacon.runs.delete_many({"datasetId": args.datasetId})
+    db.runs.delete_many({"datasetId": args.datasetId})
     print('runs for dataset: {} removed successfully'.format(args.datasetId))
-    client.beacon.targets.delete_many({"datasetId": args.datasetId})
+    db.targets.delete_many({"datasetId": args.datasetId})
     print('dataset: {} removed successfully'.format(args.datasetId))
 
 parser = argparse.ArgumentParser(

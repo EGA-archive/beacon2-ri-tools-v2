@@ -1,4 +1,3 @@
-from pymongo.mongo_client import MongoClient
 from conf import conf
 import json
 from validators.update.genomicVariations import GenomicVariations
@@ -10,18 +9,9 @@ from validators.update.individuals import Individuals
 from validators.update.runs import Runs
 import argparse
 import os
+from mongo_connection import build_mongo_database
 
-client = MongoClient(
-        #"mongodb://127.0.0.1:27017/"
-        "mongodb://{}:{}@{}:{}/{}?authSource={}".format(
-            conf.database_user,
-            conf.database_password,
-            conf.database_host,
-            conf.database_port,
-            conf.database_name,
-            conf.database_auth_source,
-        )
-    )
+db = build_mongo_database()
 
 def validate_record(json_record, args):
     if args.recordType == 'genomicVariation':
@@ -48,30 +38,34 @@ def convert_record(json_record, args):
         search_dict["datasetId"]=json_record["datasetId"]
         search_dict["_id"]=json_record["_id"]
         update_dict["$set"]=json_record
-        initial_record=client.beacon[args.collection].find(search_dict)
-        client.beacon[args.collection].update_many(search_dict, update_dict)
-        updated_record=client.beacon[args.collection].find(search_dict)
+        initial_record=db[args.collection].find(search_dict)
+        db[args.collection].update_many(search_dict, update_dict)
+        updated_record=db[args.collection].find(search_dict)
         try:
             validate_record(updated_record[0], args)
         except Exception:
-            client.beacon[args.collection].delete_one(search_dict)
-            client.beacon[args.collection].insert_one(initial_record[0])
+            db[args.collection].delete_one(search_dict)
+            db[args.collection].insert_one(initial_record[0])
             print('record {} for dataset: {} update failed. The document could not be validated against Beacon v2 standards. Please, compare the documents you are updating to resolve the confllicts.'.format(json_record["_id"],json_record["datasetId"]))
         print('record {} for dataset: {} updated successfully'.format(json_record["_id"],json_record["datasetId"]))
     else:
         search_dict={}
-        search_dict["datasetId"]=json_record["datasetId"]
+        if args.recordType != 'dataset':
+            search_dict["datasetId"]=json_record["datasetId"]
         search_dict["id"]=json_record["id"]
         update_dict["$set"]=json_record
-        initial_record=client.beacon[args.collection].find(search_dict)
-        client.beacon[args.collection].update_many(search_dict, update_dict)
-        updated_record=client.beacon[args.collection].find(search_dict)
+        initial_record=db[args.collection].find(search_dict)
+        db[args.collection].update_many(search_dict, update_dict)
+        updated_record=db[args.collection].find(search_dict)
         try:
             validate_record(updated_record[0], args)
-            print('record {} for dataset: {} updated successfully'.format(json_record["id"],json_record["datasetId"]))
+            if args.recordType != 'dataset':
+                print('record {} for dataset: {} updated successfully'.format(json_record["id"],json_record["datasetId"]))
+            else:
+                print('record {} for dataset: {} updated successfully'.format(json_record["id"],json_record["id"]))
         except Exception:
-            client.beacon[args.collection].delete_one(search_dict)
-            client.beacon[args.collection].insert_one(initial_record[0])
+            db[args.collection].delete_one(search_dict)
+            db[args.collection].insert_one(initial_record[0])
             print('record {} for dataset: {} update failed. The document could not be validated against Beacon v2 standards. Please, compare the documents you are updating to resolve the confllicts.'.format(json_record["variantInternalId"],json_record["datasetId"]))
         
 def update_record(args):
