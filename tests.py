@@ -17,7 +17,6 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='COVID_FI_subpop_chr21_subset')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)
@@ -53,7 +52,6 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='COVID_FI_subpop_chr21_subset')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)
@@ -80,7 +78,6 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='COVID_FI_subpop_chr21_subset')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)
@@ -221,14 +218,13 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
         dict_generado, total_i=csv_to_bff(dict_properties, list_of_headers, args)
         assert total_i-1 == 1
     def test_main_check_no_AF_reads_is_working(self):
-        with open('pipelines/default/templates/populations.json', 'w') as f:
-            json.dump({}, f)
+        #with open('pipelines/default/templates/populations.json', 'w') as f:
+            #json.dump({}, f)
         parser = argparse.ArgumentParser(
                             prog='genomicVariationsVCFtoJSON',
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='test_2')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)
@@ -297,7 +293,6 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='test')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)
@@ -327,7 +322,6 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
                             description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
         parser.add_argument('-o', '--output', default=conf.output_docs_folder)
         parser.add_argument('-d', '--datasetId', default='test')
-        parser.add_argument('-r', '--refGen', default=conf.reference_genome)
         parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
         parser.add_argument('-n', '--numRows', default=conf.num_rows)
         parser.add_argument('-v', '--verbosity', default=conf.verbosity)
