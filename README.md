@@ -151,7 +151,9 @@ Note: All the output arguments expect a directory path, and file expect a file p
 
 ### Populating a beacon instance from VCF
 
-Populate genomicVaritiatons model from a VCF
+Populate genomicVaritiatons model from a VCF. 
+
+**Bear in mind that the input VCF must be sorted to improve runtime performance.**
 
 #### Annotated VCFs
 To ensure minimum information is lost, Beacon RI Tools v2 is also compatible with header annotations. 
