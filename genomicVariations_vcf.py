@@ -199,92 +199,98 @@ def generate(dict_properties, args):
     for vcf_filename in glob.glob(args.input):
         print(vcf_filename)
 
-        print('Executing refgenDetector, wait a few moments until the reference genome is inferred...')
-        execution = [
-        "refgenDetector -f {} -t VCF".format(vcf_filename)
-        ]
-        try:
-            execute_refgenDetector = subprocess.check_output(
-                execution,
-                stderr=subprocess.STDOUT,
-                shell=True
-            )
-        except Exception:
-            print("Could not determine reference genome for file {}, this VCF will not get processed".format(vcf_filename))
-            continue
+        if args.referenceGenome == None:
 
-        execute_refgenDetector=execute_refgenDetector.decode("utf-8")
-        if args.verbosity==True:
-            print(execute_refgenDetector)
-
-        refGen_complete = re.search(r"Inferred Reference genome:\s*(\S+)", execute_refgenDetector)
-
-        if refGen_complete:
-            refGen = refGen_complete.group(1)
-            print("Found a valid reference genome: {} for file: {}".format(refGen, vcf_filename))
+            print('Executing refgenDetector, wait a few moments until the reference genome is inferred...')
+            execution = [
+            "refgenDetector -f {} -t VCF".format(vcf_filename)
+            ]
             try:
-                seqid1=seqrepo_dataproxy.translate_sequence_identifier("{}:1".format(refGen), "ga4gh")
-                seqid2=seqrepo_dataproxy.translate_sequence_identifier("{}:2".format(refGen), "ga4gh")
-                seqid3=seqrepo_dataproxy.translate_sequence_identifier("{}:3".format(refGen), "ga4gh")
-                seqid4=seqrepo_dataproxy.translate_sequence_identifier("{}:4".format(refGen), "ga4gh")
-                seqid5=seqrepo_dataproxy.translate_sequence_identifier("{}:5".format(refGen), "ga4gh")
-                seqid6=seqrepo_dataproxy.translate_sequence_identifier("{}:6".format(refGen), "ga4gh")
-                seqid7=seqrepo_dataproxy.translate_sequence_identifier("{}:7".format(refGen), "ga4gh")
-                seqid8=seqrepo_dataproxy.translate_sequence_identifier("{}:8".format(refGen), "ga4gh")
-                seqid9=seqrepo_dataproxy.translate_sequence_identifier("{}:9".format(refGen), "ga4gh")
-                seqid10=seqrepo_dataproxy.translate_sequence_identifier("{}:10".format(refGen), "ga4gh")
-                seqid11=seqrepo_dataproxy.translate_sequence_identifier("{}:11".format(refGen), "ga4gh")
-                seqid12=seqrepo_dataproxy.translate_sequence_identifier("{}:12".format(refGen), "ga4gh")
-                seqid13=seqrepo_dataproxy.translate_sequence_identifier("{}:13".format(refGen), "ga4gh")
-                seqid14=seqrepo_dataproxy.translate_sequence_identifier("{}:14".format(refGen), "ga4gh")
-                seqid15=seqrepo_dataproxy.translate_sequence_identifier("{}:15".format(refGen), "ga4gh")
-                seqid16=seqrepo_dataproxy.translate_sequence_identifier("{}:16".format(refGen), "ga4gh")
-                seqid17=seqrepo_dataproxy.translate_sequence_identifier("{}:17".format(refGen), "ga4gh")
-                seqid18=seqrepo_dataproxy.translate_sequence_identifier("{}:18".format(refGen), "ga4gh")
-                seqid19=seqrepo_dataproxy.translate_sequence_identifier("{}:19".format(refGen), "ga4gh")
-                seqid20=seqrepo_dataproxy.translate_sequence_identifier("{}:20".format(refGen), "ga4gh")
-                seqid21=seqrepo_dataproxy.translate_sequence_identifier("{}:21".format(refGen), "ga4gh")
-                seqid22=seqrepo_dataproxy.translate_sequence_identifier("{}:22".format(refGen), "ga4gh")
-                seqid23=seqrepo_dataproxy.translate_sequence_identifier("{}:X".format(refGen), "ga4gh")
-                seqid24=seqrepo_dataproxy.translate_sequence_identifier("{}:Y".format(refGen), "ga4gh")
-                seqMT='ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct'
+                execute_refgenDetector = subprocess.check_output(
+                    execution,
+                    stderr=subprocess.STDOUT,
+                    shell=True
+                )
             except Exception:
-                if refGen == 'GRCh38':
-                    with open(GRCH38_FILE, 'r') as outfile:
-                        sequence_ids=yaml.load(outfile, Loader=yaml.SafeLoader)
-                elif refGen == 'GRCh37':
-                    with open(GRCH37_FILE, 'r') as outfile:
-                        sequence_ids=yaml.load(outfile, Loader=yaml.SafeLoader)
-                else:
-                    print("Could not determine GA4GH vrs sequence_id for ref genome {}, this VCF will not get processed".format(refGen))
-                seqid1=sequence_ids['chr1']
-                seqid2=sequence_ids['chr2']
-                seqid3=sequence_ids['chr3']
-                seqid4=sequence_ids['chr4']
-                seqid5=sequence_ids['chr5']
-                seqid6=sequence_ids['chr6']
-                seqid7=sequence_ids['chr7']
-                seqid8=sequence_ids['chr8']
-                seqid9=sequence_ids['chr9']
-                seqid10=sequence_ids['chr10']
-                seqid11=sequence_ids['chr11']
-                seqid12=sequence_ids['chr12']
-                seqid13=sequence_ids['chr13']
-                seqid14=sequence_ids['chr14']
-                seqid15=sequence_ids['chr15']
-                seqid16=sequence_ids['chr16']
-                seqid17=sequence_ids['chr17']
-                seqid18=sequence_ids['chr18']
-                seqid19=sequence_ids['chr19']
-                seqid20=sequence_ids['chr20']
-                seqid21=sequence_ids['chr21']
-                seqid22=sequence_ids['chr22']
-                seqid23=sequence_ids['chrX']
-                seqid24=sequence_ids['chrY']
-                seqMT='ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct'
+                print("Could not determine reference genome for file {}, this VCF will not get processed".format(vcf_filename))
+                continue
+
+            execute_refgenDetector=execute_refgenDetector.decode("utf-8")
+            if args.verbosity==True:
+                print(execute_refgenDetector)
+
+            refGen_complete = re.search(r"Inferred Reference genome:\s*(\S+)", execute_refgenDetector)
+
+            if refGen_complete:
+                refGen = refGen_complete.group(1)
+                print("Found a valid reference genome: {} for file: {}".format(refGen, vcf_filename))
+            else:
+                print("Could not determine reference genome for file {}, this VCF will not get processed".format(vcf_filename))
+                continue
         else:
-            print("Could not determine reference genome for file {}, this VCF will not get processed".format(vcf_filename))
-            continue
+            refGen = args.referenceGenome
+            
+        try:
+            seqid1=seqrepo_dataproxy.translate_sequence_identifier("{}:1".format(refGen), "ga4gh")
+            seqid2=seqrepo_dataproxy.translate_sequence_identifier("{}:2".format(refGen), "ga4gh")
+            seqid3=seqrepo_dataproxy.translate_sequence_identifier("{}:3".format(refGen), "ga4gh")
+            seqid4=seqrepo_dataproxy.translate_sequence_identifier("{}:4".format(refGen), "ga4gh")
+            seqid5=seqrepo_dataproxy.translate_sequence_identifier("{}:5".format(refGen), "ga4gh")
+            seqid6=seqrepo_dataproxy.translate_sequence_identifier("{}:6".format(refGen), "ga4gh")
+            seqid7=seqrepo_dataproxy.translate_sequence_identifier("{}:7".format(refGen), "ga4gh")
+            seqid8=seqrepo_dataproxy.translate_sequence_identifier("{}:8".format(refGen), "ga4gh")
+            seqid9=seqrepo_dataproxy.translate_sequence_identifier("{}:9".format(refGen), "ga4gh")
+            seqid10=seqrepo_dataproxy.translate_sequence_identifier("{}:10".format(refGen), "ga4gh")
+            seqid11=seqrepo_dataproxy.translate_sequence_identifier("{}:11".format(refGen), "ga4gh")
+            seqid12=seqrepo_dataproxy.translate_sequence_identifier("{}:12".format(refGen), "ga4gh")
+            seqid13=seqrepo_dataproxy.translate_sequence_identifier("{}:13".format(refGen), "ga4gh")
+            seqid14=seqrepo_dataproxy.translate_sequence_identifier("{}:14".format(refGen), "ga4gh")
+            seqid15=seqrepo_dataproxy.translate_sequence_identifier("{}:15".format(refGen), "ga4gh")
+            seqid16=seqrepo_dataproxy.translate_sequence_identifier("{}:16".format(refGen), "ga4gh")
+            seqid17=seqrepo_dataproxy.translate_sequence_identifier("{}:17".format(refGen), "ga4gh")
+            seqid18=seqrepo_dataproxy.translate_sequence_identifier("{}:18".format(refGen), "ga4gh")
+            seqid19=seqrepo_dataproxy.translate_sequence_identifier("{}:19".format(refGen), "ga4gh")
+            seqid20=seqrepo_dataproxy.translate_sequence_identifier("{}:20".format(refGen), "ga4gh")
+            seqid21=seqrepo_dataproxy.translate_sequence_identifier("{}:21".format(refGen), "ga4gh")
+            seqid22=seqrepo_dataproxy.translate_sequence_identifier("{}:22".format(refGen), "ga4gh")
+            seqid23=seqrepo_dataproxy.translate_sequence_identifier("{}:X".format(refGen), "ga4gh")
+            seqid24=seqrepo_dataproxy.translate_sequence_identifier("{}:Y".format(refGen), "ga4gh")
+            seqMT='ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct'
+        except Exception:
+            if refGen == 'GRCh38':
+                with open(GRCH38_FILE, 'r') as outfile:
+                    sequence_ids=yaml.load(outfile, Loader=yaml.SafeLoader)
+            elif refGen == 'GRCh37':
+                with open(GRCH37_FILE, 'r') as outfile:
+                    sequence_ids=yaml.load(outfile, Loader=yaml.SafeLoader)
+            else:
+                print("Could not determine GA4GH vrs sequence_id for ref genome {}, this VCF will not get processed".format(refGen))
+            seqid1=sequence_ids['chr1']
+            seqid2=sequence_ids['chr2']
+            seqid3=sequence_ids['chr3']
+            seqid4=sequence_ids['chr4']
+            seqid5=sequence_ids['chr5']
+            seqid6=sequence_ids['chr6']
+            seqid7=sequence_ids['chr7']
+            seqid8=sequence_ids['chr8']
+            seqid9=sequence_ids['chr9']
+            seqid10=sequence_ids['chr10']
+            seqid11=sequence_ids['chr11']
+            seqid12=sequence_ids['chr12']
+            seqid13=sequence_ids['chr13']
+            seqid14=sequence_ids['chr14']
+            seqid15=sequence_ids['chr15']
+            seqid16=sequence_ids['chr16']
+            seqid17=sequence_ids['chr17']
+            seqid18=sequence_ids['chr18']
+            seqid19=sequence_ids['chr19']
+            seqid20=sequence_ids['chr20']
+            seqid21=sequence_ids['chr21']
+            seqid22=sequence_ids['chr22']
+            seqid23=sequence_ids['chrX']
+            seqid24=sequence_ids['chrY']
+            seqMT='ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct'
+
         vcf = VCF(vcf_filename, strict_gt=True)
         formatted=False
         for rec in vcf.header_iter():
@@ -866,6 +872,7 @@ parser.add_argument('-j', '--json', default=False, action=argparse.BooleanOption
 parser.add_argument('-i', '--input', default="files/vcf/files_to_read/*.vcf.gz")
 parser.add_argument('-ac', '--alleleCounts', default=conf.populations_by_allele_counts, action=argparse.BooleanOptionalAction)
 parser.add_argument('-af', '--alleleFrequency', default=conf.only_process_reads_with_allele_frequency, action=argparse.BooleanOptionalAction)
+parser.add_argument('-rg', '--referenceGenome', default=None, choices=["hg18", "GRCh37", "GRCh38" ,"T2T", None])
 
 args = parser.parse_args()
 
