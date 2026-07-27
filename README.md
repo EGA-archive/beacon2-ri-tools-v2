@@ -114,14 +114,19 @@ parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 ```
 
 **genomicVariations_vcf.py**
+
+For the genomic variations, there is one additional argument that you can't set by the configuration file, only by the command line, which is --referenceGenome. This argument, while included with a value at the execution time, will bypass the usage of refgendetector and will define the assembly of the vcf by the input value of this argument. There are only 4 values allowed which are hg18, GRCh37, GRCh38 and T2T.
 ```bash
 parser.add_argument('-o', '--output', default=conf.output_docs_folder)
 parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
 parser.add_argument('-n', '--numRows', default=conf.num_rows)
-parser.add_argument('-v', '--verbosity', default=conf.verbosity)
+parser.add_argument('-v', '--verbosity', default=conf.verbosity, action=argparse.BooleanOptionalAction)
 parser.add_argument('-j', '--json', default=False, action=argparse.BooleanOptionalAction)
 parser.add_argument('-i', '--input', default="files/vcf/files_to_read/*.vcf.gz")
+parser.add_argument('-ac', '--alleleCounts', default=conf.populations_by_allele_counts, action=argparse.BooleanOptionalAction)
+parser.add_argument('-af', '--alleleFrequency', default=conf.only_process_reads_with_allele_frequency, action=argparse.BooleanOptionalAction)
+parser.add_argument('-rg', '--referenceGenome', default=None, choices=["hg18", "GRCh37", "GRCh38" ,"T2T", None])
 ```
 
 **individuals_to_cohorts_csv.py**
