@@ -30,6 +30,7 @@ geographicOrigin|label
 id
 info
 interventionsOrProcedures|ageAtProcedure
+interventionsOrProcedures|ageAtProcedure|iso8601duration
 interventionsOrProcedures|ageAtProcedure|days
 interventionsOrProcedures|ageAtProcedure|end
 interventionsOrProcedures|ageAtProcedure|end|iso8601duration

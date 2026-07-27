@@ -36,6 +36,8 @@ exclusionCriteria|ageRange
 exclusionCriteria|ageRange|end|iso8601duration
 exclusionCriteria|ageRange|start|iso8601duration
 exclusionCriteria|diseaseConditions|ageOfOnset
+exclusionCriteria|diseaseConditions|ageOfOnset|id
+exclusionCriteria|diseaseConditions|ageOfOnset|label
 exclusionCriteria|diseaseConditions|diseaseCode|id
 exclusionCriteria|diseaseConditions|diseaseCode|label
 exclusionCriteria|diseaseConditions|familyHistory
@@ -61,6 +63,7 @@ exclusionCriteria|phenotypicConditions|featureType|label
 exclusionCriteria|phenotypicConditions|modifiers
 exclusionCriteria|phenotypicConditions|notes
 exclusionCriteria|phenotypicConditions|onset
+exclusionCriteria|phenotypicConditions|onset|iso8601duration
 exclusionCriteria|phenotypicConditions|resolution
 exclusionCriteria|phenotypicConditions|severity|id
 exclusionCriteria|phenotypicConditions|severity|label
@@ -69,6 +72,8 @@ inclusionCriteria|ageRange
 inclusionCriteria|ageRange|end|iso8601duration
 inclusionCriteria|ageRange|start|iso8601duration
 inclusionCriteria|diseaseConditions|ageOfOnset
+inclusionCriteria|diseaseConditions|ageOfOnset|id
+inclusionCriteria|diseaseConditions|ageOfOnset|label
 inclusionCriteria|diseaseConditions|diseaseCode|id
 inclusionCriteria|diseaseConditions|diseaseCode|label
 inclusionCriteria|diseaseConditions|familyHistory
@@ -94,6 +99,7 @@ inclusionCriteria|phenotypicConditions|featureType|label
 inclusionCriteria|phenotypicConditions|modifiers
 inclusionCriteria|phenotypicConditions|notes
 inclusionCriteria|phenotypicConditions|onset
+inclusionCriteria|phenotypicConditions|onset|iso8601duration
 inclusionCriteria|phenotypicConditions|resolution
 inclusionCriteria|phenotypicConditions|severity|id
 inclusionCriteria|phenotypicConditions|severity|label

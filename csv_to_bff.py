@@ -106,10 +106,10 @@ def process_dictionary(item, new_item, subitem_dict, dict_of_properties, num_pro
                         num_process=len(propv)-1
                     propv=propv[num_process]
                 check_new_item_and_append_it(subitem_dict, current_item.split("|"), propv)
-    #print(subitem_dict)
     return subitem_dict, num_process
 
 def process_list(item, new_item, processed_list, dict_of_properties, num_process, list_of_provs):
+    print(new_item)
     # As we can only have dictionaries inside lists in Beacon v2, we process each item with the function to process dictionaries.
     for list_item in item:
         if isinstance(list_item, dict):
@@ -118,8 +118,14 @@ def process_list(item, new_item, processed_list, dict_of_properties, num_process
                 splitted_list=new_item.split('|')
                 # In case the returning object is a list that is not meant to be a list (e.g. measurementValue and not modifiers or members), we process it as a dictionary.
                 # TODO: Try a non hardcoded alternative.
-                if len(splitted_list)>1 and 'modifiers' not in new_item and 'members' not in new_item and 'dataUseConditions' not in new_item and 'Criteria' not in new_item and 'molecularEffects' not in new_item and 'interval' not in new_item and 'phenotypicEffects' not in new_item and 'clinicalInterpretations' not in new_item and 'imageStudy|disease|pathology' not in new_item and 'imageStudy|disease|treatment' not in new_item:                 
+                if len(splitted_list)>1 and 'ageAtProcedure' not in new_item and 'modifiers' not in new_item and 'members' not in new_item and 'dataUseConditions' not in new_item and 'Criteria' not in new_item and 'molecularEffects' not in new_item and 'interval' not in new_item and 'phenotypicEffects' not in new_item and 'clinicalInterpretations' not in new_item and 'imageStudy|disease|pathology' not in new_item and 'imageStudy|disease|treatment' not in new_item:                 
                     processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]]
+                elif 'ageAtProcedure' in new_item and 'interventionsOrProcedures' not in new_item:
+                    processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]]
+                elif 'ageOfOnset' in new_item and 'diseaseConditions' in new_item:
+                    processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]]
+                elif 'onset' in new_item and 'phenotypicConditions' in new_item and 'iso8601duration':
+                    processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]]
                 elif 'start' in new_item or 'end' in new_item and 'interval' in new_item:
                     processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]][new_item.split('|')[3]]
                 elif '|interval' in new_item:
@@ -138,6 +144,8 @@ def process_list(item, new_item, processed_list, dict_of_properties, num_process
                         processed_list=sublist_dict[new_item.split('|')[0]]
                     except Exception as e:
                         pass
+                elif 'interventionsOrProcedures' and 'ageAtProcedure' in new_item:
+                    processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]]
                 else:
                     processed_list.append(sublist_dict[new_item.split('|')[0]])
         elif isinstance(list_item, str):
@@ -147,7 +155,7 @@ def process_list(item, new_item, processed_list, dict_of_properties, num_process
                     propv=propv.split('|')
                     for propv_splitted in propv:
                         processed_list.append(propv_splitted)
-                elif new_item == 'modalities':
+                elif new_item == 'modalities' or new_item == 'molecularAttributes|aminoacidChanges' or new_item == 'molecularAttributes|geneIds':
                     processed_list=[propv]
                 else:
                     processed_list=propv
@@ -222,6 +230,7 @@ def csv_to_bff(dict_properties, list_of_headers, args):
 
     k=0
     pbar = tqdm(total = num_rows)
+
     with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         i=1
