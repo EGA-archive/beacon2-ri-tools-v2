@@ -199,7 +199,7 @@ def generate(dict_properties, args):
     for vcf_filename in glob.glob(args.input):
         print(vcf_filename)
 
-        if args.referenceGenome != None:
+        if args.referenceGenome == None:
 
             print('Executing refgenDetector, wait a few moments until the reference genome is inferred...')
             execution = [
