@@ -7,10 +7,15 @@ from urllib.parse import urldefrag, urljoin
 
 import requests
 
-def schema_to_example(schema, uri, visited=None):
+def schema_to_example(
+    schema,
+    uri,
+    visited=None,
+):
     """
     Convert a JSON Schema into a JSON example structure.
     Resolves refs and preserves oneOf/anyOf alternatives.
+    Consecutive arrays produced by oneOf/anyOf are flattened.
     """
 
     if visited is None:
@@ -35,14 +40,22 @@ def schema_to_example(schema, uri, visited=None):
     # Handle alternatives
     for keyword in ("oneOf", "anyOf"):
         if keyword in schema:
-            return [
-                schema_to_example(
+            result = []
+
+            for option in schema[keyword]:
+                value = schema_to_example(
                     option,
                     uri,
                     visited.copy()
                 )
-                for option in schema[keyword]
-            ]
+
+                # Flatten array alternatives
+                if isinstance(value, list):
+                    result.extend(value)
+                else:
+                    result.append(value)
+
+            return result
 
     # allOf merges object structures
     if "allOf" in schema:
@@ -63,17 +76,10 @@ def schema_to_example(schema, uri, visited=None):
     schema_type = schema.get("type")
 
     # Objects
-    if (
-        schema_type == "object"
-        or "properties" in schema
-    ):
+    if schema_type == "object" or "properties" in schema:
         result = {}
 
-        for name, subschema in schema.get(
-            "properties",
-            {}
-        ).items():
-
+        for name, subschema in schema.get("properties", {}).items():
             result[name] = schema_to_example(
                 subschema,
                 uri,
@@ -86,18 +92,25 @@ def schema_to_example(schema, uri, visited=None):
     if schema_type == "array":
         items = schema.get("items")
 
-        if items:
-            return [
-                schema_to_example(
-                    items,
-                    uri,
-                    visited.copy()
-                )
-            ]
+        if not items:
+            return []
 
-        return []
+        example = schema_to_example(
+            items,
+            uri,
+            visited.copy()
+        )
+
+        # Avoid [[...]]
+        if isinstance(example, list):
+            return example
+
+        return [example]
 
     # Primitive values
+    if "enum" in schema:
+        return schema["enum"][0] if schema["enum"] else ""
+
     if schema_type == "string":
         return ""
 
@@ -107,11 +120,6 @@ def schema_to_example(schema, uri, visited=None):
     if schema_type == "boolean":
         return False
 
-    # If schema has enum, preserve allowed values
-    if "enum" in schema:
-        return schema["enum"]
-
-    # Fallback
     return ""
 
 class SchemaLoader:
