@@ -109,7 +109,6 @@ def process_dictionary(item, new_item, subitem_dict, dict_of_properties, num_pro
     return subitem_dict, num_process
 
 def process_list(item, new_item, processed_list, dict_of_properties, num_process, list_of_provs):
-    print(new_item)
     # As we can only have dictionaries inside lists in Beacon v2, we process each item with the function to process dictionaries.
     for list_item in item:
         if isinstance(list_item, dict):

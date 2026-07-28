@@ -7,6 +7,112 @@ from urllib.parse import urldefrag, urljoin
 
 import requests
 
+def schema_to_example(schema, uri, visited=None):
+    """
+    Convert a JSON Schema into a JSON example structure.
+    Resolves refs and preserves oneOf/anyOf alternatives.
+    """
+
+    if visited is None:
+        visited = set()
+
+    if not isinstance(schema, dict):
+        return ""
+
+    # Resolve refs
+    while "$ref" in schema:
+        ref = schema["$ref"]
+
+        key = (uri, ref)
+
+        if key in visited:
+            return ""
+
+        visited.add(key)
+
+        schema, uri = resolve_ref(ref, uri)
+
+    # Handle alternatives
+    for keyword in ("oneOf", "anyOf"):
+        if keyword in schema:
+            return [
+                schema_to_example(
+                    option,
+                    uri,
+                    visited.copy()
+                )
+                for option in schema[keyword]
+            ]
+
+    # allOf merges object structures
+    if "allOf" in schema:
+        merged = {}
+
+        for subschema in schema["allOf"]:
+            value = schema_to_example(
+                subschema,
+                uri,
+                visited.copy()
+            )
+
+            if isinstance(value, dict):
+                merged.update(value)
+
+        return merged
+
+    schema_type = schema.get("type")
+
+    # Objects
+    if (
+        schema_type == "object"
+        or "properties" in schema
+    ):
+        result = {}
+
+        for name, subschema in schema.get(
+            "properties",
+            {}
+        ).items():
+
+            result[name] = schema_to_example(
+                subschema,
+                uri,
+                visited.copy()
+            )
+
+        return result
+
+    # Arrays
+    if schema_type == "array":
+        items = schema.get("items")
+
+        if items:
+            return [
+                schema_to_example(
+                    items,
+                    uri,
+                    visited.copy()
+                )
+            ]
+
+        return []
+
+    # Primitive values
+    if schema_type == "string":
+        return ""
+
+    if schema_type in ("integer", "number"):
+        return 0
+
+    if schema_type == "boolean":
+        return False
+
+    # If schema has enum, preserve allowed values
+    if "enum" in schema:
+        return schema["enum"]
+
+    # Fallback
+    return ""
 
 class SchemaLoader:
     def __init__(self):
@@ -154,17 +260,18 @@ def extract_paths(schema, uri, prefix, paths, visited):
 
 
 def main():
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 5:
         print(
             "Usage:\n"
-            "  python jsonschema_to_csv.py "
-            "<schema_url> <output.csv> <output.txt>"
+            " python jsonschema_to_csv.py "
+            "<schema_url> <output.csv> <output.txt> <deref.json>"
         )
         sys.exit(1)
 
     schema_url = sys.argv[1]
     output_csv = sys.argv[2]
     output_headers = sys.argv[3]
+    output_deref = sys.argv[4]
 
     root_schema = loader.load(schema_url)
 
@@ -197,6 +304,27 @@ def main():
 
     print(
         f"Generated header file into {output_headers}"
+    )
+
+    deref_schema = schema_to_example(
+        root_schema,
+        schema_url
+    )
+
+    with open(
+        output_deref,
+        "w",
+        encoding="utf-8"
+    ) as f:
+        json.dump(
+            deref_schema,
+            f,
+            indent=4,
+            ensure_ascii=False
+        )
+
+    print(
+        f"Generated dereferenced schema into {output_deref}"
     )
 
 if __name__ == "__main__":

@@ -86,13 +86,13 @@
         ],
         "variantAlternativeIds": [
             {
-                "id": "string",
-                "notes": "string",
-                "reference": "string",
-                "type": "object"
+                "id": "",
+                "notes": "",
+                "reference": ""
             }
         ]
     },
+    "info": {},
     "molecularAttributes": {
         "aminoacidChanges": [
             ""
@@ -169,81 +169,213 @@
         ]
     },
     "variation": [
-        {
-            "_id": "",
-            "type": "",
-            "location": [
-                {
-                    "_id": "",
-                    "type": "",
-                    "species_id": "",
-                    "chr": "",
-                    "interval": ""
-                },
-                {
-                    "_id": "",
-                    "type": "",
-                    "sequence_id": "",
-                    "interval": [
-                        {
+        [
+            {
+                "_id": "",
+                "type": "",
+                "location": [
+                    "",
+                    {
+                        "_id": "",
+                        "type": "",
+                        "species_id": "",
+                        "chr": "",
+                        "interval": {
                             "type": "",
-                            "start": [
+                            "start": "",
+                            "end": ""
+                        }
+                    },
+                    {
+                        "_id": "",
+                        "type": "",
+                        "sequence_id": "",
+                        "interval": [
+                            {
+                                "type": "",
+                                "start": [
+                                    {
+                                        "type": "",
+                                        "min": 0,
+                                        "max": 0
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0,
+                                        "comparator": ""
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0
+                                    }
+                                ],
+                                "end": [
+                                    {
+                                        "type": "",
+                                        "min": 0,
+                                        "max": 0
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0,
+                                        "comparator": ""
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "",
+                                "start": 0,
+                                "end": 0
+                            }
+                        ]
+                    }
+                ],
+                "state": [
+                    {
+                        "type": "",
+                        "components": [
+                            [
                                 {
                                     "type": "",
-                                    "min": 0,
-                                    "max": 0
+                                    "location": {
+                                        "_id": "",
+                                        "type": "",
+                                        "sequence_id": "",
+                                        "interval": [
+                                            {
+                                                "type": "",
+                                                "start": [
+                                                    {
+                                                        "type": "",
+                                                        "min": 0,
+                                                        "max": 0
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0,
+                                                        "comparator": ""
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0
+                                                    }
+                                                ],
+                                                "end": [
+                                                    {
+                                                        "type": "",
+                                                        "min": 0,
+                                                        "max": 0
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0,
+                                                        "comparator": ""
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "",
+                                                "start": 0,
+                                                "end": 0
+                                            }
+                                        ]
+                                    },
+                                    "reverse_complement": false
                                 },
                                 {
                                     "type": "",
-                                    "value": 0,
-                                    "comparator": ""
+                                    "sequence": ""
                                 },
                                 {
                                     "type": "",
-                                    "value": 0
-                                }
-                            ],
-                            "end": [
-                                {
-                                    "type": "",
-                                    "min": 0,
-                                    "max": 0
-                                },
-                                {
-                                    "type": "",
-                                    "value": 0,
-                                    "comparator": ""
-                                },
-                                {
-                                    "type": "",
-                                    "value": 0
+                                    "seq_expr": [
+                                        {
+                                            "type": "",
+                                            "location": {
+                                                "_id": "",
+                                                "type": "",
+                                                "sequence_id": "",
+                                                "interval": [
+                                                    {
+                                                        "type": "",
+                                                        "start": [
+                                                            {
+                                                                "type": "",
+                                                                "min": 0,
+                                                                "max": 0
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "value": 0,
+                                                                "comparator": ""
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "value": 0
+                                                            }
+                                                        ],
+                                                        "end": [
+                                                            {
+                                                                "type": "",
+                                                                "min": 0,
+                                                                "max": 0
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "value": 0,
+                                                                "comparator": ""
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "value": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "start": 0,
+                                                        "end": 0
+                                                    }
+                                                ]
+                                            },
+                                            "reverse_complement": false
+                                        },
+                                        {
+                                            "type": "",
+                                            "sequence": ""
+                                        }
+                                    ],
+                                    "count": [
+                                        {
+                                            "type": "",
+                                            "min": 0,
+                                            "max": 0
+                                        },
+                                        {
+                                            "type": "",
+                                            "value": 0,
+                                            "comparator": ""
+                                        },
+                                        {
+                                            "type": "",
+                                            "value": 0
+                                        }
+                                    ]
                                 }
                             ]
-                        },
-                        {
-                            "type": "",
-                            "start": 0,
-                            "end": 0
-                        }
-                    ]
-                }
-            ],
-            "state": [
-                {
-                    "type": "",
-                    "sequence": ""
-                },
-                {
-                    "type": "",
-                    "location": [
-                        {
-                            "_id": "",
-                            "type": "",
-                            "species_id": "",
-                            "chr": "",
-                            "interval": ""
-                        },
-                        {
+                        ]
+                    },
+                    {
+                        "type": "",
+                        "location": {
                             "_id": "",
                             "type": "",
                             "sequence_id": "",
@@ -289,24 +421,19 @@
                                     "end": 0
                                 }
                             ]
-                        }
-                    ],
-                    "reverse_complement": true
-                },
-                {
-                    "type": "",
-                    "seq_expr": [
-                        {
-                            "type": "",
-                            "location": [
-                                {
-                                    "_id": "",
-                                    "type": "",
-                                    "species_id": "",
-                                    "chr": "",
-                                    "interval": ""
-                                },
-                                {
+                        },
+                        "reverse_complement": false
+                    },
+                    {
+                        "type": "",
+                        "sequence": ""
+                    },
+                    {
+                        "type": "",
+                        "seq_expr": [
+                            {
+                                "type": "",
+                                "location": {
                                     "_id": "",
                                     "type": "",
                                     "sequence_id": "",
@@ -352,297 +479,360 @@
                                             "end": 0
                                         }
                                     ]
-                                }
-                            ],
-                            "reverse_complement": ""
-                        },
-                        {
-                            "type": "",
-                            "sequence": ""
-                        }
-                    ],
-                    "count": [
-                        {
-                            "type": "",
-                            "min": 0,
-                            "max": 0
-                        },
-                        {
-                            "type": "",
-                            "value": 0,
-                            "comparator": ""
-                        },
-                        {
-                            "type": "",
-                            "value": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "",
-                    "components": [
-                        {
-                            "type": "",
-                            "location": [
-                                {
-                                    "_id": "",
-                                    "type": "",
-                                    "species_id": "",
-                                    "chr": "",
-                                    "interval": ""
                                 },
-                                {
-                                    "_id": "",
-                                    "type": "",
-                                    "sequence_id": "",
-                                    "interval": [
-                                        {
-                                            "type": "",
-                                            "start": [
-                                                {
-                                                    "type": "",
-                                                    "min": 0,
-                                                    "max": 0
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0,
-                                                    "comparator": ""
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0
-                                                }
-                                            ],
-                                            "end": [
-                                                {
-                                                    "type": "",
-                                                    "min": 0,
-                                                    "max": 0
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0,
-                                                    "comparator": ""
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "type": "",
-                                            "start": 0,
-                                            "end": 0
-                                        }
-                                    ]
-                                }
-                            ],
-                            "reverse_complement": ""
-                        },
-                        {
-                            "type": "",
-                            "sequence": ""
-                        },
-                        {
-                            "type": ""
-                        }
-                    ]
-                },
-                {
-                    "type": "",
-                    "sequence": ""
-                }
-            ]
-        },
-        {
-            "_id": "",
-            "type": "",
-            "subject": [
-                {
-                    "_id": "",
-                    "type": "",
-                    "species_id": "",
-                    "chr": "",
-                    "interval": ""
-                },
-                {
-                    "type": "",
-                    "gene_id": ""
-                },
-                {
-                    "_id": "",
-                    "type": "",
-                    "sequence_id": "",
-                    "interval": ""
-                }
-            ],
-            "copy_change": "",
-            "copies": [
-                {
-                    "_id": "",
-                    "type": "",
-                    "species_id": "",
-                    "chr": "",
-                    "interval": ""
-                },
-                {
-                    "type": "",
-                    "gene_id": ""
-                },
-                {
-                    "_id": "",
-                    "type": "",
-                    "sequence_id": "",
-                    "interval": ""
-                }
-            ],
-            "members": {
-                "type": "",
-                "count": [
-                    {
-                        "type": "",
-                        "min": 0,
-                        "max": 0
+                                "reverse_complement": false
+                            },
+                            {
+                                "type": "",
+                                "sequence": ""
+                            }
+                        ],
+                        "count": [
+                            {
+                                "type": "",
+                                "min": 0,
+                                "max": 0
+                            },
+                            {
+                                "type": "",
+                                "value": 0,
+                                "comparator": ""
+                            },
+                            {
+                                "type": "",
+                                "value": 0
+                            }
+                        ]
                     },
                     {
                         "type": "",
-                        "value": 0,
-                        "comparator": ""
-                    },
-                    {
-                        "type": "",
-                        "value": 0
-                    }
-                ],
-                "variation": [
-                    {
-                        "type": ""
-                    },
-                    {
-                        "type": ""
+                        "sequence": ""
                     }
                 ]
             },
-            "count": [
-                {
-                    "_id": "",
-                    "type": "",
-                    "species_id": "",
-                    "chr": "",
-                    "interval": ""
-                },
-                {
-                    "type": "",
-                    "gene_id": ""
-                },
-                {
-                    "_id": "",
-                    "type": "",
-                    "sequence_id": "",
-                    "interval": ""
-                }
-            ]
-        },
-        {
-            "_id": "",
-            "type": "",
-            "location": [
-                {
-                    "_id": "",
-                    "type": "",
-                    "species_id": "",
-                    "chr": "",
-                    "interval": ""
-                },
-                {
-                    "_id": "",
-                    "type": "",
-                    "sequence_id": "",
-                    "interval": [
+            {
+                "_id": "",
+                "type": "",
+                "members": [
+                    [
                         {
+                            "_id": "",
                             "type": "",
-                            "start": [
+                            "location": [
+                                "",
                                 {
+                                    "_id": "",
                                     "type": "",
-                                    "min": 0,
-                                    "max": 0
+                                    "species_id": "",
+                                    "chr": "",
+                                    "interval": {
+                                        "type": "",
+                                        "start": "",
+                                        "end": ""
+                                    }
                                 },
                                 {
+                                    "_id": "",
                                     "type": "",
-                                    "value": 0,
-                                    "comparator": ""
-                                },
-                                {
-                                    "type": "",
-                                    "value": 0
+                                    "sequence_id": "",
+                                    "interval": [
+                                        {
+                                            "type": "",
+                                            "start": [
+                                                {
+                                                    "type": "",
+                                                    "min": 0,
+                                                    "max": 0
+                                                },
+                                                {
+                                                    "type": "",
+                                                    "value": 0,
+                                                    "comparator": ""
+                                                },
+                                                {
+                                                    "type": "",
+                                                    "value": 0
+                                                }
+                                            ],
+                                            "end": [
+                                                {
+                                                    "type": "",
+                                                    "min": 0,
+                                                    "max": 0
+                                                },
+                                                {
+                                                    "type": "",
+                                                    "value": 0,
+                                                    "comparator": ""
+                                                },
+                                                {
+                                                    "type": "",
+                                                    "value": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "",
+                                            "start": 0,
+                                            "end": 0
+                                        }
+                                    ]
                                 }
                             ],
-                            "end": [
+                            "state": [
                                 {
                                     "type": "",
-                                    "min": 0,
-                                    "max": 0
+                                    "components": [
+                                        [
+                                            {
+                                                "type": "",
+                                                "location": {
+                                                    "_id": "",
+                                                    "type": "",
+                                                    "sequence_id": "",
+                                                    "interval": [
+                                                        {
+                                                            "type": "",
+                                                            "start": [
+                                                                {
+                                                                    "type": "",
+                                                                    "min": 0,
+                                                                    "max": 0
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0,
+                                                                    "comparator": ""
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0
+                                                                }
+                                                            ],
+                                                            "end": [
+                                                                {
+                                                                    "type": "",
+                                                                    "min": 0,
+                                                                    "max": 0
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0,
+                                                                    "comparator": ""
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "start": 0,
+                                                            "end": 0
+                                                        }
+                                                    ]
+                                                },
+                                                "reverse_complement": false
+                                            },
+                                            {
+                                                "type": "",
+                                                "sequence": ""
+                                            },
+                                            {
+                                                "type": "",
+                                                "seq_expr": [
+                                                    {
+                                                        "type": "",
+                                                        "location": {
+                                                            "_id": "",
+                                                            "type": "",
+                                                            "sequence_id": "",
+                                                            "interval": [
+                                                                {
+                                                                    "type": "",
+                                                                    "start": [
+                                                                        {
+                                                                            "type": "",
+                                                                            "min": 0,
+                                                                            "max": 0
+                                                                        },
+                                                                        {
+                                                                            "type": "",
+                                                                            "value": 0,
+                                                                            "comparator": ""
+                                                                        },
+                                                                        {
+                                                                            "type": "",
+                                                                            "value": 0
+                                                                        }
+                                                                    ],
+                                                                    "end": [
+                                                                        {
+                                                                            "type": "",
+                                                                            "min": 0,
+                                                                            "max": 0
+                                                                        },
+                                                                        {
+                                                                            "type": "",
+                                                                            "value": 0,
+                                                                            "comparator": ""
+                                                                        },
+                                                                        {
+                                                                            "type": "",
+                                                                            "value": 0
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "start": 0,
+                                                                    "end": 0
+                                                                }
+                                                            ]
+                                                        },
+                                                        "reverse_complement": false
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "sequence": ""
+                                                    }
+                                                ],
+                                                "count": [
+                                                    {
+                                                        "type": "",
+                                                        "min": 0,
+                                                        "max": 0
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0,
+                                                        "comparator": ""
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    ]
                                 },
                                 {
                                     "type": "",
-                                    "value": 0,
-                                    "comparator": ""
+                                    "location": {
+                                        "_id": "",
+                                        "type": "",
+                                        "sequence_id": "",
+                                        "interval": [
+                                            {
+                                                "type": "",
+                                                "start": [
+                                                    {
+                                                        "type": "",
+                                                        "min": 0,
+                                                        "max": 0
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0,
+                                                        "comparator": ""
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0
+                                                    }
+                                                ],
+                                                "end": [
+                                                    {
+                                                        "type": "",
+                                                        "min": 0,
+                                                        "max": 0
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0,
+                                                        "comparator": ""
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "",
+                                                "start": 0,
+                                                "end": 0
+                                            }
+                                        ]
+                                    },
+                                    "reverse_complement": false
                                 },
                                 {
                                     "type": "",
-                                    "value": 0
-                                }
-                            ]
-                        },
-                        {
-                            "type": "",
-                            "start": 0,
-                            "end": 0
-                        }
-                    ]
-                }
-            ],
-            "state": [
-                {
-                    "type": "",
-                    "sequence": ""
-                },
-                {
-                    "type": "",
-                    "location": [
-                        {
-                            "_id": "",
-                            "type": "",
-                            "species_id": "",
-                            "chr": "",
-                            "interval": ""
-                        },
-                        {
-                            "_id": "",
-                            "type": "",
-                            "sequence_id": "",
-                            "interval": [
+                                    "sequence": ""
+                                },
                                 {
                                     "type": "",
-                                    "start": [
+                                    "seq_expr": [
                                         {
                                             "type": "",
-                                            "min": 0,
-                                            "max": 0
+                                            "location": {
+                                                "_id": "",
+                                                "type": "",
+                                                "sequence_id": "",
+                                                "interval": [
+                                                    {
+                                                        "type": "",
+                                                        "start": [
+                                                            {
+                                                                "type": "",
+                                                                "min": 0,
+                                                                "max": 0
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "value": 0,
+                                                                "comparator": ""
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "value": 0
+                                                            }
+                                                        ],
+                                                        "end": [
+                                                            {
+                                                                "type": "",
+                                                                "min": 0,
+                                                                "max": 0
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "value": 0,
+                                                                "comparator": ""
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "value": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "start": 0,
+                                                        "end": 0
+                                                    }
+                                                ]
+                                            },
+                                            "reverse_complement": false
                                         },
                                         {
                                             "type": "",
-                                            "value": 0,
-                                            "comparator": ""
-                                        },
-                                        {
-                                            "type": "",
-                                            "value": 0
+                                            "sequence": ""
                                         }
                                     ],
-                                    "end": [
+                                    "count": [
                                         {
                                             "type": "",
                                             "min": 0,
@@ -661,221 +851,886 @@
                                 },
                                 {
                                     "type": "",
-                                    "start": 0,
-                                    "end": 0
+                                    "sequence": ""
                                 }
                             ]
-                        }
-                    ],
-                    "reverse_complement": true
-                },
-                {
-                    "type": "",
-                    "seq_expr": [
-                        {
-                            "type": "",
-                            "location": [
-                                {
-                                    "_id": "",
-                                    "type": "",
-                                    "species_id": "",
-                                    "chr": "",
-                                    "interval": ""
-                                },
-                                {
-                                    "_id": "",
-                                    "type": "",
-                                    "sequence_id": "",
-                                    "interval": [
-                                        {
-                                            "type": "",
-                                            "start": [
-                                                {
-                                                    "type": "",
-                                                    "min": 0,
-                                                    "max": 0
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0,
-                                                    "comparator": ""
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0
-                                                }
-                                            ],
-                                            "end": [
-                                                {
-                                                    "type": "",
-                                                    "min": 0,
-                                                    "max": 0
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0,
-                                                    "comparator": ""
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "type": "",
-                                            "start": 0,
-                                            "end": 0
-                                        }
-                                    ]
-                                }
-                            ],
-                            "reverse_complement": ""
                         },
-                        {
-                            "type": "",
-                            "sequence": ""
-                        }
-                    ],
-                    "count": [
-                        {
-                            "type": "",
-                            "min": 0,
-                            "max": 0
-                        },
-                        {
-                            "type": "",
-                            "value": 0,
-                            "comparator": ""
-                        },
-                        {
-                            "type": "",
-                            "value": 0
-                        }
+                        ""
                     ]
-                },
-                {
-                    "type": "",
-                    "components": [
-                        {
-                            "type": "",
-                            "location": [
-                                {
-                                    "_id": "",
-                                    "type": "",
-                                    "species_id": "",
-                                    "chr": "",
-                                    "interval": ""
-                                },
-                                {
-                                    "_id": "",
-                                    "type": "",
-                                    "sequence_id": "",
-                                    "interval": [
-                                        {
-                                            "type": "",
-                                            "start": [
-                                                {
-                                                    "type": "",
-                                                    "min": 0,
-                                                    "max": 0
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0,
-                                                    "comparator": ""
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0
-                                                }
-                                            ],
-                                            "end": [
-                                                {
-                                                    "type": "",
-                                                    "min": 0,
-                                                    "max": 0
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0,
-                                                    "comparator": ""
-                                                },
-                                                {
-                                                    "type": "",
-                                                    "value": 0
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "type": "",
-                                            "start": 0,
-                                            "end": 0
-                                        }
-                                    ]
-                                }
-                            ],
-                            "reverse_complement": ""
-                        },
-                        {
-                            "type": "",
-                            "sequence": ""
-                        },
-                        {
-                            "type": ""
-                        }
-                    ]
-                },
-                {
-                    "type": "",
-                    "sequence": ""
-                }
-            ]
-        },
-        {
-            "_id": "",
-            "type": "",
-            "subject": [
-                {
-                    "_id": "",
-                    "type": "",
-                    "species_id": "",
-                    "chr": "",
-                    "interval": ""
-                },
-                {
-                    "type": "",
-                    "gene_id": ""
-                },
-                {
-                    "_id": "",
-                    "type": "",
-                    "sequence_id": "",
-                    "interval": ""
-                }
-            ],
-            "copy_change": "",
-            "copies": [
-                {
-                    "_id": "",
-                    "type": "",
-                    "species_id": "",
-                    "chr": "",
-                    "interval": ""
-                },
-                {
-                    "type": "",
-                    "gene_id": ""
-                },
-                {
-                    "_id": "",
-                    "type": "",
-                    "sequence_id": "",
-                    "interval": ""
-                }
-            ],
-            "members": {
+                ]
+            }
+        ],
+        [
+            {
+                "_id": "",
                 "type": "",
+                "subject": [
+                    "",
+                    {
+                        "_id": "",
+                        "type": "",
+                        "species_id": "",
+                        "chr": "",
+                        "interval": {
+                            "type": "",
+                            "start": "",
+                            "end": ""
+                        }
+                    },
+                    {
+                        "type": "",
+                        "gene_id": ""
+                    },
+                    {
+                        "_id": "",
+                        "type": "",
+                        "sequence_id": "",
+                        "interval": [
+                            {
+                                "type": "",
+                                "start": [
+                                    {
+                                        "type": "",
+                                        "min": 0,
+                                        "max": 0
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0,
+                                        "comparator": ""
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0
+                                    }
+                                ],
+                                "end": [
+                                    {
+                                        "type": "",
+                                        "min": 0,
+                                        "max": 0
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0,
+                                        "comparator": ""
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "",
+                                "start": 0,
+                                "end": 0
+                            }
+                        ]
+                    }
+                ],
+                "copy_change": ""
+            },
+            {
+                "_id": "",
+                "type": "",
+                "subject": [
+                    "",
+                    {
+                        "_id": "",
+                        "type": "",
+                        "species_id": "",
+                        "chr": "",
+                        "interval": {
+                            "type": "",
+                            "start": "",
+                            "end": ""
+                        }
+                    },
+                    {
+                        "type": "",
+                        "gene_id": ""
+                    },
+                    {
+                        "_id": "",
+                        "type": "",
+                        "sequence_id": "",
+                        "interval": [
+                            {
+                                "type": "",
+                                "start": [
+                                    {
+                                        "type": "",
+                                        "min": 0,
+                                        "max": 0
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0,
+                                        "comparator": ""
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0
+                                    }
+                                ],
+                                "end": [
+                                    {
+                                        "type": "",
+                                        "min": 0,
+                                        "max": 0
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0,
+                                        "comparator": ""
+                                    },
+                                    {
+                                        "type": "",
+                                        "value": 0
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "",
+                                "start": 0,
+                                "end": 0
+                            }
+                        ]
+                    }
+                ],
+                "copies": [
+                    {
+                        "type": "",
+                        "min": 0,
+                        "max": 0
+                    },
+                    {
+                        "type": "",
+                        "value": 0,
+                        "comparator": ""
+                    },
+                    {
+                        "type": "",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "_id": "",
+                "type": "",
+                "members": [
+                    {
+                        "type": "",
+                        "count": [
+                            {
+                                "type": "",
+                                "min": 0,
+                                "max": 0
+                            },
+                            {
+                                "type": "",
+                                "value": 0,
+                                "comparator": ""
+                            },
+                            {
+                                "type": "",
+                                "value": 0
+                            }
+                        ],
+                        "variation": [
+                            {
+                                "_id": "",
+                                "type": "",
+                                "location": [
+                                    "",
+                                    {
+                                        "_id": "",
+                                        "type": "",
+                                        "species_id": "",
+                                        "chr": "",
+                                        "interval": {
+                                            "type": "",
+                                            "start": "",
+                                            "end": ""
+                                        }
+                                    },
+                                    {
+                                        "_id": "",
+                                        "type": "",
+                                        "sequence_id": "",
+                                        "interval": [
+                                            {
+                                                "type": "",
+                                                "start": [
+                                                    {
+                                                        "type": "",
+                                                        "min": 0,
+                                                        "max": 0
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0,
+                                                        "comparator": ""
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0
+                                                    }
+                                                ],
+                                                "end": [
+                                                    {
+                                                        "type": "",
+                                                        "min": 0,
+                                                        "max": 0
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0,
+                                                        "comparator": ""
+                                                    },
+                                                    {
+                                                        "type": "",
+                                                        "value": 0
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "",
+                                                "start": 0,
+                                                "end": 0
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "state": [
+                                    {
+                                        "type": "",
+                                        "components": [
+                                            [
+                                                {
+                                                    "type": "",
+                                                    "location": {
+                                                        "_id": "",
+                                                        "type": "",
+                                                        "sequence_id": "",
+                                                        "interval": [
+                                                            {
+                                                                "type": "",
+                                                                "start": [
+                                                                    {
+                                                                        "type": "",
+                                                                        "min": 0,
+                                                                        "max": 0
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "value": 0,
+                                                                        "comparator": ""
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "value": 0
+                                                                    }
+                                                                ],
+                                                                "end": [
+                                                                    {
+                                                                        "type": "",
+                                                                        "min": 0,
+                                                                        "max": 0
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "value": 0,
+                                                                        "comparator": ""
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "value": 0
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "start": 0,
+                                                                "end": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    "reverse_complement": false
+                                                },
+                                                {
+                                                    "type": "",
+                                                    "sequence": ""
+                                                },
+                                                {
+                                                    "type": "",
+                                                    "seq_expr": [
+                                                        {
+                                                            "type": "",
+                                                            "location": {
+                                                                "_id": "",
+                                                                "type": "",
+                                                                "sequence_id": "",
+                                                                "interval": [
+                                                                    {
+                                                                        "type": "",
+                                                                        "start": [
+                                                                            {
+                                                                                "type": "",
+                                                                                "min": 0,
+                                                                                "max": 0
+                                                                            },
+                                                                            {
+                                                                                "type": "",
+                                                                                "value": 0,
+                                                                                "comparator": ""
+                                                                            },
+                                                                            {
+                                                                                "type": "",
+                                                                                "value": 0
+                                                                            }
+                                                                        ],
+                                                                        "end": [
+                                                                            {
+                                                                                "type": "",
+                                                                                "min": 0,
+                                                                                "max": 0
+                                                                            },
+                                                                            {
+                                                                                "type": "",
+                                                                                "value": 0,
+                                                                                "comparator": ""
+                                                                            },
+                                                                            {
+                                                                                "type": "",
+                                                                                "value": 0
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "start": 0,
+                                                                        "end": 0
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "reverse_complement": false
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "sequence": ""
+                                                        }
+                                                    ],
+                                                    "count": [
+                                                        {
+                                                            "type": "",
+                                                            "min": 0,
+                                                            "max": 0
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "value": 0,
+                                                            "comparator": ""
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "value": 0
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        ]
+                                    },
+                                    {
+                                        "type": "",
+                                        "location": {
+                                            "_id": "",
+                                            "type": "",
+                                            "sequence_id": "",
+                                            "interval": [
+                                                {
+                                                    "type": "",
+                                                    "start": [
+                                                        {
+                                                            "type": "",
+                                                            "min": 0,
+                                                            "max": 0
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "value": 0,
+                                                            "comparator": ""
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "value": 0
+                                                        }
+                                                    ],
+                                                    "end": [
+                                                        {
+                                                            "type": "",
+                                                            "min": 0,
+                                                            "max": 0
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "value": 0,
+                                                            "comparator": ""
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "value": 0
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "",
+                                                    "start": 0,
+                                                    "end": 0
+                                                }
+                                            ]
+                                        },
+                                        "reverse_complement": false
+                                    },
+                                    {
+                                        "type": "",
+                                        "sequence": ""
+                                    },
+                                    {
+                                        "type": "",
+                                        "seq_expr": [
+                                            {
+                                                "type": "",
+                                                "location": {
+                                                    "_id": "",
+                                                    "type": "",
+                                                    "sequence_id": "",
+                                                    "interval": [
+                                                        {
+                                                            "type": "",
+                                                            "start": [
+                                                                {
+                                                                    "type": "",
+                                                                    "min": 0,
+                                                                    "max": 0
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0,
+                                                                    "comparator": ""
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0
+                                                                }
+                                                            ],
+                                                            "end": [
+                                                                {
+                                                                    "type": "",
+                                                                    "min": 0,
+                                                                    "max": 0
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0,
+                                                                    "comparator": ""
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "start": 0,
+                                                            "end": 0
+                                                        }
+                                                    ]
+                                                },
+                                                "reverse_complement": false
+                                            },
+                                            {
+                                                "type": "",
+                                                "sequence": ""
+                                            }
+                                        ],
+                                        "count": [
+                                            {
+                                                "type": "",
+                                                "min": 0,
+                                                "max": 0
+                                            },
+                                            {
+                                                "type": "",
+                                                "value": 0,
+                                                "comparator": ""
+                                            },
+                                            {
+                                                "type": "",
+                                                "value": 0
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "",
+                                        "sequence": ""
+                                    }
+                                ]
+                            },
+                            {
+                                "_id": "",
+                                "type": "",
+                                "members": [
+                                    [
+                                        {
+                                            "_id": "",
+                                            "type": "",
+                                            "location": [
+                                                "",
+                                                {
+                                                    "_id": "",
+                                                    "type": "",
+                                                    "species_id": "",
+                                                    "chr": "",
+                                                    "interval": {
+                                                        "type": "",
+                                                        "start": "",
+                                                        "end": ""
+                                                    }
+                                                },
+                                                {
+                                                    "_id": "",
+                                                    "type": "",
+                                                    "sequence_id": "",
+                                                    "interval": [
+                                                        {
+                                                            "type": "",
+                                                            "start": [
+                                                                {
+                                                                    "type": "",
+                                                                    "min": 0,
+                                                                    "max": 0
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0,
+                                                                    "comparator": ""
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0
+                                                                }
+                                                            ],
+                                                            "end": [
+                                                                {
+                                                                    "type": "",
+                                                                    "min": 0,
+                                                                    "max": 0
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0,
+                                                                    "comparator": ""
+                                                                },
+                                                                {
+                                                                    "type": "",
+                                                                    "value": 0
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "start": 0,
+                                                            "end": 0
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "state": [
+                                                {
+                                                    "type": "",
+                                                    "components": [
+                                                        [
+                                                            {
+                                                                "type": "",
+                                                                "location": {
+                                                                    "_id": "",
+                                                                    "type": "",
+                                                                    "sequence_id": "",
+                                                                    "interval": [
+                                                                        {
+                                                                            "type": "",
+                                                                            "start": [
+                                                                                {
+                                                                                    "type": "",
+                                                                                    "min": 0,
+                                                                                    "max": 0
+                                                                                },
+                                                                                {
+                                                                                    "type": "",
+                                                                                    "value": 0,
+                                                                                    "comparator": ""
+                                                                                },
+                                                                                {
+                                                                                    "type": "",
+                                                                                    "value": 0
+                                                                                }
+                                                                            ],
+                                                                            "end": [
+                                                                                {
+                                                                                    "type": "",
+                                                                                    "min": 0,
+                                                                                    "max": 0
+                                                                                },
+                                                                                {
+                                                                                    "type": "",
+                                                                                    "value": 0,
+                                                                                    "comparator": ""
+                                                                                },
+                                                                                {
+                                                                                    "type": "",
+                                                                                    "value": 0
+                                                                                }
+                                                                            ]
+                                                                        },
+                                                                        {
+                                                                            "type": "",
+                                                                            "start": 0,
+                                                                            "end": 0
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "reverse_complement": false
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "sequence": ""
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "seq_expr": [
+                                                                    {
+                                                                        "type": "",
+                                                                        "location": {
+                                                                            "_id": "",
+                                                                            "type": "",
+                                                                            "sequence_id": "",
+                                                                            "interval": [
+                                                                                {
+                                                                                    "type": "",
+                                                                                    "start": [
+                                                                                        {
+                                                                                            "type": "",
+                                                                                            "min": 0,
+                                                                                            "max": 0
+                                                                                        },
+                                                                                        {
+                                                                                            "type": "",
+                                                                                            "value": 0,
+                                                                                            "comparator": ""
+                                                                                        },
+                                                                                        {
+                                                                                            "type": "",
+                                                                                            "value": 0
+                                                                                        }
+                                                                                    ],
+                                                                                    "end": [
+                                                                                        {
+                                                                                            "type": "",
+                                                                                            "min": 0,
+                                                                                            "max": 0
+                                                                                        },
+                                                                                        {
+                                                                                            "type": "",
+                                                                                            "value": 0,
+                                                                                            "comparator": ""
+                                                                                        },
+                                                                                        {
+                                                                                            "type": "",
+                                                                                            "value": 0
+                                                                                        }
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "type": "",
+                                                                                    "start": 0,
+                                                                                    "end": 0
+                                                                                }
+                                                                            ]
+                                                                        },
+                                                                        "reverse_complement": false
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "sequence": ""
+                                                                    }
+                                                                ],
+                                                                "count": [
+                                                                    {
+                                                                        "type": "",
+                                                                        "min": 0,
+                                                                        "max": 0
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "value": 0,
+                                                                        "comparator": ""
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "value": 0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "",
+                                                    "location": {
+                                                        "_id": "",
+                                                        "type": "",
+                                                        "sequence_id": "",
+                                                        "interval": [
+                                                            {
+                                                                "type": "",
+                                                                "start": [
+                                                                    {
+                                                                        "type": "",
+                                                                        "min": 0,
+                                                                        "max": 0
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "value": 0,
+                                                                        "comparator": ""
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "value": 0
+                                                                    }
+                                                                ],
+                                                                "end": [
+                                                                    {
+                                                                        "type": "",
+                                                                        "min": 0,
+                                                                        "max": 0
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "value": 0,
+                                                                        "comparator": ""
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "value": 0
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "type": "",
+                                                                "start": 0,
+                                                                "end": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    "reverse_complement": false
+                                                },
+                                                {
+                                                    "type": "",
+                                                    "sequence": ""
+                                                },
+                                                {
+                                                    "type": "",
+                                                    "seq_expr": [
+                                                        {
+                                                            "type": "",
+                                                            "location": {
+                                                                "_id": "",
+                                                                "type": "",
+                                                                "sequence_id": "",
+                                                                "interval": [
+                                                                    {
+                                                                        "type": "",
+                                                                        "start": [
+                                                                            {
+                                                                                "type": "",
+                                                                                "min": 0,
+                                                                                "max": 0
+                                                                            },
+                                                                            {
+                                                                                "type": "",
+                                                                                "value": 0,
+                                                                                "comparator": ""
+                                                                            },
+                                                                            {
+                                                                                "type": "",
+                                                                                "value": 0
+                                                                            }
+                                                                        ],
+                                                                        "end": [
+                                                                            {
+                                                                                "type": "",
+                                                                                "min": 0,
+                                                                                "max": 0
+                                                                            },
+                                                                            {
+                                                                                "type": "",
+                                                                                "value": 0,
+                                                                                "comparator": ""
+                                                                            },
+                                                                            {
+                                                                                "type": "",
+                                                                                "value": 0
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "type": "",
+                                                                        "start": 0,
+                                                                        "end": 0
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "reverse_complement": false
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "sequence": ""
+                                                        }
+                                                    ],
+                                                    "count": [
+                                                        {
+                                                            "type": "",
+                                                            "min": 0,
+                                                            "max": 0
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "value": 0,
+                                                            "comparator": ""
+                                                        },
+                                                        {
+                                                            "type": "",
+                                                            "value": 0
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "",
+                                                    "sequence": ""
+                                                }
+                                            ]
+                                        },
+                                        ""
+                                    ]
+                                ]
+                            }
+                        ]
+                    }
+                ],
                 "count": [
                     {
                         "type": "",
@@ -891,36 +1746,9 @@
                         "type": "",
                         "value": 0
                     }
-                ],
-                "variation": [
-                    {
-                        "type": ""
-                    },
-                    {
-                        "type": ""
-                    }
                 ]
-            },
-            "count": [
-                {
-                    "_id": "",
-                    "type": "",
-                    "species_id": "",
-                    "chr": "",
-                    "interval": ""
-                },
-                {
-                    "type": "",
-                    "gene_id": ""
-                },
-                {
-                    "_id": "",
-                    "type": "",
-                    "sequence_id": "",
-                    "interval": ""
-                }
-            ]
-        },
+            }
+        ],
         {
             "alternateBases": "",
             "location": [
@@ -929,7 +1757,11 @@
                     "type": "",
                     "species_id": "",
                     "chr": "",
-                    "interval": ""
+                    "interval": {
+                        "type": "",
+                        "start": "",
+                        "end": ""
+                    }
                 },
                 {
                     "_id": "",
