@@ -6,6 +6,8 @@ import biosamples
 
 import csv
 
+import ast
+
 
 def csv_to_bff():
     filename = "biosamples3.csv"
@@ -78,20 +80,33 @@ class ConfigModel(BaseModel):
     def _config_to_dict(cls):
         result = {}
         for key, value in CONFIG.items():
+            try:
+                value=ast.literal_eval(value)
+            except Exception:
+                pass
             parts = key.split("|")
             property_type=cls.__annotations__.get(parts[0])
             if 'list' in property_type:
                 if parts[0] not in result:
-                    result[parts[0]]=[]
+                    if len(parts)==1:
+                        result[parts[0]]=[value]
+                    else:
+                        result[parts[0]]=[]
             elif 'dict' in property_type:
                 if parts[0] not in result:
-                    result[parts[0]]={}
+                    if len(parts)==1:
+                        result[parts[0]]=value
+                    else:
+                        result[parts[0]]={}
             elif property_type in ['str', 'int', 'float']:
                 if parts[0] not in result:
                     result[parts[0]]=value
             else:
                 if parts[0] not in result:
-                    result[parts[0]]={}
+                    if len(parts)==1:
+                        result[parts[0]]=value
+                    else:
+                        result[parts[0]]={}
             i=1
             while i < len(parts):
                 print(key)
@@ -109,8 +124,6 @@ class ConfigModel(BaseModel):
                             new_class = getattr(biosamples, formatted_type, None)
                             property_type=new_class.__annotations__.get(parts[i])
                             if result[parts[0]]==[]:
-                                print(len(parts))
-                                print(i)
                                 if i+1==len(parts):
                                     result[parts[0]].append({parts[1]: value})
                                 elif i+3==len(parts):
@@ -122,7 +135,21 @@ class ConfigModel(BaseModel):
                                     result[parts[0]][0][parts[1]]=value
                                 else:
                                     print('hereeee')
-                                    if parts[1] in result[parts[0]][0]:
+                                    if 'list' in property_type:
+                                        print('kwaaaaai')
+                                        try:
+                                            result[parts[0]][0][parts[1]][0][parts[2]]=value
+                                        except Exception as e:
+                                            print(e)
+                                            result[parts[0]][0][parts[1]]=[{parts[2]:value}]
+                                    elif len(parts)==5:
+                                        if parts[3] not in result[parts[0]][0][parts[1]][parts[2]]:
+                                            result[parts[0]][0][parts[1]][parts[2]][parts[3]]={}
+                                        if parts[4] not in result[parts[0]][0][parts[1]][parts[2]][parts[3]]:
+                                            result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
+                                        else:
+                                            result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
+                                    elif parts[1] in result[parts[0]][0]:
                                         if i+1==len(parts):
                                             result[parts[0]][0][parts[1]][parts[2]]=value
                                         elif i+2==len(parts):
@@ -152,8 +179,11 @@ class ConfigModel(BaseModel):
                     print('noteeeeeeeeed')
                     previous_type=cls.__annotations__.get(parts[i-1])
                     if previous_type == None:
+                        print('ahaaaa')
                         previous_type=cls.__annotations__.get(parts[i-2])
                         if previous_type != None:
+                            print('woooop')
+                            print(property_type)
                             if 'list' in previous_type:
                                 formatted_type=previous_type.replace(']','[')
                                 formatted_type = formatted_type.split('[')
@@ -163,12 +193,24 @@ class ConfigModel(BaseModel):
                                 if result[parts[0]]==[]:
                                     result[parts[0]].append({parts[1]: {parts[2]: value}})
                                 else:
+                                    print('howmanyyy')
                                     print(parts)
-                                    result[parts[0]][0][parts[1]]={}
-                                    result[parts[0]][0][parts[1]][parts[2]]=value
+                                    try:
+                                        result[parts[0]][0][parts[1]][0][parts[2]]=value
+                                    except Exception:
+                                        result[parts[0]][0][parts[1]]={}
+                                        result[parts[0]][0][parts[1]][parts[2]]=value
+                        else:
+                            if len(parts)==5:
+                                print('gogogo')
+                                print(parts)
+                                if parts[4] not in result[parts[0]][0][parts[1]][parts[2]][parts[3]]:
+                                    result[parts[0]][0][parts[1]][parts[2]][parts[3]]={}
+                                    result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
+                                else:
+                                    result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
 
                     else:
-                        print(previous_type)
                         if 'list' in previous_type:
                             if result[parts[0]]==[]:
                                   result[parts[0]]=[{parts[i]: value}]
