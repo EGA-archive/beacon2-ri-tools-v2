@@ -15,8 +15,13 @@ from pydantic import (
     Field,
     RootModel,
     conint,
-    constr,
+    constr
 )
+
+from config import ConfigModel
+
+
+
 
 
 class CURIE(RootModel[constr(pattern=r'^\w[^:]+:.+$')]):
@@ -630,7 +635,7 @@ class Measurement(BaseModel):
     )
 
 
-class Biosamples(BaseModel):
+class Biosamples(ConfigModel):
     model_config = ConfigDict(
         extra='allow',
     )
