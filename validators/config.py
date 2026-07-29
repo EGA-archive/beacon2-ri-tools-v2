@@ -98,33 +98,74 @@ class ConfigModel(BaseModel):
                 print(value)
                 property_type=cls.__annotations__.get(parts[i])
                 if property_type == None:
+                    print('whooo')
                     previous_type=cls.__annotations__.get(parts[i-1])
-                    if 'list' in previous_type:
-                        formatted_type=previous_type.replace(']','[')
-                        formatted_type = formatted_type.split('[')
-                        formatted_type =formatted_type[1]
-                        new_class = getattr(biosamples, formatted_type, None)
-                        property_type=new_class.__annotations__.get(parts[i])
-                        if result[parts[0]]==[]:
-                            result[parts[0]].append({parts[1]: value})
-                        else:
-                            result[parts[0]][0][parts[1]]={}
-                elif property_type in ['str', 'int', 'float']:
-                    previous_type=cls.__annotations__.get(parts[i-1])
-                    if previous_type == None:
-                        previous_type=cls.__annotations__.get(parts[i-2])
+                    if previous_type != None:
                         if 'list' in previous_type:
+                            print('heaaa')
                             formatted_type=previous_type.replace(']','[')
                             formatted_type = formatted_type.split('[')
                             formatted_type =formatted_type[1]
                             new_class = getattr(biosamples, formatted_type, None)
-                            property_type=new_class.__annotations__.get(parts[i-1])
+                            property_type=new_class.__annotations__.get(parts[i])
                             if result[parts[0]]==[]:
-                                result[parts[0]].append({parts[1]: {parts[2]: value}})
+                                print(len(parts))
+                                print(i)
+                                if i+1==len(parts):
+                                    result[parts[0]].append({parts[1]: value})
+                                elif i+3==len(parts):
+                                    result[parts[0]].append({parts[1]: {parts[2]: {parts[3]:value}}})
+                                else:
+                                    result[parts[0]].append({parts[1]: {parts[2]: value}})
                             else:
-                                print(parts)
-                                result[parts[0]][0][parts[1]]={}
-                                result[parts[0]][0][parts[1]][parts[2]]=value
+                                if i+1==len(parts):
+                                    result[parts[0]][0][parts[1]]=value
+                                else:
+                                    print('hereeee')
+                                    if parts[1] in result[parts[0]][0]:
+                                        if i+1==len(parts):
+                                            result[parts[0]][0][parts[1]][parts[2]]=value
+                                        elif i+2==len(parts):
+                                            result[parts[0]][0][parts[1]][parts[2]]=value
+                                        else:
+                                            if parts[2] not in result[parts[0]][0][parts[1]]:
+                                                result[parts[0]][0][parts[1]][parts[2]]={}
+                                                result[parts[0]][0][parts[1]][parts[2]][parts[3]]=value
+                                            else:
+                                                result[parts[0]][0][parts[1]][parts[2]][parts[3]]=value
+                                                
+                                    else:
+                                        if i+1==len(parts):
+                                            result[parts[0]][0][parts[1]]={}
+                                            result[parts[0]][0][parts[1]][parts[2]]=value
+                                        elif i+2==len(parts):
+                                            if parts[1] not in result[parts[0]][0]:
+                                                result[parts[0]][0][parts[1]]={}
+                                                result[parts[0]][0][parts[1]][parts[2]]=value
+                                        else:
+                                            result[parts[0]][0][parts[1]]={}
+                                            result[parts[0]][0][parts[1]][parts[2]]={}
+                                            result[parts[0]][0][parts[1]][parts[2]][parts[3]]=value
+                        else:
+                            result[parts[0]][parts[1]]=value
+                elif 'str' in property_type or 'int' in property_type or 'float' in property_type:
+                    print('noteeeeeeeeed')
+                    previous_type=cls.__annotations__.get(parts[i-1])
+                    if previous_type == None:
+                        previous_type=cls.__annotations__.get(parts[i-2])
+                        if previous_type != None:
+                            if 'list' in previous_type:
+                                formatted_type=previous_type.replace(']','[')
+                                formatted_type = formatted_type.split('[')
+                                formatted_type =formatted_type[1]
+                                new_class = getattr(biosamples, formatted_type, None)
+                                property_type=new_class.__annotations__.get(parts[i-1])
+                                if result[parts[0]]==[]:
+                                    result[parts[0]].append({parts[1]: {parts[2]: value}})
+                                else:
+                                    print(parts)
+                                    result[parts[0]][0][parts[1]]={}
+                                    result[parts[0]][0][parts[1]][parts[2]]=value
 
                     else:
                         print(previous_type)
