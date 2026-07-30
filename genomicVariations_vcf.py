@@ -5,7 +5,7 @@ import glob
 import re
 import conf.conf as conf
 import gc
-from validators.genomicVariations import GenomicVariations, LegacyVariation, SequenceLocation, SequenceInterval, Number, OntologyTerm, MolecularAttributes, FrequencyInPopulation, PopulationFrequency, Identifiers
+from validators.ga4gh.vcf import Genomicvariations, LegacyVariation, SequenceLocation, SequenceInterval, Number, OntologyTerm, MolecularAttributes, FrequencyInPopulations, PopulationFrequency, Identifiers
 from pymongo.errors import BulkWriteError
 import hashlib
 import argparse
@@ -525,7 +525,7 @@ def generate(dict_properties, args):
                     for frequency in frequencies:
                         population_frequency = PopulationFrequency(population=frequency["population"],alleleFrequency=frequency["alleleFrequency"]).model_dump(exclude_none=True)
                         population_frequencies.append(population_frequency)
-                    frequency_in_population = FrequencyInPopulation(sourceReference=pipeline["sourceReference"],source=pipeline["source"],frequencies=population_frequencies)
+                    frequency_in_population = FrequencyInPopulations(sourceReference=pipeline["sourceReference"],source=pipeline["source"],frequencies=population_frequencies)
                     population_frequencies=[]
                 elif allele_frequency == None and args.alleleFrequency == True:
                     number_variants+=1
@@ -738,9 +738,9 @@ def generate(dict_properties, args):
                         else:
                             j+=1
                 if allele_frequency != None:
-                    variant = GenomicVariations(variation=variation, variantInternalId=_id, frequencyInPopulations=[frequency_in_population.model_dump(exclude_none=True)], molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
+                    variant = Genomicvariations(variation=variation, variantInternalId=_id, frequencyInPopulations=[frequency_in_population.model_dump(exclude_none=True)], molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
                 else:
-                    variant = GenomicVariations(variation=variation, variantInternalId=_id, molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
+                    variant = Genomicvariations(variation=variation, variantInternalId=_id, molecularAttributes=molecular_attributes, identifiers=Identifiers(genomicHGVSId=HGVSId))
 
                 definitivedict = variant.model_dump(exclude_none=True)
                 definitivedict["datasetId"]=args.datasetId
@@ -758,6 +758,7 @@ def generate(dict_properties, args):
                             definitivedict["frequencyInPopulations"].append(dictfrequency)
                 except Exception:
                     pass
+
                 total_dict.append(definitivedict)
 
                 pbar.update(1)

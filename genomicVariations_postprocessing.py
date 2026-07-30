@@ -4,7 +4,7 @@ import re
 import conf.conf as conf
 import csv
 import sys
-from validators.genomicVariations import GenomicVariations
+from validators.ga4gh.vcf import Genomicvariations
 import argparse
 import os
 from mongo_connection import build_mongo_database
@@ -601,7 +601,7 @@ def postprocess_variant(dict_properties,list_of_headers, args):
             except Exception:
                 pass
             #print(definitivedict)
-            GenomicVariations(**definitivedict)
+            Genomicvariations(**definitivedict)
             definitivedict["datasetId"]=args.datasetId
             total_dict.append(definitivedict)
             list_of_required_keys=[]
