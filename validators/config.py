@@ -80,42 +80,80 @@ class ConfigModel(BaseModel):
 
     @classmethod
     def _get_properties(cls, type_class, parts, pos):
-        print(type_class)
-        if type_class not in ['str', 'int', 'float']:
-            if 'list' in type_class:
-                formatted_type=type_class.replace(']','[')
-                formatted_type = formatted_type.split('[')
-                formatted_type =formatted_type[1]
-                module_name = cls.ENTRY_TYPE
+        if type_class is None:
+            return "None", False
 
-                individuals = importlib.import_module(f"validators.{cls.MODEL}.{module_name}")
+        type_class = type_class.strip()
 
-                new_class = getattr(individuals, formatted_type, None)
-                property_type=new_class.__annotations__.get(parts[pos])
-            elif '|' in type_class:
-                formatted_type = type_class.split('|')
+        if "|" in type_class:
+            candidates = [
+                t.strip()
+                for t in type_class.split("|")
+                if t.strip() != "None"
+            ]
 
-                
-                
-                
-                module_name = cls.ENTRY_TYPE
-                individuals = importlib.import_module(f"validators.{cls.MODEL}.{module_name}")
-                for possible_type in formatted_type:
-                    replaced_type = possible_type.replace(' ', '')
-                    print(replaced_type)
-                    new_class = getattr(individuals, replaced_type, None)
-                    if new_class == None:
-                        return 'None', False
-                    property_type=new_class.__annotations__.get(parts[pos])
-                    if property_type != None:
-                        if 'list' in property_type:
-                            return property_type, "list" in property_type
-            else:
-                property_type = 'None'
-        else:
-            property_type = type_class
-        if property_type == None:
-            property_type = 'None'
+            if len(candidates) == 1:
+                type_class = candidates[0]
+
+
+        if type_class in ["str", "int", "float", "bool"]:
+            return type_class, False
+
+        module_name = cls.ENTRY_TYPE
+        individuals = importlib.import_module(
+            f"validators.{cls.MODEL}.{module_name}"
+        )
+
+        # List type: list[Something]
+        if type_class.startswith("list["):
+            inner_type = type_class[len("list["):-1]
+
+            new_class = getattr(individuals, inner_type, None)
+
+            if new_class is None:
+                return "None", False
+
+            property_type = new_class.__annotations__.get(parts[pos])
+
+            if property_type is None:
+                return "None", False
+
+            return property_type, "list" in property_type
+
+
+        # Union type (remaining unions, e.g. A | B)
+        if "|" in type_class:
+            possible_types = [
+                t.strip()
+                for t in type_class.split("|")
+                if t.strip() != "None"
+            ]
+
+            for possible_type in possible_types:
+                new_class = getattr(individuals, possible_type, None)
+
+                if new_class is None:
+                    continue
+
+                property_type = new_class.__annotations__.get(parts[pos])
+
+                if property_type is not None:
+                    return property_type, "list" in property_type
+
+            return "None", False
+
+
+        # Normal model/class
+        new_class = getattr(individuals, type_class, None)
+
+        if new_class is None:
+            return "None", False
+
+        property_type = new_class.__annotations__.get(parts[pos])
+
+        if property_type is None:
+            return "None", False
+
         return property_type, "list" in property_type
 
     @classmethod
@@ -176,8 +214,6 @@ class ConfigModel(BaseModel):
                     result[parts[0]][0][parts[1]]= value
                 except Exception:
                     result[parts[0]]= [{parts[1]:value}]
-
-
                 continue
             if key == 'info':
                 result['info']={"info": value}
@@ -203,10 +239,9 @@ class ConfigModel(BaseModel):
                     else:
                         result[parts[0]]={}
             i=1
-            print(parts)
+
             while i < len(parts):
 
-                # only handle the leaf assignment
                 if i + 1 == len(parts):
 
                     types = []
@@ -229,22 +264,18 @@ class ConfigModel(BaseModel):
 
                         types.append(current)
                         flags.append(is_list)
-                    if 'aminoacidChange' in parts:
-                        print(types)
-                        print(parts)
-                        print(value)
-                        print(flags)
+
                     cls._insert(
                         result,
                         parts,
                         flags,
                         value
                     )
-                    print(result)
+
 
 
                 i+=1
-        print(result)
+
         definitivedict=expand(result)
                 
         return definitivedict
