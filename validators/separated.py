@@ -180,7 +180,20 @@ class ConfigModel(BaseModel):
                                             result[parts[0]][0][parts[1]][parts[2]]={}
                                             result[parts[0]][0][parts[1]][parts[2]][parts[3]]=value
                         else:
-                            result[parts[0]][parts[1]]=value
+                            if i+1==len(parts):
+                                result[parts[0]][parts[1]]=value
+                    elif not isinstance(result[parts[0]],list):
+                        print(parts)
+                        if len(parts)==4 and i+1==len(parts):
+                            try:
+                                result[parts[0]][parts[1]][parts[2]]={}
+                                result[parts[0]][parts[1]][parts[2]][parts[3]]=value
+
+                            except Exception:
+                                result[parts[0]][parts[1]]={}
+                                result[parts[0]][parts[1]][parts[2]]={}
+                                result[parts[0]][parts[1]][parts[2]][parts[3]]=value
+
                 elif 'str' in property_type or 'int' in property_type or 'float' in property_type:
                     previous_type=cls.__annotations__.get(parts[i-1])
                     if previous_type == None:
@@ -190,7 +203,7 @@ class ConfigModel(BaseModel):
                                 formatted_type=previous_type.replace(']','[')
                                 formatted_type = formatted_type.split('[')
                                 formatted_type =formatted_type[1]
-                                module_name = "individuals"
+                                module_name = cls.ENTRY_TYPE
 
                                 individuals = importlib.import_module(f"validators.{module_name}")
 

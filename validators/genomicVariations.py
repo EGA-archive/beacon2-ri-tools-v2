@@ -955,7 +955,7 @@ class VariationSet(BaseModel):
     )
 
 
-class GenomicVariations(ConfigModel):
+class Genomicvariations(ConfigModel):
     model_config = ConfigDict(
         extra='allow',
     )
