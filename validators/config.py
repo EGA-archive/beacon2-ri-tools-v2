@@ -89,6 +89,14 @@ class ConfigModel(BaseModel):
                 pass
             parts = key.split("|")
             property_type=cls.__annotations__.get(parts[0])
+            if 'DataTypesArray' in property_type:
+                try:
+                    result[parts[0]][0][parts[1]]= value
+                except Exception:
+                    result[parts[0]]= [{parts[1]:value}]
+
+
+                continue
             if key == 'info':
                 result['info']={"info": value}
             elif 'list' in property_type:
@@ -142,7 +150,16 @@ class ConfigModel(BaseModel):
                                 else:
                                     if 'list' in property_type:
                                         try:
-                                            result[parts[0]][0][parts[1]][0][parts[2]]=value
+                                            
+                                            try:
+                                                result[parts[0]][0][parts[1]][0][parts[2]][parts[3]]=value
+                                            except Exception:
+                                                if len(parts)==4:
+                                                    result[parts[0]][0][parts[1]][0][parts[2]]={}
+                                                    result[parts[0]][0][parts[1]][0][parts[2]][parts[3]]=value
+                                                else:
+                                                    result[parts[0]][0][parts[1]][0][parts[2]]=value
+
                                         except Exception as e:
                                             result[parts[0]][0][parts[1]]=[{parts[2]:value}]
                                     elif len(parts)==5:
@@ -197,9 +214,38 @@ class ConfigModel(BaseModel):
                                 elif len(parts)==2 and i+1==len(parts):
                                     result[parts[0]][parts[1]]=value
                                 elif len(parts)==3 and 'list' not in property_type:
-                                    result[parts[0]][parts[1]][parts[2]]=value
+                                    try:
+                                        result[parts[0]][parts[1]][parts[2]]=value
+                                    except Exception:
+                                        result[parts[0]][parts[1]]={}
+                                        result[parts[0]][parts[1]][parts[2]]=value
                                 elif len(parts)==4 and i+1==len(parts):
                                     result[parts[0]][parts[1]][parts[2]][parts[3]]=value
+                                elif len(parts)==4 and 'Criteria' in parts[0] and 'Conditions' in parts[1]:
+                                    try:
+                                        result[parts[0]][parts[1]][0][parts[2]][parts[3]]=value
+                                    except Exception:
+                                        try:
+                                            result[parts[0]][parts[1]][0][parts[2]]={}
+                                            result[parts[0]][parts[1]][0][parts[2]][parts[3]]=value
+
+                                        except Exception:
+                                            result[parts[0]][parts[1]]=[{parts[2]: {parts[3]: value}}]
+                                elif len(parts)==5 and 'Criteria' in parts[0] and 'Conditions' in parts[1]:
+                                    try:
+                                        result[parts[0]][parts[1]][0][parts[2]][parts[3]][parts[4]]=value
+                                    except Exception:
+                                        try:
+                                            result[parts[0]][parts[1]][0][parts[2]][parts[3]]={}
+                                            result[parts[0]][parts[1]][0][parts[2]][parts[3]][parts[4]]=value
+
+                                        except Exception:
+                                            try:
+                                                result[parts[0]][parts[1]][0][parts[2]]={}
+                                                result[parts[0]][parts[1]][0][parts[2]][parts[3]]={}
+                                                result[parts[0]][parts[1]][0][parts[2]][parts[3]][parts[4]]=value
+                                            except Exception:
+                                                result[parts[0]][parts[1]]=[{parts[2]: {parts[3]: {parts[4]: value}}}]
                                 elif len(parts)==5:
                                     try:
                                         result[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]=value
@@ -223,17 +269,28 @@ class ConfigModel(BaseModel):
 
                     elif not isinstance(result[parts[0]],list):
                         if len(parts)==4 and i+1==len(parts):
-                            try:
-                                result[parts[0]][parts[1]][parts[2]][parts[3]]=value
-                            except Exception:
+                            if 'Criteria' in parts[0] and 'Conditions' in parts[1]:
                                 try:
-                                    result[parts[0]][parts[1]][parts[2]]={}
-                                    result[parts[0]][parts[1]][parts[2]][parts[3]]=value
-
+                                    result[parts[0]][parts[1]][0][parts[2]][parts[3]]=value
                                 except Exception:
-                                    result[parts[0]][parts[1]]={}
-                                    result[parts[0]][parts[1]][parts[2]]={}
+                                    try:
+                                        result[parts[0]][parts[1]][0][parts[2]]={}
+                                        result[parts[0]][parts[1]][0][parts[2]][parts[3]]=value
+
+                                    except Exception:
+                                        result[parts[0]][parts[1]]=[{parts[2]: {parts[3]: value}}]
+                            else:
+                                try:
                                     result[parts[0]][parts[1]][parts[2]][parts[3]]=value
+                                except Exception:
+                                    try:
+                                        result[parts[0]][parts[1]][parts[2]]={}
+                                        result[parts[0]][parts[1]][parts[2]][parts[3]]=value
+
+                                    except Exception:
+                                        result[parts[0]][parts[1]]={}
+                                        result[parts[0]][parts[1]][parts[2]]={}
+                                        result[parts[0]][parts[1]][parts[2]][parts[3]]=value
 
                 elif 'str' in property_type or 'int' in property_type or 'float' in property_type:
                     previous_type=cls.__annotations__.get(parts[i-1])
@@ -260,11 +317,17 @@ class ConfigModel(BaseModel):
                                         result[parts[0]][0][parts[1]][parts[2]]=value
                         else:
                             if len(parts)==5:
-                                if parts[4] not in result[parts[0]][0][parts[1]][parts[2]][parts[3]]:
-                                    result[parts[0]][0][parts[1]][parts[2]][parts[3]]={}
-                                    result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
-                                else:
-                                    result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
+                                try:
+                                    if parts[4] not in result[parts[0]][0][parts[1]][parts[2]][parts[3]]:
+                                        result[parts[0]][0][parts[1]][parts[2]][parts[3]]={}
+                                        result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
+                                    else:
+                                        result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
+                                except KeyError:
+                                    try:
+                                        result[parts[0]][parts[1]][0][parts[2]][parts[3]][parts[4]]=value
+                                    except Exception:
+                                        result[parts[0]][parts[1]]=[{parts[2]: {parts[3]: {parts[4]:value}}}]
 
                     else:
                         if 'list' in previous_type:
