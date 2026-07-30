@@ -16,7 +16,7 @@ from pydantic import (
     conint,
     constr,
 )
-
+from validators.separated import ConfigModel
 
 class Timestamp(RootModel[AwareDatetime]):
     root: AwareDatetime = Field(
@@ -380,7 +380,7 @@ class DataUseConditions(BaseModel):
     duoDataUse: list[DUODataUse] | None = Field(None, min_length=1)
 
 
-class Datasets(BaseModel):
+class Datasets(ConfigModel):
     model_config = ConfigDict(
         extra='allow',
     )

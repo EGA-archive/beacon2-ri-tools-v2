@@ -1,238 +1,42 @@
-import json
-from tqdm import tqdm
-import conf.conf as conf
+
+
 import csv
-import sys
-from validators.individuals import Individuals
-from validators.biosamples import Biosamples
-from validators.cohorts import Cohorts
-from validators.analyses import Analyses
-from validators.runs import Runs
-from validators.genomicVariations import GenomicVariations, SequenceInterval, LegacyVariation
-from validators.datasets import Datasets
-from validators.EUCAIM.collections import Collections
-from validators.EUCAIM.patients import Patients
-from validators.EUCAIM.imageStudies import ImageStudies
-import hashlib
-import argparse
 import os
+import json
+from conf.conf import output_docs_folder, csv_folder, datasetId, entry_type
+import argparse
+from tqdm import tqdm
+import hashlib
+from importlib import import_module
+from pathlib import Path
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def get_hash(string:str):
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
-def check_new_item_and_append_it(current_dict, keys, value):
-    # If the dictionary is a nested dictionary, continue creating the subdictionaries until we reach the end, then we store the value.
-    key = keys[0]
-    if len(keys) == 1:
-        if isinstance(value, str):
-            if value.lower() == 'true' or value.lower() == 'false':
-                value = bool(value)
-            else:
-                try:
-                    value = float(value)
-                except Exception:
-                    try:
-                        value = int(value)
-                    except Exception:
-                        pass
-        current_dict[key] = value
-    else:
-        if key not in current_dict:
-            current_dict[key] = {}
-        check_new_item_and_append_it(current_dict[key], keys[1:], value)
-
-def process_piped_list(num_process, value, current_item, dict_of_properties, item, list_of_provs):
-    # Let's store the num_process for later iterations of the inner list, so we process all the possible pipe splitted values.
-    list_of_processes=[]
-    list_of_processes.append(str(num_process))
-    # Start the array to check that the num_process didn't kick in for an inner key of an inner parent key so we keep the num_process alive.
-    processed_list=[]
-    # If there is the need of still process a splitted pipe value, execute the list processing.
-    while num_process >=0:
-        sublist, num_process, list_of_provs = process_list(value, current_item, [], dict_of_properties, num_process, list_of_provs)
-        # If the returned value is an empty list, it means that there are no splitted values, so no need to continue processing this inner key.
-        if sublist == []:
-            num_process = -1
-        # If the returned value is a dictionary, process the value as a simple list and break the iteration, as it means this inner key is not meant to have the processing.
-        elif isinstance(sublist, dict):
-            processed_list, num_process, list_of_provs = process_list(value, current_item, [], dict_of_properties, num_process, list_of_provs)
-            list_of_provs.append('continue')
-            break
-        # Else, continue iterating the value with pipes until they are all processed. Then, we store the parent key in list_of_provs so the parent function knows this has already been processed.
-        else:
-            processed_list.append(sublist[0])
-            num_process-=1
-            if num_process == -1:
-                list_of_provs.append(item)
-    return processed_list, num_process, list_of_processes
-
-def process_dictionary(item, new_item, subitem_dict, dict_of_properties, num_process, list_of_provs):
-    for key, value in item.items():
-        current_item = new_item + "|" + key
-        # If we find that the item is a dictionary inside a dictionary, call the method again.
-        if isinstance(value, dict):
-            if current_item not in subitem_dict:
-                subitem_dict, num_process = process_dictionary(value, current_item, subitem_dict, dict_of_properties, num_process, list_of_provs)
-        # If we find it is an inner list, process it as a list.
-        elif isinstance(value, list):
-            # If the list has values with pipes |, process it iterating each value of the value with pipes.
-            if num_process >=0:
-                processed_list, num_process, list_of_processes = process_piped_list(num_process, value, current_item, dict_of_properties, item, list_of_provs)
-                # Keep the num process alive for later inner keys that do need to process pipe splitted values..
-                if processed_list == []:
-                    num_process = int(list_of_processes[0])
-            else:
-                processed_list, num_process, list_of_provs = process_list(value, current_item, [], dict_of_properties, num_process, list_of_provs)
-                if num_process >=0:
-                    processed_list, num_process, list_of_processes = process_piped_list(num_process, value, current_item, dict_of_properties, item, list_of_provs)
-                    # Keep the num process alive for later inner keys that do need to process pipe splitted values..
-                    if processed_list == []:
-                        num_process = int(list_of_processes[0])
-            if processed_list and num_process<0 or processed_list and 'measurementValue' in current_item or processed_list:
-                check_new_item_and_append_it(subitem_dict, current_item.split("|"), processed_list)
-            elif 'measurementValue' not in current_item:
-                processed_list, num_process, list_of_processes = process_piped_list(num_process, value, current_item, dict_of_properties, item, list_of_provs)
-                if processed_list and num_process<0:
-                    check_new_item_and_append_it(subitem_dict, current_item.split("|"), processed_list)
-        else:
-            # If the value is a string, process it and append it, unless it is a piped | value, where we start the wheel of multiple processing of the values that belong to a list, letting the parent function now by stargint the num_process variable as the number of times (values) needing to be processed.
-            propv = process_string(current_item, dict_of_properties)
-            if propv is not None:
-                if '|' in propv:
-                    propv=propv.split('|')
-                    if num_process == -1:
-                        num_process=len(propv)-1
-                    propv=propv[num_process]
-                check_new_item_and_append_it(subitem_dict, current_item.split("|"), propv)
-    return subitem_dict, num_process
-
-def process_list(item, new_item, processed_list, dict_of_properties, num_process, list_of_provs):
-    # As we can only have dictionaries inside lists in Beacon v2, we process each item with the function to process dictionaries.
-    for list_item in item:
-        if isinstance(list_item, dict):
-            sublist_dict, num_process = process_dictionary(list_item, new_item, {}, dict_of_properties, num_process, list_of_provs)
-            if sublist_dict !={}:
-                splitted_list=new_item.split('|')
-                # In case the returning object is a list that is not meant to be a list (e.g. measurementValue and not modifiers or members), we process it as a dictionary.
-                # TODO: Try a non hardcoded alternative.
-                if len(splitted_list)>1 and 'ageAtProcedure' not in new_item and 'modifiers' not in new_item and 'members' not in new_item and 'dataUseConditions' not in new_item and 'Criteria' not in new_item and 'molecularEffects' not in new_item and 'interval' not in new_item and 'phenotypicEffects' not in new_item and 'clinicalInterpretations' not in new_item and 'imageStudy|disease|pathology' not in new_item and 'imageStudy|disease|treatment' not in new_item:                 
-                    processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]]
-                elif 'ageAtProcedure' in new_item and 'interventionsOrProcedures' not in new_item:
-                    processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]]
-                elif 'ageOfOnset' in new_item and 'diseaseConditions' in new_item:
-                    processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]]
-                elif 'onset' in new_item and 'phenotypicConditions' in new_item and 'iso8601duration':
-                    processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]]
-                elif 'start' in new_item or 'end' in new_item and 'interval' in new_item:
-                    processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]][new_item.split('|')[3]]
-                elif '|interval' in new_item:
-                    try:
-                        SequenceInterval(**sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]])
-                        processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]]
-                    except Exception:
-                        pass
-                elif 'modifiers' in new_item or 'members' in new_item or 'dataUseConditions' in new_item or 'Criteria' in new_item or 'molecularEffects' in new_item or 'phenotypicEffects' in new_item or 'clinicalInterpretations' in new_item:              
-                    processed_list.append(sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]])
-                elif 'imageStudy|disease|pathology' in new_item or 'imageStudy|disease|treatment' in new_item:
-                    processed_list.append(sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]][new_item.split('|')[2]])
-                elif 'variation' in new_item:
-                    try:
-                        LegacyVariation(**sublist_dict[new_item.split('|')[0]])
-                        processed_list=sublist_dict[new_item.split('|')[0]]
-                    except Exception as e:
-                        pass
-                elif 'interventionsOrProcedures' and 'ageAtProcedure' in new_item:
-                    processed_list=sublist_dict[new_item.split('|')[0]][new_item.split('|')[1]]
-                else:
-                    processed_list.append(sublist_dict[new_item.split('|')[0]])
-        elif isinstance(list_item, str):
-            propv = process_string(new_item, dict_of_properties)
-            if propv is not None:
-                if '|' in propv:
-                    propv=propv.split('|')
-                    for propv_splitted in propv:
-                        processed_list.append(propv_splitted)
-                elif new_item == 'modalities' or new_item == 'molecularAttributes|aminoacidChanges' or new_item == 'molecularAttributes|geneIds':
-                    processed_list=[propv]
-                else:
-                    processed_list=propv
-    return processed_list, num_process, list_of_provs
-
-def process_string(new_item, dict_of_properties):
-    if new_item in dict_of_properties:
-        return dict_of_properties[new_item]
-    return None
-
-def create_record(dict_properties, dict_of_properties):
-    # Create dictionary for each record
-    definitivedict = {}
-    for key, value in dict_properties.items():
-        # Start a list where we will assign which parent keys have already processed the value that contains a pipe |
-        list_of_provs=[]
-        if isinstance(value, list):
-            # Get the list for the key, the number of times this list has to be processed in case there is a pipe | and if the pipe has been processed in an inner list with list_of_provs.
-            value_list, num_of_processes, list_of_provs = process_list(value, key, [], dict_of_properties, -1, list_of_provs)
-            #print(value_list)
-            # If the instance is a list, where the pipe values can happen, let's check if it's the case for the parent key
-            if num_of_processes >=0:
-                total_list=[]
-                # If the num_of_proceesses is equal or greater than 0 and the parent key has not already been processed (appears inside list_of_provs), continue processing the items of the list.
-                while num_of_processes>=0 and key not in list_of_provs:
-                    # As the generic num_of_processes is different for each iteration of the list item, we call the subprocesses that come from inner lists as remainder, to not conflict with the greater num processes.
-                    value_list, remainder, list_of_provs = process_list(value, key, [], dict_of_properties, num_of_processes, list_of_provs)
-                    #print(value_list)
-                    try:
-                        total_list.append(value_list[0])
-                    except Exception:
-                        total_list = value_list
-                    if 'continue' not in list_of_provs:
-                        list_of_provs.append(key)
-                    num_of_processes-=1
-                # Assign the processed the list to the parent key
-                if total_list:
-                    #print(definitivedict)
-                    definitivedict[key] = total_list
-            # Assign the simple list to the parent key
-            elif value_list:
-                #print(value_list)
-                definitivedict[key] = value_list
-        elif isinstance(value, dict):
-            # If the value is a dictionary, process it
-            subitem_dict, num_of_processes = process_dictionary(value, key, {}, dict_of_properties, -1, list_of_provs)
-            #print(subitem_dict)
-            if subitem_dict != {}:
-                #print(definitivedict)
-                definitivedict[key] = subitem_dict[key]
-        else:
-            # If the value is just a string, process it and append it
-            # TODO: Some values like for measurementValue are still strings, need to convert them to integers or float and check why validator is not kicking in.
-            propv = process_string(key, dict_of_properties)
-            if propv is not None:
-                definitivedict[key] = propv
-
-    return definitivedict
-
-def csv_to_bff(dict_properties, list_of_headers, args):
-    #filename = conf.filename
+def csv_to_bff(args):
     if args.input.endswith('.csv'):
         filename = args.input
     else:
         filename = os.path.join(args.input, args.entry_type+'.csv')
 
+    name = Path(filename).stem
+
+    module = import_module(f"validators.{name}")
+
+    class_name = name.capitalize()
+    ValidatorClass = getattr(module, class_name)
+    total_dict=[]
     with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
         num_rows = sum(1 for row in reader)
 
-    total_dict =[]
-
-    k=0
     pbar = tqdm(total = num_rows)
 
     with open(filename, 'r' ) as theFile:
         reader = csv.DictReader(theFile)
-        i=1
+        k=1
         for line in reader:
             dict_of_properties={}
             list_of_filled_items=[]
@@ -241,15 +45,13 @@ def csv_to_bff(dict_properties, list_of_headers, args):
                 if property_value == None:
                     continue
                 property_value=property_value.replace('\ufeff', '')
-                if property_value not in list_of_headers:
-                    raise Exception(('the header {} is not allowed. Please, take a look at csv templates to check the headers allowed.').format(property_value))
 
 
                 
                 valor = vline
 
 
-                if i > 0:
+                if k > 0:
                     
                     if valor != '':
 
@@ -265,32 +67,10 @@ def csv_to_bff(dict_properties, list_of_headers, args):
 
                     elif valor == 0:
                         dict_of_properties[property_value]=valor
-
-            #print(dict_properties)
-            #print(dict_of_properties)
-
-            definitivedict = create_record(dict_properties, dict_of_properties)
-            #print(definitivedict)
-            if args.entry_type == 'individuals':
-                Individuals(**definitivedict)
-            elif args.entry_type == 'biosamples':
-                Biosamples(**definitivedict)
-            elif args.entry_type == 'cohorts':
-                Cohorts(**definitivedict)
-            elif args.entry_type == 'datasets':
-                Datasets(**definitivedict)
-            elif args.entry_type == 'genomicVariations':
-                GenomicVariations(**definitivedict)
-            elif args.entry_type == 'analyses':
-                Analyses(**definitivedict)
-            elif args.entry_type == 'runs':
-                Runs(**definitivedict)
-            elif args.entry_type == 'patients':
-                Patients(**definitivedict)
-            elif args.entry_type == 'collections':
-                Collections(**definitivedict)
-            elif args.entry_type == 'imageStudies':
-                ImageStudies(**definitivedict)
+            ValidatorClass.CONFIG=dict_of_properties
+            ValidatorClass.ENTRY_TYPE=args.entry_type
+            obtained_class = ValidatorClass()
+            definitivedict = obtained_class.model_dump(mode="json",exclude_none=True)
             if args.entry_type != 'datasets':
                 definitivedict["datasetId"]=args.datasetId
             if args.entry_type == 'genomicVariations':
@@ -300,26 +80,23 @@ def csv_to_bff(dict_properties, list_of_headers, args):
             else:
                 definitivedict["_id"]=get_hash(args.datasetId+definitivedict["id"])
             total_dict.append(definitivedict)
-
-            
             pbar.update(1)
-            if i > num_rows:
+            if k > num_rows:
                 break
-            i+=1
+            k+=1
+            #print(dict_properties)
+            #print(dict_of_properties)
 
-            
-
-    pbar.close()
-    return total_dict, i
+    return total_dict, k
 
 
 parser = argparse.ArgumentParser(
                     prog='convert_csv_to_bff',
                     description='This script translates a csv to BFF')
-parser.add_argument('-o', '--output', default=conf.output_docs_folder)
-parser.add_argument('-d', '--datasetId', default=conf.datasetId)
-parser.add_argument('-i', '--input', default=conf.csv_folder)
-parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all', 'collections', 'imageStudies', 'patients'])
+parser.add_argument('-o', '--output', default=output_docs_folder)
+parser.add_argument('-d', '--datasetId', default=datasetId)
+parser.add_argument('-i', '--input', default=csv_folder)
+parser.add_argument('-e', '--entry_type', default=entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all', 'collections', 'imageStudies', 'patients'])
 
 args = parser.parse_args()
 
@@ -328,24 +105,9 @@ if __name__ == '__main__':
     if args.entry_type == 'all':
         for entrytype in choices:
             args.entry_type = entrytype
-            header_path = os.path.join(
-                BASE_DIR,
-                "files",
-                "headers",
-                args.entry_type + ".txt"
-            )
-            json_path = os.path.join(
-                BASE_DIR,
-                "files",
-                "deref_schemas",
-                args.entry_type + ".json"
-            )
-            with open(header_path, "r") as txt_file:
-                list_of_headers=txt_file.read().splitlines() 
-            with open(json_path) as json_file:
-                dict_properties = json.load(json_file)
+
             try:
-                dict_generado, total_i=csv_to_bff(dict_properties, list_of_headers, args)
+                dict_generado, total_i=csv_to_bff(args)
             except FileNotFoundError:
                 continue
 
@@ -364,24 +126,9 @@ if __name__ == '__main__':
         path = args.entry_type
         if args.entry_type not in choices:
             path = 'EUCAIM/' + args.entry_type
-        header_path = os.path.join(
-            BASE_DIR,
-            "files",
-            "headers",
-            path + ".txt"
-        )
-        json_path = os.path.join(
-            BASE_DIR,
-            "files",
-            "deref_schemas",
-            path + ".json"
-        )
-        with open(header_path, "r") as txt_file:
-            list_of_headers=txt_file.read().splitlines() 
-        with open(json_path) as json_file:
-            dict_properties = json.load(json_file)
 
-        dict_generado, total_i=csv_to_bff(dict_properties, list_of_headers, args)
+
+        dict_generado, total_i=csv_to_bff(args)
 
         output = os.path.join(args.output, args.entry_type+'.json')
 
@@ -394,4 +141,3 @@ if __name__ == '__main__':
 
         with open(output, 'w') as f:
             json.dump(dict_generado, f)
-

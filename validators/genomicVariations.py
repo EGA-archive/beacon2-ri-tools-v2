@@ -8,7 +8,7 @@ from enum import Enum
 from typing import Any, Literal
 
 from pydantic import AnyUrl, BaseModel, ConfigDict, Field, RootModel, conint, constr
-
+from validators.separated import ConfigModel
 
 class Info(BaseModel):
     pass
@@ -955,7 +955,7 @@ class VariationSet(BaseModel):
     )
 
 
-class GenomicVariations(BaseModel):
+class GenomicVariations(ConfigModel):
     model_config = ConfigDict(
         extra='allow',
     )

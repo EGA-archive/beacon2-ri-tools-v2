@@ -8,7 +8,7 @@ from datetime import date
 from enum import Enum
 
 from pydantic import AnyUrl, BaseModel, ConfigDict, Field, RootModel, conint, constr
-
+from validators.separated import ConfigModel
 
 class LibraryLayout(Enum):
     PAIRED = 'PAIRED'
@@ -215,7 +215,7 @@ class Pagination(BaseModel):
     skip: Skip | None = Field(0, validate_default=True)
 
 
-class Runs(BaseModel):
+class Runs(ConfigModel):
     model_config = ConfigDict(
         extra='allow',
     )

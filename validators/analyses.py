@@ -8,12 +8,13 @@ from datetime import date
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from validators.separated import ConfigModel
 
 class Info(BaseModel):
     pass
 
 
-class Analyses(BaseModel):
+class Analyses(ConfigModel):
     model_config = ConfigDict(
         extra='allow',
     )

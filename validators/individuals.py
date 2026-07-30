@@ -18,6 +18,8 @@ from pydantic import (
     constr,
 )
 
+from validators.separated import ConfigModel
+
 
 class Age(BaseModel):
     iso8601duration: str = Field(
@@ -782,7 +784,7 @@ class Measurement(BaseModel):
     )
 
 
-class Individuals(BaseModel):
+class Individuals(ConfigModel):
     model_config = ConfigDict(
         extra='allow',
     )

@@ -1,92 +1,97 @@
-from typing import Any
-
 from pydantic import BaseModel, model_validator
-
-import biosamples
-
-import csv
-
 import ast
+from typing import Any, ClassVar
+from copy import deepcopy
+from typing import get_type_hints, get_origin, get_args
+import importlib
+
+def split_piped_object(obj):
+    paths = []
+
+    def collect(node, path):
+        if isinstance(node, dict):
+            for k, v in node.items():
+                collect(v, path + [k])
+        elif isinstance(node, list):
+            return
+        elif isinstance(node, str) and "|" in node:
+            parts = node.split("|")
+            paths.append((path, parts))
+
+    collect(obj, [])
+
+    if not paths:
+        return None
+
+    lengths = {len(parts) for _, parts in paths}
+    if len(lengths) != 1:
+        return None
+
+    n = lengths.pop()
+
+    result = []
+    for i in range(n):
+        new_obj = deepcopy(obj)
+        for path, parts in paths:
+            target = new_obj
+            for key in path[:-1]:
+                target = target[key]
+            target[path[-1]] = parts[i]
+        result.append(new_obj)
+
+    return result
 
 
-def csv_to_bff():
-    filename = "biosamples3.csv"
+def expand(node):
+    if isinstance(node, dict):
+        return {k: expand(v) for k, v in node.items()}
 
-    with open(filename, 'r' ) as theFile:
-        reader = csv.DictReader(theFile)
+    elif isinstance(node, list):
+        new_list = []
+        for item in node:
+            item = expand(item)
 
+            if isinstance(item, dict):
+                expanded = split_piped_object(item)
+                if expanded:
+                    new_list.extend(expanded)
+                else:
+                    new_list.append(item)
+            else:
+                new_list.append(item)
+        return new_list
 
-    with open(filename, 'r' ) as theFile:
-        reader = csv.DictReader(theFile)
-        i=1
-        for line in reader:
-            dict_of_properties={}
-            list_of_filled_items=[]
-            for kline, vline in line.items():
-                property_value = kline
-                if property_value == None:
-                    continue
-                property_value=property_value.replace('\ufeff', '')
-
-
-                
-                valor = vline
-
-
-                if i > 0:
-                    
-                    if valor != '':
-
-
-                        list_of_filled_items.append(property_value)
-
-                    if valor:
-                        if '|' in valor:
-                            dict_of_properties[property_value]=valor
-                        else:
-                            dict_of_properties[property_value]=valor
-                        
-
-                    elif valor == 0:
-                        dict_of_properties[property_value]=valor
-
-            #print(dict_properties)
-            #print(dict_of_properties)
-
-    return dict_of_properties
-
-CONFIG = csv_to_bff()
-
-print(CONFIG)
+    else:
+        return node
 
 class ConfigModel(BaseModel):
-
     @model_validator(mode="before")
     @classmethod
-    def populate_from_config(cls, data: Any):
+    def populate_from_config(cls, data: Any, config_data):
         if data is None:
             data = {}
         elif not isinstance(data, dict):
             data = dict(data)
 
         merged = cls._config_to_dict()
-        print('ready')
-        print(data)
         cls._deep_update(merged, data)
 
         return merged
 
     @classmethod
     def _config_to_dict(cls):
+
         result = {}
-        for key, value in CONFIG.items():
+        for key, value in cls.CONFIG.items():
             try:
                 value=ast.literal_eval(value)
             except Exception:
                 pass
             parts = key.split("|")
             property_type=cls.__annotations__.get(parts[0])
-            if 'list' in property_type:
+            if key == 'info':
+                result['info']={"info": value}
+            elif 'list' in property_type:
                 if parts[0] not in result:
                     if len(parts)==1:
                         result[parts[0]]=[value]
@@ -109,19 +114,23 @@ class ConfigModel(BaseModel):
                         result[parts[0]]={}
             i=1
             while i < len(parts):
-                print(key)
-                print(value)
                 property_type=cls.__annotations__.get(parts[i])
+                print(cls)
+                print(parts[i])
+                print(property_type)
                 if property_type == None:
-                    print('whooo')
                     previous_type=cls.__annotations__.get(parts[i-1])
                     if previous_type != None:
                         if 'list' in previous_type:
-                            print('heaaa')
                             formatted_type=previous_type.replace(']','[')
                             formatted_type = formatted_type.split('[')
                             formatted_type =formatted_type[1]
-                            new_class = getattr(biosamples, formatted_type, None)
+                            module_name = cls.ENTRY_TYPE
+
+                            individuals = importlib.import_module(f"validators.{module_name}")
+
+                            new_class = getattr(individuals, formatted_type, None)
+
                             property_type=new_class.__annotations__.get(parts[i])
                             if result[parts[0]]==[]:
                                 if i+1==len(parts):
@@ -134,13 +143,10 @@ class ConfigModel(BaseModel):
                                 if i+1==len(parts):
                                     result[parts[0]][0][parts[1]]=value
                                 else:
-                                    print('hereeee')
                                     if 'list' in property_type:
-                                        print('kwaaaaai')
                                         try:
                                             result[parts[0]][0][parts[1]][0][parts[2]]=value
                                         except Exception as e:
-                                            print(e)
                                             result[parts[0]][0][parts[1]]=[{parts[2]:value}]
                                     elif len(parts)==5:
                                         if parts[3] not in result[parts[0]][0][parts[1]][parts[2]]:
@@ -176,25 +182,23 @@ class ConfigModel(BaseModel):
                         else:
                             result[parts[0]][parts[1]]=value
                 elif 'str' in property_type or 'int' in property_type or 'float' in property_type:
-                    print('noteeeeeeeeed')
                     previous_type=cls.__annotations__.get(parts[i-1])
                     if previous_type == None:
-                        print('ahaaaa')
                         previous_type=cls.__annotations__.get(parts[i-2])
                         if previous_type != None:
-                            print('woooop')
-                            print(property_type)
                             if 'list' in previous_type:
                                 formatted_type=previous_type.replace(']','[')
                                 formatted_type = formatted_type.split('[')
                                 formatted_type =formatted_type[1]
-                                new_class = getattr(biosamples, formatted_type, None)
+                                module_name = "individuals"
+
+                                individuals = importlib.import_module(f"validators.{module_name}")
+
+                                new_class = getattr(individuals, formatted_type, None)
                                 property_type=new_class.__annotations__.get(parts[i-1])
                                 if result[parts[0]]==[]:
                                     result[parts[0]].append({parts[1]: {parts[2]: value}})
                                 else:
-                                    print('howmanyyy')
-                                    print(parts)
                                     try:
                                         result[parts[0]][0][parts[1]][0][parts[2]]=value
                                     except Exception:
@@ -202,8 +206,6 @@ class ConfigModel(BaseModel):
                                         result[parts[0]][0][parts[1]][parts[2]]=value
                         else:
                             if len(parts)==5:
-                                print('gogogo')
-                                print(parts)
                                 if parts[4] not in result[parts[0]][0][parts[1]][parts[2]][parts[3]]:
                                     result[parts[0]][0][parts[1]][parts[2]][parts[3]]={}
                                     result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
@@ -221,9 +223,10 @@ class ConfigModel(BaseModel):
 
 
                 i+=1
-                print(result)
+        definitivedict=expand(result)
+        print(definitivedict)
                 
-        return result
+        return definitivedict
 
     @classmethod
     def _deep_update(cls, dst, src):

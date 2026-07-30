@@ -18,7 +18,7 @@ from pydantic import (
     constr
 )
 
-from config import ConfigModel
+from validators.separated import ConfigModel
 
 
 

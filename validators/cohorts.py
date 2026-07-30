@@ -17,7 +17,7 @@ from pydantic import (
     conint,
     constr,
 )
-
+from validators.separated import ConfigModel
 
 class CohortType(Enum):
     study_defined = 'study-defined'
@@ -722,7 +722,7 @@ class InclusionCriteria(BaseModel):
     )
 
 
-class Cohorts(BaseModel):
+class Cohorts(ConfigModel):
     model_config = ConfigDict(
         extra='allow',
     )
