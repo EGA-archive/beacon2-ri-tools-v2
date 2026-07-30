@@ -6,6 +6,7 @@ from pydantic import (
     field_validator,
     PrivateAttr
 )
+from validators.config import ConfigModel
 from typing import Optional, List
 
 class OntologyTerm(BaseModel):
@@ -104,7 +105,7 @@ class ImageStudies(BaseModel, extra='forbid'):
             raise ValueError("Must be a valid RFC3339 date-time (JSON Schema format=date-time)")
         return v
 
-class Patients(BaseModel, extra='forbid'):
+class Patients(ConfigModel, extra='forbid'):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():
             try:

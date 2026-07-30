@@ -23,7 +23,7 @@ def csv_to_bff(args):
 
     name = Path(filename).stem
 
-    module = import_module(f"validators.{name}")
+    module = import_module(f"validators.{args.model}.{name}")
 
     class_name = name.capitalize()
     ValidatorClass = getattr(module, class_name)
@@ -69,6 +69,7 @@ def csv_to_bff(args):
                         dict_of_properties[property_value]=valor
             ValidatorClass.CONFIG=dict_of_properties
             ValidatorClass.ENTRY_TYPE=args.entry_type
+            ValidatorClass.MODEL=args.model
             obtained_class = ValidatorClass()
             definitivedict = obtained_class.model_dump(mode="json",exclude_none=True)
             if args.entry_type != 'datasets':
@@ -96,6 +97,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-o', '--output', default=output_docs_folder)
 parser.add_argument('-d', '--datasetId', default=datasetId)
 parser.add_argument('-i', '--input', default=csv_folder)
+parser.add_argument('-m', '--model', default='ga4gh')
 parser.add_argument('-e', '--entry_type', default=entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all', 'collections', 'imageStudies', 'patients'])
 
 args = parser.parse_args()

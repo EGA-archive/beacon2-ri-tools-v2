@@ -8,7 +8,7 @@ from datetime import date
 from enum import Enum
 
 from pydantic import AnyUrl, BaseModel, ConfigDict, Field, RootModel, conint, constr
-from validators.separated import ConfigModel
+from validators.config import ConfigModel
 
 class LibraryLayout(Enum):
     PAIRED = 'PAIRED'

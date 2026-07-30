@@ -8,7 +8,7 @@ from datetime import date
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from validators.separated import ConfigModel
+from validators.config import ConfigModel
 
 class Info(BaseModel):
     pass

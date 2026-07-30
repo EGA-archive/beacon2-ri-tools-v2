@@ -17,7 +17,7 @@ from pydantic import (
     conint,
     constr,
 )
-from validators.separated import ConfigModel
+from validators.config import ConfigModel
 
 class CohortType(Enum):
     study_defined = 'study-defined'

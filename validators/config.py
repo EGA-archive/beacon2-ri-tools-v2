@@ -115,9 +115,6 @@ class ConfigModel(BaseModel):
             i=1
             while i < len(parts):
                 property_type=cls.__annotations__.get(parts[i])
-                print(cls)
-                print(parts[i])
-                print(property_type)
                 if property_type == None:
                     previous_type=cls.__annotations__.get(parts[i-1])
                     if previous_type != None:
@@ -127,7 +124,7 @@ class ConfigModel(BaseModel):
                             formatted_type =formatted_type[1]
                             module_name = cls.ENTRY_TYPE
 
-                            individuals = importlib.import_module(f"validators.{module_name}")
+                            individuals = importlib.import_module(f"validators.{cls.MODEL}.{module_name}")
 
                             new_class = getattr(individuals, formatted_type, None)
 
@@ -179,20 +176,64 @@ class ConfigModel(BaseModel):
                                             result[parts[0]][0][parts[1]]={}
                                             result[parts[0]][0][parts[1]][parts[2]]={}
                                             result[parts[0]][0][parts[1]][parts[2]][parts[3]]=value
+
                         else:
-                            if i+1==len(parts):
+                            module_name = cls.ENTRY_TYPE
+                            if 'LegacyVariation' in previous_type:
+                                previous_type = 'LegacyVariation'
+                            else:
+
+                                previous_type = previous_type.split('|')
+                                previous_type = previous_type[0].replace(" ", "")
+
+                            individuals = importlib.import_module(f"validators.{cls.MODEL}.{module_name}")
+
+                            new_class = getattr(individuals, previous_type, None)
+
+                            property_type=new_class.__annotations__.get(parts[i])
+                            if property_type != None:
+                                if 'list' in property_type and i+1==len(parts):
+                                    result[parts[0]][parts[1]]=[value]
+                                elif len(parts)==2 and i+1==len(parts):
+                                    result[parts[0]][parts[1]]=value
+                                elif len(parts)==3 and 'list' not in property_type:
+                                    result[parts[0]][parts[1]][parts[2]]=value
+                                elif len(parts)==4 and i+1==len(parts):
+                                    result[parts[0]][parts[1]][parts[2]][parts[3]]=value
+                                elif len(parts)==5:
+                                    try:
+                                        result[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]=value
+                                    except Exception:
+                                        try:
+                                            result[parts[0]][parts[1]][parts[2]][parts[3]]={}
+                                            result[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]=value
+                                        except Exception:
+                                            try:
+                                                result[parts[0]][parts[1]][parts[2]]={}
+                                                result[parts[0]][parts[1]][parts[2]][parts[3]]={}
+                                                result[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]=value
+                                            except Exception:
+                                                result[parts[0]][parts[1]]={}
+                                                result[parts[0]][parts[1]][parts[2]]={}
+                                                result[parts[0]][parts[1]][parts[2]][parts[3]]={}
+                                                result[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]=value   
+                            elif i+1==len(parts) and len(parts)==2:
                                 result[parts[0]][parts[1]]=value
+
+
                     elif not isinstance(result[parts[0]],list):
-                        print(parts)
                         if len(parts)==4 and i+1==len(parts):
                             try:
-                                result[parts[0]][parts[1]][parts[2]]={}
                                 result[parts[0]][parts[1]][parts[2]][parts[3]]=value
-
                             except Exception:
-                                result[parts[0]][parts[1]]={}
-                                result[parts[0]][parts[1]][parts[2]]={}
-                                result[parts[0]][parts[1]][parts[2]][parts[3]]=value
+                                try:
+                                    result[parts[0]][parts[1]][parts[2]]={}
+                                    result[parts[0]][parts[1]][parts[2]][parts[3]]=value
+
+                                except Exception:
+                                    result[parts[0]][parts[1]]={}
+                                    result[parts[0]][parts[1]][parts[2]]={}
+                                    result[parts[0]][parts[1]][parts[2]][parts[3]]=value
 
                 elif 'str' in property_type or 'int' in property_type or 'float' in property_type:
                     previous_type=cls.__annotations__.get(parts[i-1])
@@ -205,7 +246,7 @@ class ConfigModel(BaseModel):
                                 formatted_type =formatted_type[1]
                                 module_name = cls.ENTRY_TYPE
 
-                                individuals = importlib.import_module(f"validators.{module_name}")
+                                individuals = importlib.import_module(f"validators.{cls.MODEL}.{module_name}")
 
                                 new_class = getattr(individuals, formatted_type, None)
                                 property_type=new_class.__annotations__.get(parts[i-1])
@@ -234,10 +275,8 @@ class ConfigModel(BaseModel):
                         else:
                             result[parts[0]][parts[i]]=value
 
-
                 i+=1
         definitivedict=expand(result)
-        print(definitivedict)
                 
         return definitivedict
 

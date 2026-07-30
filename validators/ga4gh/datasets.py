@@ -16,7 +16,7 @@ from pydantic import (
     conint,
     constr,
 )
-from validators.separated import ConfigModel
+from validators.config import ConfigModel
 
 class Timestamp(RootModel[AwareDatetime]):
     root: AwareDatetime = Field(

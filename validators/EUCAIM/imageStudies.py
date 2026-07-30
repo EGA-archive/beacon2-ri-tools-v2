@@ -7,6 +7,7 @@ from pydantic import (
     PrivateAttr
 )
 from typing import Optional, List
+from validators.config import ConfigModel
 
 class OntologyTerm(BaseModel):
     id: str
@@ -81,7 +82,7 @@ class Diseases(BaseModel, extra='forbid'):
         for treatment in v:
             OntologyTerm(**treatment)
 
-class ImageStudies(BaseModel, extra='forbid'):
+class ImageStudies(ConfigModel, extra='forbid'):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():
             try:

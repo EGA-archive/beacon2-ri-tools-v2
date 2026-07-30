@@ -5,11 +5,13 @@ from pydantic import (
 
 from typing import Optional, List
 
+from validators.config import ConfigModel
+
 class AgeRange(BaseModel, extra='forbid'):
     min: float
     max: float
 
-class Collections(BaseModel, extra='forbid'):
+class Collections(ConfigModel, extra='forbid'):
     def __init__(self, **data) -> None:
         for private_key in self.__class__.__private_attributes__.keys():
             try:
