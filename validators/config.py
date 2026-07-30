@@ -79,6 +79,88 @@ class ConfigModel(BaseModel):
         return merged
 
     @classmethod
+    def _get_properties(cls, type_class, parts, pos):
+        print(type_class)
+        if type_class not in ['str', 'int', 'float']:
+            if 'list' in type_class:
+                formatted_type=type_class.replace(']','[')
+                formatted_type = formatted_type.split('[')
+                formatted_type =formatted_type[1]
+                module_name = cls.ENTRY_TYPE
+
+                individuals = importlib.import_module(f"validators.{cls.MODEL}.{module_name}")
+
+                new_class = getattr(individuals, formatted_type, None)
+                property_type=new_class.__annotations__.get(parts[pos])
+            elif '|' in type_class:
+                formatted_type = type_class.split('|')
+
+                
+                
+                
+                module_name = cls.ENTRY_TYPE
+                individuals = importlib.import_module(f"validators.{cls.MODEL}.{module_name}")
+                for possible_type in formatted_type:
+                    replaced_type = possible_type.replace(' ', '')
+                    print(replaced_type)
+                    new_class = getattr(individuals, replaced_type, None)
+                    if new_class == None:
+                        return 'None', False
+                    property_type=new_class.__annotations__.get(parts[pos])
+                    if property_type != None:
+                        if 'list' in property_type:
+                            return property_type, "list" in property_type
+            else:
+                property_type = 'None'
+        else:
+            property_type = type_class
+        if property_type == None:
+            property_type = 'None'
+        return property_type, "list" in property_type
+
+    @classmethod
+    def _insert(cls, root, parts, list_flags, value):
+        node = root
+
+        for i, key in enumerate(parts[:-1]):
+
+            is_list = list_flags[i]
+
+            # If we are currently inside a list, descend into its first element.
+            if isinstance(node, list):
+                if not node:
+                    node.append({})
+                elif not isinstance(node[0], dict):
+                    node[0] = {}
+                node = node[0]
+
+            # Create (or repair) the container for this key.
+            if is_list:
+                if key not in node or not isinstance(node[key], list):
+                    node[key] = [{}]
+            else:
+                if key not in node or not isinstance(node[key], dict):
+                    node[key] = {}
+
+            node = node[key]
+
+        # If the parent of the leaf is a list, descend into its first element.
+        if isinstance(node, list):
+            if not node:
+                node.append({})
+            elif not isinstance(node[0], dict):
+                node[0] = {}
+            node = node[0]
+
+        # Handle the leaf field.
+        if list_flags[-1]:
+            if parts[-1] not in node or not isinstance(node[parts[-1]], list):
+                node[parts[-1]] = []
+            node[parts[-1]].append(value)
+        else:
+            node[parts[-1]] = value
+
+    @classmethod
     def _config_to_dict(cls):
 
         result = {}
@@ -121,224 +203,48 @@ class ConfigModel(BaseModel):
                     else:
                         result[parts[0]]={}
             i=1
+            print(parts)
             while i < len(parts):
-                property_type=cls.__annotations__.get(parts[i])
-                if property_type == None:
-                    previous_type=cls.__annotations__.get(parts[i-1])
-                    if previous_type != None:
-                        if 'list' in previous_type:
-                            formatted_type=previous_type.replace(']','[')
-                            formatted_type = formatted_type.split('[')
-                            formatted_type =formatted_type[1]
-                            module_name = cls.ENTRY_TYPE
 
-                            individuals = importlib.import_module(f"validators.{cls.MODEL}.{module_name}")
+                # only handle the leaf assignment
+                if i + 1 == len(parts):
 
-                            new_class = getattr(individuals, formatted_type, None)
+                    types = []
+                    flags = []
 
-                            property_type=new_class.__annotations__.get(parts[i])
-                            if result[parts[0]]==[]:
-                                if i+1==len(parts):
-                                    result[parts[0]].append({parts[1]: value})
-                                elif i+3==len(parts):
-                                    result[parts[0]].append({parts[1]: {parts[2]: {parts[3]:value}}})
-                                else:
-                                    result[parts[0]].append({parts[1]: {parts[2]: value}})
-                            else:
-                                if i+1==len(parts):
-                                    result[parts[0]][0][parts[1]]=value
-                                else:
-                                    if 'list' in property_type:
-                                        try:
-                                            
-                                            try:
-                                                result[parts[0]][0][parts[1]][0][parts[2]][parts[3]]=value
-                                            except Exception:
-                                                if len(parts)==4:
-                                                    result[parts[0]][0][parts[1]][0][parts[2]]={}
-                                                    result[parts[0]][0][parts[1]][0][parts[2]][parts[3]]=value
-                                                else:
-                                                    result[parts[0]][0][parts[1]][0][parts[2]]=value
+                    current = cls.__annotations__.get(parts[0])
 
-                                        except Exception as e:
-                                            result[parts[0]][0][parts[1]]=[{parts[2]:value}]
-                                    elif len(parts)==5:
-                                        if parts[3] not in result[parts[0]][0][parts[1]][parts[2]]:
-                                            result[parts[0]][0][parts[1]][parts[2]][parts[3]]={}
-                                        if parts[4] not in result[parts[0]][0][parts[1]][parts[2]][parts[3]]:
-                                            result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
-                                        else:
-                                            result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
-                                    elif parts[1] in result[parts[0]][0]:
-                                        if i+1==len(parts):
-                                            result[parts[0]][0][parts[1]][parts[2]]=value
-                                        elif i+2==len(parts):
-                                            result[parts[0]][0][parts[1]][parts[2]]=value
-                                        else:
-                                            if parts[2] not in result[parts[0]][0][parts[1]]:
-                                                result[parts[0]][0][parts[1]][parts[2]]={}
-                                                result[parts[0]][0][parts[1]][parts[2]][parts[3]]=value
-                                            else:
-                                                result[parts[0]][0][parts[1]][parts[2]][parts[3]]=value
-                                                
-                                    else:
-                                        if i+1==len(parts):
-                                            result[parts[0]][0][parts[1]]={}
-                                            result[parts[0]][0][parts[1]][parts[2]]=value
-                                        elif i+2==len(parts):
-                                            if parts[1] not in result[parts[0]][0]:
-                                                result[parts[0]][0][parts[1]]={}
-                                                result[parts[0]][0][parts[1]][parts[2]]=value
-                                        else:
-                                            result[parts[0]][0][parts[1]]={}
-                                            result[parts[0]][0][parts[1]][parts[2]]={}
-                                            result[parts[0]][0][parts[1]][parts[2]][parts[3]]=value
+                    if current is None:
+                        break
 
-                        else:
-                            module_name = cls.ENTRY_TYPE
-                            if 'LegacyVariation' in previous_type:
-                                previous_type = 'LegacyVariation'
-                            else:
+                    types.append(current)
+                    flags.append("list" in current)
 
-                                previous_type = previous_type.split('|')
-                                previous_type = previous_type[0].replace(" ", "")
+                    for pos in range(1, len(parts)):
+                        current, is_list = cls._get_properties(
+                            current,
+                            parts,
+                            pos
+                        )
 
-                            individuals = importlib.import_module(f"validators.{cls.MODEL}.{module_name}")
+                        types.append(current)
+                        flags.append(is_list)
+                    if 'aminoacidChange' in parts:
+                        print(types)
+                        print(parts)
+                        print(value)
+                        print(flags)
+                    cls._insert(
+                        result,
+                        parts,
+                        flags,
+                        value
+                    )
+                    print(result)
 
-                            new_class = getattr(individuals, previous_type, None)
-
-                            property_type=new_class.__annotations__.get(parts[i])
-                            if property_type != None:
-                                if 'list' in property_type and i+1==len(parts):
-                                    result[parts[0]][parts[1]]=[value]
-                                elif len(parts)==2 and i+1==len(parts):
-                                    result[parts[0]][parts[1]]=value
-                                elif len(parts)==3 and 'list' not in property_type:
-                                    try:
-                                        result[parts[0]][parts[1]][parts[2]]=value
-                                    except Exception:
-                                        result[parts[0]][parts[1]]={}
-                                        result[parts[0]][parts[1]][parts[2]]=value
-                                elif len(parts)==4 and i+1==len(parts):
-                                    result[parts[0]][parts[1]][parts[2]][parts[3]]=value
-                                elif len(parts)==4 and 'Criteria' in parts[0] and 'Conditions' in parts[1]:
-                                    try:
-                                        result[parts[0]][parts[1]][0][parts[2]][parts[3]]=value
-                                    except Exception:
-                                        try:
-                                            result[parts[0]][parts[1]][0][parts[2]]={}
-                                            result[parts[0]][parts[1]][0][parts[2]][parts[3]]=value
-
-                                        except Exception:
-                                            result[parts[0]][parts[1]]=[{parts[2]: {parts[3]: value}}]
-                                elif len(parts)==5 and 'Criteria' in parts[0] and 'Conditions' in parts[1]:
-                                    try:
-                                        result[parts[0]][parts[1]][0][parts[2]][parts[3]][parts[4]]=value
-                                    except Exception:
-                                        try:
-                                            result[parts[0]][parts[1]][0][parts[2]][parts[3]]={}
-                                            result[parts[0]][parts[1]][0][parts[2]][parts[3]][parts[4]]=value
-
-                                        except Exception:
-                                            try:
-                                                result[parts[0]][parts[1]][0][parts[2]]={}
-                                                result[parts[0]][parts[1]][0][parts[2]][parts[3]]={}
-                                                result[parts[0]][parts[1]][0][parts[2]][parts[3]][parts[4]]=value
-                                            except Exception:
-                                                result[parts[0]][parts[1]]=[{parts[2]: {parts[3]: {parts[4]: value}}}]
-                                elif len(parts)==5:
-                                    try:
-                                        result[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]=value
-                                    except Exception:
-                                        try:
-                                            result[parts[0]][parts[1]][parts[2]][parts[3]]={}
-                                            result[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]=value
-                                        except Exception:
-                                            try:
-                                                result[parts[0]][parts[1]][parts[2]]={}
-                                                result[parts[0]][parts[1]][parts[2]][parts[3]]={}
-                                                result[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]=value
-                                            except Exception:
-                                                result[parts[0]][parts[1]]={}
-                                                result[parts[0]][parts[1]][parts[2]]={}
-                                                result[parts[0]][parts[1]][parts[2]][parts[3]]={}
-                                                result[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]=value   
-                            elif i+1==len(parts) and len(parts)==2:
-                                result[parts[0]][parts[1]]=value
-
-
-                    elif not isinstance(result[parts[0]],list):
-                        if len(parts)==4 and i+1==len(parts):
-                            if 'Criteria' in parts[0] and 'Conditions' in parts[1]:
-                                try:
-                                    result[parts[0]][parts[1]][0][parts[2]][parts[3]]=value
-                                except Exception:
-                                    try:
-                                        result[parts[0]][parts[1]][0][parts[2]]={}
-                                        result[parts[0]][parts[1]][0][parts[2]][parts[3]]=value
-
-                                    except Exception:
-                                        result[parts[0]][parts[1]]=[{parts[2]: {parts[3]: value}}]
-                            else:
-                                try:
-                                    result[parts[0]][parts[1]][parts[2]][parts[3]]=value
-                                except Exception:
-                                    try:
-                                        result[parts[0]][parts[1]][parts[2]]={}
-                                        result[parts[0]][parts[1]][parts[2]][parts[3]]=value
-
-                                    except Exception:
-                                        result[parts[0]][parts[1]]={}
-                                        result[parts[0]][parts[1]][parts[2]]={}
-                                        result[parts[0]][parts[1]][parts[2]][parts[3]]=value
-
-                elif 'str' in property_type or 'int' in property_type or 'float' in property_type:
-                    previous_type=cls.__annotations__.get(parts[i-1])
-                    if previous_type == None:
-                        previous_type=cls.__annotations__.get(parts[i-2])
-                        if previous_type != None:
-                            if 'list' in previous_type:
-                                formatted_type=previous_type.replace(']','[')
-                                formatted_type = formatted_type.split('[')
-                                formatted_type =formatted_type[1]
-                                module_name = cls.ENTRY_TYPE
-
-                                individuals = importlib.import_module(f"validators.{cls.MODEL}.{module_name}")
-
-                                new_class = getattr(individuals, formatted_type, None)
-                                property_type=new_class.__annotations__.get(parts[i-1])
-                                if result[parts[0]]==[]:
-                                    result[parts[0]].append({parts[1]: {parts[2]: value}})
-                                else:
-                                    try:
-                                        result[parts[0]][0][parts[1]][0][parts[2]]=value
-                                    except Exception:
-                                        result[parts[0]][0][parts[1]]={}
-                                        result[parts[0]][0][parts[1]][parts[2]]=value
-                        else:
-                            if len(parts)==5:
-                                try:
-                                    if parts[4] not in result[parts[0]][0][parts[1]][parts[2]][parts[3]]:
-                                        result[parts[0]][0][parts[1]][parts[2]][parts[3]]={}
-                                        result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
-                                    else:
-                                        result[parts[0]][0][parts[1]][parts[2]][parts[3]][parts[4]]=value
-                                except KeyError:
-                                    try:
-                                        result[parts[0]][parts[1]][0][parts[2]][parts[3]][parts[4]]=value
-                                    except Exception:
-                                        result[parts[0]][parts[1]]=[{parts[2]: {parts[3]: {parts[4]:value}}}]
-
-                    else:
-                        if 'list' in previous_type:
-                            if result[parts[0]]==[]:
-                                  result[parts[0]]=[{parts[i]: value}]
-                            else:
-                                result[parts[0]][0][parts[i]]=value
-                        else:
-                            result[parts[0]][parts[i]]=value
 
                 i+=1
+        print(result)
         definitivedict=expand(result)
                 
         return definitivedict
