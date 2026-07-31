@@ -98,6 +98,19 @@ The tools can connect to a standalone MongoDB instance using the legacy host/por
 
 All the config parameters can be parsed through command line for each script. Here is the relationship of scripts and their command line arguments:
 
+**jsonschema_to_csv.py**
+```bash
+    print(
+        "Usage:\n"
+        " python jsonschema_to_csv.py "
+        "<schema_url> <output.csv>"
+    )
+    sys.exit(1)
+
+schema_url = sys.argv[1]
+output_csv = sys.argv[2]
+```
+
 **csv_to_bff.py**
 ```bash
 parser.add_argument('-o', '--output', default=output_docs_folder)
@@ -421,13 +434,12 @@ And then, to the root class of the entry type (the one that you named with the s
 class Biosamples(ConfigModel):
 ```
 
-After that, you can create your own csv templates, bear in mind to follow the path rule using the names of the properties in your classes:
+After that, you can create your own csv templates, like the example below (change url and name of csv accordingly):
 
 ```bash
-property1|property2|property3
+docker exec -it ri-tools python jsonschema_to_csv.py https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/refs/heads/main/models/json/beacon-v2-default-model/biosamples/defaultSchema.json  ./output_docs/biosamples.csv
 ```
-
-And once you have them filled in, generate your BFF json files adding the name of the model for your schemas:
+And once you have them filled in, save it in the folder you want to read it from with the name of the entry type and generate your BFF json files adding the name of the model for your schemas:
 
 ```bash
 docker exec -it ri-tools python csv_to_bff.py -m EUCAIM
