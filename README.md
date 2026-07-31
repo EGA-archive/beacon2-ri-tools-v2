@@ -98,14 +98,28 @@ The tools can connect to a standalone MongoDB instance using the legacy host/por
 
 All the config parameters can be parsed through command line for each script. Here is the relationship of scripts and their command line arguments:
 
+**jsonschema_to_csv.py**
+```bash
+    print(
+        "Usage:\n"
+        " python jsonschema_to_csv.py "
+        "<schema_url> <output.csv>"
+    )
+    sys.exit(1)
+
+schema_url = sys.argv[1]
+output_csv = sys.argv[2]
+```
+
 **csv_to_bff.py**
 ```bash
-parser.add_argument('-o', '--output', default=conf.output_docs_folder)
-parser.add_argument('-d', '--datasetId', default=conf.datasetId)
-parser.add_argument('-i', '--input', default=conf.csv_folder)
-parser.add_argument('-e', '--entry_type', default=conf.entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all', 'EUCAIM/collections', 'EUCAIM/imageStudies', 'EUCAIM/patients'])
+parser.add_argument('-o', '--output', default=output_docs_folder)
+parser.add_argument('-d', '--datasetId', default=datasetId)
+parser.add_argument('-i', '--input', default=csv_folder)
+parser.add_argument('-m', '--model', default='ga4gh')
+parser.add_argument('-e', '--entry_type', default=entry_type)
 ```
-Note: all is only for genomic data. For EUCAIM, the data can only be processed individually by now.
+Note: all is now available for any type of model.
 
 **genomicVariations_postprocessing.py**
 ```bash
@@ -380,9 +394,9 @@ docker exec ri-tools-mongo mongoexport --jsonArray --uri "mongodb://root:example
 docker exec ri-tools-mongo mongoexport --jsonArray --uri "mongodb://root:example@127.0.0.1:27017/beacon?authSource=admin" --collection targets > targets.json
 ```
 
-#### Converting data from CSV files
+#### Converting data from CSV files (now from any model)
 
-Before the conversion, please make sure your [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py), is reading the right .csv document(s). 
+Before the conversion, please make sure your [conf.py](https://github.com/EGA-archive/beacon2-ri-tools-v2/tree/main/conf/conf.py), is reading the right .csv document(s).
 
 Execute the next bash script from the root folder in your terminal. All .csv files contained in the specified csv_folder will be transformed into .json:
 
@@ -394,7 +408,42 @@ The Beacon Friendly Format JSONs will be generated in the output_docs folder, wi
 
 These BFF jsons will be used to populate a mongoDB for beacon usage. To know how to import theme into a Beacon v2, please do as described in [Beacon v2 PI api](https://github.com/EGA-archive/beacon2-pi-api).
 
+#### Getting your own model schemas to BFF
 
+In case you want to have your own schemas converted and inserted into beacon, this is now possible in RI Tools.
+
+First of all, you will need to have datamodel-codegen installed in your local system.
+
+After that, you will be able to generate your schemas' pydantic classes reading from your JSON oficial schemas using the next command:
+
+```bash
+datamodel-codegen --url <url_to_schema> --input-file-type jsonschema --output <entry_type_name.py> --class-name <Entry_type_name_with_capital_letter> --allow-remote-refs
+```
+
+Then, create a folder inside *validators folder* and add a new folder with the name for your model and put all the entry types files you generate inside.
+
+For each of these entry types files, you will need to add an import at the beginning:
+
+```bash
+from validators.config import ConfigModel
+```
+
+And then, to the root class of the entry type (the one that you named with the same entry type name and with capital letter), change *BaseModel* to *ConfigModel*, like the following example:
+
+```bash
+class Biosamples(ConfigModel):
+```
+
+After that, you can create your own csv templates, like the example below (change url and name of csv accordingly):
+
+```bash
+docker exec -it ri-tools python jsonschema_to_csv.py https://raw.githubusercontent.com/ga4gh-beacon/beacon-v2/refs/heads/main/models/json/beacon-v2-default-model/biosamples/defaultSchema.json  ./output_docs/biosamples.csv
+```
+And once you have them filled in, save it in the folder you want to read it from with the name of the entry type and generate your BFF json files adding the name of the model for your schemas:
+
+```bash
+docker exec -it ri-tools python csv_to_bff.py -m EUCAIM
+```
 
 ### Populating a beacon instance from Phenopackets
 

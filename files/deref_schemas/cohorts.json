@@ -1,7 +1,9 @@
 {
-    "cohortDataTypes": [{
-        "id": "",
-        "label": ""}
+    "cohortDataTypes": [
+        {
+            "id": "",
+            "label": ""
+        }
     ],
     "cohortDesign": {
         "id": "",
@@ -12,48 +14,48 @@
     "collectionEvents": [
         {
             "eventAgeRange": {
-                "availability": true,
+                "availability": false,
                 "availabilityCount": 0,
                 "distribution": {}
             },
             "eventCases": 0,
             "eventControls": 0,
             "eventDataTypes": {
-                "availability": true,
+                "availability": false,
                 "availabilityCount": 0,
                 "distribution": {}
             },
             "eventDate": "",
             "eventDiseases": {
-                "availability": true,
+                "availability": false,
                 "availabilityCount": 0,
                 "distribution": {}
             },
             "eventEthnicities": {
-                "availability": true,
+                "availability": false,
                 "availabilityCount": 0,
                 "distribution": {}
             },
             "eventGenders": {
-                "availability": true,
+                "availability": false,
                 "availabilityCount": 0,
                 "distribution": {}
             },
             "eventLocations": {
-                "availability": true,
+                "availability": false,
                 "availabilityCount": 0,
                 "distribution": {}
             },
             "eventNum": 0,
             "eventPhenotypes": {
-                "availability": true,
+                "availability": false,
                 "availabilityCount": 0,
                 "distribution": {}
             },
             "eventSize": 0,
             "eventTimeline": {
-                "start": "",
-                "end": ""
+                "end": "",
+                "start": ""
             }
         }
     ],
@@ -98,7 +100,7 @@
                     "id": "",
                     "label": ""
                 },
-                "familyHistory": true,
+                "familyHistory": false,
                 "notes": "",
                 "severity": {
                     "id": "",
@@ -141,7 +143,7 @@
                         "reference": ""
                     }
                 },
-                "excluded": true,
+                "excluded": false,
                 "featureType": {
                     "id": "",
                     "label": ""
@@ -254,7 +256,7 @@
                     "id": "",
                     "label": ""
                 },
-                "familyHistory": true,
+                "familyHistory": false,
                 "notes": "",
                 "severity": {
                     "id": "",
@@ -297,7 +299,7 @@
                         "reference": ""
                     }
                 },
-                "excluded": true,
+                "excluded": false,
                 "featureType": {
                     "id": "",
                     "label": ""
@@ -368,5 +370,6 @@
             }
         ]
     },
+    "info": {},
     "name": ""
 }

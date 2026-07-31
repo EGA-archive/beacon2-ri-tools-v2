@@ -26,6 +26,7 @@
             },
             "date": "",
             "measurementValue": [
+                
                 {
                     "referenceRange": {
                         "high": 0,
@@ -34,35 +35,41 @@
                             "id": "",
                             "label": ""
                         }
-                    }
-                },
-                {
+                    },
                     "unit": {
                         "id": "",
                         "label": ""
                     },
-                    "value": 0,
+                    "value": 0
+                },
+                {
                     "id": "",
                     "label": ""
                 },
                 {
-                    "typedQuantities": {
-                        "quantity": {
-                            "referenceRange": {
-                                "high": 0,
-                                "low": 0,
+                    "typedQuantities": [
+                        {
+                            "quantity": {
+                                "referenceRange": {
+                                    "high": 0,
+                                    "low": 0,
+                                    "unit": {
+                                        "id": "",
+                                        "label": ""
+                                    }
+                                },
                                 "unit": {
                                     "id": "",
                                     "label": ""
-                                }
+                                },
+                                "value": 0
                             },
-                            "unit": {
+                            "quantityType": {
                                 "id": "",
                                 "label": ""
-                            },
-                            "value": 0
+                            }
                         }
-                    }
+                    ]
                 }
             ],
             "notes": "",
@@ -132,6 +139,43 @@
         }
     ],
     "notes": "",
+    "obtentionProcedure": {
+        "ageAtProcedure": [
+            {
+                "iso8601duration": ""
+            },
+            {
+                "end": {
+                    "iso8601duration": ""
+                },
+                "start": {
+                    "iso8601duration": ""
+                }
+            },
+            {
+                "days": 0,
+                "weeks": 0
+            },
+            "",
+            {
+                "end": "",
+                "start": ""
+            },
+            {
+                "id": "",
+                "label": ""
+            }
+        ],
+        "bodySite": {
+            "id": "",
+            "label": ""
+        },
+        "dateOfProcedure": "",
+        "procedureCode": {
+            "id": "",
+            "label": ""
+        }
+    },
     "pathologicalStage": {
         "id": "",
         "label": ""
@@ -155,7 +199,7 @@
                     "reference": ""
                 }
             },
-            "excluded": true,
+            "excluded": false,
             "featureType": {
                 "id": "",
                 "label": ""
