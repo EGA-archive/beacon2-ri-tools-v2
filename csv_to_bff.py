@@ -98,14 +98,21 @@ parser.add_argument('-o', '--output', default=output_docs_folder)
 parser.add_argument('-d', '--datasetId', default=datasetId)
 parser.add_argument('-i', '--input', default=csv_folder)
 parser.add_argument('-m', '--model', default='ga4gh')
-parser.add_argument('-e', '--entry_type', default=entry_type, choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs', 'all', 'collections', 'imageStudies', 'patients'])
+parser.add_argument('-e', '--entry_type', default=entry_type)
 
 args = parser.parse_args()
 
 if __name__ == '__main__':
-    choices=['analyses', 'biosamples', 'cohorts', 'datasets', 'genomicVariations', 'individuals', 'runs']
     if args.entry_type == 'all':
+        validators_dir = os.path.join(BASE_DIR, "validators", args.model)
+
+        choices = sorted(
+            os.path.splitext(f)[0]
+            for f in os.listdir(validators_dir) if 'vcf' not in f
+        )
+        print(choices, flush=True)
         for entrytype in choices:
+            print(entrytype)
             args.entry_type = entrytype
 
             try:
@@ -125,9 +132,7 @@ if __name__ == '__main__':
             with open(output, 'w') as f:
                 json.dump(dict_generado, f)
     else:
-        path = args.entry_type
-        if args.entry_type not in choices:
-            path = 'EUCAIM/' + args.entry_type
+        path = os.path.join(BASE_DIR, "validators", args.model, '/', args.entry_type)
 
 
         dict_generado, total_i=csv_to_bff(args)
