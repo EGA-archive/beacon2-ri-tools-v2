@@ -1,9 +1,10 @@
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, model_validator, RootModel
 import ast
-from typing import Any, ClassVar
+from typing import Any, Union
 from copy import deepcopy
-from typing import get_type_hints, get_origin, get_args
+from typing import get_origin, get_args, get_type_hints
 import importlib
+from types import UnionType
 
 def split_piped_object(obj):
     paths = []
@@ -121,7 +122,6 @@ class ConfigModel(BaseModel):
             return property_type, "list" in property_type
 
 
-        # Union type (remaining unions, e.g. A | B)
         if "|" in type_class:
             possible_types = [
                 t.strip()
@@ -182,7 +182,6 @@ class ConfigModel(BaseModel):
 
             node = node[key]
 
-        # If the parent of the leaf is a list, descend into its first element.
         if isinstance(node, list):
             if not node:
                 node.append({})
@@ -190,7 +189,6 @@ class ConfigModel(BaseModel):
                 node[0] = {}
             node = node[0]
 
-        # Handle the leaf field.
         if list_flags[-1]:
             if parts[-1] not in node or not isinstance(node[parts[-1]], list):
                 node[parts[-1]] = []
@@ -209,12 +207,19 @@ class ConfigModel(BaseModel):
                 pass
             parts = key.split("|")
             property_type=cls.__annotations__.get(parts[0])
-            if 'DataTypesArray' in property_type:
-                try:
-                    result[parts[0]][0][parts[1]]= value
-                except Exception:
-                    result[parts[0]]= [{parts[1]:value}]
-                continue
+            tp = get_type_hints(cls)[parts[0]]
+            if get_origin(tp) is UnionType:
+                tp = next(t for t in get_args(tp) if t is not type(None))
+            try:
+                if issubclass(tp, RootModel):
+                    tp = tp.__annotations__["root"]
+
+                if 'list' in tp:
+                    pass
+
+            except Exception:
+                tp='None'
+
             if key == 'info':
                 result['info']={"info": value}
             elif 'list' in property_type:
@@ -223,6 +228,12 @@ class ConfigModel(BaseModel):
                         result[parts[0]]=[value]
                     else:
                         result[parts[0]]=[]
+            elif 'list' in tp:
+                try:
+                    result[parts[0]][0][parts[1]]= value
+                except Exception:
+                    result[parts[0]]= [{parts[1]:value}]
+                continue
             elif 'dict' in property_type:
                 if parts[0] not in result:
                     if len(parts)==1:
