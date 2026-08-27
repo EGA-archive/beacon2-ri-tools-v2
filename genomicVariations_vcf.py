@@ -255,7 +255,7 @@ def generate(dict_properties, args):
             seqid22=seqrepo_dataproxy.translate_sequence_identifier("{}:22".format(refGen), "ga4gh")
             seqid23=seqrepo_dataproxy.translate_sequence_identifier("{}:X".format(refGen), "ga4gh")
             seqid24=seqrepo_dataproxy.translate_sequence_identifier("{}:Y".format(refGen), "ga4gh")
-            seqMT='ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct'
+            seqMT=['ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct']
         except Exception:
             if refGen == 'GRCh38':
                 with open(GRCH38_FILE, 'r') as outfile:
@@ -289,7 +289,7 @@ def generate(dict_properties, args):
             seqid22=sequence_ids['chr22']
             seqid23=sequence_ids['chrX']
             seqid24=sequence_ids['chrY']
-            seqMT='ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct'
+            seqMT=['ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct']
 
         vcf = VCF(vcf_filename, strict_gt=True)
         formatted=False
