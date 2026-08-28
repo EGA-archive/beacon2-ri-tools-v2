@@ -612,7 +612,7 @@ def generate(dict_properties, args):
                     elif chromos == '7':
                         HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.'
 
-                if chromos == 'MT':
+                if chromos in ['MT', 'M']:
                     HGVSId="NC_012920.1:m."
                 
                 if reversed(ref) == alt[0]:
@@ -711,7 +711,7 @@ def generate(dict_properties, args):
                     sequence_id=seqid23
                 elif chromos == '24' or chromos == 'Y':
                     sequence_id=seqid24
-                elif chromos == 'MT':
+                elif chromos in ['MT', 'M']:
                     sequence_id=seqMT
                 end_range = Number(type="Number",value=int(end))
                 start_range = Number(type="Number",value=int(start))
@@ -827,6 +827,7 @@ def generate(dict_properties, args):
                             except Exception:
                                 with open(os.path.join(args.output, 'genomicVariations.json'), 'w') as outfile:
                                     json.dump([variantdict], outfile)
+                        total_dict = []
             except ValidationError:
                 print("Validation error for variant in chr: {} with start position: {} and reference base: {}".format(chrom, start, ref))
                 raise
