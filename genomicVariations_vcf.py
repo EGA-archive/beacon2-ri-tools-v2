@@ -65,7 +65,10 @@ GRCH37_FILE = os.path.join(
 )
 
 seqrepo_rest_service_url = "seqrepo+https://services.genomicmedlab.org/seqrepo"
-seqrepo_dataproxy = create_dataproxy(uri=seqrepo_rest_service_url)
+try:
+    seqrepo_dataproxy = create_dataproxy(uri=seqrepo_rest_service_url)
+except Exception:
+    seqrepo_dataproxy = None
 
 db = build_mongo_database()
 
@@ -255,7 +258,7 @@ def generate(dict_properties, args):
             seqid22=seqrepo_dataproxy.translate_sequence_identifier("{}:22".format(refGen), "ga4gh")
             seqid23=seqrepo_dataproxy.translate_sequence_identifier("{}:X".format(refGen), "ga4gh")
             seqid24=seqrepo_dataproxy.translate_sequence_identifier("{}:Y".format(refGen), "ga4gh")
-            seqMT='ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct'
+            seqMT=['ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct']
         except Exception:
             if refGen == 'GRCh38':
                 with open(GRCH38_FILE, 'r') as outfile:
@@ -265,31 +268,31 @@ def generate(dict_properties, args):
                     sequence_ids=yaml.load(outfile, Loader=yaml.SafeLoader)
             else:
                 print("Could not determine GA4GH vrs sequence_id for ref genome {}, this VCF will not get processed".format(refGen))
-            seqid1=sequence_ids['chr1']
-            seqid2=sequence_ids['chr2']
-            seqid3=sequence_ids['chr3']
-            seqid4=sequence_ids['chr4']
-            seqid5=sequence_ids['chr5']
-            seqid6=sequence_ids['chr6']
-            seqid7=sequence_ids['chr7']
-            seqid8=sequence_ids['chr8']
-            seqid9=sequence_ids['chr9']
-            seqid10=sequence_ids['chr10']
-            seqid11=sequence_ids['chr11']
-            seqid12=sequence_ids['chr12']
-            seqid13=sequence_ids['chr13']
-            seqid14=sequence_ids['chr14']
-            seqid15=sequence_ids['chr15']
-            seqid16=sequence_ids['chr16']
-            seqid17=sequence_ids['chr17']
-            seqid18=sequence_ids['chr18']
-            seqid19=sequence_ids['chr19']
-            seqid20=sequence_ids['chr20']
-            seqid21=sequence_ids['chr21']
-            seqid22=sequence_ids['chr22']
-            seqid23=sequence_ids['chrX']
-            seqid24=sequence_ids['chrY']
-            seqMT='ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct'
+            seqid1=[sequence_ids['chr1']]
+            seqid2=[sequence_ids['chr2']]
+            seqid3=[sequence_ids['chr3']]
+            seqid4=[sequence_ids['chr4']]
+            seqid5=[sequence_ids['chr5']]
+            seqid6=[sequence_ids['chr6']]
+            seqid7=[sequence_ids['chr7']]
+            seqid8=[sequence_ids['chr8']]
+            seqid9=[sequence_ids['chr9']]
+            seqid10=[sequence_ids['chr10']]
+            seqid11=[sequence_ids['chr11']]
+            seqid12=[sequence_ids['chr12']]
+            seqid13=[sequence_ids['chr13']]
+            seqid14=[sequence_ids['chr14']]
+            seqid15=[sequence_ids['chr15']]
+            seqid16=[sequence_ids['chr16']]
+            seqid17=[sequence_ids['chr17']]
+            seqid18=[sequence_ids['chr18']]
+            seqid19=[sequence_ids['chr19']]
+            seqid20=[sequence_ids['chr20']]
+            seqid21=[sequence_ids['chr21']]
+            seqid22=[sequence_ids['chr22']]
+            seqid23=[sequence_ids['chrX']]
+            seqid24=[sequence_ids['chrY']]
+            seqMT=['ga4gh:SQ.k3grVkjY-hoWcCUojHw6VU6GE3MZ8Sct']
 
         vcf = VCF(vcf_filename, strict_gt=True)
         formatted=False
@@ -609,7 +612,7 @@ def generate(dict_properties, args):
                     elif chromos == '7':
                         HGVSId=rootHGVS+str(chromos) + '.12' + ':' + 'g.'
 
-                if chromos == 'MT':
+                if chromos in ['MT', 'M']:
                     HGVSId="NC_012920.1:m."
                 
                 if reversed(ref) == alt[0]:
@@ -708,7 +711,7 @@ def generate(dict_properties, args):
                     sequence_id=seqid23
                 elif chromos == '24' or chromos == 'Y':
                     sequence_id=seqid24
-                elif chromos == 'MT':
+                elif chromos in ['MT', 'M']:
                     sequence_id=seqMT
                 end_range = Number(type="Number",value=int(end))
                 start_range = Number(type="Number",value=int(start))
@@ -824,6 +827,7 @@ def generate(dict_properties, args):
                             except Exception:
                                 with open(os.path.join(args.output, 'genomicVariations.json'), 'w') as outfile:
                                     json.dump([variantdict], outfile)
+                        total_dict = []
             except ValidationError:
                 print("Validation error for variant in chr: {} with start position: {} and reference base: {}".format(chrom, start, ref))
                 raise
