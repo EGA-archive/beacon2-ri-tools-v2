@@ -1,2 +1,2 @@
 createDateTime,dataUseConditions|duoDataUse|id,dataUseConditions|duoDataUse|label,dataUseConditions|duoDataUse|version,description,externalUrl,id,info,name,updateDateTime,version
-2021-12-29T20:33:40Z,DUO:0000019,publication required,7-1-19,Bear in mind that both genomic and metadata information is synthetic,http://synthetic_usecases_4beacon_testingV4.com,synthetic_usecases_4beacon_testingV4,,Dataset with synthetic data for beacon testing,2021-12-29T20:33:40Z,v1.0
+2021-12-29T20:33:40Z,DUO:0000019,publication required,7-1-19,Bear in mind that both genomic and metadata information is synthetic,http://synthetic_usecases_4beacon_testingV4.com,test,,Dataset with synthetic data for beacon testing,2021-12-29T20:33:40Z,v1.0

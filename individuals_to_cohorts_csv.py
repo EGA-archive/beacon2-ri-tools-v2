@@ -2,7 +2,7 @@ import json
 from tqdm import tqdm
 import conf.conf as conf
 import csv
-from validators.cohorts import Cohorts
+from validators.update.cohorts import Cohorts
 import hashlib
 import argparse
 import os
