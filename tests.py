@@ -354,14 +354,16 @@ def suite():
     """
         Gather all the tests from this module in a test suite.
     """
+    loader = unittest.TestLoader()
     test_suite = unittest.TestSuite()
-    test_suite.addTest(unittest.makeSuite(TestGenomicVariationsWithPopulations))
+    test_suite.addTest(loader.loadTestsFromTestCase(TestGenomicVariationsWithPopulations))
     #test_suite.addTest(unittest.makeSuite(TestBudget2))
     return test_suite
 
 
-mySuit=suite()
+if __name__ == '__main__':
+    runner = unittest.TextTestRunner()
+    if not runner.run(suite()).wasSuccessful():
+        raise SystemExit(1)
 
 
-runner=unittest.TextTestRunner()
-runner.run(mySuit)
