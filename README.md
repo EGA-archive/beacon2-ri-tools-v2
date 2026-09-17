@@ -134,9 +134,10 @@ For the genomic variations, there is one additional argument that you can't set 
 parser.add_argument('-o', '--output', default=conf.output_docs_folder)
 parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
-parser.add_argument('-n', '--numRows', default=conf.num_rows)
+parser.add_argument('-n', '--numRows', type=int, default=conf.num_rows)
 parser.add_argument('-v', '--verbosity', default=conf.verbosity, action=argparse.BooleanOptionalAction)
 parser.add_argument('-j', '--json', default=False, action=argparse.BooleanOptionalAction)
+parser.add_argument('-jl', '--jsonl', default=False, action=argparse.BooleanOptionalAction)
 parser.add_argument('-i', '--input', default="files/vcf/files_to_read/*.vcf.gz")
 parser.add_argument('-ac', '--alleleCounts', default=conf.populations_by_allele_counts, action=argparse.BooleanOptionalAction)
 parser.add_argument('-af', '--alleleFrequency', default=conf.only_process_reads_with_allele_frequency, action=argparse.BooleanOptionalAction)
@@ -166,6 +167,12 @@ parser.add_argument('-c', '--collection', default=conf.collection_name)
 ```
 
 Note 1: json parameter, if present, will convert the vcf variants into BFF json directly (not to mongoDB). This can generate a very big file, so, if you don't have a lot of space in your disk, consider to not use it.
+
+Note 1b: the records are streamed to disk through a single open file handle, in batches, rather than one file append per variant. The output format of `--json` is unchanged (one file holding a JSON array), so `mongoimport --jsonArray` and beacon2-pi-api keep working as before.
+
+Note 1c: the **jsonl** parameter writes JSON Lines instead (one compact BFF document per line, in `genomicVariations.jsonl`), and implies `--json`. This is the more robust format for very large VCFs: it is append-safe, streamable line by line, and `mongoimport` reads it without `--jsonArray`.
+
+Note 1d: each run now starts a fresh output file. Previously a second `--json` run appended to the file left by the first, silently accumulating duplicate variants (the MongoDB path never had this problem, because it de-duplicates on `_id`). If you were relying on that append behaviour, write each run to its own `--output` directory.
 Note: All the output arguments expect a directory path, and file expect a file path. Input arguments expect either directory or filepath except for the input path of genomicVariations_vcf script, that the path has to be to a file terminated in .vcf.gz. You can use a wildcard (*) for specifying that you want to parse all the vcfs of the folder, e.g. "path/to/your/folder/*.vcf.gz". Note that if the folder is not volumed and the vcf is a large file, it can make docker run out of space when building. For the rest of the scripts, if you input a filepath it has to terminate in .csv. If this is not terminated in .csv or a folder is specified, a default name for a .csv will be completed to find the file (e.g. analyses_csv -> analyses.csv).
 
 ### Populating a beacon instance from VCF
