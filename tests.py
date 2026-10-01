@@ -1,5 +1,7 @@
 import unittest
+import genomicVariations_vcf
 from genomicVariations_vcf import generate, db
+from bff_writer import open_bff_writer
 from remove_dataset import remove_dataset
 from csv_to_bff import csv_to_bff
 from update_record import update_record
@@ -343,12 +345,79 @@ class TestGenomicVariationsWithPopulations(unittest.TestCase):
             assert 'variantLevelData' in case_dict
 
 
+class TestBffWriter(unittest.TestCase):
+    """Covers the streaming BFF writers that replaced the per-record append."""
+
+    def _args(self, output, **overrides):
+        options = dict(output=output, datasetId='writer_test', caseLevelData=False,
+                       numRows=10, verbosity=False, json=True, jsonl=False,
+                       input='unused', alleleCounts=False, alleleFrequency=False,
+                       referenceGenome='GRCh38')
+        options.update(overrides)
+        return argparse.Namespace(**options)
+
+    def test_json_array_round_trips(self):
+        records = [{"_id": "a", "n": 1}, {"_id": "b", "n": 2}]
+        writer = open_bff_writer(os.path.join(conf.output_docs_folder, 'writer_test'), 'genomicVariations')
+        try:
+            writer.write_many(records)
+        finally:
+            writer.close()
+        with open(writer.path) as outfile:
+            assert json.load(outfile) == records
+
+    def test_jsonl_matches_the_json_array(self):
+        records = [{"_id": "a", "n": 1}, {"_id": "b", "n": 2}]
+        writer = open_bff_writer(os.path.join(conf.output_docs_folder, 'writer_test'), 'genomicVariations', True)
+        try:
+            writer.write_many(records)
+        finally:
+            writer.close()
+        with open(writer.path) as outfile:
+            assert [json.loads(line) for line in outfile] == records
+
+    def test_empty_run_writes_an_empty_array(self):
+        writer = open_bff_writer(os.path.join(conf.output_docs_folder, 'writer_test'), 'empty')
+        writer.close()
+        with open(writer.path) as outfile:
+            assert json.load(outfile) == []
+
+    def test_array_is_terminated_even_when_conversion_raises(self):
+        # generate() closes its writers in a finally, so a mid-run failure must
+        # still leave a parseable JSON array on disk.
+        output = os.path.join(conf.output_docs_folder, 'writer_crash')
+        original = genomicVariations_vcf._generate
+
+        def explode(dict_properties, args, variants_writer, case_level_writer):
+            variants_writer.write({"_id": "written_before_the_failure"})
+            raise RuntimeError('simulated mid-run failure')
+
+        genomicVariations_vcf._generate = explode
+        try:
+            self.assertRaises(RuntimeError, generate, {}, self._args(output))
+        finally:
+            genomicVariations_vcf._generate = original
+        with open(os.path.join(output, 'genomicVariations.json')) as outfile:
+            assert json.load(outfile) == [{"_id": "written_before_the_failure"}]
+
+    def test_output_directory_is_created(self):
+        output = os.path.join(conf.output_docs_folder, 'writer_nested', 'deeper')
+        original = genomicVariations_vcf._generate
+        genomicVariations_vcf._generate = lambda *args, **kwargs: (0, 0)
+        try:
+            generate({}, self._args(output))
+        finally:
+            genomicVariations_vcf._generate = original
+        assert os.path.isfile(os.path.join(output, 'genomicVariations.json'))
+
+
 def suite():
     """
         Gather all the tests from this module in a test suite.
     """
     test_suite = unittest.TestSuite()
     test_suite.addTest(unittest.makeSuite(TestGenomicVariationsWithPopulations))
+    test_suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestBffWriter))
     #test_suite.addTest(unittest.makeSuite(TestBudget2))
     return test_suite
 
