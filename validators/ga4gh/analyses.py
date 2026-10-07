@@ -11,8 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from validators.config import ConfigModel
 
 class Info(BaseModel):
-    pass
-
+    model_config = ConfigDict(extra='allow')
 
 class Analyses(ConfigModel):
     model_config = ConfigDict(

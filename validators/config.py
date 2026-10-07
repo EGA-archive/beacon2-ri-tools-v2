@@ -239,7 +239,7 @@ class ConfigModel(BaseModel):
                 tp='None'
 
             if key == 'info':
-                result['info']={"info": value}
+                result['info']=value
             elif 'list' in property_type:
                 if parts[0] not in result:
                     if len(parts)==1:
