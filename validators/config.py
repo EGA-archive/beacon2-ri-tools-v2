@@ -69,17 +69,24 @@ def expand(node):
 
     elif isinstance(node, list):
         new_list = []
+
         for item in node:
             item = expand(item)
 
-            if isinstance(item, dict):
+            if isinstance(item, str) and "|" in item:
+                new_list.extend(item.split("|"))
+
+            elif isinstance(item, dict):
                 expanded = split_piped_object(item)
+
                 if expanded:
                     new_list.extend(expanded)
                 else:
                     new_list.append(item)
+
             else:
                 new_list.append(item)
+
         return new_list
 
     else:
