@@ -69,17 +69,24 @@ def expand(node):
 
     elif isinstance(node, list):
         new_list = []
+
         for item in node:
             item = expand(item)
 
-            if isinstance(item, dict):
+            if isinstance(item, str) and "|" in item:
+                new_list.extend(item.split("|"))
+
+            elif isinstance(item, dict):
                 expanded = split_piped_object(item)
+
                 if expanded:
                     new_list.extend(expanded)
                 else:
                     new_list.append(item)
+
             else:
                 new_list.append(item)
+
         return new_list
 
     else:
@@ -239,7 +246,7 @@ class ConfigModel(BaseModel):
                 tp='None'
 
             if key == 'info':
-                result['info']={"info": value}
+                result['info']=value
             elif 'list' in property_type:
                 if parts[0] not in result:
                     if len(parts)==1:

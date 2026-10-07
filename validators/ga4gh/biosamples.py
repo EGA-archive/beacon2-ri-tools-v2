@@ -175,7 +175,7 @@ class TestMode(RootModel[bool]):
 
 
 class Info(BaseModel):
-    pass
+    model_config = ConfigDict(extra='allow')
 
 
 class CountAdjustedTo1(RootModel[list[CountAdjustedToItem]]):
