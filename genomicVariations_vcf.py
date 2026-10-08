@@ -204,7 +204,7 @@ def generate(dict_properties, args):
                 writer.close()
 
 def _generate(dict_properties, args, variants_writer, case_level_writer):
-    if args.scanAndDelete == True:
+    if args.scanAndDelete == True and args.json == False:
         db.genomicVariations.delete_many({})
         print("Deleted all pre-existing variants in the database")
         if args.caseLevelData==True:
