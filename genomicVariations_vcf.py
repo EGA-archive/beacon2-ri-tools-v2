@@ -204,6 +204,15 @@ def generate(dict_properties, args):
                 writer.close()
 
 def _generate(dict_properties, args, variants_writer, case_level_writer):
+    if args.scanAndDelete == True:
+        db.genomicVariations.delete_many({})
+        print("Deleted all pre-existing variants in the database")
+        if args.caseLevelData==True:
+            db.caseLevelData.delete_many({})
+            db.targets.delete_many({})
+            print("Deleted all pre-existing caseLevelData and targets in the database")
+        
+
     if pipeline is not None and args.alleleFrequency == True:
         print("VCFs being processed with AF for populations!")
     if args.alleleCounts == True and pipeline is not None:
@@ -865,17 +874,19 @@ def _parse_args():
     parser.add_argument('-ac', '--alleleCounts', default=conf.populations_by_allele_counts, action=argparse.BooleanOptionalAction)
     parser.add_argument('-af', '--alleleFrequency', default=conf.only_process_reads_with_allele_frequency, action=argparse.BooleanOptionalAction)
     parser.add_argument('-rg', '--referenceGenome', default=None, choices=["hg18", "GRCh37", "GRCh38" ,"T2T", None])
+    parser.add_argument('-del', '--scanAndDelete', default=conf.scan_and_delete_variants_before_processing, action=argparse.BooleanOptionalAction)
 
     return parser.parse_args()
 
 
 
-if args.jsonl == True:
-    args.json = True
+
 
 
 if __name__ == '__main__':
     args = _parse_args()
+    if args.jsonl == True:
+        args.json = True
     total_i, skipped_variants=generate(dict_properties, args)
 
 
