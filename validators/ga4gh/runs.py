@@ -16,7 +16,7 @@ class LibraryLayout(Enum):
 
 
 class Info(BaseModel):
-    pass
+    model_config = ConfigDict(extra='allow')
 
 
 class CURIE(RootModel[constr(pattern=r'^\w[^:]+:.+$')]):

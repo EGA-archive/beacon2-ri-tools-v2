@@ -4,3 +4,5 @@ files/vcf/files_to_read/*
 *.vcf.bgz
 output_docs/data/db/*
 refgen-data
+*.json.gz
+*.jsonl.gz

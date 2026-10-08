@@ -4,7 +4,6 @@ from tqdm import tqdm
 import glob
 import re
 import conf.conf as conf
-import gc
 from validators.ga4gh.vcf import Genomicvariations, LegacyVariation, SequenceLocation, SequenceInterval, Number, OntologyTerm, MolecularAttributes, FrequencyInPopulations, PopulationFrequency, Identifiers
 from pymongo.errors import BulkWriteError
 import hashlib
@@ -16,6 +15,9 @@ from ga4gh.vrs.dataproxy import create_dataproxy
 import subprocess
 import yaml
 from mongo_connection import build_mongo_database
+from bff_writer import open_bff_writer
+
+BATCH_SIZE = 10000
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -138,24 +140,79 @@ def generate_molecular_attributes(moleculareffect_input):
                         list_of_molecular_effects.append(OntologyTerm(id=ontology["id"], label=ontology["label"]))
     return list_of_molecular_effects
 
-def append_to_json(file, data):
-    chunk = " , " + json.dumps(data) + "]"
+def flush_variants(records, args, writer):
+    """Write a batch of genomicVariations documents, returning how many were skipped.
 
-    with open(file, 'r+') as f:
+    When ``writer`` is set the batch goes to the BFF output file, otherwise it is
+    inserted into MongoDB as a single bulk operation.
+    """
+    if records == []:
+        return 0
+    if writer is not None:
+        writer.write_many(records)
+        return 0
+    variants_errors=[]
+    try:
+        db.genomicVariations.insert_many(records, ordered=False)
+    except BulkWriteError as BulkError:
+        variants_errors.extend(bulk_write_ops(BulkError))
+    for error in variants_errors:
+        if args.verbosity == True:
+            print("following duplicated variant found was skipped: {}".format(error))
+    return len(variants_errors)
 
-        f.seek(0, 2)
-        index = f.tell()
-
-        while not f.read().startswith(']'):
-            index -= 1
-            if index == 0:
-                raise ValueError("{} is not a JSON formatted file".format(file))
-            f.seek(index)
-
-        f.seek(index)
-        f.write(chunk)  
+def flush_case_level_data(records, writer):
+    """Write a batch of caseLevelData documents, merging any duplicate _id."""
+    if records == []:
+        return
+    if writer is not None:
+        writer.write_many(records)
+        return
+    catch_errors=[]
+    try:
+        db.caseLevelData.insert_many(records, ordered=False)
+    except BulkWriteError as BulkError:
+        catch_errors.extend(bulk_write_ops(BulkError))
+    for caught_error in catch_errors:
+        final_dict=caught_error
+        caseLevelData_to_update=db.caseLevelData.find_one({"_id": caught_error["_id"]})
+        if caseLevelData_to_update != {} and caseLevelData_to_update != None:
+            for k, v in caseLevelData_to_update.items():
+                final_dict[k]=v
+            set_dict={}
+            set_dict["$set"]=final_dict
+            db.caseLevelData.update_one({"_id": caught_error["_id"]},set_dict)
 
 def generate(dict_properties, args):
+    """Open the BFF output writers (if any) for the run and convert every VCF.
+
+    The writers are closed in a ``finally`` so a JSON array is always terminated,
+    even if conversion raises part way through.
+    """
+    variants_writer=None
+    case_level_writer=None
+    if args.json == True:
+        jsonl=getattr(args, 'jsonl', False)
+        variants_writer=open_bff_writer(args.output, 'genomicVariations', jsonl)
+        if args.caseLevelData == True:
+            case_level_writer=open_bff_writer(args.output, 'caseLevelData', jsonl)
+    try:
+        return _generate(dict_properties, args, variants_writer, case_level_writer)
+    finally:
+        for writer in (variants_writer, case_level_writer):
+            if writer is not None:
+                writer.close()
+
+def _generate(dict_properties, args, variants_writer, case_level_writer):
+    if args.scanAndDelete == True and args.json == False:
+        db.genomicVariations.delete_many({})
+        print("Deleted all pre-existing variants in the database")
+        if args.caseLevelData==True:
+            db.caseLevelData.delete_many({})
+            db.targets.delete_many({})
+            print("Deleted all pre-existing caseLevelData and targets in the database")
+        
+
     if pipeline is not None and args.alleleFrequency == True:
         print("VCFs being processed with AF for populations!")
     if args.alleleCounts == True and pipeline is not None:
@@ -188,8 +245,9 @@ def generate(dict_properties, args):
         list_of_population_headers=list(set(list_of_population_headers))
         list_of_existing_headers=[]
     total_dict =[]
+    case_level_dict =[]
     number_variants=1
-    if args.caseLevelData == True:
+    if args.caseLevelData == True and args.json == False:
         try:
             db.create_collection(name="targets")
         except Exception:
@@ -338,9 +396,11 @@ def generate(dict_properties, args):
                 if args.json == False:
                     db.targets.insert_many([dict_target],ordered=False)
                 else:
-                    output_file = os.path.join(args.output, "targets.json")
-                    with open(output_file, 'w') as outfile:
-                        json.dump([dict_target], outfile)
+                    targets_writer = open_bff_writer(args.output, 'targets', getattr(args, 'jsonl', False))
+                    try:
+                        targets_writer.write(dict_target)
+                    finally:
+                        targets_writer.close()
             except BulkWriteError as BulkError:
                 target_errors.extend(bulk_write_ops(BulkError))
                 pass
@@ -766,68 +826,18 @@ def generate(dict_properties, args):
 
                 pbar.update(1)
                 number_variants+=1
-                if args.caseLevelData == True and args.json == False:
-                    catch_errors=[]
-                    try:
-                        db.caseLevelData.insert_many([dict_trues],ordered=False)
-                    except BulkWriteError as BulkError:
-                        catch_errors.extend(bulk_write_ops(BulkError))
-                        pass
-                    if catch_errors != []:
-                        final_dict={}
-                        for caught_error in catch_errors:
-                            final_dict=caught_error
-                            caseLevelData_to_update=db.caseLevelData.find_one({"_id": caught_error["_id"]})
-                            if caseLevelData_to_update != {} and caseLevelData_to_update != None:
-                                for k, v in caseLevelData_to_update.items():
-                                    final_dict[k]=v
-                                set_dict={}
-                                set_dict["$set"]=final_dict
-                                db.caseLevelData.update_one({"_id": caught_error["_id"]},set_dict)
-                elif args.caseLevelData == True:
-                    try:
-                        output_file = os.path.join(args.output, "caseLevelData.json")
-                        append_to_json(output_file, dict_trues)
-                    except Exception:
-                        output_file = os.path.join(args.output, "caseLevelData.json")
-                        with open(output_file, 'w') as outfile:
-                            json.dump([dict_trues], outfile)
-                    
-
+                if args.caseLevelData == True:
+                    case_level_dict.append(dict_trues)
 
                 dict_trues={}
 
-                if total_dict != []:
-                    if args.json == False:
-                        variants_errors=[]
-                        if number_variants == args.numRows:
-                            try:
-                                db.genomicVariations.insert_many(total_dict, ordered=False)
-                            except BulkWriteError as BulkError:
-                                variants_errors.extend(bulk_write_ops(BulkError))
-                            break
-                        elif (number_variants/10000).is_integer():
-                            try:
-                                db.genomicVariations.insert_many(total_dict, ordered=False)
-                            except BulkWriteError as BulkError:
-                                variants_errors.extend(bulk_write_ops(BulkError))
-
-                            del definitivedict
-                            del total_dict
-                            gc.collect()
-                            total_dict=[]
-                        for error in variants_errors:
-                            if args.verbosity == True:
-                                print("following duplicated variant found was skipped: {}".format(error))
-                            skipped_counts+=1
-                    else:
-                        for variantdict in total_dict:
-                            try:
-                                append_to_json(os.path.join(args.output, 'genomicVariations.json'), variantdict)
-                            except Exception:
-                                with open(os.path.join(args.output, 'genomicVariations.json'), 'w') as outfile:
-                                    json.dump([variantdict], outfile)
-                        total_dict = []
+                if number_variants == args.numRows or len(total_dict) >= BATCH_SIZE:
+                    skipped_counts += flush_variants(total_dict, args, variants_writer)
+                    total_dict = []
+                    flush_case_level_data(case_level_dict, case_level_writer)
+                    case_level_dict = []
+                    if number_variants == args.numRows:
+                        break
             except ValidationError:
                 print("Validation error for variant in chr: {} with start position: {} and reference base: {}".format(chrom, start, ref))
                 raise
@@ -835,25 +845,10 @@ def generate(dict_properties, args):
 
 
 
-    if total_dict != []:
-        if args.json == False:
-            variants_errors=[]
-            if number_variants != args.numRows:
-                try:
-                    db.genomicVariations.insert_many(total_dict, ordered=False)
-                except BulkWriteError as BulkError:
-                    variants_errors.extend(bulk_write_ops(BulkError))
-            for error in variants_errors:
-                if args.verbosity == True:
-                    print("following duplicated variant found was skipped: {}".format(error))
-                skipped_counts+=1
-        else:
-            for variantdict in total_dict:
-                try:
-                    append_to_json(os.path.join(args.output, 'genomicVariations.json'), variantdict)
-                except Exception:
-                    with open(os.path.join(args.output, 'genomicVariations.json'), 'w') as outfile:
-                        json.dump([variantdict], outfile)
+    skipped_counts += flush_variants(total_dict, args, variants_writer)
+    total_dict = []
+    flush_case_level_data(case_level_dict, case_level_writer)
+    case_level_dict = []
 
 
     try:
@@ -863,26 +858,35 @@ def generate(dict_properties, args):
         print('No vcf.gz file could be found or processed.')
         return 0,0
 
+def _parse_args():
+    parser = argparse.ArgumentParser(
+                        prog='genomicVariationsVCFtoJSON',
+                        description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
 
-parser = argparse.ArgumentParser(
-                    prog='genomicVariationsVCFtoJSON',
-                    description='This script translates a vcf of genomic variations to a beaconized json for g_variants')
+    parser.add_argument('-o', '--output', default=conf.output_docs_folder)
+    parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+    parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
+    parser.add_argument('-n', '--numRows', type=int, default=conf.num_rows)
+    parser.add_argument('-v', '--verbosity', default=conf.verbosity, action=argparse.BooleanOptionalAction)
+    parser.add_argument('-j', '--json', default=False, action=argparse.BooleanOptionalAction)
+    parser.add_argument('-jl', '--jsonl', default=False, action=argparse.BooleanOptionalAction)
+    parser.add_argument('-i', '--input', default="files/vcf/files_to_read/*.vcf.gz")
+    parser.add_argument('-ac', '--alleleCounts', default=conf.populations_by_allele_counts, action=argparse.BooleanOptionalAction)
+    parser.add_argument('-af', '--alleleFrequency', default=conf.only_process_reads_with_allele_frequency, action=argparse.BooleanOptionalAction)
+    parser.add_argument('-rg', '--referenceGenome', default=None, choices=["hg18", "GRCh37", "GRCh38" ,"T2T", None])
+    parser.add_argument('-del', '--scanAndDelete', default=conf.scan_and_delete_variants_before_processing, action=argparse.BooleanOptionalAction)
 
-parser.add_argument('-o', '--output', default=conf.output_docs_folder)
-parser.add_argument('-d', '--datasetId', default=conf.datasetId)
-parser.add_argument('-c', '--caseLevelData', default=conf.case_level_data, action=argparse.BooleanOptionalAction)
-parser.add_argument('-n', '--numRows', default=conf.num_rows)
-parser.add_argument('-v', '--verbosity', default=conf.verbosity, action=argparse.BooleanOptionalAction)
-parser.add_argument('-j', '--json', default=False, action=argparse.BooleanOptionalAction)
-parser.add_argument('-i', '--input', default="files/vcf/files_to_read/*.vcf.gz")
-parser.add_argument('-ac', '--alleleCounts', default=conf.populations_by_allele_counts, action=argparse.BooleanOptionalAction)
-parser.add_argument('-af', '--alleleFrequency', default=conf.only_process_reads_with_allele_frequency, action=argparse.BooleanOptionalAction)
-parser.add_argument('-rg', '--referenceGenome', default=None, choices=["hg18", "GRCh37", "GRCh38" ,"T2T", None])
+    return parser.parse_args()
 
-args = parser.parse_args()
+
+
+
 
 
 if __name__ == '__main__':
+    args = _parse_args()
+    if args.jsonl == True:
+        args.json = True
     total_i, skipped_variants=generate(dict_properties, args)
 
 
