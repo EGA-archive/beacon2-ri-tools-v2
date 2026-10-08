@@ -88,18 +88,20 @@ def csv_to_bff(args):
     return total_dict, k
 
 
-parser = argparse.ArgumentParser(
-                    prog='convert_csv_to_bff',
-                    description='This script translates a csv to BFF')
-parser.add_argument('-o', '--output', default=output_docs_folder)
-parser.add_argument('-d', '--datasetId', default=datasetId)
-parser.add_argument('-i', '--input', default=csv_folder)
-parser.add_argument('-m', '--model', default='ga4gh')
-parser.add_argument('-e', '--entry_type', default=entry_type)
+def _parse_args():
+    parser = argparse.ArgumentParser(
+                        prog='convert_csv_to_bff',
+                        description='This script translates a csv to BFF')
+    parser.add_argument('-o', '--output', default=output_docs_folder)
+    parser.add_argument('-d', '--datasetId', default=datasetId)
+    parser.add_argument('-i', '--input', default=csv_folder)
+    parser.add_argument('-m', '--model', default='ga4gh')
+    parser.add_argument('-e', '--entry_type', default=entry_type)
 
-args = parser.parse_args()
+    return parser.parse_args()
 
 if __name__ == '__main__':
+    args = _parse_args()
     if args.entry_type == 'all':
         validators_dir = os.path.join(BASE_DIR, "validators", args.model)
 
