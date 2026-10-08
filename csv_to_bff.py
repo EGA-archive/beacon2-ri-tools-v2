@@ -42,31 +42,28 @@ def csv_to_bff(args):
             list_of_filled_items=[]
             for kline, vline in line.items():
                 property_value = kline
-                if property_value == None:
+
+                if property_value is None:
                     continue
-                property_value=property_value.replace('\ufeff', '')
 
-
-                
+                property_value = property_value.replace('\ufeff', '')
                 valor = vline
 
+                if valor:
+                    if property_value == "info":
+                        try:
+                            dict_of_properties[property_value] = json.loads(
+                                valor.replace('\u00a0', ' ')
+                            )
+                        except json.JSONDecodeError as e:
+                            raise ValueError(
+                                f"Invalid JSON in info column: {valor}"
+                            ) from e
+                    else:
+                        dict_of_properties[property_value] = valor
 
-                if k > 0:
-                    
-                    if valor != '':
-
-
-                        list_of_filled_items.append(property_value)
-
-                    if valor:
-                        if '|' in valor:
-                            dict_of_properties[property_value]=valor
-                        else:
-                            dict_of_properties[property_value]=valor
-                        
-
-                    elif valor == 0:
-                        dict_of_properties[property_value]=valor
+                elif valor == 0:
+                    dict_of_properties[property_value] = valor
             ValidatorClass.CONFIG=dict_of_properties
             ValidatorClass.ENTRY_TYPE=args.entry_type
             ValidatorClass.MODEL=args.model

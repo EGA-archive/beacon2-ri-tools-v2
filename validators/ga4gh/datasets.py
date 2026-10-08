@@ -224,7 +224,7 @@ class CountAdjustedTo1(RootModel[list[CountAdjustedToItem]]):
 
 
 class Info(BaseModel):
-    pass
+    model_config = ConfigDict(extra='allow')
 
 
 class OntologyTerm(BaseModel):
