@@ -42,31 +42,28 @@ def csv_to_bff(args):
             list_of_filled_items=[]
             for kline, vline in line.items():
                 property_value = kline
-                if property_value == None:
+
+                if property_value is None:
                     continue
-                property_value=property_value.replace('\ufeff', '')
 
-
-                
+                property_value = property_value.replace('\ufeff', '')
                 valor = vline
 
+                if valor:
+                    if property_value == "info":
+                        try:
+                            dict_of_properties[property_value] = json.loads(
+                                valor.replace('\u00a0', ' ')
+                            )
+                        except json.JSONDecodeError as e:
+                            raise ValueError(
+                                f"Invalid JSON in info column: {valor}"
+                            ) from e
+                    else:
+                        dict_of_properties[property_value] = valor
 
-                if k > 0:
-                    
-                    if valor != '':
-
-
-                        list_of_filled_items.append(property_value)
-
-                    if valor:
-                        if '|' in valor:
-                            dict_of_properties[property_value]=valor
-                        else:
-                            dict_of_properties[property_value]=valor
-                        
-
-                    elif valor == 0:
-                        dict_of_properties[property_value]=valor
+                elif valor == 0:
+                    dict_of_properties[property_value] = valor
             ValidatorClass.CONFIG=dict_of_properties
             ValidatorClass.ENTRY_TYPE=args.entry_type
             ValidatorClass.MODEL=args.model
@@ -91,18 +88,20 @@ def csv_to_bff(args):
     return total_dict, k
 
 
-parser = argparse.ArgumentParser(
-                    prog='convert_csv_to_bff',
-                    description='This script translates a csv to BFF')
-parser.add_argument('-o', '--output', default=output_docs_folder)
-parser.add_argument('-d', '--datasetId', default=datasetId)
-parser.add_argument('-i', '--input', default=csv_folder)
-parser.add_argument('-m', '--model', default='ga4gh')
-parser.add_argument('-e', '--entry_type', default=entry_type)
+def _parse_args():
+    parser = argparse.ArgumentParser(
+                        prog='convert_csv_to_bff',
+                        description='This script translates a csv to BFF')
+    parser.add_argument('-o', '--output', default=output_docs_folder)
+    parser.add_argument('-d', '--datasetId', default=datasetId)
+    parser.add_argument('-i', '--input', default=csv_folder)
+    parser.add_argument('-m', '--model', default='ga4gh')
+    parser.add_argument('-e', '--entry_type', default=entry_type)
 
-args = parser.parse_args()
+    return parser.parse_args()
 
 if __name__ == '__main__':
+    args = _parse_args()
     if args.entry_type == 'all':
         validators_dir = os.path.join(BASE_DIR, "validators", args.model)
 

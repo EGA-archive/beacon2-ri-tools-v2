@@ -24,13 +24,16 @@ def remove_dataset(args):
     db.targets.delete_many({"datasetId": args.datasetId})
     print('dataset: {} removed successfully'.format(args.datasetId))
 
-parser = argparse.ArgumentParser(
-                    prog='removeDatasetfromMongoDB',
-                    description='This script removes all the records belonging to a dataset in MongoDB')
+def _parse_args():
+    parser = argparse.ArgumentParser(
+                        prog='removeDatasetfromMongoDB',
+                        description='This script removes all the records belonging to a dataset in MongoDB')
 
-parser.add_argument('-d', '--datasetId', default=conf.datasetId)
+    parser.add_argument('-d', '--datasetId', default=conf.datasetId)
 
-args = parser.parse_args()
+    return parser.parse_args()
+
 
 if __name__ == '__main__':
+    args = _parse_args()
     remove_dataset(args)

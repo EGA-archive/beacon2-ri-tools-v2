@@ -4,7 +4,27 @@ from typing import Any, Union
 from copy import deepcopy
 from typing import get_origin, get_args, get_type_hints
 import importlib
+from functools import lru_cache
 from types import UnionType
+
+# The validator modules are large generated files using `from __future__ import
+# annotations`, so `get_type_hints` re-resolves every forward ref on each call and
+# `import_module` is hit once per path segment per column per row.  Both results are
+# constant for the lifetime of the process, so memoize them.
+_TYPE_HINTS_CACHE = {}
+
+
+def cached_type_hints(cls):
+    hints = _TYPE_HINTS_CACHE.get(cls)
+    if hints is None:
+        hints = get_type_hints(cls)
+        _TYPE_HINTS_CACHE[cls] = hints
+    return hints
+
+
+@lru_cache(maxsize=None)
+def load_validator_module(model, entry_type):
+    return importlib.import_module(f"validators.{model}.{entry_type}")
 
 def split_piped_object(obj):
     paths = []
@@ -49,17 +69,24 @@ def expand(node):
 
     elif isinstance(node, list):
         new_list = []
+
         for item in node:
             item = expand(item)
 
-            if isinstance(item, dict):
+            if isinstance(item, str) and "|" in item:
+                new_list.extend(item.split("|"))
+
+            elif isinstance(item, dict):
                 expanded = split_piped_object(item)
+
                 if expanded:
                     new_list.extend(expanded)
                 else:
                     new_list.append(item)
+
             else:
                 new_list.append(item)
+
         return new_list
 
     else:
@@ -100,10 +127,7 @@ class ConfigModel(BaseModel):
         if type_class in ["str", "int", "float", "bool"]:
             return type_class, False
 
-        module_name = cls.ENTRY_TYPE
-        individuals = importlib.import_module(
-            f"validators.{cls.MODEL}.{module_name}"
-        )
+        individuals = load_validator_module(cls.MODEL, cls.ENTRY_TYPE)
 
         # List type: list[Something]
         if type_class.startswith("list["):
@@ -200,6 +224,7 @@ class ConfigModel(BaseModel):
     def _config_to_dict(cls):
 
         result = {}
+        type_hints = cached_type_hints(cls)
         for key, value in cls.CONFIG.items():
             try:
                 value=ast.literal_eval(value)
@@ -207,7 +232,7 @@ class ConfigModel(BaseModel):
                 pass
             parts = key.split("|")
             property_type=cls.__annotations__.get(parts[0])
-            tp = get_type_hints(cls)[parts[0]]
+            tp = type_hints[parts[0]]
             if get_origin(tp) is UnionType:
                 tp = next(t for t in get_args(tp) if t is not type(None))
             try:
@@ -221,7 +246,7 @@ class ConfigModel(BaseModel):
                 tp='None'
 
             if key == 'info':
-                result['info']={"info": value}
+                result['info']=value
             elif 'list' in property_type:
                 if parts[0] not in result:
                     if len(parts)==1:

@@ -8,8 +8,9 @@ only_process_reads_with_allele_frequency=True
 populations_by_allele_counts=True # Variable to choose if allele frequencies are to be read by single allele or by the whole genotype of the individual, if True the populations.json fields of Homozygous, Heterozygous and Hemizygous counts will be alleleCount, if False, genotype.
 datasetId='test'
 case_level_data=False
-num_rows=15000000
+num_rows=150000000
 verbosity=False # This variable, if True, will make the program run slower but give logs about all the skipped variants and the reason why.
+scan_and_delete_variants_before_processing=True# If True, all the existing variants in the database will be deleted before starting the VCF processing.
 
 ### Update record ###
 record_type='genomicVariation' # One between analysis, biosample, cohort, dataset, genomicVariation, individual or run

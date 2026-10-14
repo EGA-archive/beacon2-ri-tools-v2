@@ -11,7 +11,7 @@ from pydantic import AnyUrl, BaseModel, ConfigDict, Field, RootModel, conint, co
 from validators.config import ConfigModel
 
 class Info(BaseModel):
-    pass
+    model_config = ConfigDict(extra='allow')
 
 
 class CopyChange(Enum):
