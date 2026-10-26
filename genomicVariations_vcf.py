@@ -49,7 +49,7 @@ MOLECULAREFFECTS_FILE = os.path.join(
     "pipelines",
     "default",
     "templates",
-    "moleculareffects.json"
+    "moleculareffects.json" or "molecularEffects.json"
 )
 
 GRCH38_FILE = os.path.join(
