@@ -1,4 +1,4 @@
-FROM python:3.11-bookworm
+FROM python:3.13-bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
@@ -7,7 +7,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 WORKDIR /usr/src/app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
+    ca-certificates  \
     openssl \
     curl \
     pkg-config \
@@ -16,13 +16,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \
     libpq-dev \
     vim \
-    && update-ca-certificates \
+    && update-ca-certificates -f \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 
 RUN pip install --upgrade pip setuptools wheel && \
     pip install --no-cache-dir -r requirements.txt
+
+RUN python -m pip install --upgrade \
+    "pip>=26.2.2" \
+    "certifi>=2026.10.19"
 
 COPY . .
 
@@ -33,8 +37,8 @@ RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh && \
 
 
 RUN mkdir -p /opt/refgen-data && \
-    rm -rf /usr/local/lib/python3.11/site-packages/refgenDetector/msgpacks && \
-    ln -s /opt/refgen-data /usr/local/lib/python3.11/site-packages/refgenDetector/msgpacks
+    rm -rf /usr/local/lib/python3.13/site-packages/refgenDetector/msgpacks && \
+    ln -s /opt/refgen-data /usr/local/lib/python3.13/site-packages/refgenDetector/msgpacks
 
 ENV REFGEN_DATA_DIR=/opt/refgen-data
 
