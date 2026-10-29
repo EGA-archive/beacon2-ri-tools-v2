@@ -49,7 +49,7 @@ MOLECULAREFFECTS_FILE = os.path.join(
     "pipelines",
     "default",
     "templates",
-    "moleculareffects.json"
+    "moleculareffects.json" or "molecularEffects.json"
 )
 
 GRCH38_FILE = os.path.join(
@@ -211,7 +211,17 @@ def _generate(dict_properties, args, variants_writer, case_level_writer):
             db.caseLevelData.delete_many({})
             db.targets.delete_many({})
             print("Deleted all pre-existing caseLevelData and targets in the database")
-        
+    elif args.scanAndDelete == False and args.json == False:
+        variants_found=db.genomicVariations.find_one({})
+        if variants_found is not None:
+            print("Variants found in the database before processing the VCF. The variants will be added to the pre-existing variants in the database")
+        if args.caseLevelData==True:
+            caseLevelData_found=db.caseLevelData.find_one({})
+            if caseLevelData_found is not None:
+                print("CaseLevelData found in the database before processing the VCF. The new caseLevelData will be added to the pre-existing caseLevelData in the database")
+            targets_found=db.targets.find_one({})
+            if targets_found is not None:
+                print("targets found in the database before processing the VCF. The new targets will be added to the pre-existing targets in the database")
 
     if pipeline is not None and args.alleleFrequency == True:
         print("VCFs being processed with AF for populations!")
