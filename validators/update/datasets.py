@@ -1,22 +1,14 @@
 import re
-import argparse
-from dateutil.parser import parse
-from pydantic import (
-    BaseModel,
-    ValidationError,
-    field_validator,
-    PrivateAttr
-)
 
-from typing import Optional, Union, List
+from pydantic import BaseModel, PrivateAttr, field_validator
 
-from typing import Optional, List
 from .common import OntologyTerm, timestamp_regex
-            
+
+
 class DUODataUse(BaseModel, extra='allow'):
     id: str
-    label: Optional[str]=None
-    modifiers: Optional[List[OntologyTerm]] = None
+    label: str | None=None
+    modifiers: list[OntologyTerm] | None = None
     version: str
     @field_validator('id')
     @classmethod
@@ -33,7 +25,7 @@ class DUODataUse(BaseModel, extra='allow'):
             OntologyTerm(**modifier)
 
 class DataUseConditions(BaseModel, extra='allow'):
-    duoDataUse: Optional[List[DUODataUse]] = None
+    duoDataUse: list[DUODataUse] | None = None
 
 class Datasets(BaseModel, extra='allow'):
     def __init__(self, **data) -> None:
@@ -44,33 +36,33 @@ class Datasets(BaseModel, extra='allow'):
                 pass
 
         super().__init__(**data)
-    _id: Optional[str] = PrivateAttr()
-    createDateTime: Optional[str] = None
-    dataUseConditions: Optional[DataUseConditions]=None
-    description: Optional[str] = None
-    externalUrl: Optional[str] = None
+    _id: str | None = PrivateAttr()
+    createDateTime: str | None = None
+    dataUseConditions: DataUseConditions | None=None
+    description: str | None = None
+    externalUrl: str | None = None
     id: str
-    info: Optional[dict] = None
+    info: dict | None = None
     name: str
-    updateDateTime: Optional[str]=None
-    version: Optional[str] = None
+    updateDateTime: str | None=None
+    version: str | None = None
     @field_validator('createDateTime')
     @classmethod
-    def check_createDateTime(cls, v: Optional[str]) -> Optional[str]:
+    def check_createDateTime(cls, v: str | None) -> str | None:
         if v is None:
             return v
         try:
             timestamp_regex.match(v)
         except Exception as e:
-            raise ValueError('createDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
+            raise ValueError(f'createDateTime, if string, must be Timestamp, getting this error: {e}')
         return v
     @field_validator('updateDateTime')
     @classmethod
-    def check_updateDateTime(cls, v: Optional[str]) -> Optional[str]:
+    def check_updateDateTime(cls, v: str | None) -> str | None:
         if v is None:
             return v
         try:
             timestamp_regex.match(v)
         except Exception as e:
-            raise ValueError('updateDateTime, if string, must be Timestamp, getting this error: {}'.format(e))
+            raise ValueError(f'updateDateTime, if string, must be Timestamp, getting this error: {e}')
         return v

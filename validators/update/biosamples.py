@@ -1,16 +1,7 @@
-import re
-import argparse
-from dateutil.parser import parse
-from pydantic import (
-    BaseModel,
-    ValidationError,
-    field_validator,
-    Field,
-    PrivateAttr
-)
+from pydantic import BaseModel, PrivateAttr, field_validator
 
-from typing import Optional, Union, List
 from .common import OntologyTerm, timestamp_regex
+
 
 class Age(BaseModel, extra='allow'):
     iso8601duration: str
@@ -20,7 +11,7 @@ class AgeRange(BaseModel, extra='allow'):
     start: Age
 
 class GestationalAge(BaseModel, extra='allow'):
-    days: Optional[int] = None
+    days: int | None = None
     weeks: int
 
 class TimeInterval(BaseModel, extra='allow'):
@@ -28,14 +19,14 @@ class TimeInterval(BaseModel, extra='allow'):
     start: str
 
 class ReferenceRange(BaseModel, extra='allow'):
-    high: Union[int,float]
-    low: Union[int, float]
+    high: int | float
+    low: int | float
     unit: OntologyTerm
 
 class Quantity(BaseModel, extra='allow'):
-    referenceRange: Optional[ReferenceRange] = None
+    referenceRange: ReferenceRange | None = None
     unit: OntologyTerm
-    value: Union[int, float]
+    value: int | float
 
 class TypedQuantity(BaseModel, extra='allow'):
     quantity: Quantity
@@ -45,13 +36,13 @@ class TypedQuantities(BaseModel):
     typedQuantities: TypedQuantity
 
 class InterventionsOrProcedures(BaseModel, extra='allow'):
-    ageAtProcedure: Optional[Union[str,dict]]=None
-    bodySite: Optional[OntologyTerm]=None
-    dateOfProcedure: Optional[str]=None
+    ageAtProcedure: str | dict | None=None
+    bodySite: OntologyTerm | None=None
+    dateOfProcedure: str | None=None
     procedureCode: OntologyTerm
     @field_validator('ageAtProcedure')
     @classmethod
-    def check_ageAtProcedure(cls, v: Optional[Union[str,dict]]) -> Optional[Union[str,dict]]:
+    def check_ageAtProcedure(cls, v: str | dict | None) -> str | dict | None:
         if v is None:
             return v
         if isinstance(v, str):
@@ -59,7 +50,7 @@ class InterventionsOrProcedures(BaseModel, extra='allow'):
                 timestamp_regex.match(v)
                 return v
             except Exception as e:
-                raise ValueError('ageAtProcedure, if string, must be Timestamp, getting this error: {}'.format(e))
+                raise ValueError(f'ageAtProcedure, if string, must be Timestamp, getting this error: {e}')
         elif isinstance(v, dict):
             for model in [Age, AgeRange, GestationalAge, TimeInterval, OntologyTerm]:
                 try:
@@ -68,17 +59,17 @@ class InterventionsOrProcedures(BaseModel, extra='allow'):
                 except Exception:
                     continue
             raise ValueError('ageAtProcedure, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
-            
+
 class Measurement(BaseModel, extra='allow'):
     assayCode: OntologyTerm
-    date: Optional[str] = None
-    measurementValue: Union[Quantity, OntologyTerm, TypedQuantities]
-    notes: Optional[str]=None
-    observationMoment: Optional[Union[str,dict]]=None
-    procedure: Optional[InterventionsOrProcedures] = None
+    date: str | None = None
+    measurementValue: Quantity | OntologyTerm | TypedQuantities
+    notes: str | None=None
+    observationMoment: str | dict | None=None
+    procedure: InterventionsOrProcedures | None = None
     @field_validator('observationMoment')
     @classmethod
-    def check_observationMoment(cls, v: Optional[Union[str,dict]]) -> Optional[Union[str,dict]]:
+    def check_observationMoment(cls, v: str | dict | None) -> str | dict | None:
         if v is None:
             return v
         if isinstance(v, str):
@@ -86,7 +77,7 @@ class Measurement(BaseModel, extra='allow'):
                 timestamp_regex.match(v)
                 return v
             except Exception as e:
-                raise ValueError('observationMoment, if string, must be Timestamp, getting this error: {}'.format(e))
+                raise ValueError(f'observationMoment, if string, must be Timestamp, getting this error: {e}')
         elif isinstance(v, dict):
             for model in [Age, AgeRange, GestationalAge, TimeInterval, OntologyTerm]:
                 try:
@@ -105,24 +96,24 @@ class Biosamples(BaseModel, extra='allow'):
                 pass
 
         super().__init__(**data)
-    _id: Optional[str] = PrivateAttr()
+    _id: str | None = PrivateAttr()
     biosampleStatus: OntologyTerm
-    collectionDate: Optional[str] = None
-    collectionMoment: Optional[str] = None
-    diagnosticMarkers: Optional[List[OntologyTerm]] = None
-    histologicalDiagnosis: Optional[OntologyTerm] = None
+    collectionDate: str | None = None
+    collectionMoment: str | None = None
+    diagnosticMarkers: list[OntologyTerm] | None = None
+    histologicalDiagnosis: OntologyTerm | None = None
     id: str
-    individualId: Optional[str] = None
-    info: Optional[dict] = None
-    measurements: Optional[List[Measurement]] = None
-    notes: Optional[str]=None
-    obtentionProcedure: Optional[InterventionsOrProcedures] = None
-    pathologicalStage: Optional[OntologyTerm] = None
-    pathologicalTnmFinding: Optional[List] = None
-    phenotypicFeatures: Optional[List] = None
-    sampleOriginDetail: Optional[OntologyTerm] = None
+    individualId: str | None = None
+    info: dict | None = None
+    measurements: list[Measurement] | None = None
+    notes: str | None=None
+    obtentionProcedure: InterventionsOrProcedures | None = None
+    pathologicalStage: OntologyTerm | None = None
+    pathologicalTnmFinding: list | None = None
+    phenotypicFeatures: list | None = None
+    sampleOriginDetail: OntologyTerm | None = None
     sampleOriginType: OntologyTerm
-    sampleProcessing: Optional[OntologyTerm] = None
-    sampleStorage: Optional[OntologyTerm] = None
-    tumorGrade: Optional[OntologyTerm] = None
-    tumorProgression: Optional[OntologyTerm] = None
+    sampleProcessing: OntologyTerm | None = None
+    sampleStorage: OntologyTerm | None = None
+    tumorGrade: OntologyTerm | None = None
+    tumorProgression: OntologyTerm | None = None

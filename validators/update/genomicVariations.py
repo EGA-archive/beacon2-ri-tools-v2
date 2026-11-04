@@ -1,16 +1,9 @@
 import re
-import argparse
-from pydantic import (
-    BaseModel,
-    ValidationError,
-    field_validator,
-    Field,
-    PrivateAttr
-)
 
-from typing import Optional, Union
+from pydantic import BaseModel, Field, PrivateAttr, field_validator
 
 from .common import OntologyTerm
+
 
 class Members(BaseModel, extra='allow'):
     affected: bool
@@ -18,9 +11,9 @@ class Members(BaseModel, extra='allow'):
     role: OntologyTerm
 
 class Reference(BaseModel, extra='allow'):
-    id: Optional[str] = None
-    notes: Optional[str] = None
-    reference: Optional[str] = None
+    id: str | None = None
+    notes: str | None = None
+    reference: str | None = None
 
 class Number(BaseModel, extra='allow'):
     type: str
@@ -36,8 +29,8 @@ class Number(BaseModel, extra='allow'):
 
 class DefiniteRange(BaseModel, extra='allow'):
     type: str
-    min: Union[int, float]
-    max: Union[int, float]
+    min: int | float
+    max: int | float
     @field_validator('type')
     @classmethod
     def type_must_be_DefiniteRange(cls, v: str) -> str:
@@ -46,10 +39,10 @@ class DefiniteRange(BaseModel, extra='allow'):
         else:
             raise ValueError('type can only contain the word DefiniteRange')
         return v
-    
+
 class IndefiniteRange(BaseModel, extra='allow'):
     type: str
-    value: Union[int, float]
+    value: int | float
     comparator: str
     @field_validator('type')
     @classmethod
@@ -109,11 +102,11 @@ class SimpleInterval(BaseModel, extra='allow'):
         else:
             raise ValueError('type can only contain the word SimpleInterval')
         return v
-    
+
 class SequenceInterval(BaseModel, extra='allow'):
     type: str
-    start: Union[DefiniteRange, IndefiniteRange, Number]
-    end: Union[DefiniteRange, IndefiniteRange, Number]
+    start: DefiniteRange | IndefiniteRange | Number
+    end: DefiniteRange | IndefiniteRange | Number
     @field_validator('type')
     @classmethod
     def type_must_be_SequenceInterval(cls, v: str) -> str:
@@ -124,7 +117,7 @@ class SequenceInterval(BaseModel, extra='allow'):
         return v
 
 class ChromosomeLocation(BaseModel, extra='allow'):
-    id: Optional[str]=Field(default=None, alias='_id')
+    id: str | None=Field(default=None, alias='_id')
     type: str
     species_id: str
     chr: str
@@ -162,12 +155,12 @@ class ChromosomeLocation(BaseModel, extra='allow'):
         else:
             raise ValueError('chr must be a valid chromosome, e.g. 1..22, X, Y')
         return v
-    
+
 class SequenceLocation(BaseModel, extra='allow'):
-    id: Optional[str]=Field(default=None, alias='_id')
+    id: str | None=Field(default=None, alias='_id')
     type: str
     sequence_id: str
-    interval: Union[SequenceInterval,SimpleInterval]
+    interval: SequenceInterval | SimpleInterval
     @field_validator('id')
     @classmethod
     def id_must_be_CURIE(cls, v: str) -> str:
@@ -192,7 +185,7 @@ class SequenceLocation(BaseModel, extra='allow'):
         else:
             raise ValueError('sequence_id must be CURIE, e.g. NCIT:C42331')
         return v
-    
+
 class DerivedSequenceExpression(BaseModel, extra='allow'):
     type: str
     location: SequenceLocation
@@ -205,7 +198,7 @@ class DerivedSequenceExpression(BaseModel, extra='allow'):
         else:
             raise ValueError('type can only contain the word DerivedSequenceExpression')
         return v
-    
+
 class LiteralSequenceExpression(BaseModel, extra='allow'):
     type: str
     sequence: str
@@ -225,11 +218,11 @@ class LiteralSequenceExpression(BaseModel, extra='allow'):
         else:
             raise ValueError('sequence must be a character string of Residues that represents a biological sequence using the conventional sequence order (5’-to-3’ for nucleic acid sequences, and amino-to-carboxyl for amino acid sequences). IUPAC ambiguity codes are permitted in Sequences.')
         return v
-    
+
 class RepeatedSequenceExpression(BaseModel, extra='allow'):
     type: str
-    seq_expr: Union[DerivedSequenceExpression, LiteralSequenceExpression]
-    count: Union[DefiniteRange, IndefiniteRange, Number]
+    seq_expr: DerivedSequenceExpression | LiteralSequenceExpression
+    count: DefiniteRange | IndefiniteRange | Number
     @field_validator('type')
     @classmethod
     def type_must_be_RepeatedSequenceExpression(cls, v: str) -> str:
@@ -238,9 +231,9 @@ class RepeatedSequenceExpression(BaseModel, extra='allow'):
         else:
             raise ValueError('type can only contain the word RepeatedSequenceExpression')
         return v
-    
+
 class ComposedSequenceExpression(BaseModel, extra='allow'):
-    type: Optional[str] = None
+    type: str | None = None
     components: list
     @field_validator('type')
     @classmethod
@@ -266,10 +259,10 @@ class ComposedSequenceExpression(BaseModel, extra='allow'):
         return v
 
 class Allele(BaseModel, extra='allow'):
-    id: Optional[str] = Field(default=None, alias='_id')
+    id: str | None = Field(default=None, alias='_id')
     type: str
-    location: Union[str,ChromosomeLocation,SequenceLocation]
-    state: Union[ComposedSequenceExpression, DerivedSequenceExpression, LiteralSequenceExpression, RepeatedSequenceExpression]
+    location: str | ChromosomeLocation | SequenceLocation
+    state: ComposedSequenceExpression | DerivedSequenceExpression | LiteralSequenceExpression | RepeatedSequenceExpression
     @field_validator('id')
     @classmethod
     def id_must_be_CURIE(cls, v: str) -> str:
@@ -293,9 +286,9 @@ class Allele(BaseModel, extra='allow'):
             if not re.match("[A-Za-z0-9]+:[A-Za-z0-9]", v):
                 raise ValueError('location, if string, must be CURIE, e.g. NCIT:C42331')
         return v
-        
+
 class Haplotype(BaseModel, extra='allow'):
-    id: Optional[str]=Field(default=None, alias='_id')
+    id: str | None=Field(default=None, alias='_id')
     type: str
     members: list
     @field_validator('id')
@@ -355,9 +348,9 @@ class Gene(BaseModel, extra='allow'):
         return v
 
 class CopyNumberChange(BaseModel, extra='allow'):
-    id: Optional[str]=Field(default=None, alias='_id')
+    id: str | None=Field(default=None, alias='_id')
     type: str
-    subject: Union[str, ChromosomeLocation, Gene, SequenceLocation]
+    subject: str | ChromosomeLocation | Gene | SequenceLocation
     copy_change: str
     @field_validator('id')
     @classmethod
@@ -383,12 +376,12 @@ class CopyNumberChange(BaseModel, extra='allow'):
         else:
             raise ValueError('copy_change "MUST be one of \"efo:0030069\" (complete genomic loss), \"efo:0020073\" (high-level loss),  \"efo:0030068\" (low-level loss), \"efo:0030067\" (loss), \"efo:0030064\" (regional base ploidy),  \"efo:0030070\" (gain), \"efo:0030071\" (low-level gain), \"efo:0030072\" (high-level gain).')
         return v
-    
+
 class CopyNumberCount(BaseModel, extra='allow'):
-    id: Optional[str]=Field(default=None, alias='_id')
+    id: str | None=Field(default=None, alias='_id')
     type: str
-    subject: Union[str, ChromosomeLocation, Gene, SequenceLocation]
-    copies: Union[DefiniteRange, IndefiniteRange, Number]
+    subject: str | ChromosomeLocation | Gene | SequenceLocation
+    copies: DefiniteRange | IndefiniteRange | Number
     @field_validator('id')
     @classmethod
     def id_must_be_CURIE(cls, v: str) -> str:
@@ -405,11 +398,11 @@ class CopyNumberCount(BaseModel, extra='allow'):
         else:
             raise ValueError('type can only contain the word CopyNumberCount')
         return v
-    
+
 class GenotypeMember(BaseModel, extra='allow'):
     type: str
-    count: Union[DefiniteRange, IndefiniteRange, Number]
-    variation: Union[Allele, Haplotype]
+    count: DefiniteRange | IndefiniteRange | Number
+    variation: Allele | Haplotype
     @field_validator('type')
     @classmethod
     def type_must_be_GenotypeMember(cls, v: str) -> str:
@@ -418,12 +411,12 @@ class GenotypeMember(BaseModel, extra='allow'):
         else:
             raise ValueError('type can only contain the word GenotypeMember')
         return v
-    
+
 class Genotype(BaseModel, extra='allow'):
-    id: Optional[str]=Field(default=None, alias='_id')
+    id: str | None=Field(default=None, alias='_id')
     type: str
     members: list
-    count: Union[DefiniteRange, IndefiniteRange, Number]
+    count: DefiniteRange | IndefiniteRange | Number
     @field_validator('id')
     @classmethod
     def id_must_be_CURIE(cls, v: str) -> str:
@@ -449,8 +442,8 @@ class Genotype(BaseModel, extra='allow'):
 
 class LegacyVariation(BaseModel, extra='allow'):
     alternateBases: str
-    location: Union[str,ChromosomeLocation,SequenceLocation]
-    referenceBases: Optional[str] = None
+    location: str | ChromosomeLocation | SequenceLocation
+    referenceBases: str | None = None
     variantType: str
     @field_validator('alternateBases')
     @classmethod
@@ -468,19 +461,19 @@ class LegacyVariation(BaseModel, extra='allow'):
         else:
             raise ValueError('referenceBases must be a valid combination of bases from ACGTUNRYSWKMBDHV')
         return v
-    
+
 class SoftwareTool(BaseModel, extra='allow'):
     toolName: str
     toolReferences: dict
     version: str
-    
+
 class PhenoClinicEffect(BaseModel, extra='allow'):
-    annotatedWith: Optional[SoftwareTool]=None
-    category: Optional[OntologyTerm]=None
-    clinicalRelevance: Optional[str] = None
+    annotatedWith: SoftwareTool | None=None
+    category: OntologyTerm | None=None
+    clinicalRelevance: str | None = None
     conditionId: str
     effect: OntologyTerm
-    evidenceType: Optional[OntologyTerm]=None
+    evidenceType: OntologyTerm | None=None
     @field_validator('clinicalRelevance')
     @classmethod
     def check_clinicalRelevance(cls, v: str) -> str:
@@ -488,18 +481,18 @@ class PhenoClinicEffect(BaseModel, extra='allow'):
             pass
         else:
             raise ValueError('clinicalRelevance must be a valid string from ["benign","likely benign","uncertain significance","likely pathogenic","pathogenic"]')
-        return v    
-    
+        return v
+
 class CaseLevelVariant(BaseModel, extra='allow'):
-    alleleOrigin: Optional[OntologyTerm] =None
-    analysisId: Optional[str]=None
+    alleleOrigin: OntologyTerm | None =None
+    analysisId: str | None=None
     biosampleId: str
-    clinicalInterpretations: Optional[list]=None
-    id: Optional[str]=None
-    individualId: Optional[str]=None
-    phenotypicEffects: Optional[list]=None
-    runId: Optional[str]=None
-    zygosity: Optional[OntologyTerm] =None
+    clinicalInterpretations: list | None=None
+    id: str | None=None
+    individualId: str | None=None
+    phenotypicEffects: list | None=None
+    runId: str | None=None
+    zygosity: OntologyTerm | None =None
     @field_validator('clinicalInterpretations')
     @classmethod
     def check_clinicalInterpretations(cls, v: list) -> list:
@@ -514,14 +507,14 @@ class CaseLevelVariant(BaseModel, extra='allow'):
         return v
 
 class PopulationFrequency(BaseModel, extra='allow'):
-    alleleFrequency: Union[float, int]
+    alleleFrequency: float | int
     population: str
 
 class FrequencyInPopulation(BaseModel, extra='allow'):
     frequencies: list
     source: str
     sourceReference: str
-    version: Optional[str]=None
+    version: str | None=None
     @field_validator('frequencies')
     @classmethod
     def check_frequencies(cls, v: list) -> list:
@@ -530,11 +523,11 @@ class FrequencyInPopulation(BaseModel, extra='allow'):
         return v
 
 class Identifiers(BaseModel, extra='allow'):
-    clinvarVariantId: Optional[str]=None
-    genomicHGVSId: Optional[str]=None
-    proteinHGVSIds: Optional[list]=None
-    transcriptHGVSIds: Optional[list]=None
-    variantAlternativeIds: Optional[list]=None
+    clinvarVariantId: str | None=None
+    genomicHGVSId: str | None=None
+    proteinHGVSIds: list | None=None
+    transcriptHGVSIds: list | None=None
+    variantAlternativeIds: list | None=None
     @field_validator('clinvarVariantId')
     @classmethod
     def check_clinvarVariantId(cls, v: str) -> str:
@@ -570,13 +563,13 @@ class Identifiers(BaseModel, extra='allow'):
 
 class GenomicFeature(BaseModel, extra='allow'):
     featureClass: OntologyTerm
-    featureId: Optional[OntologyTerm]=None
+    featureId: OntologyTerm | None=None
 
 class MolecularAttributes(BaseModel, extra='allow'):
-    aminoacidChanges: Optional[list]=None
-    geneIds: Optional[list]=None
-    genomicFeatures: Optional[list]=None
-    molecularEffects: Optional[list[OntologyTerm]]=None
+    aminoacidChanges: list | None=None
+    geneIds: list | None=None
+    genomicFeatures: list | None=None
+    molecularEffects: list[OntologyTerm] | None=None
     @field_validator('aminoacidChanges')
     @classmethod
     def check_aminoacidChanges(cls, v: list) -> list:
@@ -605,8 +598,8 @@ class MolecularAttributes(BaseModel, extra='allow'):
         return v
 
 class VariantLevelData(BaseModel, extra='allow'):
-    clinicalInterpretations: Optional[list]=None
-    phenotypicEffects: Optional[list]=None
+    clinicalInterpretations: list | None=None
+    phenotypicEffects: list | None=None
     @field_validator('clinicalInterpretations')
     @classmethod
     def check_clinicalInterpretations(cls, v: list) -> list:
@@ -628,14 +621,14 @@ class GenomicVariations(BaseModel, extra='allow'):
             except KeyError:
                 pass
         super().__init__(**data)
-    _id: Optional[str] = PrivateAttr()
-    caseLevelData: Optional[list] = None
-    frequencyInPopulations: Optional[list[FrequencyInPopulation]] = None
-    identifiers: Optional[Identifiers] = None
-    molecularAttributes: Optional[MolecularAttributes] = None
+    _id: str | None = PrivateAttr()
+    caseLevelData: list | None = None
+    frequencyInPopulations: list[FrequencyInPopulation] | None = None
+    identifiers: Identifiers | None = None
+    molecularAttributes: MolecularAttributes | None = None
     variantInternalId: str
-    variantLevelData: Optional[VariantLevelData]=None
-    variation: Union[LegacyVariation, Allele, Haplotype, CopyNumberChange, CopyNumberCount, Genotype]
+    variantLevelData: VariantLevelData | None=None
+    variation: LegacyVariation | Allele | Haplotype | CopyNumberChange | CopyNumberCount | Genotype
     @field_validator('caseLevelData')
     @classmethod
     def check_caseLevelData(cls, v: list) -> list:
