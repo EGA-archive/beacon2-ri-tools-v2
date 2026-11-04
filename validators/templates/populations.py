@@ -5,32 +5,31 @@ from pydantic import (
     ValidationError,
     PrivateAttr
 )
-from typing import Optional, Union
 
-class AllelePopulation(BaseModel, extra='forbid'): 
+class AllelePopulation(BaseModel, extra='forbid'):
     population: str
     alleleFrequency: str
-    alleleCount: Optional[str] = ""
-    alleleCountHomozygous: Optional[str] = ""
-    alleleCountHeterozygous: Optional[str] = ""
-    alleleCountHemizygous: Optional[str] = ""
-    alleleNumber: Optional[str] = ""
+    alleleCount: str | None = ""
+    alleleCountHomozygous: str | None = ""
+    alleleCountHeterozygous: str | None = ""
+    alleleCountHemizygous: str | None = ""
+    alleleNumber: str | None = ""
 
-class GenotypePopulation(BaseModel, extra='forbid'): 
+class GenotypePopulation(BaseModel, extra='forbid'):
     population: str
     alleleFrequency: str
-    alleleCount: Optional[str] = ""
-    genotypeHomozygous: Optional[str] = ""
-    genotypeHeterozygous: Optional[str] = ""
-    genotypeHemizygous: Optional[str] = ""
-    alleleNumber: Optional[str] = ""
+    alleleCount: str | None = ""
+    genotypeHomozygous: str | None = ""
+    genotypeHeterozygous: str | None = ""
+    genotypeHemizygous: str | None = ""
+    alleleNumber: str | None = ""
 
-class GenotypePopulations(BaseModel, extra='forbid'): 
+class GenotypePopulations(BaseModel, extra='forbid'):
     source: str
     sourceReference: str
     populations: list[GenotypePopulation]
 
-class AllelePopulations(BaseModel, extra='forbid'): 
+class AllelePopulations(BaseModel, extra='forbid'):
     source: str
     sourceReference: str
     populations: list[AllelePopulation]

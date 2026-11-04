@@ -1,11 +1,5 @@
-import json
-import argparse
-from pydantic import (
-    BaseModel,
-    ValidationError,
-    PrivateAttr
-)
-from typing import Optional, Union
+from pydantic import BaseModel, PrivateAttr
+
 
 class Analyses(BaseModel, extra='allow'):
     def __init__(self, **data) -> None:
@@ -16,15 +10,15 @@ class Analyses(BaseModel, extra='allow'):
                 pass
 
         super().__init__(**data)
-    _id: Optional[str] = PrivateAttr()
-    aligner: Optional[str] = None
+    _id: str | None = PrivateAttr()
+    aligner: str | None = None
     analysisDate: str
-    biosampleId: Optional[str] = None
+    biosampleId: str | None = None
     id: str
-    individualId: Optional[str] = None
-    info: Optional[dict] = None
+    individualId: str | None = None
+    info: dict | None = None
     pipelineName: str
-    pipelineRef: Optional[str]=None
-    runId: Optional[str]=None
-    variantCaller: Optional[str]=None
-    
+    pipelineRef: str | None=None
+    runId: str | None=None
+    variantCaller: str | None=None
+

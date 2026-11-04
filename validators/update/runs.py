@@ -1,16 +1,6 @@
-import re
-import argparse
-from pydantic import (
-    BaseModel,
-    ValidationError,
-    field_validator,
-    Field,
-    PrivateAttr
-)
+from pydantic import BaseModel, PrivateAttr
 
-from typing import Optional, Union
-
-from .common import OntologyTerm, timestamp_regex
+from .common import OntologyTerm
 
 #parser = argparse.ArgumentParser()
 #parser.add_argument("-url", "--url")
@@ -25,16 +15,16 @@ class Runs(BaseModel, extra='forbid'):
                 pass
 
         super().__init__(**data)
-    _id: Optional[str] = PrivateAttr()
+    _id: str | None = PrivateAttr()
     biosampleId: str
     id: str
-    individualId: Optional[str] = None
-    info: Optional[dict] = None
-    libraryLayout: Optional[str]=None
-    librarySelection: Optional[str]=None
-    librarySource: Optional[OntologyTerm] = None
-    libraryStrategy: Optional[str] = None
-    platform: Optional[str] = None
-    platformModel: Optional[OntologyTerm] = None
-    runDate: Optional[str] = None
-    datasetId: Optional[str] = None
+    individualId: str | None = None
+    info: dict | None = None
+    libraryLayout: str | None=None
+    librarySelection: str | None=None
+    librarySource: OntologyTerm | None = None
+    libraryStrategy: str | None = None
+    platform: str | None = None
+    platformModel: OntologyTerm | None = None
+    runDate: str | None = None
+    datasetId: str | None = None

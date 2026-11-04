@@ -1,17 +1,9 @@
 import re
-import argparse
-from dateutil.parser import parse
-from pydantic import (
-    BaseModel,
-    ValidationError,
-    field_validator,
-    Field,
-    PrivateAttr
-)
 
-from typing import Optional, Union, List
+from pydantic import BaseModel, PrivateAttr, field_validator
 
 from .common import OntologyTerm, timestamp_regex
+
 
 class Age(BaseModel, extra='allow'):
     iso8601duration: str
@@ -21,7 +13,7 @@ class AgeRange(BaseModel, extra='allow'):
     start: Age
 
 class GestationalAge(BaseModel, extra='allow'):
-    days: Optional[int] = None
+    days: int | None = None
     weeks: int
 
 class TimeInterval(BaseModel, extra='allow'):
@@ -29,22 +21,22 @@ class TimeInterval(BaseModel, extra='allow'):
     start: str
 
 class ReferenceRange(BaseModel, extra='allow'):
-    high: Union[int,float]
-    low: Union[int, float]
+    high: int | float
+    low: int | float
     unit: OntologyTerm
 
 class Quantity(BaseModel, extra='allow'):
-    referenceRange: Optional[ReferenceRange] = None
+    referenceRange: ReferenceRange | None = None
     unit: OntologyTerm
-    value: Union[int, float]
+    value: int | float
 
 class TypedQuantity(BaseModel, extra='allow'):
     quantity: Quantity
     quantityType: OntologyTerm
 
 class EventTimeline(BaseModel, extra='allow'):
-    end: Optional[str]=None
-    start: Optional[str]=None
+    end: str | None=None
+    start: str | None=None
     @field_validator('end')
     @classmethod
     def check_end(cls, v: str) -> str:
@@ -52,7 +44,7 @@ class EventTimeline(BaseModel, extra='allow'):
             try:
                 timestamp_regex.match(v)
             except Exception as e:
-                raise ValueError('end, if string, must be Timestamp, getting this error: {}'.format(e))
+                raise ValueError(f'end, if string, must be Timestamp, getting this error: {e}')
             return v
     @field_validator('start')
     @classmethod
@@ -61,27 +53,27 @@ class EventTimeline(BaseModel, extra='allow'):
             try:
                 timestamp_regex.match(v)
             except Exception as e:
-                raise ValueError('start, if string, must be Timestamp, getting this error: {}'.format(e))
+                raise ValueError(f'start, if string, must be Timestamp, getting this error: {e}')
             return v
-        
+
 
 class Diseases(BaseModel, extra='allow'):
-    ageOfOnset: Optional[Union[str,dict]]=None
+    ageOfOnset: str | dict | None=None
     diseaseCode: OntologyTerm
-    familyHistory: Optional[bool]=None
-    notes: Optional[str]=None
-    severity: Optional[OntologyTerm]=None
-    stage: Optional[OntologyTerm]=None
+    familyHistory: bool | None=None
+    notes: str | None=None
+    severity: OntologyTerm | None=None
+    stage: OntologyTerm | None=None
     @field_validator('ageOfOnset')
     @classmethod
-    def check_ageOfOnset(cls, v: Optional[Union[str,dict]]) -> Optional[Union[str,dict]]:
+    def check_ageOfOnset(cls, v: str | dict | None) -> str | dict | None:
         if v is None:
             return v
         if isinstance(v, str):
             try:
                 timestamp_regex.match(v)
             except Exception as e:
-                raise ValueError('ageOfOnset, if string, must be Timestamp, getting this error: {}'.format(e))
+                raise ValueError(f'ageOfOnset, if string, must be Timestamp, getting this error: {e}')
             return v
         elif isinstance(v, dict):
             for model in [Age, AgeRange, GestationalAge, TimeInterval, OntologyTerm]:
@@ -91,10 +83,10 @@ class Diseases(BaseModel, extra='allow'):
                 except Exception:
                     continue
             raise ValueError('ageOfOnset, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
-            
+
 class Ethnicity(BaseModel, extra='allow'):
     id: str
-    label: Optional[str]=None
+    label: str | None=None
     @field_validator('id')
     @classmethod
     def id_must_be_CURIE(cls, v: str) -> str:
@@ -103,10 +95,10 @@ class Ethnicity(BaseModel, extra='allow'):
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
         return v
-    
+
 class Sex(BaseModel, extra='allow'):
     id: str
-    label: Optional[str]=None
+    label: str | None=None
     @field_validator('id')
     @classmethod
     def id_must_be_CURIE(cls, v: str) -> str:
@@ -115,26 +107,26 @@ class Sex(BaseModel, extra='allow'):
         else:
             raise ValueError('id must be CURIE, e.g. NCIT:C42331')
         return v
-    
+
 class Reference(BaseModel, extra='allow'):
-    id: Optional[str] = None
-    notes: Optional[str] = None
-    reference: Optional[str] = None
-    
+    id: str | None = None
+    notes: str | None = None
+    reference: str | None = None
+
 class Evidence(BaseModel, extra='allow'):
     evidenceCode: OntologyTerm
-    reference: Optional[Reference] = None
+    reference: Reference | None = None
 
 class PhenotypicFeatures(BaseModel, extra='allow'):
-    evidence: Optional[Evidence]=None
-    id: Optional[str] = None
-    excluded: Optional[bool]=None
+    evidence: Evidence | None=None
+    id: str | None = None
+    excluded: bool | None=None
     featureType: OntologyTerm
-    modifiers: Optional[List[OntologyTerm]]=None
-    notes: Optional[str]=None
-    onset: Optional[Union[str,dict]]=None
-    resolution: Optional[Union[str,dict]]=None
-    severity: Optional[OntologyTerm]=None
+    modifiers: list[OntologyTerm] | None=None
+    notes: str | None=None
+    onset: str | dict | None=None
+    resolution: str | dict | None=None
+    severity: OntologyTerm | None=None
     @field_validator('modifiers')
     @classmethod
     def check_modifiers(cls, v: list) -> list:
@@ -142,7 +134,7 @@ class PhenotypicFeatures(BaseModel, extra='allow'):
             OntologyTerm(**modifier)
     @field_validator('onset')
     @classmethod
-    def check_onset(cls, v: Optional[Union[str,dict]]) -> Optional[Union[str,dict]]:
+    def check_onset(cls, v: str | dict | None) -> str | dict | None:
         if v is None:
             return v
         if isinstance(v, str):
@@ -150,7 +142,7 @@ class PhenotypicFeatures(BaseModel, extra='allow'):
                 timestamp_regex.match(v)
                 return v
             except Exception as e:
-                raise ValueError('onset, if string, must be Timestamp, getting this error: {}'.format(e))
+                raise ValueError(f'onset, if string, must be Timestamp, getting this error: {e}')
         elif isinstance(v, dict):
             for model in [Age, AgeRange, GestationalAge, TimeInterval, OntologyTerm]:
                 try:
@@ -161,7 +153,7 @@ class PhenotypicFeatures(BaseModel, extra='allow'):
             raise ValueError('onset, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
     @field_validator('resolution')
     @classmethod
-    def check_resolution(cls, v: Optional[Union[str,dict]]) -> Optional[Union[str,dict]]:
+    def check_resolution(cls, v: str | dict | None) -> str | dict | None:
         if v is None:
             return v
         if isinstance(v, str):
@@ -169,7 +161,7 @@ class PhenotypicFeatures(BaseModel, extra='allow'):
                 timestamp_regex.match(v)
                 return v
             except Exception as e:
-                raise ValueError('resolution, if string, must be Timestamp, getting this error: {}'.format(e))
+                raise ValueError(f'resolution, if string, must be Timestamp, getting this error: {e}')
         elif isinstance(v, dict):
             for model in [Age, AgeRange, GestationalAge, TimeInterval, OntologyTerm]:
                 try:
@@ -180,41 +172,41 @@ class PhenotypicFeatures(BaseModel, extra='allow'):
             raise ValueError('resolution, if object, must be any format possible between age, ageRange, gestationalAge, timeInterval or OntologyTerm')
 
 class CohortCriteria(BaseModel, extra='allow'):
-    ageRange: Optional[AgeRange]=None
-    diseaseConditions: Optional[List[Diseases]]=None
-    ethnicities: Optional[List[OntologyTerm]]=None
-    genders: Optional[List[OntologyTerm]]=None
-    locations: Optional[List[OntologyTerm]]=None
-    phenotypicConditions: Optional[List[PhenotypicFeatures]]=None
+    ageRange: AgeRange | None=None
+    diseaseConditions: list[Diseases] | None=None
+    ethnicities: list[OntologyTerm] | None=None
+    genders: list[OntologyTerm] | None=None
+    locations: list[OntologyTerm] | None=None
+    phenotypicConditions: list[PhenotypicFeatures] | None=None
 
 class DataAvailabilityAndDistribution(BaseModel, extra='allow'):
     availability: bool
-    availabilityCount: Optional[int]=None
-    distribution: Optional[dict]=None
-            
+    availabilityCount: int | None=None
+    distribution: dict | None=None
+
 class CollectionEvent(BaseModel, extra='allow'):
-    eventAgeRange: Optional[DataAvailabilityAndDistribution]=None
-    eventCases: Optional[int] = None
-    eventControls: Optional[int] = None
-    eventDataTypes: Optional[DataAvailabilityAndDistribution]=None
-    eventDate: Optional[str]=None
-    eventDiseases: Optional[DataAvailabilityAndDistribution]=None
-    eventEthnicities: Optional[DataAvailabilityAndDistribution]=None
-    eventGenders: Optional[DataAvailabilityAndDistribution]=None
-    eventLocations: Optional[DataAvailabilityAndDistribution]=None
-    eventNum: Optional[int] = None
-    eventPhenotypes: Optional[DataAvailabilityAndDistribution]=None
-    eventSize: Optional[int] = None
-    eventTimeline: Optional[EventTimeline] = None
+    eventAgeRange: DataAvailabilityAndDistribution | None=None
+    eventCases: int | None = None
+    eventControls: int | None = None
+    eventDataTypes: DataAvailabilityAndDistribution | None=None
+    eventDate: str | None=None
+    eventDiseases: DataAvailabilityAndDistribution | None=None
+    eventEthnicities: DataAvailabilityAndDistribution | None=None
+    eventGenders: DataAvailabilityAndDistribution | None=None
+    eventLocations: DataAvailabilityAndDistribution | None=None
+    eventNum: int | None = None
+    eventPhenotypes: DataAvailabilityAndDistribution | None=None
+    eventSize: int | None = None
+    eventTimeline: EventTimeline | None = None
     @field_validator('eventDate')
     @classmethod
-    def check_eventDate(cls, v: Optional[str]) -> Optional[str]:
+    def check_eventDate(cls, v: str | None) -> str | None:
         if v is None:
             return v
         try:
             timestamp_regex.match(v)
         except Exception as e:
-            raise ValueError('eventDate, if string, must be Timestamp, getting this error: {}'.format(e))
+            raise ValueError(f'eventDate, if string, must be Timestamp, getting this error: {e}')
         return v
 
 class Cohorts(BaseModel, extra='allow'):
@@ -226,13 +218,13 @@ class Cohorts(BaseModel, extra='allow'):
                 pass
 
         super().__init__(**data)
-    _id: Optional[str] = PrivateAttr()
-    cohortDataTypes: Optional[List[OntologyTerm]] = None
-    cohortDesign: Optional[OntologyTerm] = None
-    cohortSize: Optional[int] = None
+    _id: str | None = PrivateAttr()
+    cohortDataTypes: list[OntologyTerm] | None = None
+    cohortDesign: OntologyTerm | None = None
+    cohortSize: int | None = None
     cohortType: str
-    collectionEvents: Optional[List[CollectionEvent]] = None
-    exclusionCriteria: Optional[CohortCriteria] = None
+    collectionEvents: list[CollectionEvent] | None = None
+    exclusionCriteria: CohortCriteria | None = None
     id: str
-    inclusionCriteria: Optional[CohortCriteria] = None
+    inclusionCriteria: CohortCriteria | None = None
     name: str

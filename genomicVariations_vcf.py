@@ -126,6 +126,15 @@ def process_alleles(allele_property):
         allele_property = float(allele_property)
     return allele_property
 
+def population_info(info, population, key):
+    """
+    Value of the INFO field that ``key`` of a populations.json entry names
+    """
+    field = population.get(key,"")
+    if field == "":
+        return None
+    return process_alleles(info.get(field))
+
 def generate_molecular_attributes(moleculareffect_input):
     list_of_molecular_effects=[]
     if moleculareffect_input is not None:
@@ -519,55 +528,19 @@ def _generate(dict_properties, args, variants_writer, case_level_writer):
                     source=pipeline["source"]
                     source_reference=pipeline["sourceReference"]
                     populations=pipeline["populations"]
+                    zygosity="alleleCount" if args.alleleCounts==True else "genotype"
                     for population in populations:
                         dict_per_population={}
-                        allele_frequency=v.INFO.get(population["alleleFrequency"])
-                        if population["alleleCount"] != "":
-                            allele_count=v.INFO.get(population["alleleCount"])
-                        if population["alleleNumber"] != "":
-                            allele_number=v.INFO.get(population["alleleNumber"])
-                        if args.alleleCounts==False:
-                            if "genotypeHomozygous" in population:
-                                if population["genotypeHomozygous"] != "":
-                                    ac_hom=v.INFO.get(population["genotypeHomozygous"])
-                                    ac_hom = process_alleles(ac_hom)
-                            else:
-                                ac_hom=None
-                            if "genotypeHeterozygous" in population:
-                                if population["genotypeHeterozygous"] != "":
-                                    ac_het=v.INFO.get(population["genotypeHeterozygous"])
-                                    ac_het = process_alleles(ac_het)
-                            else:
-                                ac_het=None
-                            if "genotypeHemizygous" in population:
-                                if population["genotypeHemizygous"] != "":
-                                    ac_hemi=v.INFO.get(population["genotypeHemizygous"])
-                                    ac_hemi = process_alleles(ac_hemi)
-                            else:
-                                ac_hemi=None
-                        else:
-                            if "alleleCountHomozygous" in population:
-                                if population["alleleCountHomozygous"] != "":
-                                    ac_hom=v.INFO.get(population["alleleCountHomozygous"])
-                                    ac_hom = process_alleles(ac_hom)
-                            else:
-                                ac_hom=None
-                            if "alleleCountHeterozygous" in population:
-                                if population["alleleCountHeterozygous"] != "":
-                                    ac_het=v.INFO.get(population["alleleCountHeterozygous"])
-                                    ac_het = process_alleles(ac_het)
-                            else:
-                                ac_het=None
-                            if "alleleCountHemizygous" in population:
-                                if population["alleleCountHemizygous"] != "":
-                                    ac_hemi=v.INFO.get(population["alleleCountHemizygous"])
-                                    ac_hemi = process_alleles(ac_hemi)
-                                else:
-                                    ac_hemi=None
-                        allele_frequency = process_alleles(allele_frequency)
-                        allele_number = process_alleles(allele_number)
-                        allele_count = process_alleles(allele_count)
-                        
+
+                        # Every field is read afresh, so a population never
+                        # inherits the counts from the one in an earlier loop
+                        allele_frequency=population_info(v.INFO, population, "alleleFrequency")
+                        allele_count=population_info(v.INFO, population, "alleleCount")
+                        allele_number=population_info(v.INFO, population, "alleleNumber")
+                        ac_hom=population_info(v.INFO,population, zygosity+"Homozygous")
+                        ac_het=population_info(v.INFO,population, zygosity+"Heterozygous")
+                        ac_hemi=population_info(v.INFO,population, zygosity+"Hemizygous")
+
                         popu=population["population"]
                         if allele_frequency != None:
                             dict_per_population["alleleFrequency"]=allele_frequency
